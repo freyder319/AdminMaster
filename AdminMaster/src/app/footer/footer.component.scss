@@ -1,0 +1,28 @@
+.fondo{
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+}
+a{
+    animation: all 0.3s;
+}
+.img-redes:hover{
+    transform: scale(1.05);
+}
+
+a {
+    text-decoration: none; 
+    font-size: 20px;
+    color: #612121;
+  }
+.bg-brown{
+    background-color: #612121;
+}
+h3{
+    color:white;
+    font-size: 20px;
+}
+@media screen and (max-width: 768px) {
+    h3{
+        font-size: 15px;
+    }
+
+}
