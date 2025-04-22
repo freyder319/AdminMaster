@@ -1,0 +1,38 @@
+.pqrs-img{
+    border-radius: 20px;
+}
+.parrafo{
+    font-family: "Special Gothic", sans-serif;
+}
+h3{
+    text-align: center;
+    color:#772929 ;
+}
+@media(max-width: 991px) {
+    h3{
+        font-size: 20px;
+    }
+}
+@media(max-width: 468px) {
+    h3{
+        font-size: 15px;
+    }
+    .autorizo{
+        font-size: 15px;
+    }
+}
+.with-input{
+    width: 500px;
+    border-radius: 10px;
+}
+.tarea{
+    height: 220px;
+}
+button{
+    background-color: #772929;
+    color: white;
+}
+button:hover{
+    background-color: #612121;
+    color: white;
+}
