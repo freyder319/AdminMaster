@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+import { NavBarComponent } from "../nav-bar/nav-bar.component";
+import { FooterComponent } from "../footer/footer.component";
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-donde-estamos',
-  imports: [],
+  imports: [NavBarComponent, FooterComponent,RouterModule],
   templateUrl: './donde-estamos.component.html',
   styleUrl: './donde-estamos.component.scss'
 })
