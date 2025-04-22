@@ -7,9 +7,10 @@ import { FooterComponent } from './footer/footer.component';
 import { ProductsComponent } from './products(principal)/products.component';
 import { DondeEstamosComponent } from './donde-estamos/donde-estamos.component';
 import { PqrsComponent } from './pqrs/pqrs.component';
+import { AdminNavbarComponent } from './admin-navbar/admin-navbar.component';
 
 export const routes: Routes = [
-    {path:"", component: ProductsComponent},//localhost:4200/
+    {path:"", component: AdminNavbarComponent},//localhost:4200/
     {path:"login-admin", component: LoginAdminComponent},// localhost:4200/login
     {path:"donde-estamos", component: DondeEstamosComponent},// localhost:4200/donde estamos
     {path:"pqrs", component: PqrsComponent},// localhost:4200/pqrs
