@@ -1,33 +1,6 @@
-.container-fluid{
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-bottom: 2px solid rgb(207, 207, 207);
-  overflow-x: auto;
-}
-
-.navbar-brand{
-  margin-right: 25px;
-  border-radius: 12px;
-  padding: 13px;
-  cursor: pointer;
-}
 
 .navbar-brand:focus{
   background-color: #5adbff;
-}
-
-.navbar-line{
-  margin-left: 158px;
-  height: 12px;
-  width: 173px;
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
-  background-color: #5adbff;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
 }
 
 .navbar {
