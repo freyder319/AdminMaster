@@ -31,7 +31,6 @@
 }
 .fixed-bottom{
     position: relative;
-    background-color: #FBF8F8
 }
 .body1,.body2{
     display: grid;
@@ -63,6 +62,10 @@
 .flexible{
     display: flex;
     height: 70px;
+    width: 300px;
+    background-color: white;
+    color: black;
+    border: none;
 }
 h6{
     font-size: 18px;
@@ -70,8 +73,9 @@ h6{
 
 .contenido-botones{
     font-size: 12px;
+    text-align: left;
     clear: both;
-    width: 100px;
+    width: 300px;
     height: 50px;
 }
 h6, p {
