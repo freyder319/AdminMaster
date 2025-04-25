@@ -20,7 +20,7 @@ import { FilterComponent } from './filter/filter.component';
 import { VentaProductoComponent } from './venta-producto/venta-producto.component';
 export const routes: Routes = [
     // Administrador
-    {path:"", component:AdministradorPrincipalComponent},//localhost:4200/
+    {path:"", component:CajasComponent},//localhost:4200/
     // Cliente
     {path:"login-admin", component: LoginAdminComponent},// localhost:4200/login
     {path:"donde-estamos", component: DondeEstamosComponent},// localhost:4200/donde estamos
