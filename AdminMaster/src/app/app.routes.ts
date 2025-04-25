@@ -19,7 +19,9 @@ import { CreateProductoComponent } from './create-producto/create-producto.compo
 import { FilterComponent } from './filter/filter.component';
 import { VentaProductoComponent } from './venta-producto/venta-producto.component';
 export const routes: Routes = [
+    // Administrador
     {path:"", component:AdministradorPrincipalComponent},//localhost:4200/
+    // Cliente
     {path:"login-admin", component: LoginAdminComponent},// localhost:4200/login
     {path:"donde-estamos", component: DondeEstamosComponent},// localhost:4200/donde estamos
     {path:"pqrs", component: PqrsComponent},// localhost:4200/pqrs
