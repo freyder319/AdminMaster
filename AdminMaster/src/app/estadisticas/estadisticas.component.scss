@@ -1,0 +1,91 @@
+h1 {
+    font-family: 'Poetsen One', cursive;
+  }
+  
+  body {
+    background-color: #FBF8F8;
+  }
+  
+  .bg-white {
+    background-color: white;
+    border-radius: 20px;
+    color: black;
+    box-shadow: 0px 0px 4px 1px rgba(214, 214, 214, 0.705);
+    border: 1px solid #70707000;
+  }
+  
+  .calendar {
+    font-size: 16px; 
+    padding: 8px 16px; 
+    width: 75%; 
+    margin: 0 auto; 
+    box-sizing: border-box;
+  }
+  .balance{
+    height: 150px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 4px 1px rgba(214, 214, 214, 0.705);
+    background-color: white;
+.img-balance{
+    margin-left: 20px;
+    margin-top: 20px;
+}
+.range{
+  height: 70px;
+  width: 100%;
+}
+.balance-precio{
+    margin-left: 135px;
+    margin-top: -80px;
+}
+.dropdown-menu {
+  width: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  border-radius: 20px;
+  padding: 0;
+  box-shadow: 0 0 4px 1px rgba(214, 214, 214, 0.705);
+  top: 100% !important; /* Asegura que baje justo debajo del botón */
+}
+
+.dropdown {
+  position: relative; /* Clave para que left/right funcionen en dropdown-menu */
+}
+
+.dropdown-item {
+  text-align: center;
+  padding: 10px 0;
+}
+  @media (max-width: 767px) {
+    .calendar, .range {
+      font-size: 14px; 
+      padding: 6px 12px; 
+      width: 90%; 
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .calendar, .range {
+      font-size: 16px; 
+    }
+  }
+  
+  @media (max-width: 767px) {
+    h1 {
+      font-size: 24px; 
+    }
+
+  }
+@media (max-width:767px) {
+    .gastos{
+        margin-top: 10px;
+    }
+    .balances{
+        margin-top: 10px;
+    }
+}
+@media (max-width:991px) {
+  .gastos{
+      margin-top: 10px;
+  }
+}

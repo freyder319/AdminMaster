@@ -17,7 +17,7 @@ import { CreateGastoComponent } from './create-gasto/create-gasto.component';
 import { CreateVentaComponent } from './create-venta/create-venta.component';
 import { CreateProductoComponent } from './create-producto/create-producto.component';
 import { FilterComponent } from './filter/filter.component';
-
+import { VentaProductoComponent } from './venta-producto/venta-producto.component';
 export const routes: Routes = [
     {path:"", component:AdministradorPrincipalComponent},//localhost:4200/
     {path:"login-admin", component: LoginAdminComponent},// localhost:4200/login
