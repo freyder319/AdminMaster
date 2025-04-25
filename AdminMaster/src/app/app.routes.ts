@@ -9,6 +9,7 @@ import { DondeEstamosComponent } from './donde-estamos/donde-estamos.component';
 import { PqrsComponent } from './pqrs/pqrs.component';
 import { AdministradorPrincipalComponent } from './admin-principal/admin-principal.component';
 import { AdminNavbarComponent } from './admin-navbar/admin-navbar.component';
+import { VentaProductoComponent } from './venta-producto/venta-producto.component';
 export const routes: Routes = [
     {path:"", component:AdministradorPrincipalComponent},//localhost:4200/
     {path:"login-admin", component: LoginAdminComponent},// localhost:4200/login

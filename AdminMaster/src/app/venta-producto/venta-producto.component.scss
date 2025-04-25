@@ -1,0 +1,442 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+h1{
+  font-family: 'poetsen one',cursive;
+}
+.left-panel {
+  height: 100vh;
+  background-color: white;
+  border-right: 1px solid #ddd;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* Evita scroll global */
+}
+
+.full-height {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.row.h-100 {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Scroll independiente a Canasta */
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: white;
+  border-right: 1px solid #ddd;
+  padding: 20px;
+  overflow: hidden; /* Oculta scroll general */
+}
+
+.canasta-lista-scroll {
+  flex-grow: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+/* Scroll independiente a Productos */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  padding: 20px;
+}
+.products-scroll {
+  flex-grow: 1;
+  overflow-y: auto;
+  min-height: 0; /* Esto es clave para que funcione en todos los navegadores */
+}
+.right-panel .container {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 10px;
+  min-height: 0;
+}
+.products-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding-bottom: 20px;
+}
+/* Footer de la canasta fijo */
+.canasta-footer {
+  border-top: 1px solid #ddd;
+  padding-top: 15px;
+  background-color: white;
+}
+
+/* Asegúrate de que tus tarjetas y filas se ven bien dentro del scroll */
+.card {
+  height: 100%;
+}
+.canasta-lista-scroll {
+  overflow-y: auto;
+}
+
+.canasta-footer {
+  border-top: 1px solid #ddd;
+  padding-top: 15px;
+  background-color: white;
+}
+  /* Borde verde en la parte inferior de Nueva Venta */
+  .nueva-venta-footer {
+    border-bottom: 4px solid #28a745; /* Borde verde */
+    padding-bottom: 20px;
+  }
+
+  /* Carrito flotante móvil */
+  .cart-float {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+    font-size: 18px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    cursor: pointer;
+  }
+
+  .cart-float span {
+    font-weight: bold;
+  }
+
+
+  .input-buscador{
+    height: 70px;
+    box-shadow:0px 0px 4px 1px rgba(214, 214, 214, 0.445);
+    border: 1px solid rgba(124, 124, 124, 0.151);
+    border-radius: 20px;
+
+}
+.input-buscador:active{
+    box-shadow:0px 0px 4px 1px #5adbff;
+    border: 1px solid #5adbff;
+}
+.input-buscador:focus{
+    box-shadow:0px 0px 4px 1px #5adbff;
+    border: 1px solid #5adbff;
+}
+.boton_buscador{
+    background-color: white;
+    border-radius: 20px;
+    height: 70px;
+    box-shadow:-6px 0px 4px 0.05px rgba(214, 214, 214, 0.219);
+    border: 1px solid rgba(124, 124, 124, 0.151);
+    border-right: none;
+}
+.boton_buscador:active{
+    background-color: white;
+    border: 1px solid #5adbff;
+    box-shadow:0px 0px 4px 1px #5adbff;
+}
+.boton_buscador img{
+    opacity: 0.5;
+}
+
+.bg-white{
+    background-color: white;
+    border-radius: 20px;
+    height: 60px;
+    color: black;
+    box-shadow: 0px 0px 4px 1px rgba(214, 214, 214, 0.705);
+    border: 1px solid #70707000;
+}
+.range{
+    height: 70px;
+    width: 100%;
+}
+.unicion{
+    display: flex;
+    flex-wrap:wrap;
+    justify-content: center;
+}
+
+// boton de venta
+.blue{
+  background-color:#5adbff ;
+  box-shadow: 0px 0px 4px 1px rgba(214, 214, 214, 0.705);
+  border: none;
+  color: black;
+}
+.circle{
+  background-color: #5adbff;
+  width: 100px;
+  height: 100px;
+  box-shadow: 0px 0px 4px 1px rgba(214, 214, 214, 0.705);
+}
+.carrito{
+  margin-top: 25px;
+  color: black;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  border-radius: 15px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: gray;
+  box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+  padding: 15px;
+}
+
+.img-card {
+  width: 100%;
+  height: auto;
+  max-width: 250px;
+  object-fit: cover;
+}
+
+.card-body {
+  text-align: center;
+}
+
+.text-prec, .text-nom, .text-cant {
+  margin: 5px 0;
+}
+
+.text-cant {
+  color: black;
+}
+// productto
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 15px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: gray;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+    padding: 15px;
+}
+
+.img-card {
+    width: 100%;
+    height: auto;
+    max-width: 250px;
+    object-fit: cover;
+}
+
+.card-body {
+    text-align: center;
+}
+
+.text-prec, .text-nom, .text-cant {
+    margin: 5px 0;
+}
+
+.text-cant {
+    color: black;
+}
+.products-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Centra horizontalmente */
+  gap: 20px; /* Espacio entre tarjetas */
+  padding-bottom: 20px;
+}
+
+.card {
+  width: 100%;
+  max-width: 250px;
+}
+.dropdown-menu.anchor {
+  width: 100% !important;
+  min-width: unset !important;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* Evita scroll global */
+}
+
+.full-height {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.row.h-100 {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Canasta */
+.left-panel {
+  height: 100vh;
+  background-color: white;
+  border-right: 1px solid #ddd;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Oculta scroll general */
+}
+
+.canasta-lista-scroll {
+  flex-grow: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+/* Productos */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.products-scroll {
+  flex-grow: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.products-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Asegura que las tarjetas se centren horizontalmente */
+  gap: 20px; /* Espacio entre tarjetas */
+  padding-bottom: 20px;
+  margin: 0 auto; /* Asegura que el contenedor de las tarjetas esté centrado */
+}
+
+.card {
+  width: 100%;
+  max-width: 250px; /* Ajusta el tamaño máximo de las tarjetas */
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #ddd;
+  box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+  padding: 15px;
+  justify-content: space-between; /* Asegura que el contenido de la tarjeta esté bien distribuido */
+}
+
+.img-card {
+  width: 100%;
+  max-width: 250px; /* Se asegura de que la imagen no sobrepase el tamaño de la tarjeta */
+  object-fit: cover;
+}
+
+.card-body {
+  text-align: center;
+}
+
+.text-prec, .text-nom, .text-cant {
+  margin: 5px 0;
+}
+
+.text-cant {
+  color: black;
+}
+
+/* Carrito flotante móvil */
+.cart-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #28a745;
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
+  font-size: 18px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  cursor: pointer;
+}
+
+.cart-float span {
+  font-weight: bold;
+}
+
+/* Ajustes en dispositivos móviles */
+@media (max-width: 767px) {
+  .products-grid {
+    justify-content: center; /* Asegura que las tarjetas se centren incluso en pantallas pequeñas */
+    gap: 10px;
+  }
+
+  .card {
+    max-width: 200px; /* Reducir el tamaño máximo de las tarjetas en pantallas pequeñas */
+  }
+
+  .img-card {
+    max-width: 200px; /* Ajustar la imagen para que no sea más grande que la tarjeta */
+  }
+}
+@media (max-width: 1067px) {
+  .range{
+    font-size: 11px;
+  }
+}
+@media (min-width: 768px) {
+  .cart-float {
+    display: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .left-panel {
+    display: none;
+  }
+  .range{
+    margin-top: 10px;
+  }
+  .card{
+    justify-content: center;
+  }
+  h1{
+    font-size: 24px;
+  
+  }
+  h1 img{
+    width: 30px;
+    height: 30px;
+  }
+  .range{
+    font-size:18px;
+  }
+  .dropdown-menu.anchor {
+    width: 100% !important;
+    min-width: unset !important;
+  }
+}
