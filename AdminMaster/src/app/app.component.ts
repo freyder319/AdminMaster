@@ -11,7 +11,7 @@ import { PqrsComponent } from "./pqrs/pqrs.component";
 import {DondeEstamosComponent} from "./donde-estamos/donde-estamos.component";
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavBarComponent, FooterComponent, PqrsComponent, DondeEstamosComponent,ProductsComponent, LoginAdminComponent, LoginPuntoVentaComponent, SecurityEmailComponent, SecurityTelefComponent],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
