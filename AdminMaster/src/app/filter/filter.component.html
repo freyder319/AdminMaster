@@ -1,74 +1,59 @@
-<app-admin-navbar></app-admin-navbar>
-<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
-    Filtrar
-  </button>
-  
-  <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop" aria-labelledby="staticBackdropLabel">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="staticBackdropLabel">Filtros</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-      <div>
-            <!-- Formulario Registro -->
+<!-- Formulario Registro -->
 
-            <div class="container form">
-                <div class="formulario">
-                    <form>
-                        <label for="exampleInputText" class="form-label">Selecciona el Metodo de pago</label>
-                        <div class="metodo-pago mb-3">
-                            <button class="item">
-                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/efectivo.png" alt="" width="30px" height="30px">
-                                <p class="texto">Efectivo</p>
-                            </button>
-                            <button class="item">
-                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/targeta.png" alt="" width="30px" height="30px">
-                                <p class="texto">Targeta</p>
-                            </button>
-                            <button class="item">
-                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/banco.png" alt="" width="30px" height="30px">
-                                <p class="texto">Transferencia Bancaria</p>
-                            </button>
-                            <button class="item">
-                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/daviplata.ico" alt="" width="30px" height="30px">
-                                <p class="texto">Daviplata</p>
-                            </button>
-                            <button class="item">
-                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/nequi.ico" alt="" width="30px" height="30px">
-                                <p class="texto">Nequi</p>
-                            </button>
-                            <button class="item">
-                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/otro.png" alt="" width="30px" height="30px">
-                                <p class="texto">Otros</p>
-                            </button>
-                        </div>
-                        <div class="mb-3">
-                            <label for="exampleInputDate" class="form-label">Cliente</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Todos los Clientes</option>
-                                <option value="1">Claudia Peñuela</option>
-                                <option value="2">Henry Forero</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="exampleInputDate" class="form-label">Proveedor</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Todos los Proveedores</option>
-                                <option value="1">Coca Cola</option>
-                                <option value="2">Henry Forero</option>
-                            </select>
-                        </div>
-                        <div class="limpiar-filtrar">
-                            <div class="limpi">
-                                <button type="submit" class="btn limpiar">Limpiar Filtros</button>
-                            </div>
-                            <div class="filt">
-                                <button type="submit" class="btn filtrar">Filtrar</button>
-                            </div>
-                        </div>
-                    </form>
+<div class="container form">
+    <div class="formulario">
+        <form>
+            <label for="exampleInputText" class="form-label">Selecciona el Metodo de pago</label>
+            <div class="metodo-pago mb-3">
+                <button class="item">
+                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/efectivo.png" alt="" width="30px" height="30px">
+                    <p class="texto">Efectivo</p>
+                </button>
+                <button class="item">
+                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/targeta.png" alt="" width="30px" height="30px">
+                    <p class="texto">Targeta</p>
+                </button>
+                <button class="item">
+                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/banco.png" alt="" width="30px" height="30px">
+                    <p class="texto">Transferencia Bancaria</p>
+                </button>
+                <button class="item">
+                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/daviplata.ico" alt="" width="30px" height="30px">
+                    <p class="texto">Daviplata</p>
+                </button>
+                <button class="item">
+                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/nequi.ico" alt="" width="30px" height="30px">
+                    <p class="texto">Nequi</p>
+                </button>
+                <button class="item">
+                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/otro.png" alt="" width="30px" height="30px">
+                    <p class="texto">Otros</p>
+                </button>
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputDate" class="form-label">Cliente</label>
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>Todos los Clientes</option>
+                    <option value="1">Claudia Peñuela</option>
+                    <option value="2">Henry Forero</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputDate" class="form-label">Proveedor</label>
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>Todos los Proveedores</option>
+                    <option value="1">Coca Cola</option>
+                    <option value="2">Henry Forero</option>
+                </select>
+            </div>
+            <div class="limpiar-filtrar">
+                <div class="limpi">
+                    <button type="submit" class="btn limpiar">Limpiar Filtros</button>
+                </div>
+                <div class="filt">
+                    <button type="submit" class="btn filtrar">Filtrar</button>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
