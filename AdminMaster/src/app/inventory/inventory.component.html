@@ -1,0 +1,251 @@
+<app-admin-navbar></app-admin-navbar><br>
+<div class="container text-center">
+    <div class="row">
+        <div class="col">
+            <h1 class="tit-inventario">Inventario</h1>
+        </div>
+    </div>
+</div>
+
+<!-- Cantidad y Total de Inventario -->
+
+<div class="container cant-total d-flex ">
+    <div class="container body1">
+        <div class="img-box">
+            <img src="../../assets/img/icons-navbar/Inventario.png" alt="" width="60px" height="60px">
+        </div>
+        <div class="cant-inven">1001</div>
+        <div class="text">Cantidad de Referencias</div>
+    </div>
+
+    <div class="container body2">
+        <div class="img-box">
+            <img src="../../assets/img/icons-navbar/money-costo-inven.png" alt="" width="60px" height="60px">
+        </div>
+        <div class="cant-inven">$ 2.100.000</div>
+        <div class="text">Costo Total del Inventario</div>
+    </div>
+</div><br>
+
+<!-- Busqueda, Crear Categoria y Agregar Productos -->
+
+<div class="container agg">
+
+    <!-- Buscar Productos -->
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Buscar Producto..." id="search-input">
+                </div>
+            </div>
+        </div>
+
+        <!-- Ver todas las Categorias -->
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="ver-cate">
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>Ver todas las Categorias</option>
+                    <option value="1">Panaderia</option>
+                    <option value="2">Pasteleria</option>
+                    <option value="3">Bebidas</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Crear Categoria -->
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="crear-cate">
+                <button class="btn crear" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCrearCategoria" aria-controls="offcanvasCrearCategoria">
+                    Crear Categoria
+                </button>
+                  
+                  <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="offcanvasCrearCategoria" aria-labelledby="offcanvasCrearCategoriaLabel">
+                    <div class="offcanvas-header">
+                      <h5 class="offcanvas-title" id="offcanvasCrearCategoriaLabel">Crear Categoria</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                      <div>
+                        GAGAGAGAGAGAGAGAGAGAGAGAGAGAGA
+                      </div>
+                    </div>
+                  </div>
+            </div>
+        </div>
+
+        <!-- Agregar Producto -->
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="agg-produc">
+                <button class="btn agregar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAgregarProducto" aria-controls="offcanvasAgregarProducto">
+                    Agregar Producto
+                  </button>
+                  
+                  <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="offcanvasAgregarProducto" aria-labelledby="offcanvasAgregarProductoLabel">
+                    <div class="offcanvas-header">
+                      <h5 class="offcanvas-title" id="offcanvasAgregarProductoLabel">Crear Producto</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                      <div>
+                        <app-create-producto></app-create-producto>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+</div><br>
+
+<!-- Productos del Inventario -->
+
+<div class="container principal">
+
+    <!-- Fila 1 -->
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card">
+                <img src="../../assets/img/products img/cocacola.jpg" class="img-card" alt="" width="250px" height="220px">
+                <div class="card-body">
+                  <p class="text-prec">$ 5.000</p>
+                  <p class="text-nom">Coca Cola 1.5L</p>
+                  <p class="text-cant">10 Disponibles</p>
+                </div>
+              </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card" >
+                <img src="../../assets/img/products img/cocacola.jpg" class="img-card" alt="" width="250px" height="220px">
+                <div class="card-body">
+                  <p class="text-prec">$ 5.000</p>
+                  <p class="text-nom">Coca Cola 1.5L</p>
+                  <p class="text-cant">10 Disponibles</p>
+                </div>
+              </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card">
+                <img src="../../assets/img/products img/cocacola.jpg" class="img-card" alt="" width="250px" height="220px">
+                <div class="card-body">
+                  <p class="text-prec">$ 5.000</p>
+                  <p class="text-nom">Coca Cola 1.5L</p>
+                  <p class="text-cant">10 Disponibles</p>
+                </div>
+              </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card">
+                <img src="../../assets/img/products img/cocacola.jpg" class="img-card" alt="" width="250px" height="220px">
+                <div class="card-body">
+                  <p class="text-prec">$ 5.000</p>
+                  <p class="text-nom">Coca Cola 1.5L</p>
+                  <p class="text-cant">10 Disponibles</p>
+                </div>
+              </div>
+        </div>
+    </div>
+
+    <!-- Fila 2 -->
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card">
+                <img src="../../assets/img/products img/cocacola.jpg" class="img-card" alt="" width="250px" height="220px">
+                <div class="card-body">
+                  <p class="text-prec">$ 5.000</p>
+                  <p class="text-nom">Coca Cola 1.5L</p>
+                  <p class="text-cant">10 Disponibles</p>
+                </div>
+              </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card" >
+                <img src="../../assets/img/products img/cocacola.jpg" class="img-card" alt="" width="250px" height="220px">
+                <div class="card-body">
+                  <p class="text-prec">$ 5.000</p>
+                  <p class="text-nom">Coca Cola 1.5L</p>
+                  <p class="text-cant">10 Disponibles</p>
+                </div>
+              </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card">
+                <img src="../../assets/img/products img/cocacola.jpg" class="img-card" alt="" width="250px" height="220px">
+                <div class="card-body">
+                  <p class="text-prec">$ 5.000</p>
+                  <p class="text-nom">Coca Cola 1.5L</p>
+                  <p class="text-cant">10 Disponibles</p>
+                </div>
+              </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card">
+                <img src="../../assets/img/products img/cocacola.jpg" class="img-card" alt="" width="250px" height="220px">
+                <div class="card-body">
+                  <p class="text-prec">$ 5.000</p>
+                  <p class="text-nom">Coca Cola 1.5L</p>
+                  <p class="text-cant">10 Disponibles</p>
+                </div>
+              </div>
+        </div>
+    </div>
+
+    <!-- Fila 3 -->
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card">
+                <img src="../../assets/img/products img/cocacola.jpg" class="img-card" alt="" width="250px" height="220px">
+                <div class="card-body">
+                  <p class="text-prec">$ 5.000</p>
+                  <p class="text-nom">Coca Cola 1.5L</p>
+                  <p class="text-cant">10 Disponibles</p>
+                </div>
+              </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card" >
+                <img src="../../assets/img/products img/cocacola.jpg" class="img-card" alt="" width="250px" height="220px">
+                <div class="card-body">
+                  <p class="text-prec">$ 5.000</p>
+                  <p class="text-nom">Coca Cola 1.5L</p>
+                  <p class="text-cant">10 Disponibles</p>
+                </div>
+              </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card">
+                <img src="../../assets/img/products img/cocacola.jpg" class="img-card" alt="" width="250px" height="220px">
+                <div class="card-body">
+                  <p class="text-prec">$ 5.000</p>
+                  <p class="text-nom">Coca Cola 1.5L</p>
+                  <p class="text-cant">10 Disponibles</p>
+                </div>
+              </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-3">
+            <div class="card">
+                <img src="../../assets/img/products img/cocacola.jpg" class="img-card" alt="" width="250px" height="220px">
+                <div class="card-body">
+                  <p class="text-prec">$ 5.000</p>
+                  <p class="text-nom">Coca Cola 1.5L</p>
+                  <p class="text-cant">10 Disponibles</p>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>

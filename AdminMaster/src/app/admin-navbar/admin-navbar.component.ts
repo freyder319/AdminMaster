@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './admin-navbar.component.scss'
 })
 export class AdminNavbarComponent {
+
 }

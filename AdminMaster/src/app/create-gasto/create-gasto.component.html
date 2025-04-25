@@ -1,0 +1,84 @@
+<app-admin-navbar></app-admin-navbar>
+<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+    crear gasto
+  </button>
+  
+  <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop" aria-labelledby="staticBackdropLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="staticBackdropLabel">Crear Gasto</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div>
+            <!-- Botones Activo-Inactivo -->
+
+            <div class="container paga-credit">
+                <div class="activo">
+                    <button class="btn-paga">Pagada</button>
+                </div>
+                <div class="inactivo">
+                    <button class="btn-credit">A Credito</button>
+                </div>
+            </div><br>
+
+            <!-- Formulario Registro -->
+
+            <div class="container form">
+                <div class="formulario">
+                    <form>
+                        <div class="mb-3">
+                          <label for="exampleInputText" class="form-label">Nombre del Gasto</label>
+                          <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputDate" class="form-label">Fecha del Gasto</label>
+                            <input type="date" class="form-control" id="exampleInputDate" aria-describedby="dateHelp" >
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputDate" class="form-label">Categoria del Gasto</label>
+                            <select class="form-select" aria-label="Default select example">
+                                <option selected>Selecciona una Categoria</option>
+                                <option value="1">Panaderia</option>
+                                <option value="2">Pasteleria</option>
+                                <option value="3">Bebidas</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputText" class="form-label">Valor</label>
+                            <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                        </div>
+                        <label for="exampleInputText" class="form-label">Selecciona el Metodo de pago</label>
+                        <div class="metodo-pago mb-3">
+                            <button class="item">
+                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/efectivo.png" alt="" width="30px" height="30px">
+                                <p class="texto">Efectivo</p>
+                            </button>
+                            <button class="item">
+                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/targeta.png" alt="" width="30px" height="30px">
+                                <p class="texto">Targeta</p>
+                            </button>
+                            <button class="item">
+                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/banco.png" alt="" width="30px" height="30px">
+                                <p class="texto">Transferencia Bancaria</p>
+                            </button>
+                            <button class="item">
+                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/daviplata.ico" alt="" width="30px" height="30px">
+                                <p class="texto">Daviplata</p>
+                            </button>
+                            <button class="item">
+                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/nequi.ico" alt="" width="30px" height="30px">
+                                <p class="texto">Nequi</p>
+                            </button>
+                            <button class="item">
+                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/otro.png" alt="" width="30px" height="30px">
+                                <p class="texto">Otros</p>
+                            </button>
+                            
+                        </div>
+                        <button type="submit" class="btn create-gasto">Crear Gasto</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

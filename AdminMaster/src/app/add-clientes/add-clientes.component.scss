@@ -1,0 +1,65 @@
+// Style Botones Activo-Inactivo
+
+.act-inac {
+    display: flex;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+    border-radius: 5px;
+    padding: 7px
+}
+
+.btn-act {
+    border: none;
+    width: 174px;
+    text-align: center;
+    border-radius: 7px;
+    color: black;
+    padding: 7px;
+    font-weight: bold;
+}
+
+.btn-act:focus{
+    color: white;
+    background-color: #4CAF50; 
+}
+
+.btn-inac {
+    border: none;
+    width: 174px;
+    text-align: center;
+    border-radius: 7px;
+    color: black;
+    padding: 7px;
+    font-weight: bold;
+    margin-left: 4px;
+}
+
+.btn-inac:focus{
+    color: white;
+    background-color: #fa0000; 
+}
+
+// Style Form
+
+.form-control:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    outline: none; 
+}
+
+.form-control{
+    border: none;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+}
+
+.btn {
+    width: 100%;
+    background-color: #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none; 
+    cursor: pointer;
+}
+  
+.btn:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 2px #5adbff;
+}
