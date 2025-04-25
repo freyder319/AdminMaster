@@ -18,9 +18,20 @@ import { CreateVentaComponent } from './create-venta/create-venta.component';
 import { CreateProductoComponent } from './create-producto/create-producto.component';
 import { FilterComponent } from './filter/filter.component';
 import { VentaProductoComponent } from './venta-producto/venta-producto.component';
+import { EstadisticasComponent } from './estadisticas/estadisticas.component';
+import { AddCajasComponent } from './add-cajas/add-cajas.component';
 export const routes: Routes = [
     // Administrador
-    {path:"", component:CajasComponent},//localhost:4200/
+    {path:"", component:ClientesComponent},//localhost:4200/
+    {path:"", component:ProductsComponent},//localhost:4200/
+    {path:"administrador", component:AdministradorPrincipalComponent},//localhost:4200/
+    {path:"crear-venta", component:VentaProductoComponent},//localhost:4200crear-venta
+    {path:"inventario", component:InventoryComponent},//localhost:4200 inventario
+    {path:"estadisticas", component:EstadisticasComponent},//localhost:4200 estadisticas
+    {path:"cajas", component:CajasComponent},//localhost:4200 Cajas
+    {path:"proveedor", component:ProveedoresComponent},//localhost:4200 proveedor
+    {path:"clientes", component:ClientesComponent},//localhost:4200 cliente
+    {path:"puntodeventa", component:LoginPuntoVentaComponent},//localhost:4200 cliente
     // Cliente
     {path:"login-admin", component: LoginAdminComponent},// localhost:4200/login
     {path:"donde-estamos", component: DondeEstamosComponent},// localhost:4200/donde estamos
