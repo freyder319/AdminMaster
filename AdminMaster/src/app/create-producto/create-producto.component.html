@@ -1,0 +1,44 @@
+<!-- Formulario Registro -->
+
+<div class="container form">
+    <div class="container subir-img">
+        <button class="item">
+            <h4 class="mb-4">Subir Imagen</h4>
+            <input type="file" accept="image/*" id="imagenInput" class="d-none" >
+        </button>
+      </div><br>
+    <div class="formulario">
+        <form>
+            <div class="mb-3">
+              <label for="exampleInputText" class="form-label">Nombre del Producto</label>
+              <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputText" class="form-label">Codigo de Producto</label>
+                <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputText" class="form-label">Productos Disponibles (Stock)</label>
+                <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputText" class="form-label">Precio Unitario</label>
+                <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputText" class="form-label">Precio Comercial</label>
+                <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputDate" class="form-label">Categoria</label>
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>Selecciona una Categoria</option>
+                    <option value="1">Panaderia</option>
+                    <option value="2">Pasteleria</option>
+                    <option value="3">Bebidas</option>
+                </select>
+            </div><br>
+            <button type="submit" class="btn confirmar">Confirmar</button>
+        </form>
+    </div>
+</div>

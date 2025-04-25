@@ -1,0 +1,183 @@
+.tit-inventario{
+    font-family: 'poetsen one', cursive;
+}
+
+// Style Totalidad
+
+.cant-total{
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: center;
+}
+
+.body1, .body2 {
+    width: 350px;
+    height: 80px;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+    padding: 10px;
+    border-radius: 15px;
+    display: grid;
+    position: relative;
+    margin: 10px;
+}
+
+.cant-inven {
+    position: relative;
+    top: -50px;
+    left: 70px;
+}
+
+.text {
+    position: relative;
+    top: -50px;
+    left: 70px;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .body1,
+    .body2 {
+        margin: 10px 0; 
+    }
+}
+
+// Style Busqueda, Crear Categoria y Agregar Productos
+
+.container.agg{
+    display: flex;
+    justify-content: center;
+}
+
+.form-control{
+    border-radius: 18px;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+}
+
+.form-control:focus{
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+}
+
+.form-select{
+    border-radius: 18px;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+}
+
+.form-select:active{
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+}
+
+.btn.crear{
+    width: 200px;
+    border-radius: 18px;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+}
+
+.btn.crear:active{
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+}
+
+.btn.agregar{
+    background-color: #5adbff;
+    width: 200px;
+    border-radius: 18px;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+}
+
+.btn.btn.agregar:active{
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 2px #5adbff;
+}
+
+.crear-cate{
+    display: flex;
+    justify-content: center;
+}
+
+.agg-produc{
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 990px) {
+    .container.agg {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .container.agg  {
+        width: 100%;
+        max-width: 90%;
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-control,.form-select,.btn.crear,.btn.agregar {
+        width: 100%;
+        margin: 5px 0;
+        box-sizing: border-box;
+    }
+    
+    
+}
+
+// Style Productos
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    border-radius: 15px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: gray;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+    padding: 15px;
+}
+
+.img-card {
+    width: 100%;
+    height: auto;
+    max-width: 250px;
+    object-fit: cover;
+}
+
+.card-body {
+    text-align: center;
+}
+
+.text-prec, .text-nom, .text-cant {
+    margin: 5px 0;
+}
+
+.text-cant {
+    color: rgb(151, 151, 151);
+}
+
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card {
+        max-width: 80%;
+        margin: 10px auto; 
+    }
+}
