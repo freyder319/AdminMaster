@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
-import { AdminNavbarComponent } from "../admin_navbar/admin_navbar.component";
-import { CreateProductoComponent } from "../create_producto/create_producto.component";
-import { CreateCategoriaComponent } from "../create_categoria/create_categoria.component";
+import { AdminNavbarComponent } from "../admin-navbar/admin-navbar.component";
+import { CreateProductoComponent } from "../create-producto/create-producto.component";
+import { CreateCategoriaComponent } from "../create-categoria/create-categoria.component";
 
 @Component({
   selector: 'app-inventory',
   imports: [AdminNavbarComponent, CreateProductoComponent, CreateCategoriaComponent],
   templateUrl: './inventory.component.html',
-  styleUrl: './inventory.component.scss'
+  styleUrls: ['./inventory.component.scss']
 })
 export class InventoryComponent {
 
 }
+

@@ -1,0 +1,68 @@
+.body {
+    display: flex;
+    justify-content: center;  
+    align-items: center;       
+    height: 100vh;        
+}
+  
+.login {
+    max-width: 900px;
+    width: 100%;
+    border-radius: 2rem;
+    box-shadow: 2px 2px 30px brown;   
+    overflow: hidden;
+    margin: auto
+}
+
+.login-img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+
+.titulo-login {
+    font-family: 'Poetsen One', cursive;
+    font-size: 2rem;
+    color: brown;
+    text-align: center;
+}
+
+.form-control:focus {
+    border-color: brown; 
+    box-shadow: 0 0 0 0.25rem rgba(165, 42, 42, 0.25); 
+    outline: none;
+}
+  
+
+.form-label {
+    color: brown; 
+}
+
+.olvidar{
+    text-decoration: none;
+    color: brown
+}
+
+.btn-principal {
+    background-color: brown;
+    color: white;
+    border: none;
+    border-radius: 2rem;
+}
+
+.btn-principal:hover {
+    background-color: rgb(163, 57, 57);
+}
+
+.btn-secundario {
+    border-radius: 2rem;
+    background-color: white;
+    color: brown;
+}
+  
+
+@media (max-width: 768px) {
+    .titulo-login {
+      font-size: 1.5rem;
+    }
+}
