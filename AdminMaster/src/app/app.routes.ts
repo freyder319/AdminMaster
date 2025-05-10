@@ -21,18 +21,18 @@ import { VentaProductoComponent } from './venta-producto/venta-producto.componen
 import { EstadisticasComponent } from './estadisticas/estadisticas.component';
 import { AddCajasComponent } from './add-cajas/add-cajas.component';
 export const routes: Routes = [
-    // Administrador
-    {path:"", component:AdministradorPrincipalComponent},//localhost:4200/
-    {path:"administrador", component:AdministradorPrincipalComponent},//localhost:4200/administrador
-    {path:"crear-venta", component:VentaProductoComponent},//localhost:4200crear-venta
-    {path:"inventario", component:InventoryComponent},//localhost:4200 inventario
-    {path:"estadisticas", component:EstadisticasComponent},//localhost:4200 estadisticas
-    {path:"cajas", component:CajasComponent},//localhost:4200 Cajas
-    {path:"proveedor", component:ProveedoresComponent},//localhost:4200 proveedor
-    {path:"clientes", component:ClientesComponent},//localhost:4200 cliente
-    {path:"puntodeventa", component:LoginPuntoVentaComponent},//localhost:4200 cliente
-    // Cliente
-    {path:"login-admin", component: LoginAdminComponent},// localhost:4200/login
-    {path:"donde-estamos", component: DondeEstamosComponent},// localhost:4200/donde estamos
-    {path:"pqrs", component: PqrsComponent},// localhost:4200/pqrs
+    // Rutas para administrador
+    { path: "", component: AdministradorPrincipalComponent }, // localhost:4200/
+    { path: "crear-venta", component: VentaProductoComponent },
+    { path: "inventario", component: InventoryComponent },
+    { path: "estadisticas", component: EstadisticasComponent },
+    { path: "cajas", component: CajasComponent },
+    { path: "proveedor", component: ProveedoresComponent },
+    { path: "clientes", component: ClientesComponent },
+    { path: "puntodeventa", component: LoginPuntoVentaComponent },
+
+    // Rutas para cliente
+    { path: "login-admin", component: LoginAdminComponent },
+    { path: "donde-estamos", component: DondeEstamosComponent },
+    { path: "pqrs", component: PqrsComponent }
 ];
