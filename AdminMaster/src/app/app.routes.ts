@@ -22,8 +22,8 @@ import { EstadisticasComponent } from './estadisticas/estadisticas.component';
 import { AddCajasComponent } from './add-cajas/add-cajas.component';
 export const routes: Routes = [
     // Administrador
-    {path:"", component:ProductsComponent},//localhost:4200/
-    {path:"administrador", component:AdministradorPrincipalComponent},//localhost:4200/
+    {path:"", component:AdministradorPrincipalComponent},//localhost:4200/
+    {path:"administrador", component:AdministradorPrincipalComponent},//localhost:4200/administrador
     {path:"crear-venta", component:VentaProductoComponent},//localhost:4200crear-venta
     {path:"inventario", component:InventoryComponent},//localhost:4200 inventario
     {path:"estadisticas", component:EstadisticasComponent},//localhost:4200 estadisticas
