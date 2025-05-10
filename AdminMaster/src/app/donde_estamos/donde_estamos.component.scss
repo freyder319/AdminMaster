@@ -1,0 +1,37 @@
+h1{
+    color:#612121 ;
+    font-size: 70px;
+}
+h2{
+    text-align: justify;
+}
+@media(max-width:2001px) {
+    iframe{
+        width: 450px;
+    }
+}
+.donde{
+    font-family: "Playfair Display", serif;
+    font-size: 40px;
+    color:#612121;
+}
+iframe{
+    border-radius: 20px;
+}
+@media(max-width:546px) {
+    h2{
+        font-size: 20px;
+    }
+    .donde{
+        font-size: 30px;
+    }
+}
+@media(max-width:546px) {
+    h1{
+        font-size: 40px;
+    }
+    iframe{
+        width: 350px;
+        height: 200px;
+    }
+}

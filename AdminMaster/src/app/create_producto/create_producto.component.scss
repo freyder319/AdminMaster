@@ -1,0 +1,58 @@
+// Style Form
+
+.subir-img{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.item {
+    border: none;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+    border-radius: 15px;
+    padding: 20px;
+    background-color: white;
+    cursor: pointer;
+    width: 50%;
+    height: 50%;
+}
+  
+.item:focus {
+    border: none;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+}
+
+.form-control{
+    border: none;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+}
+
+.form-control:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    outline: none; 
+}
+
+.form-select{
+    border: none;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+}
+
+.form-select:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    outline: none; 
+}
+
+.btn.confirmar {
+    width: 100%;
+    background-color: #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none; 
+    cursor: pointer;
+}
+  
+.btn.confirmar:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 2px #5adbff;
+}
