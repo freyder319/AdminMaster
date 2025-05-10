@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { AdminNavbarComponent } from "../admin-navbar/admin-navbar.component";
-import { AddClientesComponent } from "../add-clientes/add-clientes.component";
+import { AdminNavbarComponent } from "../admin_navbar/admin_navbar.component";
+import { AddClientesComponent } from "../add_clientes/add_clientes.component";
 
 @Component({
   selector: 'app-clientes',

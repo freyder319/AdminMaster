@@ -1,0 +1,61 @@
+// Style Form
+
+.form-control{
+    border: none;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+}
+
+.form-control:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    outline: none; 
+}
+
+.elimi-modifi{
+    display: flex;
+    border-radius: 5px;
+}
+
+.btn.eliminar {
+    width: 165px;
+    text-align: center;
+    color: red;
+    box-shadow: 0 0 3px 1px #e81313;
+    border-radius: 7px;
+    padding: 7px;
+}
+  
+.btn.eliminar:focus {
+    border: 1px solid #e81313;
+    box-shadow: 0 0 6px 2px #e81313;
+}
+
+.btn.modificar {
+    box-shadow: 0 0 3px 1px #575757;
+    border: none;
+    width: 165px;
+    text-align: center;
+    border-radius: 7px;
+    color: black;
+    padding: 7px;
+    font-weight: bold;
+    margin-left: 12px;
+}
+  
+.btn.modificar:focus {
+    border: 1px solid #575757;
+    box-shadow: 0 0 6px 2px #575757;
+}
+
+.btn.create-cate {
+    width: 100%;
+    background-color: #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none; 
+    cursor: pointer;
+}
+  
+.btn.create-cate:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 2px #5adbff;
+}

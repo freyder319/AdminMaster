@@ -1,0 +1,604 @@
+.tit-movimientos{
+    font-family: 'poetsen one',cursive;
+}
+.image-etiqueta{
+    width: 45px;
+}
+.nueva-venta{
+    width: 300px;
+    padding: 10px;
+    height:80px;
+    font-size: 25px;
+    border-radius: 20px;
+    border: 1px solid rgb(204, 204, 204);
+    box-shadow: 0px 0px 4px 1px rgb(214, 214, 214);
+    background-color: rgb(43, 206, 43);
+    margin: 0;
+}
+
+.nueva-venta:active{
+    background-color: rgb(0, 158, 0);
+}
+.nuevo-gasto{
+    width: 300px;
+    padding: 10px;
+    height: 80px;
+    font-size: 25px;
+    border-radius: 20px;
+    border: 1px solid rgb(204, 204, 204);
+    box-shadow: 0px 0px 4px 1px rgb(214, 214, 214);
+    background-color: rgb(207, 0, 0);
+}
+.fixed-bottom{
+    position: relative;
+}
+.body1,.body2{
+    display: grid;
+    position: relative;
+    margin: 10px;
+}
+.unicion{
+    display: flex;
+    flex-wrap:wrap;
+    justify-content: center;
+}
+
+.nuevo-gasto:active{
+    background-color: rgb(143, 1, 1);
+}
+// ancho de el menu de boton verde y rojo
+.ancho{
+    width: 300px;
+}
+.venta-productos{
+    width: 50px;
+    height: 50px;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #5adbff;
+    border: 1px solid #31d2ff;
+}
+
+.flexible{
+    display: flex;
+    height: 70px;
+    width: 300px;
+    background-color: white;
+    color: black;
+    border: none;
+}
+h6{
+    font-size: 18px;
+}
+
+.contenido-botones{
+    font-size: 12px;
+    text-align: left;
+    clear: both;
+    width: 300px;
+    height: 50px;
+}
+h6, p {
+    margin: 0;
+    padding: 0;
+  }
+.contenido-botones p{
+    color: gray;
+}
+a:active{
+    background: rgb(224, 224, 224);
+}
+// trnasacciones - cajas
+.transacciones-cierrecaja{
+    background-color: white;
+    display: flex;
+    height: 55px;
+    width: 100%;
+    border-radius: 20px;
+    padding-left: 25px;
+    border: 1px solid #7070702a;
+}
+body{
+    background-color: #FBF8F8;
+}
+.transacciones{
+    text-align: center;
+    width: 615px;
+    padding-top: 5px;
+    height:35px;
+    background-color: #5adbff;
+    margin-top: 10px;
+    border-radius: 10px;
+}
+.cierrescaja{
+    text-align: center;
+    width: 615px;
+    padding-top: 5px;
+    height:35px;
+    color: rgb(194, 194, 194);
+    margin-top: 10px;
+    border-radius: 10px;
+}
+.bg-white{
+    background-color: white;
+    border-radius: 20px;
+    height: 60px;
+    color: black;
+    box-shadow: 0px 0px 4px 1px rgba(214, 214, 214, 0.705);
+    border: 1px solid #70707000;
+}
+// Filtros
+.filtro{
+    width: 150px;
+    height: 70px;
+}
+.letrafiltro{
+    font-size: 19px;
+    text-align: center;
+}
+.bg-white:active{
+    color: black;
+    border: 1px solid #5adbff;
+    box-shadow: 0px 0px 4px 1px #5adbff;
+}
+.bg-white:focus{
+    color: rgb(0, 0, 0);
+
+}
+// calendario
+.calendar{
+    width: 150px;
+    height: 70px;
+}
+.calendar-container {
+    position: relative;
+    display: inline-block;
+}
+// Rango de fechas, semanal, mensual, anual
+.rango{
+    width: 100px;
+    height: 50px;
+}
+.range{
+    width: 150px;
+    height: 70px;
+}
+.contenido-botone2{
+    font-size: 12px;
+    clear: both;
+    width: 50px;
+    height: 20px;
+}
+.flexible2{
+    display: flex;
+    height:35px;
+}
+.ancho2{
+    width: 200px;
+}
+// buscador
+.input-buscador{
+    height: 70px;
+    box-shadow:0px 0px 4px 1px rgba(214, 214, 214, 0.445);
+    border: 1px solid rgba(124, 124, 124, 0.151);
+    border-radius: 20px;
+    width: 200px;
+}
+.input-buscador:active{
+    box-shadow:0px 0px 4px 1px #5adbff;
+    border: 1px solid #5adbff;
+}
+.input-buscador:focus{
+    box-shadow:0px 0px 4px 1px #5adbff;
+    border: 1px solid #5adbff;
+}
+.boton_buscador{
+    background-color: white;
+    border-radius: 20px;
+    height: 70px;
+    box-shadow:-6px 0px 4px 0.05px rgba(214, 214, 214, 0.219);
+    border: 1px solid rgba(124, 124, 124, 0.151);
+    border-right: none;
+}
+.boton_buscador:active{
+    background-color: white;
+    border: 1px solid #5adbff;
+    box-shadow:0px 0px 4px 1px #5adbff;
+}
+.boton_buscador img{
+    opacity: 0.5;
+}
+.busca{
+    width: 300px;
+}
+
+// reporte
+.report{
+    border: #707070 1px solid;
+    border-radius: 20px;
+}
+.reporte-cuadro img{
+    filter: drop-shadow(0 0 5px #34e46f);
+}
+.reporte-cuadro{
+    filter: drop-shadow(0 0 5px #5adbff);
+}
+.reporte-cuadro{
+    padding-top: 3px;
+}
+
+body{
+    background-color: #FBF8F8;
+}
+// balance
+.balance{
+    height: 150px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 4px 1px rgba(214, 214, 214, 0.705);
+    background-color: white;
+.img-balance{
+    margin-left: 20px;
+    margin-top: 20px;
+}
+.balance-precio{
+    margin-left: 135px;
+    margin-top: -80px;
+}
+}
+// Seleccion de ventas
+
+.seleccion{
+    width: 250px;
+    height: 50px;
+    padding:10px ;
+    border: none;
+    background-color: #FBF8F8;
+    border-radius: 2px;
+}
+.seleccion:focus{
+    border-bottom: 5px solid #5adbff;
+}
+// Tabla
+.table {
+    border-collapse: separate;
+    border-spacing: 0 10px; 
+    text-align: center;
+}
+
+.table thead th {
+    background-color: #f2f2f2;
+    border: none;
+}
+
+.table td, .table th {
+    border: none;
+}
+
+.table tbody tr {
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.td1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 15px;
+}
+
+.nom_produc{
+    margin-left: 10px;
+    color: black;
+}
+
+.status {
+    padding: 5px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.activo {
+    color: #00b82b;
+    background-color: #9cffb3;
+}
+
+.inactivo {
+    color: #c00013;
+    background-color: #ff828f;
+}
+
+// Style Crear Gasto - Crear Venta Libre
+
+// Style Botones Activo-Inactivo
+
+.paga-credit {
+    display: flex;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+    border-radius: 5px;
+    padding: 7px
+}
+
+.btn-paga {
+    border: none;
+    width: 174px;
+    text-align: center;
+    border-radius: 7px;
+    color: black;
+    padding: 7px;
+    font-weight: bold;
+}
+
+.btn-paga:focus{
+    color: white;
+    background-color: #4CAF50; 
+}
+
+.btn-credit {
+    border: none;
+    width: 174px;
+    text-align: center;
+    border-radius: 7px;
+    color: black;
+    padding: 7px;
+    font-weight: bold;
+    margin-left: 4px;
+}
+
+.btn-credit:focus{
+    color: white;
+    background-color: #fa0000; 
+}
+
+// Style Form
+
+.form-control{
+    border: none;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+}
+
+.form-control:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    outline: none; 
+}
+
+.form-select{
+    border: none;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+}
+
+.form-select:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    outline: none; 
+}
+
+.btn.create-gasto {
+    width: 100%;
+    background-color: #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none; 
+    cursor: pointer;
+}
+  
+.btn.create-gasto:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 2px #5adbff;
+}
+
+.metodo-pago{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    text-align: center;
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(143, 143, 143, 0.413);
+    border-radius: 15px;
+    padding: 20px;
+    background-color: white;
+    cursor: pointer;
+    width: 100%;
+    height: 90%;
+}
+  
+.item:focus {
+    border: none;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+}
+
+.img-todas{
+    margin-top: 10px;
+}
+
+.texto {
+    font-size: 12px;
+    margin-top: 5px;
+    color: #333;
+}
+// tabla puntos suspensivos
+@media screen and (max-width: 768px) {
+    .table thead {
+        display: none;
+    }
+
+    .table, .table tbody, .table tr, .table td {
+        display: block;
+        width: 100%;
+    }
+
+    .table tr {
+        margin-bottom: 15px;
+    }
+
+    .table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+    }
+
+    .table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        width: 45%;
+        padding-left: 10px;
+        font-weight: bold;
+        text-align: left;
+    }
+}
+// llevar los botones a la parte de abajo
+@media (max-width: 991px) {
+    .input-buscador{
+        margin-top: 10px;
+    }
+    .boton_buscador{
+        margin-top: 10px;
+    }
+    .busca{
+        width: 600px;
+    }
+}
+@media (max-width:685px) {
+    .busca{
+        width: 530px;
+    }
+}
+@media (max-width: 767px) {
+    .nueva-venta{
+        width: 180px;
+        font-size: 17px;
+    }
+    .nueva-venta img{
+        width: 30px;
+        height: 30px;
+    }
+    .nuevo-gasto{
+        width: 180px;
+        font-size: 17px;
+    }
+    .nuevo-gasto img{
+        width: 30px;
+        height: 30px;
+    }
+}
+@media (max-width: 555px) {
+    .fixed-bottom {
+        position: fixed;
+        display: flex;
+        background-color: white;
+        bottom: 100px;
+        padding: 5px;
+        width: 100%;
+        justify-content: center; /* O ajusta según necesidad */
+        align-items: stretch;
+
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Sombras opcionales */
+    }
+    .nueva-venta{
+        width: 170px;
+        font-size: 15px;
+    }
+    .nueva-venta img{
+        width: 30px;
+        height: 30px;
+    }
+    .nuevo-gasto{
+        width: 170px;
+        font-size: 15px;
+    }
+    .nuevo-gasto img{
+        width: 30px;
+        height: 30px;
+    }
+    .busca{
+        width: 300px;
+    }
+    .venta{
+        display: none;
+    }
+    td{
+        font-size: 12px;
+    }
+    th{
+        font-size: 12px;
+    }
+    }
+    .balance{
+        width: 320px;
+    }
+    @media (max-width: 389px) {
+        .nueva-venta{
+            width: 120px;
+            font-size: 12px;
+        }
+        .nueva-venta img{
+            display: none;
+        }
+        .nuevo-gasto{
+            width: 120px;
+            font-size: 12px;
+        }
+        .nuevo-gasto img{
+            width: 20px;
+            height: 20px;
+            display: none;
+        }
+        
+    }
+    @media (max-width: 575px) {
+        .bg-white{
+            margin-top: 10px;
+        }
+    }
+@media (max-width:1199px) {
+    .seleccion{
+        width: 200px;
+    }
+}
+@media (max-width:991px) {
+    .seleccion{
+        width: 150px;
+    }
+    .gastos{
+        margin-top: 10px;
+    }
+}
+@media (max-width:767px) {
+    .seleccion{
+        width: 100px;
+    }
+    .balances{
+        margin-top: 10px;
+    }
+}
+@media (max-width:575px) {
+    .seleccion{
+        width: 83px;
+        font-size: 13px;
+    }
+}
+@media (max-width:427px) {
+    .seleccion{
+        width: 75px;
+        font-size: 11px;
+    }
+}
+@media (max-width:395px) {
+    .seleccion{
+        width: 70px;
+        font-size: 10px;
+    }
+}
+@media (max-width:375px) {
+    .seleccion{
+        width: 64px;
+        font-size: 10px;
+    }
+}

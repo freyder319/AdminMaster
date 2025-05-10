@@ -9,9 +9,9 @@ import { AddProveedorComponent } from "../add-proveedor/add-proveedor.component"
   styleUrls: ['./proveedores.component.scss']
 })
 
-
 export class ProveedoresComponent {
-  
+
 }
+
 
 

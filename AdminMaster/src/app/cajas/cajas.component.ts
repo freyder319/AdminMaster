@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { AdminNavbarComponent } from "../admin-navbar/admin-navbar.component";
-import { AddCajasComponent } from "../add-cajas/add-cajas.component";
+import { AdminNavbarComponent } from "../admin_navbar/admin_navbar.component";
+import { AddCajasComponent } from "../add_cajas/add_cajas.component";
 
 @Component({
   selector: 'app-cajas',

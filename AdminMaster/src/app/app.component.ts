@@ -8,13 +8,15 @@ import { SecurityEmailComponent } from "./security-email/security-email.componen
 import { SecurityTelefComponent } from './security-telef/security-telef.component';
 import { FooterComponent } from "./footer/footer.component";
 import { PqrsComponent } from "./pqrs/pqrs.component";
-import {DondeEstamosComponent} from "./donde-estamos/donde-estamos.component";
+import { DondeEstamosComponent } from "./donde-estamos/donde-estamos.component";
+
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavBarComponent, FooterComponent, PqrsComponent, DondeEstamosComponent,ProductsComponent, LoginAdminComponent, LoginPuntoVentaComponent, SecurityEmailComponent, SecurityTelefComponent],
+  imports: [RouterOutlet, NavBarComponent, FooterComponent, PqrsComponent, DondeEstamosComponent, ProductsComponent, LoginAdminComponent, LoginPuntoVentaComponent, SecurityEmailComponent, SecurityTelefComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
   title = 'AdminMaster';
 }
+
