@@ -21,13 +21,10 @@ export const routes: Routes = [
     { path: "proveedor", component: ProveedoresComponent },
     { path: "clientes", component: ClientesComponent },
     { path: "puntodeventa", component: LoginPuntoVentaComponent },
-
+    
     // Rutas para cliente
     { path: "login-admin", component: LoginAdminComponent },
     { path: "donde-estamos", component: DondeEstamosComponent },
     { path: "pqrs", component: PqrsComponent }
-<<<<<<< HEAD
+
 ];
-=======
-];
->>>>>>> 4ae5dc0aa07550bc7ffe4284083ea7016d1ebc0b
