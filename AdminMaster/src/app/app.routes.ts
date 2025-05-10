@@ -21,9 +21,10 @@ export const routes: Routes = [
     { path: "proveedor", component: ProveedoresComponent },
     { path: "clientes", component: ClientesComponent },
     { path: "puntodeventa", component: LoginPuntoVentaComponent },
-
+    
     // Rutas para cliente
     { path: "login-admin", component: LoginAdminComponent },
     { path: "donde-estamos", component: DondeEstamosComponent },
     { path: "pqrs", component: PqrsComponent }
+
 ];
