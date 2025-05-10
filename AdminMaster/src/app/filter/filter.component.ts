@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AdminNavbarComponent } from "../admin-navbar/admin-navbar.component";
+import { AdminNavbarComponent } from "../admin_navbar/admin_navbar.component";
 
 @Component({
   selector: 'app-filter',
