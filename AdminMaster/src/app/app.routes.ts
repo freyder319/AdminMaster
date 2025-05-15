@@ -1,14 +1,14 @@
 import { Routes } from '@angular/router';
-import { AdministradorPrincipalComponent } from './admin-principal/admin-principal.component';
+import { AdministradorPrincipalComponent } from './admin_principal/admin_principal.component';
 import { VentaProductoComponent } from './venta_producto/venta_producto.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { EstadisticasComponent } from './estadisticas/estadisticas.component';
 import { CajasComponent } from './cajas/cajas.component';
 import { ProveedoresComponent } from './proveedores/proveedores.component';
 import { ClientesComponent } from './clientes/clientes.component';
-import { LoginPuntoVentaComponent } from './login-punto-venta/login-punto-venta.component';
-import { LoginAdminComponent } from './login-admin/login-admin.component';
-import { DondeEstamosComponent } from './donde-estamos/donde-estamos.component';
+import { LoginPuntoVentaComponent } from './login_punto_venta/login_punto_venta.component';
+import { LoginAdminComponent } from './login_admin/login_admin.component';
+import { DondeEstamosComponent } from './donde_estamos/donde_estamos.component';
 import { PqrsComponent } from './pqrs/pqrs.component';
 
 export const routes: Routes = [
