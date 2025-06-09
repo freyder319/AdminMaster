@@ -36,7 +36,15 @@
     background-color: rgb(43, 206, 43);
     margin: 0;
 }
-
+.precio_letra{
+    color:#00C928
+}
+.precio_letra_rojo{
+    color:#FF0000
+}
+.body1{
+      z-index: -1000;
+}
 .nueva-venta:active{
     background-color: rgb(0, 158, 0);
 }
@@ -68,6 +76,7 @@
     background-color: rgb(143, 1, 1);
 }
 // ancho de el menu de boton verde y rojo
+
 .ancho{
     width: 300px;
 }
@@ -276,20 +285,20 @@ body{
 .busca{
     width: 300px;
 }
-
 // reporte
 .report{
     border: #707070 1px solid;
     border-radius: 20px;
 }
-.reporte-cuadro img{
+.reporte_cuadro img{
     filter: drop-shadow(0 0 5px #34e46f);
 }
-.reporte-cuadro{
+.reporte_cuadro{
     filter: drop-shadow(0 0 5px #5adbff);
 }
-.reporte-cuadro{
+.reporte_cuadro{
     padding-top: 3px;
+    text-decoration: none;
 }
 
 body{
@@ -354,6 +363,7 @@ body{
 .nom_produc{
     margin-left: 10px;
     color: black;
+    text-decoration: none
 }
 
 .status {
