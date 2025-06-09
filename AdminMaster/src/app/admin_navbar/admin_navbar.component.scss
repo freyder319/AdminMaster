@@ -1,5 +1,5 @@
 
-.navbar-brand:focus{
+.navbar-brand:hover{
   background-color: #5adbff;
 }
 
@@ -12,6 +12,17 @@
   white-space: nowrap;
   box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
 }
+.active {
+  background-color: #5adbff;
+}
+.active2{
+  background-color: #5adbff;
+  box-sizing: border-box;
+  border-radius: 50%;
+  width: 50px; /* O el tamaño que prefieras */
+  height: 50px;
+
+}
 
 .img-navbar { 
   cursor: pointer;
@@ -22,13 +33,10 @@
   outline: none;
 }
 
-.img-navbar:focus {
-  border-radius: 50%;
-  background-color: #5adbff;
-  box-sizing: border-box;
+.foto_perfil{
+  margin-left: -9px;
+  margin-top: 6px;
 }
-
-
 .container-fluid {
   display: flex;
   align-items: center;
@@ -48,9 +56,6 @@
   gap: 8px; 
 }
 
-.navbar-brand:focus {
-  background-color: #5adbff;
-}
 
 @media screen and (max-width: 767px) {
   .navbar {
