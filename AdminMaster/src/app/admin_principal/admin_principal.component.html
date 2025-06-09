@@ -110,19 +110,20 @@
                                     <img class="img-todas" src="../../assets/img/icons-metodo de pago/otro.png" alt="" width="30px" height="30px">
                                     <p class="texto">Otros</p>
                                 </button>
-                            </div>
-                            <button type="submit" class="btn create-venta">Confirmar Venta</button>
-                            
+                            </div>   
                         </form>
                     </div>
                   </div>
               </div>
+            <div class="confirmarfinal">
+              <button type="submit" class="btn create-venta">Confirmar Venta</button>
+            </div>
             </div>
             <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="gasto" aria-labelledby="staticBackdropLabel">
               <div class="offcanvas-header">
                 <h5 class="offcanvas-title" id="staticBackdropLabel">Crear Gasto</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-              </div>
+            </div>
               <div class="offcanvas-body">
                   <!-- Botones Activo-Inactivo -->
 
@@ -188,10 +189,12 @@
                                   </button>
                                   
                               </div>
-                              <button type="submit" class="btn create-gasto">Crear Gasto</button>
                           </form>
                       </div>
                     </div>
+              </div>
+              <div class="confirmarfinal">
+                <button type="submit" class="btn create-gasto">Crear Gasto</button>
               </div>
             </div>
           </div>
@@ -228,6 +231,14 @@
         <div class="offcanvas-body">
           <div>
             <app-filter></app-filter>
+          </div>
+        </div>
+        <div class="limpiar-filtrar">
+          <div class="limpi">
+            <button type="submit" class="btn limpiar">Limpiar Filtros</button>
+          </div>
+          <div class="filt">
+            <button type="submit" class="btn filtrar">Filtrar</button>
           </div>
         </div>
       </div>

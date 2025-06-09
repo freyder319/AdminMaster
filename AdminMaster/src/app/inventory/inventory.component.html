@@ -63,17 +63,44 @@
                     Crear Categoria
                 </button>
                   
-                  <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="offcanvasCrearCategoria" aria-labelledby="offcanvasCrearCategoriaLabel">
-                    <div class="offcanvas-header">
-                      <h5 class="offcanvas-title" id="offcanvasCrearCategoriaLabel">Crear Categoria</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body">
-                      <div>
-                        <app-create-categoria></app-create-categoria>
+                <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="offcanvasCrearCategoria" aria-labelledby="offcanvasCrearCategoriaLabel">
+                  <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasCrearCategoriaLabel">Crear Categoria</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                  </div>
+                  <div class="offcanvas-body">
+                    <div>
+                        <div class="container form">
+                          <div class="formulario">
+                              <form>
+                                  <div class="mb-3">
+                                    <label for="exampleInputText" class="form-label">Nombre de la Categoria</label>
+                                    <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                                  </div><br>
+                              </form>
+                          </div>
                       </div>
                     </div>
                   </div>
+                    <div class="confirmarfinal">
+                      <div class="fila-superior">
+                        <div class="elimi-modifi">
+                          <button type="submit" class="btn eliminar">
+                            <img src="../../assets/img/icons-crear/eliminar.png" alt="" width="25px" height="25px">
+                            Eliminar
+                          </button>
+                          <button type="submit" class="btn modificar">
+                            <img src="../../assets/img/icons-crear/modificar.png" alt="" width="25px" height="25px">
+                            Modificar
+                          </button>
+                        </div>
+                      </div>
+                      <div class="fila-inferior">
+                        <button type="submit" class="btn create_cate">Crear Categoría</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
             </div>
         </div>
 
@@ -95,11 +122,14 @@
                         <app-create-producto></app-create-producto>
                       </div>
                     </div>
+                    <div class="confirmarfinal">
+                      <button type="submit" class="btn confir">Confirmar</button>
+                    </div>
                   </div>
             </div>
         </div>
     </div>
-</div><br>
+
 
 <!-- Productos del Inventario -->
 
@@ -249,3 +279,40 @@
         </div>
     </div>
 </div>
+
+<!-- Pagination -->
+
+<nav aria-label="pagination">
+  <ul class="pagination">
+    <li>
+      <a href="">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="visuallyhidden">previous set of pages</span>
+      </a>
+    </li>
+    <li>
+      <a href="" aria-current="page">
+        <span class="visuallyhidden">page </span>1
+      </a>
+    </li>
+    <li>
+      <a href="">
+        <span class="visuallyhidden">page </span>2
+      </a>
+    </li>
+    <li>
+      <a href=""> 
+        <span class="visuallyhidden">page </span>3 
+      </a>
+    </li>
+    <li>
+      <a href=""> <span class="visuallyhidden">page </span>4 </a>
+    </li>
+    <li>
+      <a href="">
+        <span class="visuallyhidden">next set of pages</span>
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav><br>

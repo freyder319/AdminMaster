@@ -190,3 +190,19 @@ img {
     }
 }
 
+.btn.confir {
+    width: 88%;
+    background-color: #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none; 
+    cursor: pointer;
+}
+
+.confirmarfinal{
+    display: flex;
+    box-shadow: 1px 1px 1px 1px #707070;
+    background-color: white;
+    height: 70px;
+    align-items: center;
+    justify-content: center;
+}

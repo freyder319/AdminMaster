@@ -4,6 +4,27 @@
 .image-etiqueta{
     width: 45px;
 }
+
+.btn.create-venta{
+    background-color: #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none;
+    width: 88%;
+    text-align: center;
+    border-radius: 7px;
+    color: black;
+    padding: 7px;
+}
+
+.confirmarfinal{
+    display: flex;
+    box-shadow: 1px 1px 1px 1px #707070;
+    background-color: white;
+    height: 100px;
+    align-items: center;
+    justify-content: center;
+}
+
 .nueva-venta{
     width: 300px;
     padding: 10px;
@@ -88,6 +109,7 @@ h6, p {
 a:active{
     background: rgb(224, 224, 224);
 }
+
 // trnasacciones - cajas
 .transacciones-cierrecaja{
     background-color: white;
@@ -145,6 +167,49 @@ body{
     color: rgb(0, 0, 0);
 
 }
+.limpiar-filtrar{
+    display: flex;
+    box-shadow: 1px 1px 1px 1px #707070;
+    background-color: white;
+    height: 100px;
+    align-items: center;
+}
+
+.btn.limpiar {
+    border: none;
+    width: 170px;
+    text-align: center;
+    border-radius: 7px;
+    padding: 7px;
+}
+  
+.btn.limpiar:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 2px #5adbff;
+}
+
+.btn.filtrar {
+    background-color: #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none;
+    width: 170px;
+    text-align: center;
+    border-radius: 7px;
+    color: black;
+    padding: 7px;
+    font-weight: bold;
+}
+  
+.btn.filtrar:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 2px #5adbff;
+}
+
+.limpi{
+    display: flex;
+    margin-left: 20px;
+}
+
 // calendario
 .calendar{
     width: 150px;
@@ -375,7 +440,7 @@ body{
 }
 
 .btn.create-gasto {
-    width: 100%;
+    width: 88%;
     background-color: #5adbff;
     box-shadow: 0 0 6px 0.5px #5adbff;
     border: none; 

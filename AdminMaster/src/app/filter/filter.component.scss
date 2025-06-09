@@ -22,41 +22,6 @@
     outline: none; 
 }
 
-.limpiar-filtrar{
-    display: flex;
-    border-radius: 5px;
-}
-
-.btn.limpiar {
-    border: none;
-    width: 165px;
-    text-align: center;
-    border-radius: 7px;
-    padding: 7px;
-}
-  
-.btn.limpiar:focus {
-    border: 1px solid #5adbff;
-    box-shadow: 0 0 6px 2px #5adbff;
-}
-
-.btn.filtrar {
-    background-color: #5adbff;
-    box-shadow: 0 0 6px 2px #5adbff;
-    border: none;
-    width: 163px;
-    text-align: center;
-    border-radius: 7px;
-    color: black;
-    padding: 7px;
-    font-weight: bold;
-}
-  
-.btn.filtrar:focus {
-    border: 1px solid #5adbff;
-    box-shadow: 0 0 6px 2px #5adbff;
-}
-
 .metodo-pago{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
