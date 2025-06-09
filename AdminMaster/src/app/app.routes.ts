@@ -10,11 +10,14 @@ import { LoginPuntoVentaComponent } from './login_punto_venta/login_punto_venta.
 import { LoginAdminComponent } from './login_admin/login_admin.component';
 import { DondeEstamosComponent } from './donde_estamos/donde_estamos.component';
 import { PqrsComponent } from './pqrs/pqrs.component';
+import { PerfilAdministradorComponent } from './perfil_dministrador/perfil_administrador.component';
 
 export const routes: Routes = [
     // Rutas para administrador
     { path: "", component: AdministradorPrincipalComponent }, // localhost:4200/
-    { path: "crear-venta", component: VentaProductoComponent },
+    { path: "movimientos", component: AdministradorPrincipalComponent  },
+    { path: "perfil_administrador", component: PerfilAdministradorComponent },
+    { path: "crear_venta", component: VentaProductoComponent },
     { path: "inventario", component: InventoryComponent },
     { path: "estadisticas", component: EstadisticasComponent },
     { path: "cajas", component: CajasComponent },
