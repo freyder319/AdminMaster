@@ -43,7 +43,7 @@
     color:#FF0000
 }
 .body1{
-      z-index: -1000;
+    z-index: -1000;
 }
 .nueva-venta:active{
     background-color: rgb(0, 158, 0);
@@ -84,9 +84,7 @@
     width: 50px;
     height: 50px;
     padding: 5px;
-    border-radius: 5px;
-    background-color: #5adbff;
-    border: 1px solid #31d2ff;
+    border-radius: 25px;    
 }
 
 .flexible{
@@ -160,11 +158,11 @@ body{
 }
 // Filtros
 .filtro{
-    width: 150px;
-    height: 70px;
+    width: 120px;
+    height: 40px;
 }
 .letrafiltro{
-    font-size: 19px;
+    font-size: 17px;
     text-align: center;
 }
 .bg-white:active{
@@ -221,8 +219,8 @@ body{
 
 // calendario
 .calendar{
-    width: 150px;
-    height: 70px;
+    width: 120px;
+    height: 40px;
 }
 .calendar-container {
     position: relative;
@@ -234,8 +232,8 @@ body{
     height: 50px;
 }
 .range{
-    width: 150px;
-    height: 70px;
+    width: 120px;
+    height: 40px;
 }
 .contenido-botone2{
     font-size: 12px;
@@ -252,11 +250,11 @@ body{
 }
 // buscador
 .input-buscador{
-    height: 70px;
     box-shadow:0px 0px 4px 1px rgba(214, 214, 214, 0.445);
     border: 1px solid rgba(124, 124, 124, 0.151);
     border-radius: 20px;
-    width: 200px;
+    width: 120px;
+    height: 40px;
 }
 .input-buscador:active{
     box-shadow:0px 0px 4px 1px #5adbff;
@@ -269,7 +267,7 @@ body{
 .boton_buscador{
     background-color: white;
     border-radius: 20px;
-    height: 70px;
+    height: 40px;
     box-shadow:-6px 0px 4px 0.05px rgba(214, 214, 214, 0.219);
     border: 1px solid rgba(124, 124, 124, 0.151);
     border-right: none;
@@ -291,12 +289,15 @@ body{
     border-radius: 20px;
 }
 .reporte_cuadro img{
+    margin-top: -10px;
     filter: drop-shadow(0 0 5px #34e46f);
 }
 .reporte_cuadro{
     filter: drop-shadow(0 0 5px #5adbff);
 }
 .reporte_cuadro{
+    width: 120px;
+    height: 40px;
     padding-top: 3px;
     text-decoration: none;
 }
@@ -306,18 +307,18 @@ body{
 }
 // balance
 .balance{
-    height: 150px;
+    height: 135px;
     border-radius: 20px;
     box-shadow: 0px 0px 4px 1px rgba(214, 214, 214, 0.705);
     background-color: white;
-.img-balance{
-    margin-left: 20px;
-    margin-top: 20px;
-}
-.balance-precio{
-    margin-left: 135px;
-    margin-top: -80px;
-}
+    .img-balance{
+        margin-left: 20px;
+        margin-top: 20px;
+    }
+    .balance-precio{
+        margin-left: 135px;
+        margin-top: -80px;
+    }
 }
 // Seleccion de ventas
 
@@ -327,7 +328,7 @@ body{
     padding:10px ;
     border: none;
     background-color: #FBF8F8;
-    border-radius: 2px;
+    border-radius: 30px;
 }
 .seleccion:focus{
     border-bottom: 5px solid #5adbff;
