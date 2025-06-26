@@ -14,6 +14,7 @@
 }
 .active {
   background-color: #5adbff;
+  box-shadow: 0 0 6px 0.5px #5adbff;
 }
 .active2{
   background-color: #5adbff;
@@ -47,7 +48,7 @@
 
 .navbar-brand {
   margin-right: 15px;
-  border-radius: 12px;
+  border-radius: 15px;
   padding: 13px;
   cursor: pointer;
   flex: 0 0 auto; 

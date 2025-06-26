@@ -47,13 +47,13 @@
 }
 
 // Style Busqueda, Crear Categoria y Agregar Productos
-
 .container.agg{
     display: flex;
     justify-content: center;
 }
 
 .form-control{
+    width: 350px;
     border-radius: 18px;
     box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
 }
@@ -74,7 +74,7 @@
 }
 
 .btn.crear{
-    width: 200px;
+    width: 220px;
     background-color: white;
     border-radius: 18px;
     box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
