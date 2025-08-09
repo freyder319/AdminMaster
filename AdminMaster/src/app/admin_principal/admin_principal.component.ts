@@ -9,5 +9,6 @@ import { FilterComponent } from '../filter/filter.component';
   styleUrl: './admin_principal.component.scss'
 })
 export class AdministradorPrincipalComponent {
+  
 
 }

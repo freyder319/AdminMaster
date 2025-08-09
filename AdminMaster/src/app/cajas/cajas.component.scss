@@ -39,6 +39,8 @@
     padding: 8px 15px; 
     border: none; 
     cursor: pointer; 
+    color: white;
+    font-size: 18px;
 }
   
 .btn.agregar:focus {
@@ -124,6 +126,41 @@ img {
 .inactivo {
     color: #c00013;
     background-color: #ff828f;
+}
+
+.btn.eliminar {
+    width: 90px;
+    text-align: center;
+    color: white;
+    background-color: #e81313;
+    box-shadow: 0 0 3px 1px #e81313;
+    border-radius: 12px;
+    padding: 7px;
+    margin-left: 12px;
+    font-weight: bold;
+}
+
+.btn.eliminar:focus {
+    border: 1px solid #e81313;
+    box-shadow: 0 0 6px 2px #e81313;
+}
+
+.btn.modificar {
+    background-color: #5adbff;
+    box-shadow: 0 0 3px 1px #5adbff;
+    border: none;
+    width: 90px;
+    text-align: center;
+    border-radius: 12px;
+    color: white;
+    padding: 7px;
+    margin-left: 12px;
+    font-weight: bold;
+}
+
+.btn.modificar:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 2px #5adbff;
 }
 
 @media screen and (max-width: 768px) {

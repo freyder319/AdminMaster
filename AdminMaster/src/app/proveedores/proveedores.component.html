@@ -1,88 +1,103 @@
-<app-admin-navbar></app-admin-navbar><br>
-<div class="container text-center">
-    <div class="row">
+<header>
+  <app-admin-navbar></app-admin-navbar>
+</header>
+<br>
+<main>
+  <!-- Título -->
+  <section>
+    <div class="container text-center">
+      <div class="row">
         <div class="col">
-            <h1 class="tit-proveedores">Proveedores</h1>
+          <h1 class="tit-proveedores">Proveedores</h1>
         </div>
+      </div>
     </div>
-</div><br>
-
-<!-- Busqueda y Agregar -->
-
-<div class="container buscar-agg">
-    <div class="row">
-
+  </section>
+  <br>
+  <!-- Busqueda y Agregar -->
+  <section>
+    <div class="container buscar-agg">
+      <div class="row">
         <!-- Buscar -->
-        
         <div class="col-sm-12 col-md-6 col-lg-6">
-            <div class="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Buscar Proveedor..." id="search-input">
-                </div>
+          <div class="search">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Buscar Proveedor..." id="search-input">
             </div>
+          </div>
         </div>
-
         <!-- Agregar Proveedor -->
-
         <div class="col-sm-12 col-md-6 col-lg-6">
-            <div class="agg-provee">
-                <button class="btn agregar" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
-                    Agregar Proveedor
-                  </button>
-                  
-                  <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop" aria-labelledby="staticBackdropLabel">
-                    <div class="offcanvas-header">
-                      <h5 class="offcanvas-title" id="staticBackdropLabel">Registrar Proveedor</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body">
-                      <div>
-                        <app-add-proveedor></app-add-proveedor>
-                      </div>
-                    </div>
-                    <div class="confirmarfinal">
-                      <button type="submit" class="btn confir">Confirmar</button>
-                    </div>
-                  </div>
+          <div class="agg-provee">
+            <button class="btn agregar" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+              Agregar Proveedor
+            </button>
+            <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop" aria-labelledby="staticBackdropLabel">
+              <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="staticBackdropLabel">Registrar Proveedor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+              </div>
+              <div class="offcanvas-body">
+                <div>
+                  <app-add-proveedor></app-add-proveedor>
+                </div>
+              </div>
+              <div class="confirmarfinal">
+                <button type="submit" class="btn confir">Confirmar</button>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
-
-<!-- Tablas Informacion -->
-
-<div class="container">
-  <table class="table table-bordered">
-    <thead class="table-secondary">
-      <tr>
-        <th>Nombre De Proveedor</th>
-        <th>Teléfono</th>
-        <th>Correo</th>
-        <th>N° Deudas pendientes</th>
-        <th>Estado de Cliente</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="td1" data-label="Nombre De Proveedor"> 
-          <img src="../../assets/img/icons-navbar/Proovedores.png" alt="" width="30px" height="30px">
-          <a>Coca-Cola</a>
-        </td>
-        <td data-label="Teléfono">31546235215</td>
-        <td data-label="Correo">cocacolagmail.com</td>
-        <td data-label="N° Deudas pendientes">0</td>
-        <td data-label="Estado de Proveedor"><span class="status activo">Activo</span></td>
-      </tr>
-      <tr>
-        <td class="td1" data-label="Nombre De Proveedor"> 
-          <img src="../../assets/img/icons-navbar/Proovedores.png" alt="" width="30px" height="30px">
-          <a>Henry Forero</a>
-        </td>
-        <td data-label="Teléfono">31852635215</td>
-        <td data-label="Correo">Henryfogmail.com</td>
-        <td data-label="N° Deudas pendientes">2</td>
-        <td data-label="Estado de Proveedor"><span class="status inactivo">Inactivo</span></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  </section>
+  <!-- Tablas Informacion -->
+  <section>
+    <div class="container">
+      <table class="table table-bordered">
+        <thead class="table-secondary">
+          <tr>
+            <th>Nombre De Proveedor</th>
+            <th>Teléfono</th>
+            <th>Correo</th>
+            <th>N° Deudas pendientes</th>
+            <th>Estado de Proveedor</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td1" data-label="Nombre De Proveedor"> 
+              <img src="../../assets/img/icons-navbar/Proovedores.png" alt="" width="30px" height="30px">
+              <a>Coca-Cola</a>
+            </td>
+            <td data-label="Teléfono">31546235215</td>
+            <td data-label="Correo">cocacolagmail.com</td>
+            <td data-label="N° Deudas pendientes">0</td>
+            <td data-label="Estado de Proveedor"><span class="status activo">Activo</span></td>
+            <td data-label="Acciones">
+              <button class="btn ver">Ver</button>
+              <button class="btn modificar">Modificar</button>
+              <button class="btn eliminar">Eliminar</button>
+            </td>
+          </tr>
+          <tr>
+            <td class="td1" data-label="Nombre De Proveedor"> 
+              <img src="../../assets/img/icons-navbar/Proovedores.png" alt="" width="30px" height="30px">
+              <a>Henry Forero</a>
+            </td>
+            <td data-label="Teléfono">31852635215</td>
+            <td data-label="Correo">Henryfogmail.com</td>
+            <td data-label="N° Deudas pendientes">2</td>
+            <td data-label="Estado de Proveedor"><span class="status inactivo">Inactivo</span></td>
+            <td data-label="Acciones">
+              <button class="btn ver">Ver</button>
+              <button class="btn modificar">Modificar</button>
+              <button class="btn eliminar">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>

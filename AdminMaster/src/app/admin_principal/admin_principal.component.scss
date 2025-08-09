@@ -1,5 +1,6 @@
 .tit-movimientos{
     font-family: 'poetsen one',cursive;
+    text-align: center;
 }
 .image-etiqueta{
     width: 45px;
@@ -138,6 +139,7 @@ body{
     background-color: #5adbff;
     margin-top: 10px;
     border-radius: 10px;
+    color: white;
 }
 .cierrescaja{
     text-align: center;
@@ -189,7 +191,7 @@ body{
     border-radius: 7px;
     padding: 7px;
 }
-  
+
 .btn.limpiar:focus {
     border: 1px solid #5adbff;
     box-shadow: 0 0 6px 2px #5adbff;
@@ -206,7 +208,7 @@ body{
     padding: 7px;
     font-weight: bold;
 }
-  
+
 .btn.filtrar:focus {
     border: 1px solid #5adbff;
     box-shadow: 0 0 6px 2px #5adbff;
@@ -457,7 +459,7 @@ body{
     border: none; 
     cursor: pointer;
 }
-  
+
 .btn.create-gasto:focus {
     border: 1px solid #5adbff;
     box-shadow: 0 0 6px 2px #5adbff;
@@ -572,10 +574,10 @@ body{
         bottom: 100px;
         padding: 5px;
         width: 100%;
-        justify-content: center; /* O ajusta según necesidad */
+        justify-content: center; 
         align-items: stretch;
 
-        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Sombras opcionales */
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); 
     }
     .nueva-venta{
         width: 170px;
