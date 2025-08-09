@@ -1,82 +1,95 @@
-<app-admin-navbar></app-admin-navbar><br>
-<div class="container text-center">
-    <div class="row">
+<header>
+  <app-admin-navbar></app-admin-navbar>
+</header>
+<br>
+<main>
+  <!-- Título -->
+  <section>
+    <div class="container text-center">
+      <div class="row">
         <div class="col">
-            <h1 class="tit-cajas">Cajas</h1>
+          <h1 class="tit-cajas">Cajas</h1>
         </div>
+      </div>
     </div>
-</div><br>
-
-<!-- Busqueda y Agregar -->
-
-<div class="container buscar-agg">
-    <div class="row">
-
+  </section>
+  <br>
+  <!-- Busqueda y Agregar -->
+  <section>
+    <div class="container buscar-agg">
+      <div class="row">
         <!-- Buscar -->
-        
         <div class="col-sm-12 col-md-6 col-lg-6">
-            <div class="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Buscar Caja..." id="search-input">
+          <div class="search">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Buscar Caja..." id="search-input">
+            </div>
+          </div>
+        </div>
+        <!-- Agregar Caja -->
+        <div class="col-sm-12 col-md-6 col-lg-6">
+          <div class="agg-caja">
+            <button class="btn agregar" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+              Agregar Caja
+            </button>
+            <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop" aria-labelledby="staticBackdropLabel">
+              <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="staticBackdropLabel">Registrar Caja</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+              </div>
+              <div class="offcanvas-body">
+                <div>
+                  <app-add_cajas></app-add_cajas>
                 </div>
+              </div>
+              <div class="confirmarfinal">
+                <button type="submit" class="btn confir">Confirmar</button>
+              </div>
             </div>
+          </div>
         </div>
-
-        <!-- Agregar Proveedor -->
-
-        <div class="col-sm-12 col-md-6 col-lg-6">
-            <div class="agg-caja">
-                <button class="btn agregar" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
-                    Agregar Caja
-                  </button>
-                  
-                  <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop" aria-labelledby="staticBackdropLabel">
-                    <div class="offcanvas-header">
-                      <h5 class="offcanvas-title" id="staticBackdropLabel">Registrar Caja</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <div class="offcanvas-body">
-                      <div>
-                        <app-add_cajas></app-add_cajas>
-                      </div>
-                    </div>
-                    <div class="confirmarfinal">
-                      <button type="submit" class="btn confir">Confirmar</button>
-                    </div>
-                  </div>
-            </div>
-        </div>
+      </div>
     </div>
-</div>
-
-<!-- Tablas Informacion -->
-
-<div class="container">
-  <table class="table table-bordered">
-    <thead class="table-secondary">
-      <tr>
-        <th>Nombre De Caja</th>
-        <th>Codigo de Caja</th>
-        <th>Estado de Caja</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="td1" data-label="Nombre De Caja"> 
-          <img src="../../assets/img/icons-navbar/Cajas.png" alt="" width="30px" height="30px">
-          <a>Caja 1</a>
-        </td>
-        <td data-label="Codigo de Caja">94683948374</td>
-        <td data-label="Estado de Caja"><span class="status activo">Activa</span></td>
-      </tr>
-      <tr>
-        <td class="td1" data-label="Nombre De Caja"> 
-          <img src="../../assets/img/icons-navbar/Cajas.png" alt="" width="30px" height="30px">
-          <a>Caja 2</a>
-        </td>
-        <td data-label="Codigo de Caja">32837283722</td>
-        <td data-label="Estado de Caja"><span class="status inactivo">Inactiva</span></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+  </section>
+  <!-- Tablas Informacion -->
+  <section>
+    <div class="container">
+      <table class="table table-bordered">
+        <thead class="table-secondary">
+          <tr>
+            <th>Nombre De Caja</th>
+            <th>Codigo de Caja</th>
+            <th>Estado de Caja</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td1" data-label="Nombre De Caja"> 
+              <img src="../../assets/img/icons-navbar/Cajas.png" alt="" width="30px" height="30px">
+              <a>Caja 1</a>
+            </td>
+            <td data-label="Codigo de Caja">94683948374</td>
+            <td data-label="Estado de Caja"><span class="status activo">Activa</span></td>
+            <td data-label="Acciones">
+              <button class="btn modificar">Modificar</button>
+              <button class="btn eliminar">Eliminar</button>
+            </td>
+          </tr>
+          <tr>
+            <td class="td1" data-label="Nombre De Caja"> 
+              <img src="../../assets/img/icons-navbar/Cajas.png" alt="" width="30px" height="30px">
+              <a>Caja 2</a>
+            </td>
+            <td data-label="Codigo de Caja">32837283722</td>
+            <td data-label="Estado de Caja"><span class="status inactivo">Inactiva</span></td>
+            <td data-label="Acciones">
+              <button class="btn modificar">Modificar</button>
+              <button class="btn eliminar">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
