@@ -1,24 +1,19 @@
-<header>
-  <app-admin-navbar></app-admin-navbar>
-</header>
-<br>
-<main>
-  <!-- Título -->
-  <section>
-    <div class="container text-center">
-      <div class="row">
+<app-admin-navbar></app-admin-navbar><br>
+<div class="container text-center">
+    <div class="row">
         <div class="col">
-          <h1 class="tit-clientes">Clientes</h1>
+            <h1 class="tit-clientes">Clientes</h1>
         </div>
-      </div>
     </div>
-  </section>
-  <br>
-  <!-- Busqueda y Agregar -->
-  <section>
-    <div class="container buscar-agg">
-      <div class="row">
+</div><br>
+
+<!-- Busqueda y Agregar -->
+
+<div class="container buscar-agg">
+    <div class="row">
+
         <!-- Buscar -->
+        
         <div class="col-sm-12 col-md-6 col-lg-6">
           <div class="search">
             <div class="input-group">
@@ -43,83 +38,69 @@
                   <app-add-clientes></app-add-clientes>
                 </div>
             </div>
-          </div>
         </div>
-        <!-- Agregar Cliente -->
+
+        <!-- Agregar Proveedor -->
+
         <div class="col-sm-12 col-md-6 col-lg-6">
-          <div class="agg-cli">
-            <button class="btn agregar" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
-              Agregar Cliente
-            </button>
-            <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop" aria-labelledby="staticBackdropLabel">
-              <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="staticBackdropLabel">Registrar Cliente</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-              </div>
-              <div class="offcanvas-body">
-                <div>
-                  <app-add-clientes></app-add-clientes>
-                </div>
-              </div>
-              <div class="confirmarfinal">
-                <button type="submit" class="btn confir">Confirmar</button>
-              </div>
+            <div class="agg-cli">
+                <button class="btn agregar" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+                    Agregar Cliente
+                  </button>
+                  
+                  <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop" aria-labelledby="staticBackdropLabel">
+                    <div class="offcanvas-header">
+                      <h5 class="offcanvas-title" id="staticBackdropLabel">Registrar Cliente</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                      <div>
+                        <app-add-clientes></app-add-clientes>
+                      </div>
+                    </div>
+                  </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </section>
-  <!-- Tablas Informacion -->
-  <section>
-    <div class="container">
-      <table class="table table-bordered">
-        <thead class="table-secondary">
-          <tr>
-            <th>Nombre De Cliente</th>
-            <th>Teléfono</th>
-            <th>Correo</th>
-            <th>N° Deudas</th>
-            <th>N° Compras</th>
-            <th>Estado de Cliente</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="td1" data-label="Nombre De Cliente"> 
-              <img src="../../assets/img/icons-navbar/Clientes.png" alt="" width="30px" height="30px">
-              <a>Claudia Peñuela</a>
-            </td>
-            <td data-label="Teléfono">31546235215</td>
-            <td data-label="Correo">freyderjapogmail.com</td>
-            <td data-label="N° Deudas">0</td>
-            <td data-label="N° Deudas">5</td>
-            <td data-label="Estado de Cliente"><span class="status activo">Activo</span></td>
-            <td data-label="Acciones">
-              <button class="btn ver">Ver</button>
-              <button class="btn modificar">Modificar</button>
-              <button class="btn eliminar">Eliminar</button>
-            </td>
-          </tr>
-          <tr>
-            <td class="td1" data-label="Nombre De Cliente"> 
-              <img src="../../assets/img/icons-navbar/Clientes.png" alt="" width="30px" height="30px">
-              <a>Henry Forero</a>
-            </td>
-            <td data-label="Teléfono">31852635215</td>
-            <td data-label="Correo">Henryfogmail.com</td>
-            <td data-label="N° Deudas">2</td>
-            <td data-label="N° Compras">20</td>
-            <td data-label="Estado de Cliente"><span class="status inactivo">Inactivo</span></td>
-            <td data-label="Acciones">
-              <button class="btn ver">Ver</button>
-              <button class="btn modificar">Modificar</button>
-              <button class="btn eliminar">Eliminar</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-</main>
+</div>
+
+<!-- Tablas Informacion -->
+
+<div class="container">
+  <table class="table table-bordered">
+    <thead class="table-secondary">
+      <tr>
+        <th>Nombre De Cliente</th>
+        <th>Teléfono</th>
+        <th>Correo</th>
+        <th>N° Deudas</th>
+        <th>N° Compras</th>
+        <th>Estado de Cliente</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="td1" data-label="Nombre De Cliente"> 
+          <img src="../../assets/img/icons-navbar/Clientes.png" alt="" width="30px" height="30px">
+          <a>Claudia Peñuela</a>
+        </td>
+        <td data-label="Teléfono">31546235215</td>
+        <td data-label="Correo">freyderjapogmail.com</td>
+        <td data-label="N° Deudas">0</td>
+        <td data-label="N° Deudas">5</td>
+        <td data-label="Estado de Cliente"><span class="status activo">Activo</span></td>
+      </tr>
+      <tr>
+        <td class="td1" data-label="Nombre De Cliente"> 
+          <img src="../../assets/img/icons-navbar/Clientes.png" alt="" width="30px" height="30px">
+          <a>Henry Forero</a>
+        </td>
+        <td data-label="Teléfono">31852635215</td>
+        <td data-label="Correo">Henryfogmail.com</td>
+        <td data-label="N° Deudas">2</td>
+        <td data-label="N° Compras">20</td>
+        <td data-label="Estado de Cliente"><span class="status inactivo">Inactivo</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
