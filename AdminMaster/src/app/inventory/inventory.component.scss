@@ -80,13 +80,13 @@
 }
 
 // Style Busqueda, Crear Categoria y Agregar Productos
-
 .container.agg{
     display: flex;
     justify-content: center;
 }
 
 .form-control{
+    width: 350px;
     border-radius: 18px;
     box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
 }
@@ -107,7 +107,7 @@
 }
 
 .btn.crear{
-    width: 200px;
+    width: 220px;
     background-color: white;
     border-radius: 18px;
     box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
@@ -118,21 +118,16 @@
     box-shadow: 0 0 6px 0.5px #5adbff;
 }
 
-<<<<<<< Updated upstream
 .btn.agregar{
     background-color: #5adbff;
     width: 200px;
     border-radius: 18px;
-    box-shadow: 0 0 6px 0.5px #5adbff;
-=======
-
 .btn.confir{
     width: 88%;
     background-color: #5adbff;
     box-shadow: 0 0 6px 0.5px #5adbff;
     border: none;
     cursor: pointer;
->>>>>>> Stashed changes
 }
 
 .btn.btn.agregar:active{
@@ -149,6 +144,7 @@
     display: flex;
     justify-content: center;
 }
+
 
 @media (max-width: 990px) {
     .container.agg {
@@ -225,4 +221,110 @@
         max-width: 80%;
         margin: 10px auto; 
     }
+}
+
+.btn.eliminar {
+    width: 165px;
+    text-align: center;
+    color: red;
+    box-shadow: 0 0 3px 1px #e81313;
+    border-radius: 7px;
+    padding: 7px;
+}
+
+.btn.eliminar:focus {
+    border: 1px solid #e81313;
+    box-shadow: 0 0 6px 2px #e81313;
+}
+
+.btn.modificar {
+    box-shadow: 0 0 3px 1px #575757;
+    border: none;
+    width: 165px;
+    text-align: center;
+    border-radius: 7px;
+    color: black;
+    padding: 7px;
+    font-weight: bold;
+    margin-left: 12px;
+}
+
+.btn.modificar:focus {
+    border: 1px solid #575757;
+    box-shadow: 0 0 6px 2px #575757;
+}
+
+.confirmarfinal {
+    display: flex;
+    flex-direction: column;
+    box-shadow: 1px 1px 1px 1px #707070;
+    background-color: white;
+    height: 130px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.fila-superior,
+.fila-inferior {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.elimi-modifi {
+    display: flex;
+    border-radius: 5px;
+}
+
+.btn.create_cate {
+    width: 88%;
+    background-color: #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none;
+    cursor: pointer;
+}
+
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: auto;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+    white-space: nowrap;
+}
+
+nav {
+    margin-top: 1em;
+    padding-top: 0.5em;
+    font: 1.2em sans-serif;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.pagination li {
+    margin: 0 1px;
+}
+
+.pagination a {
+    display: block;
+    padding: 0.5em 1em;
+    border: 1px solid #999;
+    border-radius: 0.2em;
+    text-decoration: none;
+}
+
+.pagination a[aria-current="page"] {
+    background-color: #333;
+    color: #fff;
 }

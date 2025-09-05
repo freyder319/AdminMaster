@@ -1,9 +1,31 @@
 .tit-movimientos{
     font-family: 'poetsen one',cursive;
+    text-align: center;
 }
 .image-etiqueta{
     width: 45px;
 }
+
+.btn.create-venta{
+    background-color: #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none;
+    width: 88%;
+    text-align: center;
+    border-radius: 7px;
+    color: black;
+    padding: 7px;
+}
+
+.confirmarfinal{
+    display: flex;
+    box-shadow: 1px 1px 1px 1px #707070;
+    background-color: white;
+    height: 100px;
+    align-items: center;
+    justify-content: center;
+}
+
 .nueva-venta{
     width: 300px;
     padding: 10px;
@@ -22,7 +44,7 @@
     color:#FF0000
 }
 .body1{
-      z-index: -1000;
+    z-index: -1000;
 }
 .nueva-venta:active{
     background-color: rgb(0, 158, 0);
@@ -63,9 +85,7 @@
     width: 50px;
     height: 50px;
     padding: 5px;
-    border-radius: 5px;
-    background-color: #5adbff;
-    border: 1px solid #31d2ff;
+    border-radius: 25px;    
 }
 
 .flexible{
@@ -97,6 +117,7 @@ h6, p {
 a:active{
     background: rgb(224, 224, 224);
 }
+
 // trnasacciones - cajas
 .transacciones-cierrecaja{
     background-color: white;
@@ -118,6 +139,7 @@ body{
     background-color: #5adbff;
     margin-top: 10px;
     border-radius: 10px;
+    color: white;
 }
 .cierrescaja{
     text-align: center;
@@ -138,11 +160,11 @@ body{
 }
 // Filtros
 .filtro{
-    width: 150px;
-    height: 70px;
+    width: 120px;
+    height: 40px;
 }
 .letrafiltro{
-    font-size: 19px;
+    font-size: 17px;
     text-align: center;
 }
 .bg-white:active{
@@ -154,10 +176,53 @@ body{
     color: rgb(0, 0, 0);
 
 }
+.limpiar-filtrar{
+    display: flex;
+    box-shadow: 1px 1px 1px 1px #707070;
+    background-color: white;
+    height: 100px;
+    align-items: center;
+}
+
+.btn.limpiar {
+    border: none;
+    width: 170px;
+    text-align: center;
+    border-radius: 7px;
+    padding: 7px;
+}
+
+.btn.limpiar:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 2px #5adbff;
+}
+
+.btn.filtrar {
+    background-color: #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none;
+    width: 170px;
+    text-align: center;
+    border-radius: 7px;
+    color: black;
+    padding: 7px;
+    font-weight: bold;
+}
+
+.btn.filtrar:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 2px #5adbff;
+}
+
+.limpi{
+    display: flex;
+    margin-left: 20px;
+}
+
 // calendario
 .calendar{
-    width: 150px;
-    height: 70px;
+    width: 120px;
+    height: 40px;
 }
 .calendar-container {
     position: relative;
@@ -169,8 +234,8 @@ body{
     height: 50px;
 }
 .range{
-    width: 150px;
-    height: 70px;
+    width: 120px;
+    height: 40px;
 }
 .contenido-botone2{
     font-size: 12px;
@@ -187,11 +252,11 @@ body{
 }
 // buscador
 .input-buscador{
-    height: 70px;
     box-shadow:0px 0px 4px 1px rgba(214, 214, 214, 0.445);
     border: 1px solid rgba(124, 124, 124, 0.151);
     border-radius: 20px;
-    width: 200px;
+    width: 120px;
+    height: 40px;
 }
 .input-buscador:active{
     box-shadow:0px 0px 4px 1px #5adbff;
@@ -204,7 +269,7 @@ body{
 .boton_buscador{
     background-color: white;
     border-radius: 20px;
-    height: 70px;
+    height: 40px;
     box-shadow:-6px 0px 4px 0.05px rgba(214, 214, 214, 0.219);
     border: 1px solid rgba(124, 124, 124, 0.151);
     border-right: none;
@@ -226,12 +291,15 @@ body{
     border-radius: 20px;
 }
 .reporte_cuadro img{
+    margin-top: -10px;
     filter: drop-shadow(0 0 5px #34e46f);
 }
 .reporte_cuadro{
     filter: drop-shadow(0 0 5px #5adbff);
 }
 .reporte_cuadro{
+    width: 120px;
+    height: 40px;
     padding-top: 3px;
     text-decoration: none;
 }
@@ -241,18 +309,18 @@ body{
 }
 // balance
 .balance{
-    height: 150px;
+    height: 135px;
     border-radius: 20px;
     box-shadow: 0px 0px 4px 1px rgba(214, 214, 214, 0.705);
     background-color: white;
-.img-balance{
-    margin-left: 20px;
-    margin-top: 20px;
-}
-.balance-precio{
-    margin-left: 135px;
-    margin-top: -80px;
-}
+    .img-balance{
+        margin-left: 20px;
+        margin-top: 20px;
+    }
+    .balance-precio{
+        margin-left: 135px;
+        margin-top: -80px;
+    }
 }
 // Seleccion de ventas
 
@@ -262,7 +330,7 @@ body{
     padding:10px ;
     border: none;
     background-color: #FBF8F8;
-    border-radius: 2px;
+    border-radius: 30px;
 }
 .seleccion:focus{
     border-bottom: 5px solid #5adbff;
@@ -385,13 +453,13 @@ body{
 }
 
 .btn.create-gasto {
-    width: 100%;
+    width: 88%;
     background-color: #5adbff;
     box-shadow: 0 0 6px 0.5px #5adbff;
     border: none; 
     cursor: pointer;
 }
-  
+
 .btn.create-gasto:focus {
     border: 1px solid #5adbff;
     box-shadow: 0 0 6px 2px #5adbff;
@@ -506,10 +574,10 @@ body{
         bottom: 100px;
         padding: 5px;
         width: 100%;
-        justify-content: center; /* O ajusta según necesidad */
+        justify-content: center; 
         align-items: stretch;
 
-        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Sombras opcionales */
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); 
     }
     .nueva-venta{
         width: 170px;

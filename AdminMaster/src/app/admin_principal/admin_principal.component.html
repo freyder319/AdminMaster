@@ -1,381 +1,409 @@
-<app-admin-navbar></app-admin-navbar>
+<header>
+  <app-admin-navbar></app-admin-navbar>
+</header>
 <br>
-    <!-- Titulo -->
-    <div class="container text-center">
-        <div class="row">
-            <div class="col">
-                <h1 class="tit-movimientos">Movimientos</h1>
-            </div>
+
+<main>
+  <!-- Título -->
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h1 class="tit-movimientos">Movimientos</h1>
         </div>
       </div>
-    <br>
-    <!-- Boton verde y rojo  -->
-    <div class="container unicion fixed-bottom ">
-          <div class="body1 d-flex justify-content-center">
-            <button id="button1" class="btn btn-primary dropdown-toggle nueva-venta bg-green" data-bs-toggle="dropdown">
-              <img class="image-etiqueta me-3" src="../../assets/img/Logos Admin/venta.png" alt="">
-              Nueva Venta
-            </button>
-            <div class="dropdown-menu ancho">
-              <a class="dropdown-item flexible" [routerLink]="['crear_venta']" >
-                <div class="venta-productos justify-content-center d-flex me-3">
-                  <img class="image-etiqueta" src="../../assets/img/Logos Admin/venta_productos.png" alt="">
-                </div>
-                <div class="contenido-botones">
-                  <h6>Venta de Productos</h6>
-                  <p>Registra una venta seleccionando los <br> productos del inventario</p>
-                </div>
-              </a>
-              <button id="button2" class="btn btn-primary flexible" data-bs-toggle="offcanvas" data-bs-target="#venta-libre" >
-                <div class="venta-productos justify-content-center d-flex me-3">
-                  <img class="image-etiqueta" src="../../assets/img/Logos Admin/peso.png" alt="">
-                </div>
-                <div class="contenido-botones">
-                  <h6>Venta Libre</h6>
-                  <p>Registra un ingreso sin seleccionar <br> productos de tu inventario</p>
-                </div>
-              </button>
-            </div>
-          </div>
-          <div class=" body2 d-flex justify-content-center">
-            <button id="button3" class="btn btn-primary nuevo-gasto" data-bs-toggle="offcanvas" data-bs-target="#gasto" >
-              <img class="image-etiqueta me-3" src="../../assets/img/Logos Admin/gasto.png" alt="">
-              Nuevo Gasto
-            </button>
-            <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="venta-libre" aria-labelledby="staticBackdropLabel">
-              <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="staticBackdropLabel">Crear Venta Libre</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+  </section>
+  <br>
+  <!-- Botones Principales y Offcanvas -->
+  <section>
+    <div class="container unicion fixed-bottom">
+      <div class="body1 d-flex justify-content-center">
+        <div class="dropdown">
+          <button id="button1" class="btn btn-primary dropdown-toggle nueva-venta bg-green" data-bs-toggle="dropdown" aria-expanded="false">
+            <img class="image-etiqueta me-3" src="../../assets/img/Logos Admin/venta.png" alt="">
+            Nueva Venta
+          </button>
+          <div class="dropdown-menu ancho">
+            <a class="dropdown-item flexible" [routerLink]="['crear_venta']">
+              <div class="venta-productos justify-content-center d-flex me-3">
+                <img class="image-etiqueta" src="../../assets/img/Logos Admin/venta_productos.png" alt="">
               </div>
-              <div class="offcanvas-body">
-                  <!-- Botones Activo-Inactivo -->
-
-                  <div class="container paga-credit">
-                    <div class="activo">
-                        <button class="btn-paga">Pagada</button>
-                    </div>
-                    <div class="inactivo">
-                        <button class="btn-credit">A Credito</button>
-                    </div>
-                  </div><br>
-
-                  <!-- Formulario Registro -->
-
-                  <div class="container form">
-                    <div class="formulario">
-                        <form>
-                            <div class="mb-3">
-                              <label for="exampleInputText" class="form-label">Nombre de la Venta</label>
-                              <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
-                            </div>
-                            <div class="mb-3">
-                                <label for="exampleInputDate" class="form-label">Fecha de la Venta</label>
-                                <input type="date" class="form-control" id="exampleInputDate" aria-describedby="dateHelp" >
-                            </div>
-                            <div class="mb-3">
-                                <label for="exampleInputDate" class="form-label">Cliente</label>
-                                <select class="form-select" aria-label="Default select example">
-                                    <option selected>Selecciona un Cliente</option>
-                                    <option value="1">Claudia</option>
-                                    <option value="2">Freyder</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="exampleInputText" class="form-label">Valor</label>
-                                <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
-                            </div>
-                            <label for="exampleInputText" class="form-label">Selecciona el Metodo de pago</label>
-                            <div class="metodo-pago mb-3">
-                                <button type="button" class="item">
-                                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/efectivo.png" alt="" width="30px" height="30px">
-                                    <p class="texto">Efectivo</p>
-                                </button>
-                                <button type="button"  class="item">
-                                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/targeta.png" alt="" width="30px" height="30px">
-                                    <p class="texto">Targeta</p>
-                                </button>
-                                <button type="button"  class="item">
-                                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/banco.png" alt="" width="30px" height="30px">
-                                    <p class="texto">Transferencia Bancaria</p>
-                                </button>
-                                <button type="button"  class="item">
-                                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/daviplata.ico" alt="" width="30px" height="30px">
-                                    <p class="texto">Daviplata</p>
-                                </button>
-                                <button type="button"  class="item">
-                                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/nequi.ico" alt="" width="30px" height="30px">
-                                    <p class="texto">Nequi</p>
-                                </button>
-                                <button type="button"  class="item">
-                                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/otro.png" alt="" width="30px" height="30px">
-                                    <p class="texto">Otros</p>
-                                </button>
-                            </div>
-                            <button type="submit" class="btn create-venta">Confirmar Venta</button>
-                            
-                        </form>
-                    </div>
+              <div class="contenido-botones">
+                <h6>Venta de Productos</h6>
+                <p>Registra una venta seleccionando los <br> productos del inventario</p>
+              </div>
+            </a>
+            <button id="button2" class="btn btn-primary flexible dropdown-item" data-bs-toggle="offcanvas" data-bs-target="#venta-libre">
+              <div class="venta-productos justify-content-center d-flex me-3">
+                <img class="image-etiqueta" src="../../assets/img/Logos Admin/peso.png" alt="">
+              </div>
+              <div class="contenido-botones">
+                <h6>Venta Libre</h6>
+                <p>Registra un ingreso sin seleccionar <br> productos de tu inventario</p>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="body2 d-flex justify-content-center">
+        <button id="button3" class="btn btn-primary nuevo-gasto" data-bs-toggle="offcanvas" data-bs-target="#gasto" >
+          <img class="image-etiqueta me-3" src="../../assets/img/Logos Admin/gasto.png" alt="">
+          Nuevo Gasto
+        </button>
+        <!-- Offcanvas Venta Libre -->
+        <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="venta-libre" aria-labelledby="staticBackdropLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="staticBackdropLabel">Crear Venta Libre</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <!-- Botones Activo-Inactivo -->
+            <div class="container paga-credit">
+              <div class="activo">
+                <button class="btn-paga">Pagada</button>
+              </div>
+              <div class="inactivo">
+                <button class="btn-credit">A Credito</button>
+              </div>
+            </div><br>
+            <!-- Formulario Registro -->
+            <div class="container form">
+              <div class="formulario">
+                <form>
+                  <div class="mb-3">
+                    <label for="exampleInputText" class="form-label">Nombre de la Venta</label>
+                    <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
                   </div>
+                  <div class="mb-3">
+                    <label for="exampleInputDate" class="form-label">Fecha de la Venta</label>
+                    <input type="date" class="form-control" id="exampleInputDate" aria-describedby="dateHelp" >
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputDate" class="form-label">Cliente</label>
+                    <select class="form-select" aria-label="Default select example">
+                      <option selected>Selecciona un Cliente</option>
+                      <option value="1">Claudia</option>
+                      <option value="2">Freyder</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputText" class="form-label">Valor</label>
+                    <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                  </div>
+                  <label for="exampleInputText" class="form-label">Selecciona el Metodo de pago</label>
+                  <div class="metodo-pago mb-3">
+                    <button type="button" class="item">
+                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/efectivo.png" alt="" width="30px" height="30px">
+                      <p class="texto">Efectivo</p>
+                    </button>
+                    <button type="button"  class="item">
+                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/targeta.png" alt="" width="30px" height="30px">
+                      <p class="texto">Targeta</p>
+                    </button>
+                    <button type="button"  class="item">
+                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/banco.png" alt="" width="30px" height="30px">
+                      <p class="texto">Transferencia Bancaria</p>
+                    </button>
+                    <button type="button"  class="item">
+                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/daviplata.ico" alt="" width="30px" height="30px">
+                      <p class="texto">Daviplata</p>
+                    </button>
+                    <button type="button"  class="item">
+                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/nequi.ico" alt="" width="30px" height="30px">
+                      <p class="texto">Nequi</p>
+                    </button>
+                    <button type="button"  class="item">
+                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/otro.png" alt="" width="30px" height="30px">
+                      <p class="texto">Otros</p>
+                    </button>
+                  </div>   
+                </form>
               </div>
             </div>
-            <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="gasto" aria-labelledby="staticBackdropLabel">
-              <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="staticBackdropLabel">Crear Gasto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="confirmarfinal">
+            <button type="submit" class="btn create-venta">Confirmar Venta</button>
+          </div>
+        </div>
+        <!-- Offcanvas Gasto -->
+        <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="gasto" aria-labelledby="staticBackdropLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="staticBackdropLabel">Crear Gasto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <!-- Botones Activo-Inactivo -->
+            <div class="container paga-credit">
+              <div class="activo">
+                <button class="btn-paga">Pagada</button>
               </div>
-              <div class="offcanvas-body">
-                  <!-- Botones Activo-Inactivo -->
-
-                    <div class="container paga-credit">
-                      <div class="activo">
-                          <button class="btn-paga">Pagada</button>
-                      </div>
-                      <div class="inactivo">
-                          <button class="btn-credit">A Credito</button>
-                      </div>
-                    </div><br>
-                    <!-- Formulario Registro -->
-
-                    <div class="container form">
-                      <div class="formulario">
-                          <form>
-                              <div class="mb-3">
-                                <label for="exampleInputText" class="form-label">Nombre del Gasto</label>
-                                <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
-                              </div>
-                              <div class="mb-3">
-                                  <label for="exampleInputDate" class="form-label">Fecha del Gasto</label>
-                                  <input type="date" class="form-control" id="exampleInputDate" aria-describedby="dateHelp" >
-                              </div>
-                              <div class="mb-3">
-                                  <label for="exampleInputDate" class="form-label">Categoria del Gasto</label>
-                                  <select class="form-select" aria-label="Default select example">
-                                      <option selected>Selecciona una Categoria</option>
-                                      <option value="1">Panaderia</option>
-                                      <option value="2">Pasteleria</option>
-                                      <option value="3">Bebidas</option>
-                                  </select>
-                              </div>
-                              <div class="mb-3">
-                                  <label for="exampleInputText" class="form-label">Valor</label>
-                                  <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
-                              </div>
-                              <label for="exampleInputText" class="form-label">Selecciona el Metodo de pago</label>
-                              <div class="metodo-pago mb-3">
-                                  <button type="button"  class="item">
-                                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/efectivo.png" alt="" width="30px" height="30px">
-                                      <p class="texto">Efectivo</p>
-                                  </button>
-                                  <button type="button"  class="item">
-                                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/targeta.png" alt="" width="30px" height="30px">
-                                      <p class="texto">Targeta</p>
-                                  </button>
-                                  <button type="button"  class="item">
-                                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/banco.png" alt="" width="30px" height="30px">
-                                      <p class="texto">Transferencia Bancaria</p>
-                                  </button>
-                                  <button type="button"  class="item">
-                                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/daviplata.ico" alt="" width="30px" height="30px">
-                                      <p class="texto">Daviplata</p>
-                                  </button>
-                                  <button type="button"  class="item">
-                                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/nequi.ico" alt="" width="30px" height="30px">
-                                      <p class="texto">Nequi</p>
-                                  </button>
-                                  <button type="button"  class="item">
-                                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/otro.png" alt="" width="30px" height="30px">
-                                      <p class="texto">Otros</p>
-                                  </button>
-                                  
-                              </div>
-                              <button type="submit" class="btn create-gasto">Crear Gasto</button>
-                          </form>
-                      </div>
-                    </div>
+              <div class="inactivo">
+                <button class="btn-credit">A Credito</button>
+              </div>
+            </div><br>
+            <!-- Formulario Registro -->
+            <div class="container form">
+              <div class="formulario">
+                <form>
+                  <div class="mb-3">
+                    <label for="exampleInputText" class="form-label">Nombre del Gasto</label>
+                    <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputDate" class="form-label">Fecha del Gasto</label>
+                    <input type="date" class="form-control" id="exampleInputDate" aria-describedby="dateHelp" >
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputDate" class="form-label">Categoria del Gasto</label>
+                    <select class="form-select" aria-label="Default select example">
+                      <option selected>Selecciona una Categoria</option>
+                      <option value="1">Panaderia</option>
+                      <option value="2">Pasteleria</option>
+                      <option value="3">Bebidas</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputText" class="form-label">Valor</label>
+                    <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                  </div>
+                  <label for="exampleInputText" class="form-label">Selecciona el Metodo de pago</label>
+                  <div class="metodo-pago mb-3">
+                    <button type="button"  class="item">
+                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/efectivo.png" alt="" width="30px" height="30px">
+                      <p class="texto">Efectivo</p>
+                    </button>
+                    <button type="button"  class="item">
+                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/targeta.png" alt="" width="30px" height="30px">
+                      <p class="texto">Targeta</p>
+                    </button>
+                    <button type="button"  class="item">
+                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/banco.png" alt="" width="30px" height="30px">
+                      <p class="texto">Transferencia Bancaria</p>
+                    </button>
+                    <button type="button"  class="item">
+                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/daviplata.ico" alt="" width="30px" height="30px">
+                      <p class="texto">Daviplata</p>
+                    </button>
+                    <button type="button"  class="item">
+                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/nequi.ico" alt="" width="30px" height="30px">
+                      <p class="texto">Nequi</p>
+                    </button>
+                    <button type="button"  class="item">
+                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/otro.png" alt="" width="30px" height="30px">
+                      <p class="texto">Otros</p>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="confirmarfinal">
+            <button type="submit" class="btn create-gasto">Crear Gasto</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+  <!-- Transacciones y Cierre de Caja -->
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <div class="transacciones-cierrecaja">
+            <div class="transacciones me-2">
+              <h5>Transacciones</h5>
+            </div>
+            <div class="cierrescaja">
+              <h5>Cierre de Caja</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+  <!-- Filtros, Calendario, Rango, Buscador, Reporte -->
+  <section>
+    <div class="container d-flex justify-content-center">
+      <div class="row g-5">
+        <!-- Filtro -->
+        <div class="col-sm-12 col-md-4 col-lg-2 d-flex justify-content-center text-center ">
+          <button  id="" class="btn btn-primary filtro bg-white" data-bs-toggle="offcanvas" data-bs-target="#filtro">
+            <img width="25px" class="me-0.5" src="../../assets/img/Logos Admin/filtro.png" alt=""><span class="letrafiltro">Filtros</span>
+          </button>
+          <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="filtro" aria-labelledby="staticBackdropLabel">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="staticBackdropLabel">Filtro</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <div>
+                <app-filter></app-filter>
+              </div>
+            </div>
+            <div class="limpiar-filtrar">
+              <div class="limpi">
+                <button type="submit" class="btn limpiar">Limpiar Filtros</button>
+              </div>
+              <div class="filt">
+                <button type="submit" class="btn filtrar">Filtrar</button>
               </div>
             </div>
           </div>
         </div>
-        <br>
-<!-- transacciones -->
-<div class="container">
-  <div class="row">
-    <div class="col">
-      <div class="transacciones-cierrecaja">
-        <div class="transacciones me-2">
-            <h5>Transacciones</h5>
+        <!-- Calendario -->
+        <div class="col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center text-center">
+          <button id="button_calendar" class="btn btn-primary calendar bg-white" >Calendario</button>
         </div>
-        <div class="cierrescaja">
-            <h5>Cierre de Caja</h5>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<br>
-<div class="container d-flex justify-content-center">
-  <div class="row g-5">
-    <!-- Filtro -->
-    <div class="col-sm-12 col-md-4 col-lg-2 d-flex justify-content-center text-center ">
-      <button  id="" class="btn btn-primary filtro bg-white" data-bs-toggle="offcanvas" data-bs-target="#filtro">
-        <img width="30px" class="me-0.5" src="../../assets/img/Logos Admin/filtro.png" alt=""><span class="letrafiltro">Filtros</span>
-      </button>
-      <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="filtro" aria-labelledby="staticBackdropLabel">
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="staticBackdropLabel">Filtro</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-          <div>
-            <app-filter></app-filter>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- calendario -->
-    <div class="col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center text-center">
-        <button id="button_calendar" class="btn btn-primary calendar bg-white" >Calendario</button>
-    </div>
-    <!-- Rango -->
-     <div class="col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center text-center">
-      <button id="button" class="btn btn-primary dropdown-toggle bg-white range" data-bs-toggle="dropdown">
-        Semanal
-      </button>
-      <div class="dropdown-menu ">
-        <a class="dropdown-item " href="#">
-            <div class="contenido-botones2">
+        <!-- Rango -->
+        <div class="col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center text-center">
+          <button id="button" class="btn btn-primary dropdown-toggle bg-white range" data-bs-toggle="dropdown">
+            Semanal
+          </button>
+          <div class="dropdown-menu ">
+            <a class="dropdown-item " href="#">
+              <div class="contenido-botones2">
                 <h6>Diario</h6>
-            </div>
-        </a>
-        <a class="dropdown-item flexible2" href="#">
-
-                <div class="contenido-botones2">
-                    <h6>Semanal</h6>
-                </div>
-        </a>
-        <a class="dropdown-item flexible2" href="#">
-
-                <div class="contenido-botones2">
-                    <h6>Mensual</h6>
-                </div>
-        </a>
-        <a class="dropdown-item flexible2" href="#">
-
-                <div class="contenido-botones2">
-                    <h6>Rango Personalizado</h6>
-                </div>
-        </a>
-      </div>
-     </div>
-     <!-- Buscador -->
-     <div class="col-sm-12 col-md-10 col-lg-4">
-        <form class="d-flex justify-content-center text-center" role="search">
-          <div class="input-group busca">
-          <button class="btn btn-primary boton_buscador" type="submit"><img width="35px" src="../../assets/img/Logos Admin/Buscador.png" alt="">.</button>
-          <input class="form-control input-buscador" type="search" placeholder="Buscar" aria-label="Buscar">
+              </div>
+            </a>
+            <a class="dropdown-item flexible2" href="#">
+              <div class="contenido-botones2">
+                <h6>Semanal</h6>
+              </div>
+            </a>
+            <a class="dropdown-item flexible2" href="#">
+              <div class="contenido-botones2">
+                <h6>Mensual</h6>
+              </div>
+            </a>
+            <a class="dropdown-item flexible2" href="#">
+              <div class="contenido-botones2">
+                <h6>Rango Personalizado</h6>
+              </div>
+            </a>
+          </div>
         </div>
-        </form>
-     </div>
-     <!-- Descargar reporte -->
-     <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center text-center">
-        <a  class="reporte_cuadro"   href=""><img width="40px" src="../../assets/img/Logos Admin/xls.png" alt=""><h6>Reportes</h6></a>
-     </div>
-  </div>
-</div>
-<br>
-<!-- Datos de Dinero -->
- <div class="container unicion ">
-  <div class="row">
-    <div class="col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center ">
-      <div class="balance balances">
-          <img class="img-balance " width="100px" src="../../assets/img/Logos Admin/Balance.png" alt="">
-          <div class="balance-precio ">
-            <h4>Balance</h4>
-            <h5>$0</h5>
+        <!-- Buscador -->
+        <div class="col-sm-12 col-md-10 col-lg-4">
+          <form class="d-flex justify-content-center text-center" role="search">
+            <div class="input-group busca">
+              <button class="btn btn-primary boton_buscador" type="submit">
+                <img width="28px" src="../../assets/img/Logos Admin/Buscador.png" alt="">.
+              </button>
+              <input class="form-control input-buscador" type="search" placeholder="Buscar" aria-label="Buscar">
+            </div>
+          </form>
+        </div>
+        <!-- Descargar reporte -->
+        <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center text-center">
+          <a  class="reporte_cuadro"   href=""><img width="35px" src="../../assets/img/Logos Admin/xls.png" alt=""><p>Reportes</p></a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+  <!-- Datos de Dinero -->
+  <section>
+    <div class="container unicion ">
+      <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center ">
+          <div class="balance balances">
+            <img class="img-balance " width="100px" src="../../assets/img/Logos Admin/Balance.png" alt="">
+            <div class="balance-precio ">
+              <h4>Balance</h4>
+              <h5>$0</h5>
+            </div>
           </div>
-      </div>
-    </div>
-    <div class="col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center ">
-      <div class="balance balances">
-          <img class="img-balance " width="100px" src="../../assets/img/Logos Admin/ventas.png" alt="">
-          <div class="balance-precio">
-            <h4>Ventas Totales</h4>
-            <h5> <span class="precio_letra">$0</span></h5>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center ">
+          <div class="balance balances">
+            <img class="img-balance " width="100px" src="../../assets/img/Logos Admin/ventas.png" alt="">
+            <div class="balance-precio">
+              <h4>Ventas Totales</h4>
+              <h5> <span class="precio_letra">$0</span></h5>
+            </div>
           </div>
-      </div>
-    </div>
-    <div class="col-sm-12 col-md-12 col-lg-4 d-flex justify-content-center ">
-      <div class="balance gastos">
-          <img class="img-balance" width="105px" src="../../assets/img/Logos Admin/gastos.png" alt="">
-          <div class="balance-precio">
-            <h4>Gastos Totales</h4>
-            <h5> <span class="precio_letra_rojo">$0</span></h5>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-4 d-flex justify-content-center ">
+          <div class="balance gastos">
+            <img class="img-balance" width="105px" src="../../assets/img/Logos Admin/gastos.png" alt="">
+            <div class="balance-precio">
+              <h4>Gastos Totales</h4>
+              <h5> <span class="precio_letra_rojo">$0</span></h5>
+            </div>
           </div>
+        </div>
       </div>
     </div>
-  </div>
- </div>
- <br>
- <!-- Selecciones de ventas -->
- <div class="container unicion">
-  <div class="row">
-    <div class="col">
-      <div>
-        <button class="seleccion">Ingresos</button>
+  </section>
+  <br>
+  <!-- Selecciones de Ventas -->
+  <section>
+    <div class="container unicion">
+      <div class="row">
+        <div class="col">
+          <div>
+            <button class="seleccion">Ingresos</button>
+          </div>
+        </div>
+        <div class="col">
+          <div>
+            <button class="seleccion">Egresos</button>
+          </div>
+        </div>
+        <div class="col">
+          <div>
+            <button class="seleccion">Por Cobrar</button>
+          </div>
+        </div>
+        <div class="col">
+          <div>
+            <button class="seleccion">Por Pagar</button>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="col">
-      <div>
-        <button class="seleccion">Egresos</button>
+  </section>
+  <!-- Tablas -->
+  <section>
+    <div class="container">
+      <div class="row">
+        <table class="table table-bordered">
+          <thead class="table-secondary">
+            <tr>
+              <th>Nombre Productos</th>
+              <th>Valor</th>
+              <th>Medio de Pago</th>
+              <th>Fecha y Hora</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td1" data-label="Nombre De Proveedor"> 
+                <img src="../../assets/img/Logos Admin/ventas.png" alt="" width="30px" height="30px">
+                <a  class="nom_produc">1 Cocacola 1.5L, 2 Calados</a>
+              </td>
+              <td data-label="precio">$7.000</td>
+              <td data-label="Metododepago">Efectivo</td>
+              <td data-label="fecha">14/feb/2025| 11:52AM</td>
+              <td data-label="Estado"><span class="status activo">Pagada</span></td>
+            </tr>
+            <tr>
+              <td class="td1" data-label="Nombre De Proveedor"> 
+                <img class="venta" src="../../assets/img/Logos Admin/ventas.png" alt="" width="30px" height="30px">
+                <a class="nom_produc">1 Cocacola 1.5L, 2 Calados</a>
+              </td>
+              <td data-label="precio">$7.000</td>
+              <td data-label="Correo">Efectivo</td>
+              <td data-label="fecha">14/feb/2025| 11:52AM</td>
+              <td data-label="Estado"><span class="status activo">Pagada</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    <div class="col">
-      <div>
-        <button class="seleccion">Por Cobrar</button>
-      </div>
-    </div>
-    <div class="col">
-      <div>
-        <button class="seleccion">Por Pagar</button>
-      </div>
-    </div>
-  </div>
- </div>
- <!-- Tablas -->
- <div class="container">
-  <div class="row">
-  <table class="table table-bordered">
-    <thead class="table-secondary">
-      <tr>
-        <th>Nombre Productos</th>
-        <th>Valor</th>
-        <th>Medio de Pago</th>
-        <th>Fecha y Hora</th>
-        <th>Estado</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="td1" data-label="Nombre De Proveedor"> 
-          <img src="../../assets/img/Logos Admin/ventas.png" alt="" width="30px" height="30px">
-          <a  class="nom_produc">1 Cocacola 1.5L, 2 Calados</a>
-        </td>
-        <td data-label="precio">$7.000</td>
-        <td data-label="Metododepago">Efectivo</td>
-        <td data-label="fecha">14/feb/2025| 11:52AM</td>
-        <td data-label="Estado"><span class="status activo">Pagada</span></td>
-      </tr>
-      <tr>
-        <td class="td1" data-label="Nombre De Proveedor"> 
-          <img class="venta" src="../../assets/img/Logos Admin/ventas.png" alt="" width="30px" height="30px">
-          <a class="nom_produc">1 Cocacola 1.5L, 2 Calados</a>
-        </td>
-        <td data-label="precio">$7.000</td>
-        <td data-label="Correo">Efectivo</td>
-        <td data-label="fecha">14/feb/2025| 11:52AM</td>
-        <td data-label="Estado"><span class="status activo">Pagada</span></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-</div>
+  </section>
+</main>
