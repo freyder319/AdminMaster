@@ -11,6 +11,7 @@ import { LoginAdminComponent } from './login_admin/login_admin.component';
 import { DondeEstamosComponent } from './donde_estamos/donde_estamos.component';
 import { PqrsComponent } from './pqrs/pqrs.component';
 import { PerfilAdministradorComponent } from './perfil_dministrador/perfil_administrador.component';
+import { ProductsComponent } from './products(principal)/products.component';
 
 export const routes: Routes = [
     // Rutas para administrador
@@ -28,6 +29,7 @@ export const routes: Routes = [
     // Rutas para cliente
     { path: "login-admin", component: LoginAdminComponent },
     { path: "donde-estamos", component: DondeEstamosComponent },
-    { path: "pqrs", component: PqrsComponent }
+    { path: "pqrs", component: PqrsComponent },
+    {path: "productscliente", component: ProductsComponent},
 
 ];

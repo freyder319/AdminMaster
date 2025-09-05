@@ -1,28 +1,29 @@
-
 .navbar-brand:hover{
   background-color: #5adbff;
 }
 
 .navbar {
-  position: sticky;
+  position: fixed;
+  width: 100%;
   top: 0;
-  z-index: 1000;
+  z-index: 1040;
   background-color: white;
   overflow-x: auto;
   white-space: nowrap;
   box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
 }
+
 .active {
   background-color: #5adbff;
   box-shadow: 0 0 6px 0.5px #5adbff;
 }
+
 .active2{
   background-color: #5adbff;
   box-sizing: border-box;
   border-radius: 50%;
   width: 50px; /* O el tamaño que prefieras */
   height: 50px;
-
 }
 
 .img-navbar { 
@@ -42,6 +43,7 @@
   margin-left: -9px;
   margin-top: 6px;
 }
+
 .container-fluid {
   display: flex;
   align-items: center;
@@ -90,8 +92,8 @@
   }
 
   .navbar-brand img {
-    width: 100px; 
-    height: 100px;
+    width: 70px; 
+    height: 70px;
     border: #5adbff;
   }
 
