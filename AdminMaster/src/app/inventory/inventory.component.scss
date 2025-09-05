@@ -44,7 +44,21 @@ main{
     top: -50px;
     left: 70px;
 }
-
+.btn.agregar{
+    background-color: #5adbff;
+    width: 200px;
+    border-radius: 18px;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    padding: 8px 15px; 
+    border: none; 
+    cursor: pointer; 
+    color: white;
+    font-size: 18px;
+    z-index: 12;
+}
+.btn.agregar img{
+    display: none;
+}
 @media (max-width: 768px) {
     .container {
         flex-direction: column;
@@ -54,6 +68,24 @@ main{
     .body1,
     .body2 {
         margin: 10px 0; 
+    }
+    .texto{
+        display: none;
+    }
+    .btn.agregar{
+        position: fixed; 
+        bottom: 180px; 
+        left: 80%; 
+        height: 110px;
+        transform: translateX(-50%); 
+        width: 110px; 
+        border: 1px solid #5adbff;
+        border-radius: 50%; 
+        justify-content: center;
+        align-items: center;
+    }
+    .btn.agregar img{
+        display: block;
     }
 }
 
@@ -95,16 +127,6 @@ main{
     border: 1px solid #5adbff;
     box-shadow: 0 0 6px 0.5px #5adbff;
 }
-
-.btn.agregar{
-    background-color: #5adbff;
-    width: 200px;
-    border-radius: 18px;
-    box-shadow: 0 0 6px 0.5px #5adbff;
-    color: white;
-    font-size: 18px;
-}
-
 .btn.confir{
     width: 88%;
     background-color: #5adbff;
@@ -144,7 +166,7 @@ main{
         align-items: center;
     }
 
-    .form-control,.form-select,.btn.crear,.btn.agregar {
+    .form-control,.form-select,.btn.crear {
         width: 100%;
         margin: 5px 0;
         box-sizing: border-box;

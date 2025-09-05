@@ -59,7 +59,9 @@ main{
     box-shadow: 0 0 6px 2px #5adbff;
     outline: none; 
 }
-
+.btn.agregar img{
+    display: none;
+}
 @media (max-width: 768px) {
     .buscar-agg {
         flex-direction: column; 
@@ -73,13 +75,23 @@ main{
   
     .btn.agregar {
         position: fixed; 
+        z-index: 10;
         bottom: 180px; 
-        left: 50%; 
+        left: 80%; 
+        height: 110px;
         transform: translateX(-50%); 
-        width: 40%; 
+        width: 110px; 
         border: 1px solid #5adbff;
-        border-radius: 18px; 
+        border-radius: 50%; 
+        justify-content: center;
+        align-items: center;
     }
+    .texto{
+        display: none;
+    }
+    .btn.agregar img{
+        display: block;
+    }   
   }
 
   
