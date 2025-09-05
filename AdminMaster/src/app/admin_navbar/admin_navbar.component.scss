@@ -27,11 +27,15 @@
 
 .img-navbar { 
   cursor: pointer;
-  border-radius: 12px;
+  border-radius: 50px;
   width: 90px;
   height: 90px;
   object-fit: cover;
   outline: none;
+  margin-left: 2%;
+}
+.img-navbar:active{
+  box-shadow: 0 0 6px 0.5px #5adbff;
 }
 
 .foto_perfil{

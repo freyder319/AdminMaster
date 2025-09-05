@@ -1,11 +1,102 @@
 .formulario{
-    height: 86vh;
+    height: 80vh;
+    width: 100%;
     text-align: center;
     font-family: 'Poetsen One', cursive;
     border-radius: 50px;
     border: 1px solid rgba(128, 128, 128, 0.295);
-    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.26);
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.075);
 }
 .fondo{
     background-color: gray;
+}
+.avatar-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 150px;  
+  height: 150px;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #5adbff50; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 28px;
+  box-shadow: 0 2px 6px #5adbff;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  margin-top: 10px;
+  object-fit: cover;    
+  object-position: center; 
+  display: block;    
+}
+
+
+.edit-icon {
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
+  background: white;
+  border-radius: 50%;
+  padding: 6px;
+  box-shadow: 0 2px 4px rgba(76, 228, 255, 0.2);
+  font-size: 16px;
+  cursor: pointer;
+}
+.btn.confir {
+    width: 50%;
+    background-color: #5adbff;
+    border-radius: 20px;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none; 
+    cursor: pointer;
+}
+
+.confirmarfinal{
+    display: flex;
+    background-color: white;
+    height: 70px;
+    align-items: center;
+    justify-content: center;
+}
+
+.labeldefec{
+  margin: 0px;
+  padding: 0px;
+}
+.titulo{
+  padding: 30px;
+  padding-top: 80px;
+  text-align: center;
+}
+@media screen and (max-width: 768px) {
+  .formulario{
+    height: 96vh;
+    width: 100%;
+    margin-bottom: 100px;
+  }
+  .confirmarfinal{
+    background-color: #ffffff00;
+  } 
+  .btn.confir {
+    width: 60%;
+    background-color: #5adbff;
+    border-radius: 20px;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none; 
+    cursor: pointer;
+  }
+  .titulo{
+      padding-top: 30px;
+  }
 }
