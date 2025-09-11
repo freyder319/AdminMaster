@@ -1,23 +1,29 @@
 <header>
   <app-admin-navbar></app-admin-navbar>
 </header>
-<br>
+
 <main>
-  <div class="container text-center">
-      <div class="row">
+  <!-- Vista normal (solo cuando NO estoy en agregar NI modificar) -->
+  <div *ngIf="!mostrarAddCliente && !mostrarModificarCliente">
+
+    <!-- Titulo -->
+    <section>
+      <div class="container text-center">
+        <div class="row">
           <div class="col">
-              <h1 class="tit-clientes">Clientes</h1>
+            <h1 class="tit-clientes">Clientes</h1>
           </div>
+        </div>
       </div>
-  </div><br>
+    </section>
 
-  <!-- Busqueda y Agregar -->
+    <br>
 
-  <div class="container buscar-agg">
-      <div class="row">
-
+    <!-- Busqueda y Agregar -->
+    <section>
+      <div class="container buscar-agg">
+        <div class="row">
           <!-- Buscar -->
-          
           <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="search">
               <div class="input-group">
@@ -25,67 +31,148 @@
               </div>
             </div>
           </div>
+
           <!-- Agregar Cliente -->
           <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="agg-cli">
-              <button class="btn agregar" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+
+              <!-- Para pantallas grandes (≥768px) → abre offcanvas -->
+              <button class="btn agregar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddCliente" aria-controls="offcanvasAddCliente">
                 <span class="texto">Agregar Cliente</span>
-                <img width="90px" class="img_add" src="../../assets/img/icons_clientes/agregarCliente.png" alt="">
+                <img width="80px" src="../../assets/img/icons_clientes/agregarCliente.png" alt="">
               </button>
-              <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop" aria-labelledby="staticBackdropLabel">
-                <div class="offcanvas-header">
-                  <h5 class="offcanvas-title" id="staticBackdropLabel">Registrar Cliente</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                  <div>
-                    <app-add-clientes></app-add-clientes>
-                  </div>
-              </div>
+
+              <!-- Para pantallas pequeñas (<768px) → cambia de interfaz -->
+              <button class="btn agregar d-md-none" type="button" (click)="mostrarAddCliente = true">
+                <span class="texto">Agregar Cliente</span>
+                <img width="80px" src="../../assets/img/icons_clientes/agregarCliente.png" alt="">
+              </button>
+
+            </div>
           </div>
-              </div>
-          </div>
+        </div>
       </div>
+    </section>
+
+    <!-- Tablas Informacion -->
+    <section>
+      <div class="container">
+        <table class="table table-bordered">
+          <thead class="table-secondary">
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Teléfono</th>
+              <th>N° Deudas</th>
+              <th>N° Compras</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Nombre">
+                <!-- Solo visible en móviles (<768px), clickeable -->
+                <div class="perfil clickable d-md-none" (click)="mostrarModificarCliente = true">
+                  <img src="../../assets/img/icons-navbar/Clientes.png" alt="Camión Coca-Cola">
+                  <div class="info">
+                    <p class="nombre">Coca-Cola</p>
+                    <p class="correo">cocacolagmail.com</p>
+                  </div>
+                </div>
+
+                <!-- Solo visible en escritorio (≥768px), NO clickeable -->
+                <div class="perfil d-none d-md-flex">
+                  <img src="../../assets/img/icons-navbar/Clientes.png" alt="Camión Coca-Cola" width="50px" height="50px" style="margin-top: -10px;">
+                  <div class="info">
+                    <p class="nombre" style="margin-left: 10px;">Coca-Cola</p>
+                  </div>
+                </div>
+              </td>
+
+              <td data-label="Correo">cocacolagmail.com</td>
+              <td data-label="Teléfono">31546235215</td>
+              <td data-label="N° Deudas">0</td>
+              <td data-label="N° Compras">0</td>
+              <td data-label="Estado de Cliente">
+                <span class="status activo">Activo</span>
+              </td>
+              <td data-label="Acciones" class="acciones">
+
+                <!-- Botones con texto (solo ≥1200px) -->
+                <div class="d-none d-xl-flex gap-2">
+
+                  <!-- OffCanvas Modificar Proveedor -->
+                  <button class="btn modificar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCliente" aria-controls="offcanvasModifyCliente">
+                    <span class="texto">Modificar</span>
+                  </button>
+
+                  <button class="btn elimi">Eliminar</button>
+                </div>
+
+                <!-- Botones con íconos (768px – 1200px) -->
+                <div class="d-none d-md-flex d-xl-none gap-2">
+                  <button class="btn modificar icon-btn d-none d-md-inline-block" title="Modificar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCliente" aria-controls="offcanvasModifyCliente">
+                    <i class="bi bi-pencil-square"></i>
+                  </button>
+                  <button class="btn eliminar-icon icon-btn" title="Eliminar">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
   </div>
 
-  <!-- Tablas Informacion -->
-
-  <div class="container">
-    <table class="table table-bordered">
-      <thead class="table-secondary">
-        <tr>
-          <th>Nombre De Cliente</th>
-          <th>Teléfono</th>
-          <th>Correo</th>
-          <th>N° Deudas</th>
-          <th>N° Compras</th>
-          <th>Estado de Cliente</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="td1" data-label="Nombre De Cliente"> 
-            <img src="../../assets/img/icons-navbar/Clientes.png" alt="" width="30px" height="30px">
-            <a>Claudia Peñuela</a>
-          </td>
-          <td data-label="Teléfono">31546235215</td>
-          <td data-label="Correo">freyderjapogmail.com</td>
-          <td data-label="N° Deudas">0</td>
-          <td data-label="N° Deudas">5</td>
-          <td data-label="Estado de Cliente"><span class="status activo">Activo</span></td>
-        </tr>
-        <tr>
-          <td class="td1" data-label="Nombre De Cliente"> 
-            <img src="../../assets/img/icons-navbar/Clientes.png" alt="" width="30px" height="30px">
-            <a>Henry Forero</a>
-          </td>
-          <td data-label="Teléfono">31852635215</td>
-          <td data-label="Correo">Henryfogmail.com</td>
-          <td data-label="N° Deudas">2</td>
-          <td data-label="N° Compras">20</td>
-          <td data-label="Estado de Cliente"><span class="status inactivo">Inactivo</span></td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- Vista de Agregar Cliente en móvil (<768px) -->
+  <div *ngIf="mostrarAddCliente" class="d-md-none">
+    <div class="container mt-4 p-3 shadow rounded bg-light">
+      <app-add-clientes></app-add-clientes>
+      <div class="mt-3">
+        <button class="btn btn-volver" type="button" (click)="mostrarAddCliente = false">
+          <i class="bi bi-arrow-left-short"></i> Volver
+        </button>
+      </div>
+    </div>
   </div>
+
+  <!-- Vista de Modificar Cliente en móvil (<768px) -->
+  <div *ngIf="mostrarModificarCliente" class="d-md-none">
+    <div class="container mt-4 p-3 shadow rounded bg-light">
+      <app-modify-cliente></app-modify-cliente>
+      <div class="mt-3">
+        <button class="btn btn-volver" type="button" (click)="mostrarModificarCliente = false">
+          <i class="bi bi-arrow-left-short"></i> Volver
+        </button>
+        <button class="btn eliminar">
+            <i class="bi bi-trash-fill"></i>Eliminar
+        </button>
+    </div>
+    </div>
+  </div>
+
 </main>
+
+<!-- Offcanvas (solo para pantallas grandes) Agregar -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAddCliente" aria-labelledby="offcanvasAddClienteLabel">
+  <div class="offcanvas-header">
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+  </div>
+  <div class="offcanvas-body">
+    <app-add-clientes></app-add-clientes>
+  </div>
+</div>
+
+<!-- Offcanvas (solo para pantallas grandes) Modificar -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasModifyCliente" aria-labelledby="offcanvasModifyClienteLabel">
+  <div class="offcanvas-header">
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+  </div>
+  <div class="offcanvas-body">
+    <app-modify-cliente></app-modify-cliente>
+  </div>
+</div>
