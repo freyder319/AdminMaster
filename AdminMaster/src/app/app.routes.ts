@@ -12,6 +12,7 @@ import { DondeEstamosComponent } from './donde_estamos/donde_estamos.component';
 import { PqrsComponent } from './pqrs/pqrs.component';
 import { PerfilAdministradorComponent } from './perfil_dministrador/perfil_administrador.component';
 import { ProductsComponent } from './products(principal)/products.component';
+import { ModifyProveedorComponent } from './modify-proveedor/modify-proveedor.component';
 
 export const routes: Routes = [
     // Rutas para administrador
@@ -23,6 +24,7 @@ export const routes: Routes = [
     { path: "estadisticas", component: EstadisticasComponent },
     { path: "cajas", component: CajasComponent },
     { path: "proveedor", component: ProveedoresComponent },
+    { path: "modificar-proveedor", component: ModifyProveedorComponent },
     { path: "clientes", component: ClientesComponent },
     { path: "puntodeventa", component: LoginPuntoVentaComponent },
     

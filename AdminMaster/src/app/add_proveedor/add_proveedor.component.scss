@@ -1,10 +1,15 @@
+.tit-proveedores{
+    font-family: 'poetsen one', cursive;
+}
+
 // Style Botones Activo-Inactivo
 
 .act-inac {
     display: flex;
-    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
     border-radius: 5px;
-    padding: 7px
+    padding: 7px;
+    justify-content: center;
+    align-items: center;
 }
 
 .btn-act {
@@ -62,4 +67,41 @@
 .btn:focus {
     border: 1px solid #5adbff;
     box-shadow: 0 0 6px 2px #5adbff;
+}
+
+.btn.confir {
+    width: 100%;
+    background-color: #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none; 
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+}
+
+.confirmarfinal{
+    display: flex;
+    height: 70px;
+    align-items: center;
+    justify-content: center;
+}
+
+.cont-img{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.image{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #40ff46; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px #40ff46;
 }
