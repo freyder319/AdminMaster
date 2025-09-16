@@ -1,5 +1,6 @@
 main{
     margin-top: 140px;
+    padding-bottom: 120px;
 }
 
 @media (max-width: 768px) {
@@ -302,10 +303,6 @@ body{
 }
 .reporte_cuadro img{
     margin-top: -10px;
-    filter: drop-shadow(0 0 5px #34e46f);
-}
-.reporte_cuadro{
-    filter: drop-shadow(0 0 5px #5adbff);
 }
 .reporte_cuadro{
     width: 120px;
@@ -314,11 +311,162 @@ body{
     text-decoration: none;
 }
 
+@media screen and (max-width: 768px) {
+    .filtros-responsive {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding: 10px;
+    }
+
+    .filtros-responsive > div {
+        width: 100%;
+        max-width: 320px;
+        text-align: center;
+    }
+
+    .filtro,
+    .calendar,
+    .range {
+        width: 100%;
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    /* Buscador y Reporte juntos */
+    .col-sm-12.col-md-10.col-lg-4,
+    .col-sm-12.col-md-2.col-lg-2 {
+        display: inline-block;
+        vertical-align: middle;
+        width: auto;
+        max-width: 320px;
+        margin: 0 5px;
+    }
+
+    .input-group.busca {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: nowrap;
+        width: 100%;
+        max-width: 320px;
+    }
+
+    .input-buscador {
+        flex: 1;
+        border-radius: 20px;
+        height: 40px;
+        width: 220px;
+        transition: width 0.3s ease;
+    }
+
+    .boton_buscador {
+        width: 45px;
+        height: 40px;
+        padding: 0;
+        border-radius: 20px;
+        background-color: white;
+        border: 1px solid rgba(124, 124, 124, 0.151);
+        box-shadow: 0px 0px 4px 1px rgba(214, 214, 214, 0.445);
+    }
+
+    .report {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 10px;
+        transition: transform 0.3s ease, width 0.3s ease;
+    }
+
+    .reporte_cuadro {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        font-size: 14px;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .reporte_cuadro img {
+        width: 40px;
+        height: 40px;
+        transition: width 0.3s ease;
+    }
+
+    .reporte_cuadro p {
+        margin: 0;
+    }
+}
+
+/* Pantalla entre 500px y 350px: encoge progresivamente */
+@media screen and (max-width: 500px) {
+    .input-buscador {
+        width: 180px;
+    }
+
+    .reporte_cuadro img {
+        width: 35px;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .input-buscador {
+        width: 150px;
+    }
+
+    .reporte_cuadro img {
+        width: 30px;
+    }
+}
+
+/* Menor a 350px: se apilan verticalmente */
+@media screen and (max-width: 349px) {
+    .input-group.busca {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .report {
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .input-buscador {
+        width: 100%;
+    }
+
+    .reporte_cuadro {
+        margin-top: 10px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .input-buscador{
+        width: 110px;
+    }
+
+    .report{
+        margin-right: 10px;
+    }
+}
+
+
+.report{
+    border: none;
+    margin-left: 20px;
+    font-weight: bold;
+}
+
 body{
     background-color: #FBF8F8;
 }
 // balance
 .balance{
+    width: 320px;
     height: 135px;
     border-radius: 20px;
     box-shadow: 0px 0px 4px 1px rgba(214, 214, 214, 0.705);
@@ -510,6 +658,41 @@ body{
     margin-top: 5px;
     color: #333;
 }
+
+.producto-resumen {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.img-responsive {
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+.info-producto {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
+.nom_produc {
+    color: #333;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.status {
+    font-size: 13px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+    width: fit-content;
+    margin-top: 4px;
+}
 // tabla puntos suspensivos
 @media screen and (max-width: 768px) {
     .table thead {
@@ -523,22 +706,110 @@ body{
 
     .table tr {
         margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 10px;
+        background-color: #f9f9f9;
     }
 
     .table td {
-        text-align: right;
-        padding-left: 50%;
+        text-align: left;
+        padding: 10px;
         position: relative;
+        border: none;
     }
 
     .table td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 10px;
-        width: 45%;
-        padding-left: 10px;
+        display: none; 
+    }
+
+    .ocultar-en-movil {
+        display: none !important;
+    }
+
+    .producto-resumen {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .info-producto {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .nom_produc {
         font-weight: bold;
-        text-align: left;
+        font-size: 20px;
+        color: #333;
+    }
+
+    .status {
+        font-size: 13px;
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 4px;
+        width: fit-content;
+    }
+
+    .status.active {
+        background-color: #d4edda;
+        color: #155724;
+        font-size: 20px;
+    }
+
+    .status.pendiente {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .valo {
+        text-align: right;
+    }
+
+    .valor-derecha {
+        font-weight: bold;
+        font-size: 25px;
+        color: #00C928;
+        display: block;
+        text-align: right;
+        margin-top: -55px;
+    }
+
+}
+
+@media screen and (min-width: 769px) {
+    .status.active {
+        display: none;
+    }
+}
+
+.img-responsive {
+    transition: width 0.3s ease, height 0.3s ease;
+    width: 40px;
+    height: 40px;
+}
+
+@media screen and (max-width: 768px) {
+    .img-responsive {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+@media screen and (min-width: 769px) {
+    .img-responsive {
+        width: 40px;
+        height: 40px;
+    }
+
+    .producto-resumen {
+        align-items: flex-start;
+    }
+
+    .info-producto {
+        flex: 1;
     }
 }
 // llevar los botones a la parte de abajo
@@ -576,19 +847,8 @@ body{
         height: 30px;
     }
 }
-@media (max-width: 555px) {
-    .fixed-bottom {
-        position: fixed;
-        display: flex;
-        background-color: white;
-        bottom: 100px;
-        padding: 5px;
-        width: 100%;
-        justify-content: center; 
-        align-items: stretch;
 
-        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); 
-    }
+@media (max-width: 555px) {
     .nueva-venta{
         width: 170px;
         font-size: 15px;
@@ -617,34 +877,34 @@ body{
     th{
         font-size: 12px;
     }
-    }
     .balance{
         width: 320px;
     }
-    @media (max-width: 389px) {
-        .nueva-venta{
-            width: 120px;
-            font-size: 12px;
-        }
-        .nueva-venta img{
-            display: none;
-        }
-        .nuevo-gasto{
-            width: 120px;
-            font-size: 12px;
-        }
-        .nuevo-gasto img{
-            width: 20px;
-            height: 20px;
-            display: none;
-        }
-        
+}
+@media (max-width: 389px) {
+    .nueva-venta{
+        width: 120px;
+        font-size: 12px;
     }
-    @media (max-width: 575px) {
-        .bg-white{
-            margin-top: 10px;
-        }
+    .nueva-venta img{
+        display: none;
     }
+    .nuevo-gasto{
+        width: 120px;
+        font-size: 12px;
+    }
+    .nuevo-gasto img{
+        width: 20px;
+        height: 20px;
+        display: none;
+    }
+    
+}
+@media (max-width: 575px) {
+    .bg-white{
+        margin-top: 10px;
+    }
+}
 @media (max-width:1199px) {
     .seleccion{
         width: 200px;
@@ -690,3 +950,4 @@ body{
         font-size: 10px;
     }
 }
+

@@ -265,39 +265,15 @@
     </div>
   </section>
   <!-- Pagination -->
-  <nav aria-label="pagination">
-    <ul class="pagination">
-      <li>
-        <a href="">
-          <span aria-hidden="true">&laquo;</span>
-          <span class="visuallyhidden">previous set of pages</span>
-        </a>
-      </li>
-      <li>
-        <a href="" aria-current="page">
-          <span class="visuallyhidden">page </span>1
-        </a>
-      </li>
-      <li>
-        <a href="">
-          <span class="visuallyhidden">page </span>2
-        </a>
-      </li>
-      <li>
-        <a href=""> 
-          <span class="visuallyhidden">page </span>3 
-        </a>
-      </li>
-      <li>
-        <a href=""> <span class="visuallyhidden">page </span>4 </a>
-      </li>
-      <li>
-        <a href="">
-          <span class="visuallyhidden">next set of pages</span>
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+  <div class="paginador-container">
+    <mat-paginator
+    class="custom-paginator"
+    [length]="totalItems"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 20, 50]"
+    [pageIndex]="pageIndex"
+    (page)="cambiarPagina($event)">
+  </mat-paginator>
+  </div>
   <br>
 </main>
