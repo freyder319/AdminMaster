@@ -1,0 +1,40 @@
+<mat-card class="venta-card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon color="primary">receipt_long</mat-icon>
+      <strong>Detalle de Venta</strong>
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-divider></mat-divider>
+
+  <mat-card-content>
+    <div class="detalle-item">
+      <mat-icon class="icon producto" color="accent">shopping_cart</mat-icon>
+      <span><strong>Producto:</strong> {{ data.producto }}</span>
+    </div>
+    <div class="detalle-item">
+      <mat-icon class="icon valor" color="warn">attach_money</mat-icon>
+      <span><strong>Valor:</strong> {{ data.valor }}</span>
+    </div>
+    <div class="detalle-item">
+      <mat-icon class="icon pago" color="primary">credit_card</mat-icon>
+      <span><strong>Medio de pago:</strong> {{ data.pago }}</span>
+    </div>
+    <div class="detalle-item">
+      <mat-icon class="icon fecha" color="accent">schedule</mat-icon>
+      <span><strong>Fecha y hora:</strong> {{ data.fecha }}</span>
+    </div>
+    <div class="detalle-item estado" [ngClass]="data.estado.toLowerCase()">
+      <mat-icon class="icon estado-icon" color="primary">check_circle</mat-icon>
+      <span><strong>Estado:</strong> {{ data.estado }}</span>
+    </div>
+  </mat-card-content>
+
+  <mat-divider></mat-divider>
+
+  <mat-card-actions align="end">
+    <button mat-raised-button color="primary" mat-dialog-close>Cerrar</button>
+  </mat-card-actions>
+</mat-card>
+

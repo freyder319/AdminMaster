@@ -1,5 +1,5 @@
 main{
-    margin-top: 110px;
+    margin-top: 140px;
 }
 
 @media (max-width: 768px) {
@@ -8,7 +8,6 @@ main{
     }
 }
 
-
 h1 {
   font-family: 'Poetsen One', cursive;
 }
@@ -16,100 +15,11 @@ h1 {
 body {
   background-color: #FBF8F8;
 }
-.precios{
-    color:"#00C928";
-}
-.precio_rojo{
-  color:#FF0000;
-}
+
 .bg-white {
   background-color: white;
   border-radius: 20px;
   color: black;
   box-shadow: 0px 0px 4px 1px rgba(214, 214, 214, 0.705);
   border: 1px solid #70707000;
-}
-
-.calendar {
-  font-size: 16px; 
-  padding: 8px 16px; 
-  width: 50%; 
-  height: 40px;
-  margin: 0 auto; 
-  box-sizing: border-box;
-}
-.balance{
-  height: 135px;
-  border-radius: 20px;
-  box-shadow: 0px 0px 4px 1px rgba(214, 214, 214, 0.705);
-  background-color: white;
-}
-.img-balance{
-  margin-left: 20px;
-  margin-top: 20px;
-}
-.range{
-  height: 40px;
-  width: 50%;
-}
-.balance-precio{
-  margin-left: 135px;
-  margin-top: -80px;
-}
-.dropdown-menu {
-  min-width: 50%;
-  border-radius: 20px;
-  padding: 0;
-  box-shadow: 0 0 4px 1px rgba(214, 214, 214, 0.705);
-
-}
-
-.form-control:focus {
-    border: 1px solid #5adbff;
-    box-shadow: 0 0 6px 0.5px #5adbff;
-    outline: none; 
-}
-
-
-.dropdown {
-  position: relative; /* Clave para que left/right funcionen en dropdown-menu */
-}
-
-.dropdown-item {
-  text-align: center;
-  width: 100%;
-  padding: 10px 0;
-}
-@media (max-width: 767px) {
-    .calendar, .range {
-      font-size: 14px; 
-      padding: 6px 12px; 
-      width: 90%; 
-    }
-  }
-  
-  @media (min-width: 768px) {
-    .calendar, .range {
-      font-size: 16px; 
-    }
-  }
-  
-  @media (max-width: 767px) {
-    h1 {
-      font-size: 24px; 
-    }
-
-  }
-@media (max-width:767px) {
-    .gastos{
-        margin-top: 10px;
-    }
-    .balances{
-        margin-top: 10px;
-    }
-}
-@media (max-width:991px) {
-  .gastos{
-      margin-top: 10px;
-  }
 }
