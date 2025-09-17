@@ -1,7 +1,7 @@
 <header>
   <app-admin-navbar></app-admin-navbar>
 </header>
-<br>
+
 <main>
   <!-- Título -->
   <section>
@@ -226,7 +226,7 @@
   <!-- Filtros, Calendario, Rango, Buscador, Reporte -->
   <section>
     <div class="container d-flex justify-content-center">
-      <div class="row g-5">
+      <div class="row g-3">
         <!-- Filtro -->
         <div class="col-sm-12 col-md-4 col-lg-2 d-flex justify-content-center text-center ">
           <button  id="" class="btn btn-primary filtro bg-white" data-bs-toggle="offcanvas" data-bs-target="#filtro">
@@ -285,8 +285,8 @@
           </div>
         </div>
         <!-- Buscador -->
-        <div class="col-sm-12 col-md-10 col-lg-4">
-          <form class="d-flex justify-content-center text-center" role="search">
+        <div class="col-sm-12 col-md-10 col-lg-4 buscador-reportes">
+          <form class="busc" role="search">
             <div class="input-group busca">
               <button class="btn btn-primary boton_buscador" type="submit">
                 <img width="28px" src="../../assets/img/Logos Admin/Buscador.png" alt="">.
@@ -297,7 +297,12 @@
         </div>
         <!-- Descargar reporte -->
         <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center text-center">
-          <a  class="reporte_cuadro"   href=""><img width="35px" src="../../assets/img/Logos Admin/xls.png" alt=""><p>Reportes</p></a>
+          <div class="report">
+            <a class="reporte_cuadro" href="">
+              <img width="35px" src="../../assets/img/Logos Admin/xls.png" alt="">
+              <p>Reportes</p>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -364,7 +369,7 @@
         </div>
       </div>
     </div>
-  </section>
+  </section><br>
   <!-- Tablas -->
   <section>
     <div class="container">
@@ -380,25 +385,30 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td class="td1" data-label="Nombre De Proveedor"> 
-                <img src="../../assets/img/Logos Admin/ventas.png" alt="" width="30px" height="30px">
-                <a  class="nom_produc">1 Cocacola 1.5L, 2 Calados</a>
+            <tr (click)="abrirDialogo({
+              producto: '1 Cocacola 1.5L, 2 Calados',
+              valor: '$7.000',
+              pago: 'Efectivo',
+              fecha: '14/feb/2025 | 11:52AM',
+              estado: 'Pagada'
+            })">
+              <td data-label="Nombre Productos">
+                <div class="producto-resumen">
+                  <img src="../../assets/img/Logos Admin/ventas.png" alt="" class="img-responsive">
+                  <div class="info-producto">
+                    <span class="nom_produc">1 Cocacola 1.5L, 2 Calados</span>
+                    <span class="status active">Pagada</span>
+                  </div>
+                </div>
               </td>
-              <td data-label="precio">$7.000</td>
-              <td data-label="Metododepago">Efectivo</td>
-              <td data-label="fecha">14/feb/2025| 11:52AM</td>
-              <td data-label="Estado"><span class="status activo">Pagada</span></td>
-            </tr>
-            <tr>
-              <td class="td1" data-label="Nombre De Proveedor"> 
-                <img class="venta" src="../../assets/img/Logos Admin/ventas.png" alt="" width="30px" height="30px">
-                <a class="nom_produc">1 Cocacola 1.5L, 2 Calados</a>
+              <td class="valo" data-label="Valor">
+                <span class="valor-derecha">$7.000</span>
               </td>
-              <td data-label="precio">$7.000</td>
-              <td data-label="Correo">Efectivo</td>
-              <td data-label="fecha">14/feb/2025| 11:52AM</td>
-              <td data-label="Estado"><span class="status activo">Pagada</span></td>
+              <td class="ocultar-en-movil" data-label="Medio de Pago">Efectivo</td>
+              <td class="ocultar-en-movil" data-label="Fecha y Hora">14/feb/2025 | 11:52AM</td>
+              <td class="ocultar-en-movil" data-label="Estado">
+                <span class="status activo">Pagada</span>
+              </td>
             </tr>
           </tbody>
         </table>

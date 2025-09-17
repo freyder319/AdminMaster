@@ -63,7 +63,7 @@
     border: none; 
     cursor: pointer;
 }
-
+  
 .btn:focus {
     border: 1px solid #5adbff;
     box-shadow: 0 0 6px 2px #5adbff;
@@ -104,4 +104,24 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 2px 6px #40ff46;
+}
+
+.btn.eliminar {
+    width: 130px;
+    text-align: center;
+    color: white;
+    background-color: #e81313;
+    box-shadow: 0 0 3px 1px #e81313;
+    border-radius: 7px;
+    padding: 7px;
+    font-weight: bold;
+}
+
+.btn.eliminar:focus {
+    border: 1px solid #e81313;
+    box-shadow: 0 0 6px 2px #e81313;
+}
+
+.bi{
+    margin-right: 10px;
 }

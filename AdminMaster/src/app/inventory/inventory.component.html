@@ -1,7 +1,7 @@
 <header>
   <app-admin-navbar></app-admin-navbar>
 </header>
-<br>
+
 <main>
   <!-- Título -->
   <section>
@@ -37,17 +37,18 @@
   <!-- Busqueda, Crear Categoria y Agregar Productos -->
   <section>
     <div class="container agg">
-      <div class="row">
+      <div class="row fila-opciones">
         <!-- Buscar Productos -->
-        <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="col-lg-3 col-md-6 col-sm-12">
           <div class="search">
             <div class="input-group">
               <input type="text" class="form-control" placeholder="Buscar Producto..." id="search-input">
             </div>
           </div>
         </div>
+
         <!-- Ver todas las Categorias -->
-        <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="col-lg-3 col-md-6 col-sm-12">
           <div class="ver-cate">
             <select class="form-select" aria-label="Default select example">
               <option selected>Ver Categorias</option>
@@ -57,68 +58,75 @@
             </select>
           </div>
         </div>
+
         <!-- Crear Categoria -->
-        <div class="col-sm-12 col-md-6 col-lg-3">
+        <div class="col-lg-3 col-md-6 col-sm-12">
           <div class="crear-cate">
             <button class="btn crear" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCrearCategoria" aria-controls="offcanvasCrearCategoria">
               Crear Categoria
             </button>
-            <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="offcanvasCrearCategoria" aria-labelledby="offcanvasCrearCategoriaLabel">
-              <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasCrearCategoriaLabel">Crear Categoria</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-              </div>
-              <div class="offcanvas-body">
-                <div>
-                  <div class="container form">
-                    <div class="formulario">
-                      <form>
-                        <div class="mb-3">
-                          <label for="exampleInputText" class="form-label">Nombre de la Categoria</label>
-                          <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
-                        </div><br>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="confirmarfinal">
-                <div class="fila-superior">
-                  <div class="elimi-modifi">
-                    <button type="submit" class="btn eliminar">
-                      <img src="../../assets/img/icons-crear/eliminar.png" alt="" width="25px" height="25px">
-                      Eliminar
-                    </button>
-                    <button type="submit" class="btn modificar">
-                      <img src="../../assets/img/icons-crear/modificar.png" alt="" width="25px" height="25px">
-                      Modificar
-                    </button>
-                  </div>
-                </div>
-                <div class="fila-inferior">
-                  <button type="submit" class="btn create_cate">Crear Categoría</button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
+
+        <!-- Agregar Producto -->
+        <div class="col-lg-3 col-md-6 col-sm-12">
           <div class="agg-produc">
             <button class="btn agregar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAgregarProducto" aria-controls="offcanvasAgregarProducto">
-              <span class="texto" >Agregar Producto</span>
+              <span class="texto">Agregar Producto</span>
               <img width="80px" src="../../assets/img/icono_inventario/Proveedores__7_-removebg-preview.png" alt="">
             </button>
-            <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="offcanvasAgregarProducto" aria-labelledby="offcanvasAgregarProductoLabel">
-              <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasAgregarProductoLabel">Crear Producto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-              </div>
-              <div class="offcanvas-body">
-                <div>
-                  <app-create-producto></app-create-producto>
-                </div>
-              </div>
-            </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Offcanvas Crear Categoria -->
+    <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="offcanvasCrearCategoria" aria-labelledby="offcanvasCrearCategoriaLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasCrearCategoriaLabel">Crear Categoria</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <div class="container form">
+          <div class="formulario">
+            <form>
+              <div class="mb-3">
+                <label for="exampleInputText" class="form-label">Nombre de la Categoria</label>
+                <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+              </div><br>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="confirmarfinal">
+        <div class="fila-superior">
+          <div class="elimi-modifi">
+            <button type="submit" class="btn eliminar">
+              <img src="../../assets/img/icons-crear/eliminar.png" alt="" width="25px" height="25px">
+              Eliminar
+            </button>
+            <button type="submit" class="btn modificar">
+              <img src="../../assets/img/icons-crear/modificar.png" alt="" width="25px" height="25px">
+              Modificar
+            </button>
+          </div>
+        </div>
+        <div class="fila-inferior">
+          <button type="submit" class="btn create_cate">Crear Categoría</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Offcanvas Agregar Producto -->
+    <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="offcanvasAgregarProducto" aria-labelledby="offcanvasAgregarProductoLabel">
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasAgregarProductoLabel">Crear Producto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body">
+        <div>
+          <app-create-producto></app-create-producto>
+        </div>
       </div>
     </div>
   </section>
@@ -257,39 +265,15 @@
     </div>
   </section>
   <!-- Pagination -->
-  <nav aria-label="pagination">
-    <ul class="pagination">
-      <li>
-        <a href="">
-          <span aria-hidden="true">&laquo;</span>
-          <span class="visuallyhidden">previous set of pages</span>
-        </a>
-      </li>
-      <li>
-        <a href="" aria-current="page">
-          <span class="visuallyhidden">page </span>1
-        </a>
-      </li>
-      <li>
-        <a href="">
-          <span class="visuallyhidden">page </span>2
-        </a>
-      </li>
-      <li>
-        <a href=""> 
-          <span class="visuallyhidden">page </span>3 
-        </a>
-      </li>
-      <li>
-        <a href=""> <span class="visuallyhidden">page </span>4 </a>
-      </li>
-      <li>
-        <a href="">
-          <span class="visuallyhidden">next set of pages</span>
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+  <div class="paginador-container">
+    <mat-paginator
+    class="custom-paginator"
+    [length]="totalItems"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[5, 10, 20, 50]"
+    [pageIndex]="pageIndex"
+    (page)="cambiarPagina($event)">
+  </mat-paginator>
+  </div>
   <br>
 </main>
