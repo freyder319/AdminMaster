@@ -63,28 +63,17 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td class="td1" data-label="Nombre De Cliente"> 
+          <tr *ngFor="let cliente of clientes">
+            <td class="td1" data-label="Nombre De Cliente"> 
             <img src="../../assets/img/icons-navbar/Clientes.png" alt="" width="30px" height="30px">
-            <a>Claudia Peñuela</a>
-          </td>
-          <td data-label="Teléfono">31546235215</td>
-          <td data-label="Correo">freyderjapogmail.com</td>
-          <td data-label="N° Deudas">0</td>
-          <td data-label="N° Deudas">5</td>
-          <td data-label="Estado de Cliente"><span class="status activo">Activo</span></td>
-        </tr>
-        <tr>
-          <td class="td1" data-label="Nombre De Cliente"> 
-            <img src="../../assets/img/icons-navbar/Clientes.png" alt="" width="30px" height="30px">
-            <a>Henry Forero</a>
-          </td>
-          <td data-label="Teléfono">31852635215</td>
-          <td data-label="Correo">Henryfogmail.com</td>
-          <td data-label="N° Deudas">2</td>
-          <td data-label="N° Compras">20</td>
-          <td data-label="Estado de Cliente"><span class="status inactivo">Inactivo</span></td>
-        </tr>
+            <a>{{cliente.nombre}}</a>
+            </td>
+            <td data-label="Teléfono">{{cliente.numero}}</td>
+            <td data-label="Correo">{{cliente.correo}}</td>
+            <td data-label="N° Deudas">0</td>
+            <td data-label="N° Deudas">5</td>
+            <td data-label="Estado de Cliente"><span class="status activo">{{cliente.estado}}</span></td>
+          </tr>
       </tbody>
     </table>
   </div>
