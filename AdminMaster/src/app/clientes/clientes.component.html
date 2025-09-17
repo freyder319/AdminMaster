@@ -60,53 +60,50 @@
         <table class="table table-bordered">
           <thead class="table-secondary">
             <tr>
-              <th>Nombre</th>
-              <th>Correo</th>
+              <th>Nombre De Cliente</th>
               <th>Teléfono</th>
+              <th>Correo</th>
               <th>N° Deudas</th>
               <th>N° Compras</th>
-              <th>Estado</th>
+              <th>Estado de Cliente</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr *ngFor="let cliente of clientes">
               <td data-label="Nombre">
                 <!-- Solo visible en móviles (<768px), clickeable -->
                 <div class="perfil clickable d-md-none" (click)="mostrarModificarCliente = true">
-                  <img src="../../assets/img/icons-navbar/Clientes.png" alt="Camión Coca-Cola">
+                  <img src="../../assets/img/icons-navbar/Clientes.png" alt="Cliente">
                   <div class="info">
-                    <p class="nombre">Coca-Cola</p>
-                    <p class="correo">cocacolagmail.com</p>
+                    <p class="nombre">{{cliente.nombre}}</p>
+                    <p class="correo">{{cliente.correo}}</p>
                   </div>
                 </div>
 
                 <!-- Solo visible en escritorio (≥768px), NO clickeable -->
                 <div class="perfil d-none d-md-flex">
-                  <img src="../../assets/img/icons-navbar/Clientes.png" alt="Camión Coca-Cola" width="50px" height="50px" style="margin-top: -10px;">
+                  <img src="../../assets/img/icons-navbar/Clientes.png" alt="Cliente" width="50px" height="50px" style="margin-top: -10px;">
                   <div class="info">
-                    <p class="nombre" style="margin-left: 10px;">Coca-Cola</p>
+                    <p class="nombre" style="margin-left: 10px;">{{cliente.nombre}}</p>
                   </div>
                 </div>
               </td>
 
-              <td data-label="Correo">cocacolagmail.com</td>
-              <td data-label="Teléfono">31546235215</td>
+              <td data-label="Teléfono">{{cliente.numero}}</td>
+              <td data-label="Correo">{{cliente.correo}}</td>
               <td data-label="N° Deudas">0</td>
               <td data-label="N° Compras">0</td>
               <td data-label="Estado de Cliente">
-                <span class="status activo">Activo</span>
+                <span class="status activo">{{cliente.estado}}</span>
               </td>
               <td data-label="Acciones" class="acciones">
 
                 <!-- Botones con texto (solo ≥1200px) -->
                 <div class="d-none d-xl-flex gap-2">
-
-                  <!-- OffCanvas Modificar Proveedor -->
                   <button class="btn modificar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCliente" aria-controls="offcanvasModifyCliente">
                     <span class="texto">Modificar</span>
                   </button>
-
                   <button class="btn elimi">Eliminar</button>
                 </div>
 
@@ -149,12 +146,11 @@
           <i class="bi bi-arrow-left-short"></i> Volver
         </button>
         <button class="btn eliminar">
-            <i class="bi bi-trash-fill"></i>Eliminar
+          <i class="bi bi-trash-fill"></i>Eliminar
         </button>
-    </div>
+      </div>
     </div>
   </div>
-
 </main>
 
 <!-- Offcanvas (solo para pantallas grandes) Agregar -->
