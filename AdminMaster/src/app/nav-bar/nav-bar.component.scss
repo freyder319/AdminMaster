@@ -1,6 +1,60 @@
 .shadow-bottom{
     box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.09);
 }
+.offcanvas-title,
+.offcanvas-body .nav-link {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 800;
+  font-size: 1.8rem;
+  color: #000000; 
+}
+.navbar {
+  background-color: transparent !important;  /* en serio transparente */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  padding: 1rem 1.5rem;
+  height: 100px;
+  z-index: 1050;
+  position: fixed;   /* debe ser fixed-top para que se quede arriba */
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+.offcanvas{
+  z-index: 2005;
+}
+/* Logo centrado */
+.navbar-brand img {
+  max-height: 90px;
+  margin-top: -10px;
+}
+
+/* Botón de menú */
+.navbar .btn-link {
+  font-weight: 600;
+  margin-top: -15px;
+  text-decoration: none;
+}
+
+/* Clase activa cuando se hace scroll */
+.navbar.scrolled {
+  background-color: brown !important; /* azul */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+a{
+    font-family: "Funnel Sans", sans-serif;
+    font-weight: 800;
+    margin-top: 10;
+}
+.colorwhite{
+    color: white;
+}
+.navbar-toggler {
+  border: none; /* opcional, quita el borde */
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
 @media(max-width: 991px) {
     li{
         justify-content: center;

@@ -1,41 +1,33 @@
-<header>
-  <app-nav-bar></app-nav-bar>
-</header>
+<app-nav-bar></app-nav-bar>
+<!-- Hero Section -->
+<section class="hero position-relative text-center text-white">
+  <!-- Video de fondo -->
+  <div class="hero-bg position-absolute top-0 start-0 w-100 h-100">
+    <video 
+      autoplay 
+      muted 
+      loop 
+      playsinline 
+      preload="auto" 
+      class="w-100 h-100 object-fit-cover">
+      <source src="assets/img/hover/Secuencia 01.mp4" type="video/mp4">
+      Tu navegador no soporta videos en HTML5.
+    </video>
+
+  </div>
+
+  <!-- Contenido encima -->
+  <div class="hero-content position-relative z-3 top-50 start-50 translate-middle">
+    <h1 class="display-3 fw-bold textoblanco">El Arte del Pan y la Dulzura de la Pastelería</h1>
+    <p class="lead mb-4 textoblanco">Tradición horneada cada día, con pasión y un toque moderno.</p>
+    <div class="d-flex justify-content-center gap-3">
+    </div>
+  </div>
+</section>
 
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600&family=Nunito:wght@500&display=swap" rel="stylesheet">
 
 <main>
-  <section>
-    <div class="container p-4">
-      <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-indicators">
-              <button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-              <button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="1" aria-label="Slide 2"></button>
-              <button type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide-to="2" aria-label="Slide 3"></button>
-          </div>
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <img src="../../assets/img/banner 1.jpg" class="d-block w-100" alt="...">
-            </div>
-            <div class="carousel-item">
-              <img src="../../assets/img/banner 2.jpg" class="d-block w-100" alt="...">
-            </div>
-            <div class="carousel-item">
-              <img src="../../assets/img/banner 3.jpg" class="d-block w-100" alt="...">
-            </div>
-          </div>
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-      </div>
-    </div>
-  </section>
-
   <!-- Titulo y Buscador -->
   <section>
     <div class="container text-center py-4">
@@ -65,7 +57,7 @@
         <div class="product-card col-sm-12 col-md-6 col-lg-3" *ngFor="let producto of productosFiltrados; let i = index">
           <div class="card-modern card-animada" [style.animationDelay]="(i * 100) + 'ms'">
             <div class="card-image">
-              <img [src]="'../../assets/img/products img/' + producto.imagen" [alt]="producto.nombre">
+              <img title="img" [src]="'../../assets/img/products img/' + producto.imagen" [alt]="producto.nombre">
               <a [routerLink]="['/detalle-producto', producto.nombre]" class="icon-overlay">
               </a>
             </div>
