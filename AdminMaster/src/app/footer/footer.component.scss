@@ -1,28 +1,123 @@
-.fondo{
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
-}
-a{
-    animation: all 0.3s;
-}
-.img-redes:hover{
-    transform: scale(1.05);
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap');
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fffaf0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-a {
-    text-decoration: none; 
-    font-size: 20px;
+main {
+    flex: 1;
+}
+
+.section-contacto {
+    padding: 4rem 1rem 2rem;
+    text-align: center;
+    background: linear-gradient(to bottom, #fffaf0, #fbe3d9);
+}
+
+.logo-contacto {
+    width: 160px;
+    margin-bottom: 1rem;
+    animation: floatLogo 3s ease-in-out infinite;
+}
+
+@keyframes floatLogo {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+.titulo-contacto {
     color: #612121;
-  }
-.bg-brown{
-    background-color: #612121;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    letter-spacing: 1px;
 }
-h3{
-    color:white;
-    font-size: 20px;
+
+.redes-contacto {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
 }
+
+.redes-contacto a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+}
+
+.redes-contacto a:hover {
+    transform: scale(1.1);
+}
+
+.redes-contacto i {
+    font-size: 28px;
+    color: #612121;
+    transition: color 0.3s ease;
+}
+
+.redes-contacto a:hover i {
+    color: #78391c;
+}
+
+.admin-contacto {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.admin-contacto a {
+    text-decoration: none;
+    color: #612121;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.admin-contacto a:hover {
+    color: #7c4328;
+}
+
+.footer-contacto {
+    background: #612121;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    width: 100%;
+    box-shadow: inset 0 12px 24px rgba(255, 250, 240, 0.2);
+}
+
+
 @media screen and (max-width: 768px) {
-    h3{
-        font-size: 15px;
+    .logo-contacto {
+        width: 120px;
     }
 
+    .titulo-contacto {
+        font-size: 1.6rem;
+    }
+
+    .redes-contacto a img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .footer-contacto {
+        font-size: 0.9rem;
+    }
 }

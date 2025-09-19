@@ -16,7 +16,7 @@ import { ModifyProveedorComponent } from './modify-proveedor/modify-proveedor.co
 
 export const routes: Routes = [
     // Rutas para administrador
-    { path: "", component: AdministradorPrincipalComponent }, // localhost:4200/
+    { path: "admin", component: AdministradorPrincipalComponent }, // localhost:4200/
     { path: "movimientos", component: AdministradorPrincipalComponent  },
     { path: "perfil_administrador", component: PerfilAdministradorComponent },
     { path: "crear_venta", component: VentaProductoComponent },
@@ -32,6 +32,6 @@ export const routes: Routes = [
     { path: "login-admin", component: LoginAdminComponent },
     { path: "donde-estamos", component: DondeEstamosComponent },
     { path: "pqrs", component: PqrsComponent },
-    {path: "admin", component: ProductsComponent},
+    {path: "", component: ProductsComponent},
 
 ];

@@ -73,7 +73,7 @@
             <tr *ngFor="let cliente of clientes">
               <td data-label="Nombre">
                 <!-- Solo visible en móviles (<768px), clickeable -->
-                <div class="perfil clickable d-md-none" (click)="mostrarModificarCliente = true">
+                <div class="perfil clickable d-md-none" (click)="eliminarCliente(cliente.id)">
                   <img src="../../assets/img/icons-navbar/Clientes.png" alt="cliente">
                   <div class="info">
                     <p class="nombre">{{cliente.nombre}}</p>

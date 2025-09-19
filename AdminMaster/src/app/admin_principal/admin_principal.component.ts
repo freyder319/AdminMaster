@@ -16,7 +16,6 @@ import { ActivatedRoute } from '@angular/router';
     RouterModule,
     FilterComponent,
     MatDialogModule,
-    InfoDialogComponent,
     CommonModule,
     MatButtonModule,
   ],
