@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule,Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav-bar',
-  imports: [RouterModule,CommonModule],
+  imports: [RouterModule,CommonModule,],
   templateUrl: './nav-bar.component.html',
   styleUrl: './nav-bar.component.scss'
 })
@@ -15,4 +15,6 @@ export class NavBarComponent {
   onWindowScroll() {
     this.scrolled = window.scrollY > 50;
   }
+
+  
 }

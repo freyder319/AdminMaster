@@ -6,7 +6,7 @@ body {
   
 h1 {
     text-align: center;
-    color: brown;
+    color: #612121 ;
     font-family: "Poetsen One", sans-serif;
     font-size: clamp(1.5rem, 5vw, 5rem);
     margin-bottom: 1.5rem;
@@ -22,43 +22,43 @@ h1 {
     font-size: 1.25rem;
 }
 .hero {
-  height: 90vh;
-  overflow: hidden;
-  position: relative;
+    height: 90vh;
+    overflow: hidden;
+    position: relative;
 }
 .textoblanco{
-  color:white;
+    color:white;
 }
 .hero-bg video {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
   filter: brightness(0.9); /* oscurece un poco para resaltar el texto */
 }
 .hero-bg {
-  height: 100vh; /* ocupa toda la altura en escritorio */
+    height: 100vh; /* ocupa toda la altura en escritorio */
 }
 
 .hero-bg video {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
 }
 
 /* En pantallas pequeñas (teléfono) */
 @media (max-width: 768px) {
-  .hero-bg {
+    .hero-bg {
     height: 50vh; /* solo la mitad de la pantalla */
-  }
+    }
 }
 
 .hero-content {
-  max-width: 800px;
-  padding: 1rem;
-  color: #fff;
+    max-width: 800px;
+    padding: 1rem;
+    color: #fff;
 }
 .offcanvas{
-  z-index:1100;
+    z-index:1100;
 }
 .categoria-btn {
     background: linear-gradient(135deg, #fffaf0, #fbe3d9);
