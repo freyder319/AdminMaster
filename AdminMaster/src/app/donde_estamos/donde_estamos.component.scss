@@ -67,6 +67,25 @@ body {
     margin: 0;
 }
 
+.titulo-icono {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.titulo-icono i {
+    font-size: 1.6rem;
+    color: #612121;
+}
+
+.etiqueta {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: #612121;
+    margin: 0;
+}
+
 @media screen and (max-width: 768px) {
     .ubicacion-titulo {
         font-size: 2.4rem;
