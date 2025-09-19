@@ -7,7 +7,7 @@
         </div>
         <!-- Formulario -->
         <div class="col-md-6 p-4">
-          <h2 class="titulo-login">Administrador</h2>
+          <h2 class="titulo-login">Administrador</h2><br>
           <form>
             <div class="mb-3">
               <label for="correo" class="form-label">Correo Electrónico</label>
@@ -18,11 +18,11 @@
               <input type="password" class="form-control" id="password" placeholder="Contraseña">
             </div>
             <div class="mb-3 text-end">
-              <a href="#" class="olvidar">¿Olvidaste tu contraseña?</a>
+              <a class="olvidar" [routerLink]="['/recuperar-telefono']">¿Olvidaste tu contraseña?</a>
             </div>
             <div class="d-grid gap-2">
               <button type="submit" class="btn btn-principal">Ingresar</button>
-              <button type="button" class="btn btn-secundario">Punto de Venta</button>
+              <button type="button" class="btn btn-secundario" [routerLink]="['/login-puntopos']">Punto de Venta</button>
             </div>
           </form>
         </div>
