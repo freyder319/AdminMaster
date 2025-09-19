@@ -1,18 +1,19 @@
-<nav class="navbar" [ngClass]="{'scrolled': scrolled}" id="mainNavbar"> <!-- quitamos fixed-top -->
-  <div class="container-fluid d-flex justify-content-between align-items-center">
+<main>
+  <nav class="navbar" [ngClass]="{'scrolled': scrolled}" id="mainNavbar"> <!-- quitamos fixed-top -->
+    <div class="container-fluid d-flex justify-content-between align-items-center">
 
-    <!-- Logo centrado -->
-    <a class="navbar-brand me-auto" href="#" title="logo">
-      <img src="../../assets/img/Logo-removebg-preview.png" alt="Logo" width="125" height="90">
-    </a>
+      <!-- Logo centrado -->
+      <a class="navbar-brand me-auto" href="#" title="logo">
+        <img src="../../assets/img/Logo-removebg-preview.png" alt="Logo" width="125" height="90">
+      </a>
 
-    <!-- Botón de menú (derecha) -->
-    <button class="btn btn-link text-white ms-auto d-flex align-items-center gap-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
-      <span class="navbar-toggler-icon text-white"></span> Menú
-    </button>
-  </div>
-</nav>
-
+      <!-- Botón de menú (derecha) -->
+      <button class="btn btn-link text-white ms-auto d-flex align-items-center gap-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+        <span class="navbar-toggler-icon text-white"></span> Menú
+      </button>
+    </div>
+  </nav>
+</main>
 
 <!-- Offcanvas lateral -->
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
