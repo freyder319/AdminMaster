@@ -13,6 +13,8 @@ import { PqrsComponent } from './pqrs/pqrs.component';
 import { PerfilAdministradorComponent } from './perfil_dministrador/perfil_administrador.component';
 import { ProductsComponent } from './products(principal)/products.component';
 import { ModifyProveedorComponent } from './modify-proveedor/modify-proveedor.component';
+import { SecurityTelefComponent } from './security_telef/security_telef.component';
+import { SecurityEmailComponent } from './security_email/security_email.component';
 
 export const routes: Routes = [
     // Rutas para administrador
@@ -30,8 +32,11 @@ export const routes: Routes = [
     
     // Rutas para cliente
     { path: "login-admin", component: LoginAdminComponent },
+    { path: "login-puntopos", component: LoginPuntoVentaComponent },
+    { path: "recuperar-telefono", component: SecurityTelefComponent },
+    { path: "recuperar-email", component: SecurityEmailComponent },
     { path: "donde-estamos", component: DondeEstamosComponent },
     { path: "pqrs", component: PqrsComponent },
-    {path: "", component: ProductsComponent},
+    { path: "", component: ProductsComponent},
 
 ];
