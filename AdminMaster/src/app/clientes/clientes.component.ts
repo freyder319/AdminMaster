@@ -26,5 +26,6 @@ export class ClientesComponent {
   }
   eliminarCliente(id:number){
     console.log('id:',id);
+    this.mostrarModificarCliente = true;
   }
 }
