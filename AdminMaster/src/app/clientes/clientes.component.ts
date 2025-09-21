@@ -5,7 +5,7 @@ import { AdminNavbarComponent } from "../admin_navbar/admin_navbar.component";
 import { AddClientesComponent } from "../add_clientes/add_clientes.component";
 import { ModifyClienteComponent } from "../modify-cliente/modify-cliente.component";
 import { Clientes, ClientesService } from '../services/clientes.service';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-clientes',
   standalone: true,
@@ -14,6 +14,7 @@ import { Clientes, ClientesService } from '../services/clientes.service';
   styleUrl: './clientes.component.scss'
 })
 export class ClientesComponent {
+  clienteSeleccionado: Clientes  | null=null;
   mostrarAddCliente = false; 
   mostrarModificarCliente = false;
   clientes:Clientes[] = [];
@@ -24,8 +25,49 @@ export class ClientesComponent {
     error: (error) => console.error('Error al cargar clientes:',error)
   });
   }
-  eliminarCliente(id:number){
-    console.log('id:',id);
+  mostrarInterfazReponsive(id:number){
+    this.clienteSeleccionado = this.clientes.find(c => c.id === id) || null;
     this.mostrarModificarCliente = true;
+  }
+  eliminarCliente(id:number){
+    Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.clientesServices.deleteCliente(id).subscribe({
+        next: () => {
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your file has been deleted.",
+            icon: "success"
+          });
+          this.mostrarModificarCliente = false;
+          this.ngOnInit();
+        },
+        error: (err)=> {
+          let mensaje = 'Ocurrió un error al eliminar el cliente';
+          if (err.status >= 500) {
+            mensaje = 'Error en el servidor. Intente más tarde.';
+          } else if (err.status === 404) {
+            mensaje = 'El cliente no existe o ya fue eliminado.';
+          } else if (err.status === 400) {
+            mensaje = 'Solicitud inválida.';
+          }
+          Swal.fire({
+            icon: "error",
+            title: "Error...",
+            text: mensaje,
+          });
+        }
+      })
+      
+    }
+  });
   }
 }

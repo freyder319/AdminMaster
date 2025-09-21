@@ -20,7 +20,11 @@ main{
     align-items: center;
     padding: 10px; 
 }
-
+.space{
+    display: flex;
+    justify-content: space-between; /* uno a la izq, otro a la der */
+    gap: 10px; /* espacio entre botones */
+}
 .agg-cli{
     display: flex;
     justify-content: center;
@@ -248,7 +252,6 @@ img {
     box-shadow: 0 0 3px 1px #e81313;
     border-radius: 7px;
     padding: 7px;
-    margin-left: 271px;
     font-weight: bold;
 }
 
