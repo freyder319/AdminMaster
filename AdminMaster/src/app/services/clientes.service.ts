@@ -34,6 +34,6 @@ export class ClientesService {
   }
 
   deleteCliente(id:number):Observable<void>{
-    return this.http.delete<void>('${this.apiUrl}/${id}');
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

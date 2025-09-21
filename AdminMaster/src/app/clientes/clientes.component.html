@@ -73,7 +73,7 @@
             <tr *ngFor="let cliente of clientes">
               <td data-label="Nombre">
                 <!-- Solo visible en móviles (<768px), clickeable -->
-                <div class="perfil clickable d-md-none" (click)="eliminarCliente(cliente.id)">
+                <div class="perfil clickable d-md-none" (click)="mostrarInterfazReponsive(cliente.id)">
                   <img src="../../assets/img/icons-navbar/Clientes.png" alt="cliente">
                   <div class="info">
                     <p class="nombre">{{cliente.nombre}}</p>
@@ -115,19 +115,20 @@
                   <button class="btn modificar icon-btn d-none d-md-inline-block" title="Modificar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCliente" aria-controls="offcanvasModifyCliente">
                     <i class="bi bi-pencil-square"></i>
                   </button>
-                  <button class="btn eliminar-icon icon-btn" title="Eliminar">
+                  <button (click)="eliminarCliente(cliente.id)" class="btn eliminar-icon icon-btn" title="Eliminar">
                     <i class="bi bi-trash"></i>
                   </button>
                 </div>
               </td>
             </tr>
+            <tr *ngIf="clientes.length === 0">
+              <td colspan="7" class="text-center">No hay clientes registrados</td>
+            </tr>
           </tbody>
         </table>
       </div>
     </section>
-
   </div>
-
   <!-- Vista de Agregar Cliente en móvil (<768px) -->
   <div *ngIf="mostrarAddCliente" class="d-md-none">
     <div class="container mt-4 p-3 shadow rounded bg-light">
@@ -144,11 +145,11 @@
   <div *ngIf="mostrarModificarCliente" class="d-md-none">
     <div class="container mt-4 p-3 shadow rounded bg-light">
       <app-modify-cliente></app-modify-cliente>
-      <div class="mt-3">
+      <div class="mt-3 space">
         <button class="btn btn-volver" type="button" (click)="mostrarModificarCliente = false">
           <i class="bi bi-arrow-left-short"></i> Volver
         </button>
-        <button class="btn eliminar">
+        <button *ngIf="clienteSeleccionado" (click)="eliminarCliente(clienteSeleccionado.id)" class="btn eliminar">
             <i class="bi bi-trash-fill"></i>Eliminar
         </button>
     </div>
