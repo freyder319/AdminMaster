@@ -8,10 +8,10 @@
         <!-- Formulario -->
         <div class="col-md-6 p-4">
           <h2 class="titulo-login">Punto de Venta</h2><br>
-          <form>
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
-              <label for="correo" class="form-label">Codigo de Caja</label>
-              <input type="email" class="form-control" id="correo" placeholder="Codigo de Caja">
+              <label for="codigoCaja" class="form-label">Código de Caja</label>
+              <input type="text" class="form-control" formControlName="codigoCaja" placeholder="Código de Caja">
             </div>
             <div class="d-grid gap-2">
               <button type="submit" class="btn btn-principal">Ingresar</button>

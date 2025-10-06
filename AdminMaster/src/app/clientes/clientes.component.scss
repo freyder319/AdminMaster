@@ -38,13 +38,13 @@ main{
     padding: 8px 15px; 
     margin-right: 10px; 
 }
-  
+
 .form-control:focus {
     border: 1px solid #5adbff;
     box-shadow: 0 0 6px 0.5px #5adbff;
     outline: none; 
 }
-  
+
 .btn.agregar {
     background-color: #5adbff;
     width: 200px;
@@ -147,7 +147,6 @@ img {
 .status {
     padding: 5px 10px;
     border-radius: 10px;
-    cursor: pointer;
     display: inline-block;
 }
 
@@ -232,6 +231,21 @@ img {
     .table tr td[data-label="Acciones"],
     .table td::before {
         display: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .perfil img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .info .nombre {
+        font-size: 30px;
+    }
+
+    .info .correo {
+        font-size: 22px;
     }
 }
 
