@@ -9,50 +9,67 @@
             </div>
         </div>
     </section><br>
-
-    <!-- Botones Activo-Inactivo e Imagen -->
-    <section>
-        <div class="cont-img">
-            <div class=" image">
-                <img class="icon-prov" src="../../assets/img/icons-navbar/Clientes.png" alt="" width="80px" height="80px">
-            </div>
-        </div>
-        <div class="container act-inac">
-            <div class="activo">
-                <button class="btn-act">Activo</button>
-            </div>
-            <div class="inactivo">
-                <button class="btn-inac">Inactivo</button>
-            </div>
-        </div><br>
-    </section>
-
     <!-- Formulario Registro -->
     <section>
         <div class="container form">
             <div class="formulario">
-                <form>
+                <form #formCliente="ngForm" (ngSubmit)="agregarCliente(formCliente)" novalidate>
+                    <!-- Estado -->
+                    <section>
+                        <div class="cont-img">
+                        <div class="image">
+                            <img class="icon-prov" src="../../assets/img/icons-navbar/Clientes.png" alt="" width="80px" height="80px">
+                        </div>
+                        </div>
+                        <div class="container act-inac">
+                        <div class="activo">
+                            <button type="button" [ngClass]="{'btn-active': cliente?.estado === 'activo'}" (click)="cambiarEstado('activo')" class="btn-act">Activo</button>
+                        </div>
+                        <div class="inactivo">
+                            <button type="button" [ngClass]="{'btn-negative': cliente?.estado === 'inactivo'}" (click)="cambiarEstado('inactivo')" class="btn-inac">Inactivo</button>
+                        </div>
+                        </div><br>
+                    </section>
+
+                    <!-- Nombre -->
                     <div class="mb-3">
-                        <label for="exampleInputText" class="form-label">Nombre del Cliente</label>
-                        <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                        <label for="nombre" class="form-label form-control2">Nombre del Cliente</label>
+                        <input type="text" [(ngModel)]="cliente.nombre" name="nombre" class="form-control" id="nombre" required>
                     </div>
+
+                    <!-- Apellido -->
                     <div class="mb-3">
-                        <label for="exampleInputText" class="form-label">Apellido del Cliente</label>
-                        <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                        <label for="apellido" class="form-label form-control2">Apellido del Cliente</label>
+                        <input type="text" [(ngModel)]="cliente.apellido" name="apellido" class="form-control" id="apellido" required>
                     </div>
+
+                    <!-- Teléfono -->
                     <div class="mb-3">
-                        <label for="exampleInputText" class="form-label">Telefono</label>
-                        <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="tel" [(ngModel)]="cliente.numero" name="numero" id="telefono" class="form-control" required pattern="^[0-9]{1,10}$" [ngClass]="{ 'is-invalid': clienteExcede || clienteNoNumerico, 'valid-focus': !clienteExcede && !clienteNoNumerico }" (input)="validarcliente()">
+                        <div class="invalid-feedback" *ngIf="clienteExcede">
+                            Un teléfono tiene máximo 10 números.
+                        </div>
+                        <div class="invalid-feedback" *ngIf="clienteNoNumerico">
+                            Solo se permiten números.
+                        </div>
                     </div>
+
+                    <!-- Correo -->
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Correo Electronico</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        <label for="correo" class="form-label">Correo Electrónico</label>
+                        <input type="email" [(ngModel)]="cliente.correo" name="correo" id="correo" class="form-control" required [ngClass]="{ 'is-invalid': correoInvalido, 'valid-focus': !correoInvalido && cliente.correo }"(input)="validarCorreo()">
+                        <div class="invalid-feedback" *ngIf="correoInvalido">
+                            Debes ingresar un correo válido (ejemplo@dominio.com).
+                        </div>
                     </div><br>
 
+                    <!-- Botón -->
                     <div class="confirmarfinal">
-                        <button type="submit" class="btn confir">Confirmar</button>
+                        <button data-bs-dismiss="offcanvas" [disabled]="formCliente.invalid || correoInvalido || clienteExcede || clienteNoNumerico" type="submit" class="btn confir"> Confirmar</button>
                     </div>
-                </form>
+                    </form>
+
             </div>
         </div>
     </section>

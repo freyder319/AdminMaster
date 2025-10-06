@@ -19,10 +19,10 @@
         </div>
         <div class="container act-inac">
             <div class="activo">
-                <button class="btn-act">Activo</button>
+                <button (click)="cambiarEstado('activo')" [ngClass]="{'btn-active': cliente?.estado === 'activo'}" class="btn-act">Activo</button>
             </div>
             <div class="inactivo">
-                <button class="btn-inac">Inactivo</button>
+                <button (click)="cambiarEstado('inactivo')" [ngClass]="{'active_negative': cliente?.estado === 'inactivo'}" class="btn-inac">Inactivo</button>
             </div>
         </div><br>
     </section>
@@ -31,26 +31,26 @@
     <section>
         <div class="container form">
             <div class="formulario">
-                <form>
+                <form *ngIf="cliente" (ngSubmit)="modificarCliente()">
                     <div class="mb-3">
                         <label for="exampleInputText" class="form-label">Nombre del Cliente</label>
-                        <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                        <input type="text" [(ngModel)]="cliente.nombre" name="nombre" class="form-control" id="exampleInputText" aria-describedby="textHelp">
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputText" class="form-label">Apellido del Cliente</label>
-                        <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                        <input type="text" [(ngModel)]="cliente.apellido" name="apellido" class="form-control" id="exampleInputText" aria-describedby="textHelp">
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputText" class="form-label">Telefono</label>
-                        <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                        <input type="text" [(ngModel)]="cliente.numero" name="numero" class="form-control" id="exampleInputText" aria-describedby="textHelp">
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Correo Electronico</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        <input type="email" [(ngModel)]="cliente.correo" name="correo" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                     </div>
 
                     <div class="confirmarfinal">
-                        <button type="submit" class="btn confir">Confirmar</button>
+                        <button data-bs-dismiss="offcanvas" type="submit" class="btn confir">Confirmar</button>
                     </div>
 
                 </form>

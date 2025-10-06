@@ -26,26 +26,29 @@ export class ClientesComponent {
     error: (error) => console.error('Error al cargar clientes:',error)
   });
   }
+  guardarId(id:number){
+    this.clienteSeleccionado = this.clientes.find(c => c.id === id) || null;
+  }
   mostrarInterfazReponsive(id:number){
     this.clienteSeleccionado = this.clientes.find(c => c.id === id) || null;
     this.mostrarModificarCliente = true;
   }
   eliminarCliente(id:number){
     Swal.fire({
-    title: "Are you sure?",
-    text: "You won't be able to revert this!",
+    title: "Estas Seguro?",
+    html: `Realmente Deseas Eliminar al cliente</b>?`,
     icon: "warning",
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
-    confirmButtonText: "Yes, delete it!"
+    confirmButtonText: "Si, Eliminar!"
   }).then((result) => {
     if (result.isConfirmed) {
       this.clientesServices.deleteCliente(id).subscribe({
         next: () => {
           Swal.fire({
-            title: "Deleted!",
-            text: "Your file has been deleted.",
+            title: "Eliminado!",
+            html: `Cliente Eliminado.`,
             icon: "success"
           });
           this.mostrarModificarCliente = false;
@@ -70,5 +73,13 @@ export class ClientesComponent {
       
     }
   });
+  }
+  onClienteAgregado(){
+    this.ngOnInit();
+    this.mostrarAddCliente = false; 
+  }
+  onClienteModificado(){
+    this.ngOnInit();
+    this.mostrarModificarCliente = false;
   }
 }
