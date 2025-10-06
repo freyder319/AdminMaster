@@ -26,7 +26,7 @@
           <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="search">
               <div class="input-group">
-                <input type="text" class="form-control" placeholder="Buscar Caja..." id="search-input">
+                <input type="text"  class="form-control" placeholder="Buscar Caja..." id="search-input" [(ngModel)]="busquedaCaja" (input)="filtrarCajas()">
               </div>
             </div>
           </div>
@@ -34,6 +34,7 @@
           <!-- Agregar Caja -->
           <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="agg-caja">
+
               <!-- Escritorio (≥768px) → abre offcanvas -->
               <button class="btn agregar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddCaja" aria-controls="offcanvasAddCaja">
                 <span class="texto">Agregar Caja</span>
@@ -45,6 +46,7 @@
                 <span class="texto">Agregar Caja</span>
                 <img width="80px" src="../../assets/img/icono_cajas/Proveedores__5_-removebg-preview (1).png" alt="">
               </button>
+
             </div>
           </div>
         </div>
@@ -64,15 +66,15 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Caja 1 -->
-            <tr>
+            <!-- Cajas -->
+            <tr *ngFor="let caja of cajas">
               <td data-label="Nombre">
                 <!-- Móvil (<768px) → perfil clickeable -->
-                <div class="perfil clickable d-md-none" (click)="mostrarModificarCaja = true">
+                <div class="perfil clickable d-md-none" (click)="mostrarInterfazReponsive(caja.id)">
                   <img src="../../assets/img/icons-navbar/Cajas.png" alt="Caja 1">
                   <div class="info">
-                    <p class="nombre">Caja 1</p>
-                    <p class="codigo">94683948374</p>
+                    <p class="nombre">{{ caja.nombre }}</p>
+                    <p class="codigo">{{ caja.codigoCaja }}</p>
                   </div>
                 </div>
 
@@ -80,32 +82,39 @@
                 <div class="perfil d-none d-md-flex">
                   <img src="../../assets/img/icons-navbar/Cajas.png" alt="Caja 1" width="50px" height="50px" style="margin-top: -10px;">
                   <div class="info">
-                    <p class="nombre" style="margin-left: 10px;">Caja 1</p>
+                    <p class="nombre" style="margin-left: 10px;">{{ caja.nombre }}</p>
                   </div>
                 </div>
               </td>
 
-              <td data-label="Código de Caja">94683948374</td>
-              <td data-label="Estado de Caja"><span class="status activo">Activa</span></td>
+              <td data-label="Código de Caja">{{ caja.codigoCaja }}</td>
+              <td data-label="Estado de Caja">
+                <span class="status" [ngClass]="caja.estado.toLowerCase()">
+                  {{ caja.estado }}
+                </span>
+              </td>
               <td data-label="Acciones" class="acciones">
                 <!-- Texto (≥1200px) -->
                 <div class="d-none d-xl-flex gap-2">
-                  <button class="btn modificar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCaja" aria-controls="offcanvasModifyCaja">
+                  <button class="btn modificar d-none d-md-inline-block" type="button" (click)="abrirModificarCaja(caja)" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCaja" aria-controls="offcanvasModifyCaja">
                     <span class="texto">Modificar</span>
                   </button>
-                  <button class="btn elimi">Eliminar</button>
+                  <button (click)="eliminarCaja(caja.id)" class="btn elimi">Eliminar</button>
                 </div>
 
                 <!-- Íconos (768px – 1200px) -->
                 <div class="d-none d-md-flex d-xl-none gap-2">
-                  <button class="btn modificar icon-btn d-none d-md-inline-block" title="Modificar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCaja" aria-controls="offcanvasModifyCaja">
+                  <button class="btn modificar icon-btn d-none d-md-inline-block" title="Modificar" type="button" (click)="abrirModificarCaja(caja)" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCaja" aria-controls="offcanvasModifyCaja">
                     <i class="bi bi-pencil-square"></i>
                   </button>
-                  <button class="btn eliminar-icon icon-btn" title="Eliminar">
+                  <button (click)="eliminarCaja(caja.id)" class="btn eliminar-icon icon-btn" title="Eliminar">
                     <i class="bi bi-trash"></i>
                   </button>
                 </div>
               </td>
+            </tr>
+            <tr *ngIf="cajas.length === 0">
+              <td colspan="7" class="text-center">No hay Cajas Registradas</td>
             </tr>
           </tbody>
         </table>
@@ -116,7 +125,7 @@
   <!-- Vista de Agregar Caja en móvil -->
   <div *ngIf="mostrarAddCaja" class="d-md-none">
     <div class="container mt-4 p-3 shadow rounded bg-light">
-      <app-add_cajas></app-add_cajas>
+      <app-add_cajas (cajaAgregada)="onCajaAgregada($event)"></app-add_cajas>
       <div class="mt-3">
         <button class="btn btn-volver" type="button" (click)="mostrarAddCaja = false">
           <i class="bi bi-arrow-left-short"></i> Volver
@@ -128,12 +137,12 @@
   <!-- Vista de Modificar Caja en móvil -->
   <div *ngIf="mostrarModificarCaja" class="d-md-none">
     <div class="container mt-4 p-3 shadow rounded bg-light">
-      <app-modify-caja></app-modify-caja>
-      <div class="mt-3">
+      <app-modify-caja *ngIf="mostrarModificarCaja" [caja]="cajaSeleccionada" (cajaModificada)="onCajaModificada($event)"></app-modify-caja>
+      <div class="mt-3 space">
         <button class="btn btn-volver" type="button" (click)="mostrarModificarCaja = false">
           <i class="bi bi-arrow-left-short"></i> Volver
         </button>
-        <button class="btn eliminar">
+        <button *ngIf="cajaSeleccionada" (click)="eliminarCaja(cajaSeleccionada.id)" class="btn eliminar">
           <i class="bi bi-trash-fill"></i> Eliminar
         </button>
       </div>
@@ -147,16 +156,16 @@
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
   </div>
   <div class="offcanvas-body">
-    <app-add_cajas></app-add_cajas>
+    <app-add_cajas (cerrarOffcanvas)="cerrarOffcanvas()" (cajaAgregada)="onCajaAgregada($event)"></app-add_cajas>
   </div>
 </div>
 
-<!-- Offcanvas (solo para pantallas grandes) Agregar -->
+<!-- Offcanvas (solo para pantallas grandes) Modificar -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasModifyCaja" aria-labelledby="offcanvasModifyCajaLabel">
   <div class="offcanvas-header">
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
   </div>
   <div class="offcanvas-body">
-    <app-modify-caja></app-modify-caja>
+    <app-modify-caja [caja]="cajaSeleccionada" (cajaModificada)="onCajaModificada($event)"></app-modify-caja>
   </div>
 </div>

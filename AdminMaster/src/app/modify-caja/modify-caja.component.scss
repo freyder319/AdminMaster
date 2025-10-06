@@ -43,6 +43,16 @@
     background-color: #fa0000; 
 }
 
+.btn-active{
+    color: white;
+    background-color: #4CAF50; 
+}
+
+.btn-inactive{
+    color: white;
+    background-color: #fa0000; 
+}
+
 // Style Form
 
 .form-control:focus {
@@ -98,13 +108,10 @@
 .image{
     width: 100px;
     height: 100px;
-    border-radius: 50%;
     overflow: hidden;
-    background: #40ff46; 
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 6px #40ff46;
 }
 
 .btn.eliminar {

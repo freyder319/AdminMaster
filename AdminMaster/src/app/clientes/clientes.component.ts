@@ -6,6 +6,7 @@ import { AddClientesComponent } from "../add_clientes/add_clientes.component";
 import { ModifyClienteComponent } from "../modify-cliente/modify-cliente.component";
 import { Clientes, ClientesService } from '../services/clientes.service';
 import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-clientes',
   standalone: true,

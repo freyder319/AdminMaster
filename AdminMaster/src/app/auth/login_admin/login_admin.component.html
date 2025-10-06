@@ -5,21 +5,28 @@
         <div class="col-md-6 text-center p-4">
           <img src="../../assets/img/login.jpg" alt="Login" class="login-img img-fluid">
         </div>
-        <!-- Formulario -->
+
         <div class="col-md-6 p-4">
           <h2 class="titulo-login">Administrador</h2><br>
-          <form>
+
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
               <label for="correo" class="form-label">Correo Electrónico</label>
-              <input type="email" class="form-control" id="correo" placeholder="Correo Electrónico">
+              <input type="email" class="form-control" id="correo" formControlName="correo" placeholder="Correo Electrónico" required>
             </div>
-            <div class="mb-2">
-              <label for="password" class="form-label">Contraseña</label>
-              <input type="password" class="form-control" id="password" placeholder="Contraseña">
-            </div>
+
+          <div class="password-wrapper">
+            <label for="password" class="form-label">Contraseña</label>
+            <input [type]="showPassword ? 'text' : 'password'" class="form-control password-input" id="password" formControlName="password" placeholder="Contraseña" required>
+            <button type="button" class="toggle-password-btn" (click)="togglePasswordVisibility()" aria-label="Mostrar u ocultar contraseña">
+              <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash-fill' : 'bi-eye-fill'"></i>
+            </button>
+          </div>
+
             <div class="mb-3 text-end">
               <a class="olvidar" [routerLink]="['/recuperar-telefono']">¿Olvidaste tu contraseña?</a>
             </div>
+
             <div class="d-grid gap-2">
               <button type="submit" class="btn btn-principal">Ingresar</button>
               <button type="button" class="btn btn-secundario" [routerLink]="['/login-puntopos']">Punto de Venta</button>

@@ -10,8 +10,8 @@ main{
 }
 
 .offcanvas {
-    z-index: 1055 !important; // Bootstrap usa 1040 para modals, así que esto lo pone encima
-    position: fixed !important; // Asegura que no se vea afectado por contenedores relativos
+    z-index: 1055 !important; 
+    position: fixed !important; 
 }
 
 .tit-movimientos{

@@ -1,53 +1,53 @@
 <main>
-    <!-- Título -->
-    <section>
-        <div class="container text-center">
-            <div class="row">
-            <div class="col">
-                <h1 class="tit-cajas">Modificar Caja</h1>
-            </div>
-            </div>
-        </div>
-    </section><br>
+    <form [formGroup]="formCaja" (ngSubmit)="confirmarModificacion()">
 
-    <!-- Botones Activo-Inactivo e Imagen -->
-    <section>
-        <div class="cont-img">
-            <div class=" image">
-                <img class="icon-prov" src="../../assets/img/icons-navbar/Cajas.png" alt="" width="80px" height="80px">
+        <!-- Título -->
+        <section>
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col">
+                        <h1 class="tit-cajas">Modificar Caja</h1>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="container act-inac">
-            <div class="activo">
-                <button class="btn-act">Activo</button>
-            </div>
-            <div class="inactivo">
-                <button class="btn-inac">Inactivo</button>
-            </div>
-        </div><br>
-    </section>
+        </section><br>
 
-    <!-- Formulario Registro -->
-    <section>
-        <div class="container form">
-            <div class="formulario">
-                <form>
+        <!-- Botones Activo-Inactivo e Imagen -->
+        <section>
+            <div class="cont-img">
+                <div class="image">
+                <img class="icon-prov" src="../../assets/img/icons-navbar/Cajas.png" alt="Caja" width="80px" height="80px">
+                </div>
+            </div>
+            <div class="container act-inac">
+                <div class="activo">
+                    <button type="button" class="btn-act" [ngClass]="{ 'btn-active': formCaja.value.estado === 'Activo' }" (click)="formCaja.patchValue({ estado: 'Activo' })">Activo</button>
+                </div>
+                <div class="inactivo">
+                    <button type="button" class="btn-inac" [ngClass]="{ 'btn-inactive': formCaja.value.estado === 'Inactivo' }" (click)="formCaja.patchValue({ estado: 'Inactivo' })">Inactivo</button>
+                </div>
+            </div><br>
+        </section>
+
+        <!-- Formulario Registro -->
+        <section>
+            <div class="container form">
+                <div class="formulario">
                     <div class="mb-4">
-                        <label for="exampleInputText" class="form-label">Nombre de Caja</label>
-                        <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                        <label class="form-label">Nombre de Caja</label>
+                        <input type="text" class="form-control" formControlName="nombre">
                     </div>
                     <div class="mb-4">
-                        <label for="exampleInputText" class="form-label">Codigo de Caja</label>
-                        <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                        <label class="form-label">Código de Caja</label>
+                        <input type="text" class="form-control" formControlName="codigoCaja">
                     </div>
 
                     <div class="mb-4 confirmarfinal">
-                        <button type="submit" class="btn confir">Confirmar</button>
+                        <button type="submit" data-bs-dismiss="offcanvas" class="btn confir" [disabled]="formCaja.invalid">Confirmar</button>
                     </div>
-
-                </form>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
+    </form>
 </main>

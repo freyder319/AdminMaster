@@ -129,7 +129,6 @@ main {
 .status {
     padding: 5px 10px;
     border-radius: 10px;
-    cursor: pointer;
     display: inline-block;
 }
 
@@ -179,10 +178,6 @@ main {
     .perfil img {
         width: 100px;
         height: 100px;
-        border-radius: 50%;
-        background-color: #40ff46;
-        padding: 10px;
-        box-shadow: 0 2px 6px #40ff46;
         flex-shrink: 0;
     }
 
@@ -215,6 +210,21 @@ main {
     }
 }
 
+@media screen and (max-width: 768px) {
+    .perfil img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .info .nombre {
+        font-size: 30px;
+    }
+
+    .info .codigo {
+        font-size: 22px;
+    }
+}
+
 .clickable {
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -224,7 +234,13 @@ main {
     background-color: #f0f0f0;
 }
 
-/* --- Botones de acciones --- */
+// Botones de acciones
+.space{
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; 
+}
+
 .btn.eliminar {
     width: 110px;
     text-align: center;
@@ -233,7 +249,6 @@ main {
     box-shadow: 0 0 3px 1px #e81313;
     border-radius: 7px;
     padding: 7px;
-    margin-left: 271px;
     font-weight: bold;
 }
 

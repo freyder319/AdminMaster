@@ -22,7 +22,7 @@ export class ClientesService {
   }
 
   getCliente(id:number): Observable<Clientes>{
-    return this.http.get<Clientes>('${this.apiUrl}/${id}');
+    return this.http.get<Clientes>(`${this.apiUrl}/${id}`);
   }
 
   createCliente(clientes: Partial<Clientes>): Observable<Clientes>{
@@ -30,7 +30,7 @@ export class ClientesService {
   }
 
   updateCliente(id:number,usuario: Partial<Clientes>): Observable<Clientes>{
-    return this.http.put<Clientes>('${this.apiUrl}/${id}',usuario);
+    return this.http.put<Clientes>(`${this.apiUrl}/${id}`,usuario);
   }
 
   deleteCliente(id:number):Observable<void>{
