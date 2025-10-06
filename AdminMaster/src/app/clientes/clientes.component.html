@@ -95,7 +95,7 @@
               <td data-label="N° Deudas">0</td>
               <td data-label="N° Compras">0</td>
               <td data-label="Estado de Cliente">
-                <span class="status activo">{{cliente.estado}}</span>
+                <span [ngClass]="{'activo': cliente.estado === 'activo','inactivo': cliente.estado === 'inactivo'}" class="status">{{cliente.estado}}</span>
               </td>
               <td data-label="Acciones" class="acciones">
 
@@ -103,7 +103,7 @@
                 <div class="d-none d-xl-flex gap-2">
 
                   <!-- OffCanvas Modificar Cliente -->
-                  <button class="btn modificar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCliente" aria-controls="offcanvasModifyCliente">
+                  <button (click)="guardarId(cliente.id)" class="btn modificar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCliente" aria-controls="offcanvasModifyCliente">
                     <span class="texto">Modificar</span>
                   </button>
 
@@ -132,7 +132,7 @@
   <!-- Vista de Agregar Cliente en móvil (<768px) -->
   <div *ngIf="mostrarAddCliente" class="d-md-none">
     <div class="container mt-4 p-3 shadow rounded bg-light">
-      <app-add-clientes></app-add-clientes>
+      <app-add-clientes (clienteAgregado)="onClienteAgregado()"></app-add-clientes>
       <div class="mt-3">
         <button class="btn btn-volver" type="button" (click)="mostrarAddCliente = false">
           <i class="bi bi-arrow-left-short"></i> Volver
@@ -144,11 +144,12 @@
   <!-- Vista de Modificar Cliente en móvil (<768px) -->
   <div *ngIf="mostrarModificarCliente" class="d-md-none">
     <div class="container mt-4 p-3 shadow rounded bg-light">
-      <app-modify-cliente></app-modify-cliente>
+      <app-modify-cliente [clienteId]="clienteSeleccionado?.id ?? 0" (clienteModificado)="onClienteModificado()"></app-modify-cliente>
       <div class="mt-3 space">
         <button class="btn btn-volver" type="button" (click)="mostrarModificarCliente = false">
           <i class="bi bi-arrow-left-short"></i> Volver
         </button>
+        <!-- MODIFICAR LO DE ELIMINAR -->
         <button *ngIf="clienteSeleccionado" (click)="eliminarCliente(clienteSeleccionado.id)" class="btn eliminar">
             <i class="bi bi-trash-fill"></i>Eliminar
         </button>
@@ -164,16 +165,17 @@
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
   </div>
   <div class="offcanvas-body">
-    <app-add-clientes></app-add-clientes>
+    <app-add-clientes (clienteAgregado)="onClienteAgregado()"></app-add-clientes>
   </div>
 </div>
 
 <!-- Offcanvas (solo para pantallas grandes) Modificar -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasModifyCliente" aria-labelledby="offcanvasModifyClienteLabel">
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasModifyCliente" aria-labelledby="offcanvasModifyClienteLabel" (hidden.bs.offcanvas)="clienteSeleccionado = null">
   <div class="offcanvas-header">
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"  (click)="clienteSeleccionado = null"></button>
   </div>
   <div class="offcanvas-body">
-    <app-modify-cliente></app-modify-cliente>
+    <app-modify-cliente *ngIf="clienteSeleccionado" 
+      [clienteId]="clienteSeleccionado.id" (clienteModificado)="onClienteModificado()"></app-modify-cliente>
   </div>
 </div>

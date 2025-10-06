@@ -11,6 +11,10 @@
     justify-content: center;
     align-items: center;
 }
+.active_negative{
+    color:white!important;
+    background-color: #fa0000; 
+}
 
 .btn-act {
     border: none;
@@ -26,6 +30,11 @@
     color: white;
     background-color: #4CAF50; 
 }
+.btn-active{
+    color: white;
+    background-color: #4CAF50; 
+}
+
 
 .btn-inac {
     border: none;

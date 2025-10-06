@@ -11,7 +11,16 @@
     justify-content: center;
     align-items: center;
 }
+.valid-focus:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    outline: none;
+}
 
+.is-invalid {
+    border: 1px solid #dc3545;
+    box-shadow: none;
+}
 .btn-act {
     border: none;
     width: 174px;
@@ -21,7 +30,14 @@
     padding: 7px;
     font-weight: bold;
 }
-
+.btn-active{
+    color: white;
+    background-color: #4CAF50; 
+}
+.active_negative{
+    color:white!important;
+    background-color: #fa0000; 
+}
 .btn-act:focus{
     color: white;
     background-color: #4CAF50; 
@@ -50,10 +66,14 @@
     box-shadow: 0 0 6px 0.5px #5adbff;
     outline: none; 
 }
-
+.form-control2:focus{
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+}
 .form-control{
     border: none;
     box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+    outline: none; 
 }
 
 .btn {
