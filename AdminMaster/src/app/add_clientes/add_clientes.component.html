@@ -60,7 +60,7 @@
                         <label for="correo" class="form-label">Correo Electrónico</label>
                         <input type="email" [(ngModel)]="cliente.correo" name="correo" id="correo" class="form-control" required [ngClass]="{ 'is-invalid': correoInvalido, 'valid-focus': !correoInvalido && cliente.correo }"(input)="validarCorreo()">
                         <div class="invalid-feedback" *ngIf="correoInvalido">
-                            Debes ingresar un correo válido (ejemplo@dominio.com).
+                            Debes ingresar un correo válido (ejemplodominio.com).
                         </div>
                     </div><br>
 

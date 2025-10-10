@@ -1,25 +1,20 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
 import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-login-admin',
+  selector: 'app-login',
+  standalone: true,
   imports: [ReactiveFormsModule, RouterLink, NgClass],
-  templateUrl: './login_admin.component.html',
-  styleUrls: ['./login_admin.component.scss'],
-  standalone: true
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
-export class LoginAdminComponent {
+export class LoginComponent {
   showPassword = false;
-  
-  togglePasswordVisibility() {
-    this.showPassword = !this.showPassword;
-  }
-
   loginForm: FormGroup;
 
   constructor(
@@ -31,6 +26,10 @@ export class LoginAdminComponent {
       correo: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 
   onSubmit() {
@@ -52,27 +51,26 @@ export class LoginAdminComponent {
         localStorage.setItem('rol', res.rol);
 
         Swal.fire({
-          position: "top",
+          toast: true,
+          position: 'top-end',
           icon: 'success',
           title: '¡Bienvenido!',
-          text: 'Acceso Concedido como Administrador.',
+          text: 'Has iniciado sesión exitosamente',
           showConfirmButton: false,
-          timer: 1000,
-            showClass: {
-              popup: `
-                animate__animated
-                animate__fadeInUp
-                animate__faster
-              `
-            },
-            hideClass: {
-              popup: `
-                animate__animated
-                animate__fadeOutDown
-                animate__faster
-              `
-            }
-        }).then(() => this.router.navigate(['/movimientos']));
+          timer: 2500,
+          timerProgressBar: true,
+          customClass: {
+            popup: 'custom-toast',
+            title: 'custom-title',
+            icon: 'custom-icon'
+          },
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown animate__faster'
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp animate__faster'
+          }
+        }).then(() => this.redirigirPorRol(res.rol));
       },
       error: () => {
         Swal.fire({
@@ -83,6 +81,20 @@ export class LoginAdminComponent {
         });
       }
     });
+  }
+
+  redirigirPorRol(rol: string) {
+    switch (rol) {
+      case 'admin':
+        this.router.navigate(['/movimientos']);
+        break;
+      case 'punto_pos':
+        this.router.navigate(['/movimientos']);
+        break;
+      default:
+        this.router.navigate(['/login']);
+        break;
+    }
   }
 }
 

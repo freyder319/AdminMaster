@@ -1,15 +1,19 @@
+import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-navbar',
-  imports: [RouterModule],
+  imports: [RouterModule, NgIf],
   templateUrl: './admin_navbar.component.html',
   styleUrl: './admin_navbar.component.scss'
 })
 
 export class AdminNavbarComponent {
+  correo: string | null = null;
+  rol: string | null = null;
+
   constructor(private router: Router) {}
 
   cerrarSesion(): void {
@@ -32,7 +36,7 @@ export class AdminNavbarComponent {
     }).then(result => {
       if (result.isConfirmed) {
         localStorage.clear();
-        this.router.navigate(['/login-admin']);
+        this.router.navigate(['/login']);
         Swal.fire({
           icon: 'success',
           title: 'Sesión Cerrada',
@@ -42,6 +46,11 @@ export class AdminNavbarComponent {
         });
       }
     });
+  }
+
+  ngOnInit() {
+    this.correo = localStorage.getItem('correo');
+    this.rol = localStorage.getItem('rol');
   }
 
 }

@@ -1,0 +1,76 @@
+<main>
+    <!-- Título -->
+    <section>
+        <div class="container text-center">
+            <div class="row">
+                <div class="col">
+                <h1 class="tit-empleados">Agregar Empleados</h1>
+                </div>
+            </div>
+        </div>
+    </section><br>
+
+    <!-- Formulario Registro -->
+    <section>
+        <div class="container form">
+            <div class="formulario">
+                <form #formEmpleado="ngForm" (ngSubmit)="agregarEmpleado(formEmpleado)" novalidate>
+                    <!-- Icono -->
+                    <section>
+                        <div class="cont-img">
+                            <div class="image">
+                                <img class="icon-prov" src="../../assets/img/icons-navbar/Empleados.png" alt="" width="80px" height="80px">
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Correo -->
+                    <div class="mb-3">
+                        <label for="correo" class="form-label">Correo Electrónico</label>
+                        <input type="email" [(ngModel)]="empleado.correo" name="correo" id="correo" class="form-control" required (input)="validarCorreo()" [ngClass]="{ 'is-invalid': correoInvalido, 'valid-focus': !correoInvalido && empleado.correo }">
+                        <div class="invalid-feedback" *ngIf="correoInvalido">
+                            Debes ingresar un correo válido (ejemplodominio.com).
+                        </div>
+                    </div>
+
+                    <!-- Contraseña -->
+                    <div class="mb-3">
+                        <label for="contrasena" class="form-label">Contraseña</label>
+                        <input type="password" [(ngModel)]="empleado.contrasena" name="contrasena" id="contrasena" class="form-control" required minlength="6">
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="tel" [(ngModel)]="empleado.telefono" name="telefono" id="telefono" class="form-control" required pattern="^[0-9]{1,10}$" (input)="validarTelefono()" [ngClass]="{ 'is-invalid': empleadoExcede || empleadoNoNumerico, 'valid-focus': !empleadoExcede && !empleadoNoNumerico }">
+                        <div class="invalid-feedback" *ngIf="empleadoExcede">
+                            Un teléfono tiene máximo 10 números.
+                        </div>
+                        <div class="invalid-feedback" *ngIf="empleadoNoNumerico">
+                            Solo se permiten números.
+                        </div>
+                    </div>
+
+                    <!-- Asignar Caja -->
+                    <div class="mb-3">
+                        <label for="caja" class="form-label">Asignar Caja</label>
+                        <select [(ngModel)]="empleado.cajaId" name="cajaId" class="form-select" required>
+                            <option [ngValue]="null" disabled>Selecciona una caja</option>
+                            <option *ngFor="let caja of cajas" [ngValue]="caja.id">
+                                {{ caja.nombre }} ({{ caja.codigoCaja }})
+                            </option>
+                        </select>
+                        <div *ngIf="cajas.length === 0" class="alert alert-warning">
+                            No hay cajas disponibles para asignar.
+                        </div>
+                    </div><br>
+
+                    <!-- Botón -->
+                    <div class="confirmarfinal">
+                        <button type="submit" class="btn confir" [disabled]="formEmpleado.invalid || correoInvalido || empleadoExcede || empleadoNoNumerico">Confirmar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>

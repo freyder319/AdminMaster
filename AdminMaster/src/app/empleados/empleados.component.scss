@@ -1,0 +1,357 @@
+main{
+    margin-top: 140px;
+}
+
+@media (max-width: 768px) {
+    main {
+        margin-top: 0; 
+    }
+}
+
+.tit-empleados{
+    font-family: 'poetsen one', cursive;
+}
+
+// Style Busqueda y Agregar
+
+.buscar-agg {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    padding: 10px; 
+}
+.space{
+    display: flex;
+    justify-content: space-between; /* uno a la izq, otro a la der */
+    gap: 10px; /* espacio entre botones */
+}
+.agg-cli{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+  
+.form-control {
+    width: 700px; 
+    border-radius: 18px;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+    padding: 8px 15px; 
+    margin-right: 10px; 
+}
+
+.form-control:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    outline: none; 
+}
+
+.btn.agregar {
+    background-color: #5adbff;
+    width: 200px;
+    border-radius: 18px;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    padding: 8px 15px; 
+    border: none; 
+    cursor: pointer; 
+    color: white;
+    font-size: 18px;
+}
+  
+.btn.agregar:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 2px #5adbff;
+    outline: none; 
+}
+.btn.agregar img{
+    display: none;
+}
+
+.btn-volver{
+    box-shadow: 0 0 3px 1px #39c751;
+    background-color: #39c751;
+    color: white;
+    font-weight: bold;
+    margin-left: 14px;
+}
+
+@media (max-width: 768px) {
+    .buscar-agg {
+        flex-direction: column; 
+        align-items: stretch; 
+    }
+
+    .form-control {
+        width: 100%; 
+        margin-bottom: 10px; 
+    }
+
+    .btn.agregar {
+        position: fixed; 
+        z-index: 10;
+        bottom: 180px; 
+        left: 80%; 
+        height: 110px;
+        transform: translateX(-50%); 
+        width: 110px; 
+        border: 1px solid #5adbff;
+        border-radius: 50%; 
+        justify-content: center;
+        align-items: center;
+    }
+    .texto{
+        display: none;
+    }
+    .btn.agregar img{
+        display: block;
+    }   
+}
+
+// Tablas Informacion
+
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px; 
+    text-align: center;
+}
+
+.table thead th {
+    background-color: #f2f2f2;
+    border: none;
+}
+
+.table td, .table th {
+    border: none;
+}
+
+.table tbody tr {
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.td1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-left: 15px;
+}
+
+a {
+    margin-left: 10px;
+}
+
+img {
+    position: relative;
+}
+
+@media screen and (max-width: 768px) {
+    .table thead {
+        display: none;
+    }
+
+    .table tbody,
+    .table tr,
+    .table td {
+        display: block;
+        width: 100%;
+        border: none;
+    }
+
+    .table tr {
+        margin-bottom: 15px;
+        background: #fff;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .perfil {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        width: 100%;
+    }
+
+    .perfil img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: #40ff46;
+        padding: 10px;
+        box-shadow: 0 2px 6px #40ff46;
+        flex-shrink: 0;
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .info .nombre {
+        font-weight: bold;
+        font-size: 40px;
+        color: #000;
+        margin: 0;
+        margin-right: 40px;
+    }
+
+    .info .correo {
+        font-size: 30px; 
+        color: #666;
+        margin: 4px 0 0 20px; 
+    }
+
+    /* Ocultar columnas innecesarias */
+    .table tr td[data-label="Correo"],
+    .table tr td[data-label="Teléfono"],
+    .table tr td[data-label="Acciones"],
+    .table td::before {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .perfil img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .info .nombre {
+        font-size: 30px;
+    }
+
+    .info .correo {
+        font-size: 22px;
+    }
+}
+
+.clickable {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.clickable:hover {
+    background-color: #f0f0f0;
+}
+
+.btn.eliminar {
+    width: 110px;
+    text-align: center;
+    color: white;
+    background-color: #e81313;
+    box-shadow: 0 0 3px 1px #e81313;
+    border-radius: 7px;
+    padding: 7px;
+    font-weight: bold;
+}
+
+.btn.eliminar:focus {
+    border: 1px solid #e81313;
+    box-shadow: 0 0 6px 2px #e81313;
+}
+
+.btn.elimi {
+    width: 110px;
+    text-align: center;
+    color: white;
+    background-color: #e81313;
+    box-shadow: 0 0 3px 1px #e81313;
+    border-radius: 12px;
+    padding: 7px;
+    font-weight: bold;
+}
+
+.btn.elimi:focus {
+    border: 1px solid #e81313;
+    box-shadow: 0 0 6px 2px #e81313;
+}
+
+.btn.eliminar-icon {
+    width: 90px;
+    text-align: center;
+    color: white;
+    background-color: #e81313;
+    box-shadow: 0 0 3px 1px #e81313;
+    border-radius: 12px;
+    padding: 7px;
+    font-weight: bold;
+}
+
+.btn.eliminar-icon:focus {
+    border: 1px solid #e81313;
+    box-shadow: 0 0 6px 2px #e81313;
+}
+
+.btn.modificar {
+    background-color: #5adbff;
+    box-shadow: 0 0 3px 1px #5adbff;
+    border: none;
+    width: 90px;
+    text-align: center;
+    border-radius: 12px;
+    color: white;
+    padding: 7px;
+    margin-left: 12px;
+    font-weight: bold;
+}
+
+.btn.modificar:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 2px #5adbff;
+}
+
+.btn.confir {
+    width: 88%;
+    background-color: #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none; 
+    cursor: pointer;
+}
+
+.confirmarfinal{
+    display: flex;
+    box-shadow: 1px 1px 1px 1px #707070;
+    background-color: white;
+    height: 70px;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-btn {
+    width: 40px;    
+    height: 40px;   
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem; 
+    padding: 0;       
+    border-radius: 8px; 
+}
+
+.bi{
+    margin-right: 6px;
+}
+
+.acciones{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ajustar tabla en pantallas medianas */
+@media (min-width: 768px) and (max-width: 1200px) {
+    table.table td, 
+    table.table th {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .acciones .icon-btn {
+        margin: 0 2px;
+    }
+}

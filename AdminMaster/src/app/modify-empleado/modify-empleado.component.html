@@ -1,0 +1,59 @@
+<main>
+    <!-- Título -->
+    <section>
+        <div class="container text-center">
+            <div class="row">
+                <div class="col">
+                    <h1 class="tit-empleados">Modificar Empleado</h1>
+                </div>
+            </div>
+        </div>
+    </section><br>
+
+    <!-- Imagen -->
+    <section>
+        <div class="cont-img">
+            <div class="image">
+                <img class="icon-prov" src="../../assets/img/icons-navbar/Empleados.png" alt="" width="80px" height="80px">
+            </div>
+        </div>
+    </section>
+
+    <!-- Formulario -->
+    <section>
+        <div class="container form">
+            <div class="formulario">
+                <form *ngIf="empleado" (ngSubmit)="modificarEmpleado()">
+                    <!-- Correo -->
+                    <div class="mb-3">
+                        <label for="correo" class="form-label">Correo Electrónico</label>
+                        <input type="email" [(ngModel)]="empleado.correo" name="correo" class="form-control" id="correo">
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="text" [(ngModel)]="empleado.telefono" name="telefono" class="form-control" id="telefono">
+                    </div>
+
+                    <!-- Caja Asignada -->
+                    <div class="mb-3">
+                        <label for="caja" class="form-label">Caja Asignada</label>
+                        <select [(ngModel)]="cajaIdSeleccionada" name="caja" id="caja" class="form-select" required>
+                            <option value="" disabled>Selecciona una caja</option>
+                            <option *ngFor="let caja of cajas" [ngValue]="caja.id">
+                                {{ caja.nombre }} ({{ caja.codigoCaja }})
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Botón -->
+                    <div class="confirmarfinal">
+                        <button data-bs-dismiss="offcanvas" type="submit" class="btn confir">Confirmar</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </section>
+</main>

@@ -1,17 +1,18 @@
 .body {
     display: flex;
-    justify-content: center;  
-    align-items: center;       
-    height: 100vh;        
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
-  
+
 .login {
-    max-width: 800px;
+    max-width: 900px;
     width: 100%;
     border-radius: 2rem;
-    box-shadow: 2px 2px 30px brown;   
+    box-shadow: 2px 2px 30px brown;
     overflow: hidden;
-    margin: auto
+    margin: auto;
+    background-color: white;
 }
 
 .login-img {
@@ -30,46 +31,30 @@
     }
 }
 
-.titulo-login {
+.titulo-email {
     font-family: 'Poetsen One', cursive;
     font-size: 2rem;
     color: brown;
     text-align: center;
-    width: 90%
+    width: 90%;
 }
 
-.text-security{
-    color: brown;
-    font-size: 15px
+.form-control {
+    width: 90%;
 }
-
-.otp-input {
-    width: 50px;
-    height: 50px;
-    text-align: center;
-    font-size: 1.5rem;
-    border-radius: 10px;
-    border: 1px solid #ccc;
-  }
-  
 
 .form-control:focus {
-    border-color: brown; 
-    box-shadow: 0 0 0 0.25rem rgba(165, 42, 42, 0.25); 
+    border-color: brown;
+    box-shadow: 0 0 0 0.25rem rgba(165, 42, 42, 0.25);
     outline: none;
 }
 
-.form-control{
-    width: 90%
-}
-  
 .form-label {
     color: brown;
 }
 
-.no-acceso{
-    text-decoration: none;
-    color: brown
+.text-security{
+    color: brown;
 }
 
 .btn-principal {
@@ -77,17 +62,36 @@
     color: white;
     border: none;
     border-radius: 2rem;
-    width: 100%
+    width: 90%;
 }
 
 .btn-principal:hover {
     background-color: rgb(163, 57, 57);
 }
 
-  
+.btn-secundario {
+    border-radius: 2rem;
+    background-color: white;
+    color: brown;
+    width: 90%;
+}
+
+.btn-secundario:active {
+    border: none;
+}
+
+.adminis {
+    color: white;
+}
 
 @media (max-width: 768px) {
     .titulo-login {
-      font-size: 1.5rem;
+        font-size: 1.5rem;
+    }
+
+    .btn-principal,
+    .btn-secundario,
+    .form-control {
+        width: 100%;
     }
 }

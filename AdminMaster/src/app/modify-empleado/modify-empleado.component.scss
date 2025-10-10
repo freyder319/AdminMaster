@@ -1,0 +1,86 @@
+.tit-empleados{
+    font-family: 'poetsen one', cursive;
+}
+
+// Style Form
+
+.form-control:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    outline: none; 
+}
+
+.form-control{
+    border: none;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+}
+
+.btn {
+    width: 100%;
+    background-color: #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none; 
+    cursor: pointer;
+}
+  
+.btn:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 2px #5adbff;
+}
+
+.btn.confir {
+    width: 100%;
+    background-color: #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none; 
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+}
+
+.confirmarfinal{
+    display: flex;
+    height: 70px;
+    align-items: center;
+    justify-content: center;
+}
+
+.cont-img{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.image{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #40ff46; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px #40ff46;
+}
+
+.btn.eliminar {
+    width: 130px;
+    text-align: center;
+    color: white;
+    background-color: #e81313;
+    box-shadow: 0 0 3px 1px #e81313;
+    border-radius: 7px;
+    padding: 7px;
+    font-weight: bold;
+}
+
+.btn.eliminar:focus {
+    border: 1px solid #e81313;
+    box-shadow: 0 0 6px 2px #e81313;
+}
+
+.bi{
+    margin-right: 10px;
+}

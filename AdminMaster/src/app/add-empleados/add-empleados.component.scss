@@ -1,0 +1,127 @@
+.tit-empleados{
+    font-family: 'poetsen one', cursive;
+}
+
+// Style Botones Activo-Inactivo
+
+.act-inac {
+    display: flex;
+    border-radius: 5px;
+    padding: 7px;
+    justify-content: center;
+    align-items: center;
+}
+.valid-focus:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    outline: none;
+}
+
+.is-invalid {
+    border: 1px solid #dc3545;
+    box-shadow: none;
+}
+.btn-act {
+    border: none;
+    width: 174px;
+    text-align: center;
+    border-radius: 7px;
+    color: black;
+    padding: 7px;
+    font-weight: bold;
+}
+.btn-active{
+    color: white;
+    background-color: #4CAF50; 
+}
+.active_negative{
+    color:white!important;
+    background-color: #fa0000; 
+}
+.btn-act:focus{
+    color: white;
+    background-color: #4CAF50; 
+}
+
+.btn-inac {
+    border: none;
+    width: 174px;
+    text-align: center;
+    border-radius: 7px;
+    color: black;
+    padding: 7px;
+    font-weight: bold;
+    margin-left: 4px;
+}
+
+.btn-inac:focus{
+    color: white;
+    background-color: #fa0000; 
+}
+
+// Style Form
+
+.form-control:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    outline: none; 
+}
+.form-control2:focus{
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+}
+.form-control{
+    border: none;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+    outline: none; 
+}
+
+.btn {
+    width: 100%;
+    background-color: #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none; 
+    cursor: pointer;
+}
+
+.btn:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 2px #5adbff;
+}
+
+.btn.confir {
+    width: 100%;
+    background-color: #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    border: none; 
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+}
+
+.confirmarfinal{
+    display: flex;
+    height: 70px;
+    align-items: center;
+    justify-content: center;
+}
+
+.cont-img{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.image{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #40ff46; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px #40ff46;
+}
