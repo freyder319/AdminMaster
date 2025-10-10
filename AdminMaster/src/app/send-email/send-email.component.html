@@ -1,0 +1,27 @@
+<main>
+    <section>
+        <div class="container body">
+            <div class="row login bg-white">
+                <div class="col-md-6 text-center p-4">
+                    <img src="../../assets/img/login.jpg" alt="Login" class="login-img img-fluid">
+                </div>
+
+                <div class="col-md-6 p-4">
+                    <h2 class="titulo-email">Recuperar Contraseña</h2><br>
+                    <p class="text-security">Ingresa tu correo electrónico para recibir un código de verificación</p>
+
+                    <form [formGroup]="emailForm" (ngSubmit)="enviarCodigo()">
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="correo" formControlName="correo" placeholder="Correo Electrónico">
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-principal" [disabled]="emailForm.invalid">Enviar Código</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>

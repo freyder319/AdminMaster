@@ -1,6 +1,6 @@
 import { Component, Input, Output,EventEmitter } from '@angular/core';
 import { Clientes, ClientesService } from '../services/clientes.service';
-import { CommonModule, NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from "@angular/forms";
 import Swal from 'sweetalert2';
 

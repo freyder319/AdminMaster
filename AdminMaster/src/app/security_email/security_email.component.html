@@ -7,21 +7,20 @@
         </div>
         <div class="col-md-6 p-4">
           <h2 class="titulo-login">Seguridad</h2><br>
-          <p class="text-security">Por favor, digita el codigo de verificación que fue enviado a tu Correo Electronico</p>
-          <form>
+          <p class="text-security">
+            Por favor, digita el código de verificación que fue enviado a tu correo electrónico
+          </p>
+          <form [formGroup]="form" (ngSubmit)="verificarCodigo()">
             <div class="container text-center my-4">
-              <p class="text-security fw-bold">f******japoQgmail.com</p>
+              <p class="text-security fw-bold">{{ correoOculto }}</p>
               <div class="d-flex justify-content-center gap-2">
-                <input title="codigo1" type="text" class="form-control otp-input" maxlength="1">
-                <input title="codigo2" type="text" class="form-control otp-input" maxlength="1">
-                <input title="codigo3" type="text" class="form-control otp-input" maxlength="1">
-                <input title="codigo4" type="text" class="form-control otp-input" maxlength="1">
-                <input title="codigo5" type="text" class="form-control otp-input" maxlength="1">
-                <input title="codigo6" type="text" class="form-control otp-input" maxlength="1">
+                 <input *ngFor="let i of [0,1,2,3,4,5]" type="text" maxlength="1" class="form-control otp-input text-center" [formControlName]="'codigo' + i" (keyup)="autoFocusSiguiente($event, i)"/>
               </div>
             </div>
             <div class="d-grid gap-2">
-              <button type="submit" class="btn btn-principal">Verificar</button>
+              <button type="submit" class="btn btn-principal" [disabled]="form.invalid">
+                Verificar
+              </button>
             </div>
           </form>
         </div>
