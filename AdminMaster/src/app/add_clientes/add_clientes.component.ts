@@ -28,7 +28,7 @@ export class AddClientesComponent {
     if(this.cliente.estado==''){
       Swal.fire("Estado Requerido", "Por Favor Selecciona si el cliente está Activo o Inactivo.", "warning");
     }else{
-          this.clientesServices.createCliente(this.cliente).subscribe({
+      this.clientesServices.createCliente(this.cliente).subscribe({
       next:()=>{
         Swal.fire({
           title: "Cliente Registrado!",

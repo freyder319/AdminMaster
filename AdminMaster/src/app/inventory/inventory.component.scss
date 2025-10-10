@@ -20,7 +20,19 @@ main{
     flex-wrap: wrap; 
     justify-content: center;
 }
-
+.modificar2{
+    border: 1px solid  #5adbff ;
+    box-shadow: 0 0 3px 1px #5adbff;
+    color:  #5adbff;
+    font-weight: 900;
+}
+.modificar2:hover{
+    background-color:  #5adbff;
+    color: white;
+}
+.eliminar2{
+    box-shadow: 0 0 3px 1px #e81313;
+}
 .body1, .body2 {
     width: 350px;
     height: 80px;
@@ -237,12 +249,8 @@ main{
 }
 
 .btn.eliminar {
-    width: 165px;
-    text-align: center;
     color: red;
     box-shadow: 0 0 3px 1px #e81313;
-    border-radius: 7px;
-    padding: 7px;
 }
 
 .btn.eliminar:focus {
@@ -253,13 +261,7 @@ main{
 .btn.modificar {
     box-shadow: 0 0 3px 1px #575757;
     border: none;
-    width: 165px;
-    text-align: center;
-    border-radius: 7px;
-    color: black;
-    padding: 7px;
-    font-weight: bold;
-    margin-left: 12px;
+    color: black !important;
 }
 
 .btn.modificar:focus {

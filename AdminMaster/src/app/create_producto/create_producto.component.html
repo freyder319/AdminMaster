@@ -1,46 +1,104 @@
 <!-- Formulario Registro -->
-
 <div class="container form">
-    <div class="container subir-img">
-        <button class="item">
-            <h4 class="mb-4">Subir Imagen</h4>
-            <input title="subir_imagen" type="file" accept="image/*" id="imagenInput" class="d-none" >
-        </button>
-    </div><br>
-    <div class="formulario">
-        <form>
-            <div class="mb-3">
-                <label for="exampleInputText" class="form-label">Nombre del Producto</label>
-                <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputText" class="form-label">Codigo de Producto</label>
-                <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputText" class="form-label">Productos Disponibles (Stock)</label>
-                <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputText" class="form-label">Precio Unitario</label>
-                <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputText" class="form-label">Precio Comercial</label>
-                <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputDate" class="form-label">Categoria</label>
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Selecciona una Categoria</option>
-                    <option value="1">Panaderia</option>
-                    <option value="2">Pasteleria</option>
-                    <option value="3">Bebidas</option>
-                </select>
-            </div><br>
-            <div class="confirmarfinal">
-                <button type="submit" class="btn confir">Confirmar</button>
-            </div>
-        </form>
+  <div class="container subir-img text-center mb-4">
+    <div class="image-upload-box" (click)="abrirSelectorImagen()">
+      <img
+        id="preview"
+        [src]="previewUrl || 'https://static.vecteezy.com/system/resources/previews/022/059/000/non_2x/no-image-available-icon-vector.jpg'"
+        alt="Vista previa"
+        class="img-fluid rounded mb-2"
+      />
+      <div class="overlay-text">
+        <i class="bi bi-cloud-arrow-up fs-3"></i>
+        <p class="m-0">Haz clic para subir imagen</p>
+      </div>
     </div>
+    <input
+    title="imagen"
+      #imagenInput
+      type="file"
+      accept="image/*"
+      id="imagenInput"
+      class="d-none"
+      (change)="mostrarPreview($event)"
+    />
+  </div>
+
+  <div class="formulario">
+    <form (ngSubmit)="onSubmit()" #formulario="ngForm">
+      <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre del Producto</label>
+        <input
+          type="text"
+          class="form-control"
+          id="nombre"
+          name="nombreProducto"
+          [(ngModel)]="producto.nombreProducto"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="codigo" class="form-label">Código de Producto</label>
+        <input
+          type="text"
+          class="form-control"
+          id="codigo"
+          name="codigoProducto"
+          [(ngModel)]="producto.codigoProducto"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="stock" class="form-label">Productos Disponibles (Stock)</label>
+        <input
+          type="number"
+          class="form-control"
+          id="stock"
+          name="stockProducto"
+          [(ngModel)]="producto.stockProducto"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="precioUnitario" class="form-label">Precio Unitario</label>
+        <input
+          type="number"
+          class="form-control"
+          id="precioUnitario"
+          name="precioUnitario"
+          [(ngModel)]="producto.precioUnitario"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="precioComercial" class="form-label">Precio Comercial</label>
+        <input
+          type="number"
+          class="form-control"
+          id="precioComercial"
+          name="precioComercial"
+          [(ngModel)]="producto.precioComercial"
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="categoria" class="form-label">Categoría</label>
+        <select
+          class="form-select"
+          id="categoria"
+          name="categoria"
+          [(ngModel)]="producto.categoria"
+        >
+          <option disabled selected>Selecciona una Categoría</option>
+          <option value="1">Panadería</option>
+          <option value="2">Pastelería</option>
+          <option value="3">Bebidas</option>
+        </select>
+      </div>
+
+      <div class="confirmarfinal text-center mt-3">
+        <button type="submit" class="btn btn-primary">Confirmar</button>
+      </div>
+    </form>
+  </div>
 </div>
