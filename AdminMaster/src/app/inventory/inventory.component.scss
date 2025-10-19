@@ -358,6 +358,54 @@ nav {
   width: fit-content;
   margin: 0 auto;
 }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 260ms ease-in-out;
+}
 
 
 
+
+// Modern pagination styling
+.pagination {
+  gap: 6px;
+}
+.pagination .page-item {
+  transition: transform 120ms ease;
+}
+.pagination .page-item:not(.disabled):hover {
+  transform: translateY(-1px);
+}
+.pagination .page-link {
+  border: 1px solid #e9ecef;
+  color: #333;
+  border-radius: 10px;
+  min-width: 40px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+.pagination .page-link:hover {
+  border-color: #5adbff;
+  color: #0d6efd;
+}
+.pagination .page-item.active .page-link {
+  background-color: #5adbff;
+  border-color: #5adbff;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(90,219,255,0.35);
+}
+.pagination .page-item.disabled .page-link {
+  background-color: #f8f9fa;
+  color: #9aa0a6;
+}
+.pagination .page-ellipsis {
+  border: none;
+  background: transparent;
+  color: #9aa0a6;
+  box-shadow: none;
+  cursor: default;
+}

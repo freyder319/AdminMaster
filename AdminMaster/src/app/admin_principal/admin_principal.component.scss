@@ -14,6 +14,12 @@ main{
     position: fixed !important; 
 }
 
+/* Asegurar que el backdrop quede por encima del navbar y contenido */
+::ng-deep .offcanvas-backdrop {
+    z-index: 1050 !important; /* debajo del panel (1055), encima del navbar (1040) */
+    pointer-events: auto;
+}
+
 .tit-movimientos{
     font-family: 'poetsen one',cursive;
     text-align: center;
@@ -61,7 +67,7 @@ main{
     color:#FF0000
 }
 .body1{
-    z-index: -1000;
+    z-index: auto;
 }
 .nueva-venta:active{
     background-color: rgb(0, 158, 0);
@@ -77,7 +83,7 @@ main{
     background-color: rgb(207, 0, 0);
 }
 .fixed-bottom{
-    position: relative;
+    position: relative; /* no fijar por encima del navbar */
 }
 .body1,.body2{
     display: grid;
@@ -88,6 +94,8 @@ main{
     display: flex;
     flex-wrap:wrap;
     justify-content: center;
+    position: relative;
+    z-index: auto; /* no crear stacking context para permitir que el offcanvas (1055) lo supere */
 }
 
 .nuevo-gasto:active{

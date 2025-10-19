@@ -25,7 +25,7 @@
   </div>
 
   <div class="formulario">
-    <form (ngSubmit)="onSubmit()" #formulario="ngForm">
+    <form (ngSubmit)="onSubmit()" #formulario="ngForm" novalidate>
       <div class="mb-3">
         <label for="nombre" class="form-label">Nombre del Producto</label>
         <input
@@ -33,8 +33,17 @@
           class="form-control"
           id="nombre"
           name="nombreProducto"
+          required
+          maxlength="80"
           [(ngModel)]="producto.nombreProducto"
+          #nombreProducto="ngModel"
         />
+        <div class="invalid-feedback d-block" *ngIf="nombreProducto.invalid && (nombreProducto.dirty || nombreProducto.touched)">
+          El nombre es obligatorio.
+        </div>
+        <div class="invalid-feedback d-block" *ngIf="(producto.nombreProducto?.length || 0) > 80">
+          El nombre no puede sobrepasar 80 caracteres.
+        </div>
       </div>
 
       <div class="mb-3">
@@ -44,8 +53,21 @@
           class="form-control"
           id="codigo"
           name="codigoProducto"
+          required
           [(ngModel)]="producto.codigoProducto"
+          pattern="^[A-Za-z0-9]+$"
+          title="Solo letras y números (sin signos)"
+          (ngModelChange)="onCodigoInput($event)"
+          (blur)="validarCodigo()"
+          #codigoProducto="ngModel"
+          [ngClass]="{ 'is-invalid': (codigoProducto.invalid && (codigoProducto.dirty || codigoProducto.touched)) || codigoExistente }"
         />
+        <div class="invalid-feedback d-block" *ngIf="codigoProducto.invalid && (codigoProducto.dirty || codigoProducto.touched)">
+          El código es obligatorio y solo puede contener letras y números.
+        </div>
+        <div class="invalid-feedback d-block" *ngIf="!codigoProducto.invalid && codigoExistente">
+          Este código ya existe. Ingrese uno diferente.
+        </div>
       </div>
 
       <div class="mb-3">
@@ -55,8 +77,16 @@
           class="form-control"
           id="stock"
           name="stockProducto"
-          [(ngModel)]="producto.stockProducto"
+          required
+          min="0"
+          placeholder="0"
+          [ngModel]="producto.stockProducto || null"
+          (ngModelChange)="producto.stockProducto = $event"
+          #stockProducto="ngModel"
         />
+        <div class="invalid-feedback d-block" *ngIf="stockProducto.invalid && (stockProducto.dirty || stockProducto.touched)">
+          El stock es obligatorio y no puede ser negativo.
+        </div>
       </div>
 
       <div class="mb-3">
@@ -66,8 +96,14 @@
           class="form-control"
           id="precioUnitario"
           name="precioUnitario"
+          required
+          min="0"
           [(ngModel)]="producto.precioUnitario"
+          #precioUnitario="ngModel"
         />
+        <div class="invalid-feedback d-block" *ngIf="precioUnitario.invalid && (precioUnitario.dirty || precioUnitario.touched)">
+          El precio unitario es obligatorio y no puede ser negativo.
+        </div>
       </div>
 
       <div class="mb-3">
@@ -77,8 +113,14 @@
           class="form-control"
           id="precioComercial"
           name="precioComercial"
+          required
+          min="0"
           [(ngModel)]="producto.precioComercial"
+          #precioComercial="ngModel"
         />
+        <div class="invalid-feedback d-block" *ngIf="precioComercial.invalid && (precioComercial.dirty || precioComercial.touched)">
+          El precio comercial es obligatorio y no puede ser negativo.
+        </div>
       </div>
 
       <div class="mb-3">
@@ -87,17 +129,20 @@
           class="form-select"
           id="categoria"
           name="categoria"
+          required
           [(ngModel)]="producto.categoria"
+          #categoriaCtrl="ngModel"
         >
-          <option disabled selected>Selecciona una Categoría</option>
-          <option value="1">Panadería</option>
-          <option value="2">Pastelería</option>
-          <option value="3">Bebidas</option>
+          <option disabled [selected]="!producto.categoria">Selecciona una Categoría</option>
+          <option *ngFor="let c of categorias" [value]="c.idCategoria">{{ c.nombreCategoria }}</option>
         </select>
+        <div class="invalid-feedback d-block" *ngIf="categoriaCtrl.invalid && (categoriaCtrl.dirty || categoriaCtrl.touched)">
+          Selecciona una categoría.
+        </div>
       </div>
 
       <div class="confirmarfinal text-center mt-3">
-        <button type="submit" class="btn btn-primary">Confirmar</button>
+        <button type="submit" class="btn btn-primary" [disabled]="formulario.invalid || codigoExistente">Confirmar</button>
       </div>
     </form>
   </div>

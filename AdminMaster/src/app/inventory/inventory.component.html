@@ -42,7 +42,7 @@
         <div class="col-lg-3 col-md-6 col-sm-12">
           <div class="search">
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="Buscar Producto..." id="search-input">
+              <input type="text" class="form-control" placeholder="Buscar Producto..." id="search-input" [(ngModel)]="searchTerm" (input)="onSearchChange()">
             </div>
           </div>
         </div>
@@ -50,8 +50,8 @@
         <!-- Ver todas las Categorias -->
         <div class="col-lg-3 col-md-6 col-sm-12">
           <div class="ver-cate">
-            <select title="categorias" class="form-select" name="categoria">
-              <option value="" selected>Ver Categorías</option>
+            <select title="categorias" class="form-select" name="categoria" [(ngModel)]="selectedCategoryId" (change)="onCategoryChange()">
+              <option value="" selected>Todas</option>
               <option *ngFor="let cat of categorias" [value]="cat.idCategoria">
                 {{ cat.nombreCategoria }}
               </option>
@@ -71,7 +71,7 @@
         <!-- Agregar Producto -->
         <div class="col-lg-3 col-md-6 col-sm-12">
           <div class="agg-produc">
-            <button class="btn agregar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAgregarProducto" aria-controls="offcanvasAgregarProducto">
+            <button class="btn agregar" type="button" (click)="abrirCrear()" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAgregarProducto" aria-controls="offcanvasAgregarProducto">
               <span class="texto">Agregar Producto</span>
               <img width="80px" src="../../assets/img/icono_inventario/Proveedores__7_-removebg-preview.png" alt="">
             </button>
@@ -158,12 +158,17 @@
     <!-- Offcanvas Agregar Producto -->
     <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="offcanvasAgregarProducto" aria-labelledby="offcanvasAgregarProductoLabel">
       <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasAgregarProductoLabel">Crear Producto</h5>
+        <h5 class="offcanvas-title" id="offcanvasAgregarProductoLabel">{{ tituloOffcanvas }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
       <div class="offcanvas-body">
         <div>
-          <app-create-producto></app-create-producto>
+          <app-create-producto
+            [productoInicial]="productoSeleccionado"
+            [editMode]="!!productoSeleccionado"
+            [titulo]="tituloOffcanvas"
+            (guardado)="onGuardado()"
+          ></app-create-producto>
         </div>
       </div>
     </div>
@@ -176,7 +181,7 @@
           <div class="row">
             <div class="col-12">
                   <div class="table-responsive">
-                    <table class="table  align-middle mb-0">
+                    <table class="table  align-middle mb-0 fade-in">
                       <thead class="table-light">
                         <tr>
                           <th>#</th>
@@ -191,28 +196,32 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <!-- Ejemplo de producto -->
-                        <tr>
-                          <td>1</td>
-                          <td>
-                            <img src="https://via.placeholder.com/60" alt="Producto" class="rounded" width="60">
+                        <tr *ngIf="productosFiltrados.length === 0">
+                          <td colspan="9" class="text-center text-muted py-4">
+                            No hay productos de la categoría <b>{{ selectedCategoryName | titlecase }}</b>
+                            <ng-container *ngIf="searchTerm"> con el término "{{ searchTerm }}"</ng-container>.
                           </td>
-                          <td>PRD001</td>
-                          <td>Café Premium</td>
-                          <td>Bebidas</td>
-                          <td>45</td>
-                          <td>$12.000</td>
-                          <td>$15.000</td>
+                        </tr>
+                        <tr *ngFor="let producto of paginatedProductos; let i = index">
+                          <td>{{ i + 1 + (pageIndex * pageSize) }}</td>
+                          <td>
+                            <img [src]="toImageUrl(producto.imgProducto)" alt="Producto" class="rounded" width="60">
+                          </td>
+                          <td>{{ producto.codigoProducto }}</td>
+                          <td>{{ producto.nombreProducto }}</td>
+                          <td>{{ producto.categoria?.nombreCategoria || producto.idCategoria || '-' }}</td>
+                          <td>{{ producto.stockProducto }}</td>
+                          <td>{{ producto.precioUnitario | currency:'COP':'symbol-narrow' }}</td>
+                          <td>{{ producto.precioComercial | currency:'COP':'symbol-narrow' }}</td>
                           <td class="text-center">
-                            <button title="Modificar" class="btn modificar2 btn-sm me-1">
+                            <button title="Modificar" class="btn modificar2 btn-sm me-1" (click)="abrirEditar(producto)" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAgregarProducto" aria-controls="offcanvasAgregarProducto">
                               <i class="bi bi-pencil-square">Modificar</i>
                             </button>
-                            <button title="Eliminar" class="btn btn-outline-danger eliminar2 btn-sm">
+                            <button title="Eliminar" class="btn btn-outline-danger eliminar2 btn-sm" (click)="eliminarProducto(producto.id!)">
                               <i class="bi bi-trash">Eliminar</i>
                             </button>
                           </td>
                         </tr>
-                        <!-- Aquí se pueden renderizar los demás productos dinámicamente -->
                       </tbody>
                     </table>
                   </div>
@@ -222,4 +231,32 @@
   </section>
   <!-- Pagination -->
   <br>
+  <section>
+    <div class="container">
+      <nav aria-label="Paginación de productos">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="pageIndex === 0">
+            <button class="page-link" (click)="goToFirst()" [disabled]="pageIndex === 0" aria-label="Primera">«</button>
+          </li>
+          <li class="page-item" [class.disabled]="pageIndex === 0">
+            <button class="page-link" (click)="goToPage(pageIndex - 1)" [disabled]="pageIndex === 0" aria-label="Anterior">‹</button>
+          </li>
+          <ng-container *ngFor="let p of visiblePages">
+            <li class="page-item" *ngIf="p >= 0" [class.active]="p === pageIndex">
+              <button class="page-link" (click)="goToPage(p)">{{ p + 1 }}</button>
+            </li>
+            <li class="page-item disabled" *ngIf="p < 0">
+              <span class="page-link page-ellipsis">…</span>
+            </li>
+          </ng-container>
+          <li class="page-item" [class.disabled]="pageIndex >= totalPages - 1">
+            <button class="page-link" (click)="goToPage(pageIndex + 1)" [disabled]="pageIndex >= totalPages - 1" aria-label="Siguiente">›</button>
+          </li>
+          <li class="page-item" [class.disabled]="pageIndex >= totalPages - 1">
+            <button class="page-link" (click)="goToLast()" [disabled]="pageIndex >= totalPages - 1" aria-label="Última">»</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </section>
 </main>

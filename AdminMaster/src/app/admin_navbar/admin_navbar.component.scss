@@ -6,7 +6,7 @@
   position: fixed;
   width: 100%;
   top: 0;
-  z-index: 998 !important;
+  z-index: 1040 !important; /* sobre contenido, debajo offcanvas (1055) */
   background-color: white;
   overflow-x: auto;
   white-space: nowrap;
@@ -73,7 +73,7 @@
     border-top: 2px solid rgb(207, 207, 207);
     border-bottom: none;
     background-color: white;
-    z-index: 1000;
+    z-index: 1040 !important; /* sobre contenido, debajo offcanvas (1055) */
   }
 
   .nav-text {

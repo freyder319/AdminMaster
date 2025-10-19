@@ -27,7 +27,8 @@
           <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="search">
               <div class="input-group">
-                <input type="text" class="form-control" placeholder="Buscar Cliente..." id="search-input">
+                <input type="text" class="form-control" placeholder="Buscar Cliente..." id="search-input" [(ngModel)]="searchTerm">
+
               </div>
             </div>
           </div>
@@ -70,7 +71,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let cliente of clientes">
+            <tr *ngFor="let cliente of clientesFiltrados">
               <td data-label="Nombre">
                 <!-- Solo visible en móviles (<768px), clickeable -->
                 <div class="perfil clickable d-md-none" (click)="mostrarInterfazReponsive(cliente.id)">
@@ -121,8 +122,15 @@
                 </div>
               </td>
             </tr>
-            <tr *ngIf="clientes.length === 0">
+            <!-- Sin clientes en la base -->
+            <tr *ngIf="clientes.length === 0 && !searchTerm">
               <td colspan="7" class="text-center">No hay clientes registrados</td>
+            </tr>
+            <!-- Sin coincidencias con la búsqueda -->
+            <tr *ngIf="clientes.length > 0 && clientesFiltrados.length === 0 && searchTerm">
+              <td colspan="7" class="text-center text-muted">
+                No se encontraron clientes para "{{ searchTerm }}".
+              </td>
             </tr>
           </tbody>
         </table>

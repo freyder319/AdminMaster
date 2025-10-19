@@ -25,3 +25,11 @@ html, body {
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Offcanvas global stacking to sit above navbar/content */
+.offcanvas-backdrop {
+  z-index: 2000 !important; /* below panel, above navbar/content */
+}
+.offcanvas {
+  z-index: 2005 !important; /* above backdrop */
+}
