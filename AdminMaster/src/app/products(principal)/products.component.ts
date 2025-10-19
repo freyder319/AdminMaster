@@ -4,10 +4,11 @@ import { FooterComponent } from "../footer/footer.component";
 import { NgFor, NgIf, TitleCasePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterLink } from '@angular/router';
+import { ProductoService, Producto as BackendProducto } from '../services/producto.service';
 
 type Categoria = 'panaderia' | 'pasteleria' | 'bebidas';
 
-interface Producto {
+interface ProductoCard {
   nombre: string;
   precio: number;
   imagen: string;
@@ -22,46 +23,20 @@ interface Producto {
   styleUrl: './products.component.scss'
 })
 export class ProductsComponent {
-
-  // ngOnInit() {
-  //   this.productosService.getProductos().subscribe(data => {
-  //     this.productos = data;
-  //   });
-  // }
-
+  constructor(private productoService: ProductoService) {}
+  ngOnInit() {
+    this.productoService.getAll().subscribe({
+      next: (data) => this.cargarDesdeBackend(data || []),
+      error: () => this.cargarDesdeBackend([])
+    });
+  }
   categoriaSeleccionada: Categoria = 'panaderia';
+  private baseImageUrl = 'http://localhost:3000/storage/';
 
-  productos: Record<Categoria, Producto[]> = {
-    panaderia: [
-      { nombre: 'Croasant de France', precio: 800, imagen: 'croasant.jpg' },
-      { nombre: 'Pan de Yuca', precio: 900, imagen: 'pandeyuca.jpg' },
-      { nombre: 'Pastel de Pollo', precio: 2000, imagen: 'pastelpollo.jpg' },
-      { nombre: 'Almohabana The Best', precio: 900, imagen: 'almohabana.jpg' },
-      { nombre: 'Croasant de France', precio: 800, imagen: 'croasant.jpg' },
-      { nombre: 'Pan de Yuca', precio: 900, imagen: 'pandeyuca.jpg' },
-      { nombre: 'Pastel de Pollo', precio: 2000, imagen: 'pastelpollo.jpg' },
-      { nombre: 'Almohabana The Best', precio: 900, imagen: 'almohabana.jpg' }
-    ],
-    bebidas: [
-      { nombre: 'Coca Cola 1.5 L', precio: 3000, imagen: 'cocacola.jpg' },
-      { nombre: 'Speed Max', precio: 2000, imagen: 'speed.jpg' },
-      { nombre: 'Pony Malta Personal', precio: 2500, imagen: 'ponymalta.jpg' },
-      { nombre: 'Colombiana 1.5 L', precio: 3500, imagen: 'colombiana.jpg' },
-      { nombre: 'Coca Cola 1.5 L', precio: 3000, imagen: 'cocacola.jpg' },
-      { nombre: 'Speed Max', precio: 2000, imagen: 'speed.jpg' },
-      { nombre: 'Pony Malta Personal', precio: 2500, imagen: 'ponymalta.jpg' },
-      { nombre: 'Colombiana 1.5 L', precio: 3500, imagen: 'colombiana.jpg' }
-    ],
-    pasteleria: [
-      { nombre: 'Torta Fria Libra', precio: 40000, imagen: 'tortafrialibra.png' },
-      { nombre: 'Torta Fria Media Libra', precio: 20000, imagen: 'tortafriamedialibra.jpg' },
-      { nombre: 'Cup Cakes Suspiros', precio: 3000, imagen: 'cupcake.png' },
-      { nombre: 'Postre de Maracuyá', precio: 3000, imagen: 'postresmaracuya.png' },
-      { nombre: 'Torta Fria Libra', precio: 40000, imagen: 'tortafrialibra.png' },
-      { nombre: 'Torta Fria Media Libra', precio: 20000, imagen: 'tortafriamedialibra.jpg' },
-      { nombre: 'Cup Cakes Suspiros', precio: 3000, imagen: 'cupcake.png' },
-      { nombre: 'Postre de Maracuyá', precio: 3000, imagen: 'postresmaracuya.png' }
-    ]
+  productos: Record<Categoria, ProductoCard[]> = {
+    panaderia: [],
+    bebidas: [],
+    pasteleria: []
   };
 
   animarTitulo = false;
@@ -72,9 +47,35 @@ export class ProductsComponent {
     setTimeout(() => this.animarTitulo = true, 50);
   }
 
-  get productosFiltrados(): Producto[] {
+  get productosFiltrados(): ProductoCard[] {
     return this.productos[this.categoriaSeleccionada];
   }
 
+  private cargarDesdeBackend(lista: BackendProducto[]): void {
+    const toImageUrl = (img?: string | null): string => {
+      if (!img) return '';
+      const s = String(img);
+      if (s.startsWith('http') || s.startsWith('data:')) return s;
+      return this.baseImageUrl + s.replace(/^\/+/, '');
+    };
+    const mapToLocal = (p: BackendProducto): ProductoCard => ({
+      nombre: p.nombreProducto,
+      precio: p.precioComercial ?? p.precioUnitario,
+      imagen: toImageUrl(p.imgProducto)
+    });
+    const es = (p: BackendProducto, nombre: string) =>
+      (p.categoria?.nombreCategoria || '').toLowerCase().includes(nombre) ||
+      String(p.idCategoria || '').toLowerCase() === nombre;
+
+    const pan = lista.filter(p => es(p, 'pan') || es(p, 'panaderia')).map(mapToLocal);
+    const past = lista.filter(p => es(p, 'pastel') || es(p, 'pasteleria')).map(mapToLocal);
+    const beb = lista.filter(p => es(p, 'bebida') || es(p, 'bebidas')).map(mapToLocal);
+
+    this.productos = {
+      panaderia: pan,
+      pasteleria: past,
+      bebidas: beb,
+    };
+  }
 
 }
