@@ -9,15 +9,19 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(correo: string, contrasena: string) {
-    return this.http.post<{ access_token: string; rol: string; cajaId?: number }>(
+    return this.http.post<{ access_token: string; rol: string; userId?: number; cajaId?: number }>(
       `${this.apiUrl}/login`,
       { correo, contrasena }
     ).pipe(
       tap(res => {
         localStorage.setItem('token', res.access_token);
-        localStorage.setItem('rol', res.rol);
+        const rol = (res.rol || '').trim().toLowerCase();
+        localStorage.setItem('rol', rol);
+        if (typeof res.userId === 'number') {
+          localStorage.setItem('userId', String(res.userId));
+        }
 
-        if (res.rol === 'punto_pos' && res.cajaId !== undefined) {
+        if (rol === 'punto_pos' && res.cajaId !== undefined) {
           localStorage.setItem('cajaId', res.cajaId.toString());
         }
       })
@@ -34,7 +38,8 @@ export class AuthService {
   }
 
   getRole() {
-    return localStorage.getItem('rol');
+    const r = localStorage.getItem('rol');
+    return r ? r.trim().toLowerCase() : null;
   }
 
   isLoggedIn() {

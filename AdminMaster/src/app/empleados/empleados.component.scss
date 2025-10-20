@@ -176,14 +176,8 @@ img {
         width: 100%;
     }
 
-    .perfil img {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        background-color: #40ff46;
-        padding: 10px;
-        box-shadow: 0 2px 6px #40ff46;
-        flex-shrink: 0;
+    .perfil .info {
+        max-width: calc(100% - 100px);
     }
 
     .info {
@@ -201,15 +195,24 @@ img {
     }
 
     .info .correo {
-        font-size: 30px; 
-        color: #666;
-        margin: 4px 0 0 20px; 
+        font-size: 16px;
+        font-weight: bold;
+        margin: 2px 0 0 10px;
+        line-height: 1.2;
+        word-break: break-word;
+        max-width: 100%;
     }
 
-    /* Ocultar columnas innecesarias */
-    .table tr td[data-label="Correo"],
     .table tr td[data-label="Teléfono"],
-    .table tr td[data-label="Acciones"],
+    .table tr td[data-label="Acciones"] {
+        display: none;
+    }
+
+    .table tr td[data-label="Correo"] {
+        display: block;
+        width: 100%;
+    }
+
     .table td::before {
         display: none;
     }

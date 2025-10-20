@@ -26,7 +26,7 @@
           <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="search">
               <div class="input-group">
-                <input type="text"  class="form-control" placeholder="Buscar Caja..." id="search-input" [(ngModel)]="busquedaCaja" (input)="filtrarCajas()">
+                <input type="text"  class="form-control" placeholder="Buscar Caja..." id="search-input" (input)="onSearch($any($event.target).value)">
               </div>
             </div>
           </div>
@@ -65,9 +65,9 @@
               <th>Acciones</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody *ngIf="(filteredCajas$ | async) as list">
             <!-- Cajas -->
-            <tr *ngFor="let caja of cajas">
+            <tr *ngFor="let caja of list">
               <td data-label="Nombre">
                 <!-- Móvil (<768px) → perfil clickeable -->
                 <div class="perfil clickable d-md-none" (click)="mostrarInterfazReponsive(caja.id)">
@@ -113,8 +113,8 @@
                 </div>
               </td>
             </tr>
-            <tr *ngIf="cajas.length === 0">
-              <td colspan="7" class="text-center">No hay Cajas Registradas</td>
+            <tr *ngIf="list.length === 0">
+              <td colspan="7" class="text-center">{{ lastSearchTerm ? ('No se encontró ninguna caja para "' + lastSearchTerm + '".') : 'No hay Cajas Registradas' }}</td>
             </tr>
           </tbody>
         </table>

@@ -2,6 +2,7 @@ import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
+import { TurnosService } from '../services/turnos.service';
 
 @Component({
   selector: 'app-admin-navbar',
@@ -14,7 +15,7 @@ export class AdminNavbarComponent {
   correo: string | null = null;
   rol: string | null = null;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private turnosService: TurnosService) {}
 
   cerrarSesion(): void {
     const rol = localStorage.getItem('rol') ?? 'usuario';
@@ -34,17 +35,17 @@ export class AdminNavbarComponent {
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6'
     }).then(result => {
-      if (result.isConfirmed) {
-        localStorage.clear();
-        this.router.navigate(['/login']);
-        Swal.fire({
-          icon: 'success',
-          title: 'Sesión Cerrada',
-          html: `¡Hasta Pronto, <strong>${rolTexto}</strong>!`,
-          timer: 2000,
-          showConfirmButton: false
-        });
-      }
+      if (!result.isConfirmed) return;
+
+      localStorage.clear();
+      this.router.navigate(['/login']);
+      Swal.fire({
+        icon: 'success',
+        title: 'Sesión Cerrada',
+        html: `¡Hasta Pronto, <strong>${rolTexto}</strong>!`,
+        timer: 2000,
+        showConfirmButton: false
+      });
     });
   }
 

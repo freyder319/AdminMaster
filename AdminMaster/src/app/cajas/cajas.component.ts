@@ -7,6 +7,7 @@ import { ModifyCajaComponent } from '../modify-caja/modify-caja.component';
 import { Cajas, CajasService } from '../services/cajas.service';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
+import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
 declare var bootstrap: any;
 
 @Component({
@@ -22,7 +23,10 @@ export class CajasComponent {
   mostrarModificarCaja = false;
   cajas:Cajas[] = [];
   cajasFiltrar: Cajas[] = []; 
-  busquedaCaja: string = '';
+  // búsqueda reactiva
+  private search$ = new BehaviorSubject<string>('');
+  filteredCajas$!: Observable<Cajas[]>;
+  lastSearchTerm = '';
   constructor (private cajasServices: CajasService){}
 
   ngOnInit(): void {
@@ -30,6 +34,20 @@ export class CajasComponent {
       next: (data) => {
         this.cajasFiltrar = data;
         this.cajas = data;
+        // construir stream filtrado basado en término de búsqueda
+        this.filteredCajas$ = combineLatest([
+          this.search$,
+        ]).pipe(
+          map(([term]) => {
+            const t = (term || '').trim().toLowerCase();
+            if (!t) return this.cajas;
+            return this.cajas.filter(caja =>
+              caja.nombre?.toLowerCase().includes(t) ||
+              caja.codigoCaja?.toLowerCase().includes(t) ||
+              caja.estado?.toLowerCase().includes(t)
+            );
+          })
+        );
       },
       error: (error) => console.error('Error al Cargar Cajas:', error)
     });
@@ -53,13 +71,9 @@ export class CajasComponent {
     });
   }
 
-  filtrarCajas() {
-    const termino = this.busquedaCaja.trim().toLowerCase();
-    this.cajas = this.cajasFiltrar.filter(caja =>
-      caja.nombre?.toLowerCase().includes(termino) ||
-      caja.codigoCaja?.toLowerCase().includes(termino) ||
-      caja.estado?.toLowerCase().includes(termino)
-    );
+  onSearch(value: string): void {
+    this.lastSearchTerm = value || '';
+    this.search$.next(this.lastSearchTerm);
   }
 
   mostrarInterfazReponsive(id:number){

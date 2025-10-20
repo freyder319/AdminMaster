@@ -17,6 +17,7 @@ import { SecurityEmailComponent } from './security_email/security_email.componen
 import { LoginComponent } from './auth/login/login.component';
 import { SendEmailComponent } from './send-email/send-email.component';
 import { EmpleadosComponent } from './empleados/empleados.component';
+import { EmpleadoTurnoComponent } from './empleado-turno/empleado-turno.component';
 
 export const routes: Routes = [
     // Rutas para administrador
@@ -31,6 +32,7 @@ export const routes: Routes = [
     { path: "proveedor", component: ProveedoresComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
     { path: "modificar-proveedor", component: ModifyProveedorComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
     { path: "clientes", component: ClientesComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
+    { path: "turno-empleado", component: EmpleadoTurnoComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
     { path: "verificar-email", component: SendEmailComponent },
     { path: "login", component: LoginComponent },
     

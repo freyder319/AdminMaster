@@ -27,9 +27,12 @@
                     <!-- Correo -->
                     <div class="mb-3">
                         <label for="correo" class="form-label">Correo Electrónico</label>
-                        <input type="email" [(ngModel)]="empleado.correo" name="correo" id="correo" class="form-control" required (input)="validarCorreo()" [ngClass]="{ 'is-invalid': correoInvalido, 'valid-focus': !correoInvalido && empleado.correo }">
+                        <input type="email" [(ngModel)]="empleado.correo" name="correo" id="correo" class="form-control" required (input)="validarCorreo()" [ngClass]="{ 'is-invalid': correoInvalido || correoDuplicado, 'valid-focus': !correoInvalido && !correoDuplicado && empleado.correo }">
                         <div class="invalid-feedback" *ngIf="correoInvalido">
-                            Debes ingresar un correo válido (ejemplodominio.com).
+                            Debes ingresar un correo válido (ejemplo&#64;dominio.com).
+                        </div>
+                        <div class="invalid-feedback" *ngIf="!correoInvalido && correoDuplicado">
+                            El correo ya existe.
                         </div>
                     </div>
 
@@ -42,12 +45,15 @@
                     <!-- Teléfono -->
                     <div class="mb-3">
                         <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="tel" [(ngModel)]="empleado.telefono" name="telefono" id="telefono" class="form-control" required pattern="^[0-9]{1,10}$" (input)="validarTelefono()" [ngClass]="{ 'is-invalid': empleadoExcede || empleadoNoNumerico, 'valid-focus': !empleadoExcede && !empleadoNoNumerico }">
+                        <input type="tel" [(ngModel)]="empleado.telefono" name="telefono" id="telefono" class="form-control" required pattern="^[0-9]{1,10}$" (input)="validarTelefono()" [ngClass]="{ 'is-invalid': empleadoExcede || empleadoNoNumerico || telefonoDuplicado, 'valid-focus': !empleadoExcede && !empleadoNoNumerico && !telefonoDuplicado }">
                         <div class="invalid-feedback" *ngIf="empleadoExcede">
                             Un teléfono tiene máximo 10 números.
                         </div>
                         <div class="invalid-feedback" *ngIf="empleadoNoNumerico">
                             Solo se permiten números.
+                        </div>
+                        <div class="invalid-feedback" *ngIf="!empleadoExcede && !empleadoNoNumerico && telefonoDuplicado">
+                            El teléfono ya existe.
                         </div>
                     </div>
 
@@ -67,7 +73,7 @@
 
                     <!-- Botón -->
                     <div class="confirmarfinal">
-                        <button type="submit" class="btn confir" [disabled]="formEmpleado.invalid || correoInvalido || empleadoExcede || empleadoNoNumerico">Confirmar</button>
+                        <button type="submit" class="btn confir" [disabled]="formEmpleado.invalid || correoInvalido || empleadoExcede || empleadoNoNumerico || correoDuplicado || telefonoDuplicado">Confirmar</button>
                     </div>
                 </form>
             </div>
