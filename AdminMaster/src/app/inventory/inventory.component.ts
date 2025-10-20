@@ -212,7 +212,7 @@ export class InventoryComponent {
     this.categoriaService.createCategorie(this.categoria).subscribe({
           next:()=>{
             Swal.fire({
-              title: "Cliente Registrado!",
+              title: "Categoria Registrado!",
               icon: "success",
               html: `La Categoria <b>${this.categoria.nombreCategoria} </b> fue registrada con éxito`,
               draggable: true

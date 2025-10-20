@@ -27,7 +27,7 @@
                     <div class="col-sm-12 col-md-6 col-lg-6">
                         <div class="search">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Buscar Empleado..." id="search-input">
+                                <input type="text" class="form-control" placeholder="Buscar Empleado..." id="search-input" (input)="onSearch($any($event.target).value)">
                             </div>
                         </div>
                     </div>
@@ -39,13 +39,13 @@
                             <!-- Para pantallas grandes (≥768px) → abre offcanvas -->
                             <button class="btn agregar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddEmpleado" aria-controls="offcanvasAddEmpleado">
                                 <span class="texto">Agregar Empleado</span>
-                                <img width="80px" src="../../assets/img/icons_empleados/agregarmpleado.png" alt="">
+                                <img width="80px" src="../../assets/img/icons_empleado/agregarEmpleado.png" alt="">
                             </button>
 
                             <!-- Para pantallas pequeñas (<768px) → cambia de interfaz -->
                             <button class="btn agregar d-md-none" type="button" (click)="mostrarAddEmpleado = true">
                                 <span class="texto">Agregar Empleado</span>
-                                <img width="80px" src="../../assets/img/icons_empleados/agregarEmpleado.png" alt="">
+                                <img width="80px" src="../../assets/img/icons_empleado/agregarEmpleado.png" alt="">
                             </button>
 
                         </div>
@@ -66,40 +66,43 @@
                         <th>Acciones</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr *ngFor="let empleado of empleados">
+                    <tbody *ngIf="(filteredEmpleados$ | async) as list">
+                        <tr *ngFor="let empleado of list">
                             <td data-label="Correo">
-                                <!-- Solo visible en móviles (<768px), clickeable -->
+                                <!-- Móvil -->
                                 <div class="perfil clickable d-md-none" (click)="mostrarInterfazReponsive(empleado.id)">
                                     <img src="../../assets/img/icons-navbar/Empleados.png" alt="Empleado">
                                     <div class="info">
                                         <p class="correo">{{empleado.correo}}</p>
+                                        <p class="caja">{{empleado.caja?.nombre || 'Sin asignar'}}</p>
                                     </div>
                                 </div>
 
-                                <!-- Solo visible en escritorio (≥768px), NO clickeable -->
+                                <!-- Escritorio -->
                                 <div class="perfil d-none d-md-flex">
-                                    <img src="../../assets/img/icons-navbar/Empleados.png" alt="Camión Coca-Cola" width="50px" height="50px" style="margin-top: -10px;">
+                                    <img src="../../assets/img/icons-navbar/Empleados.png" alt="Empleado" width="50px" height="50px">
                                     <div class="info">
-                                        <p class="correo" style="margin-left: 10px;">{{empleado.correo}}</p>
+                                        <p class="correo">{{empleado.correo}}</p>
                                     </div>
                                 </div>
                             </td>
 
-                            <td data-label="Teléfono">{{empleado.telefono}}</td>
-                            <td data-label="Caja">
+                            <!-- Teléfono (solo visible en escritorio) -->
+                            <td data-label="Teléfono" class="d-none d-md-table-cell">{{empleado.telefono}}</td>
+
+                            <!-- Caja (solo visible en escritorio) -->
+                            <td data-label="Caja" class="d-none d-md-table-cell">
                                 <span *ngIf="empleado.caja">{{empleado.caja.nombre}}</span>
                                 <span *ngIf="!empleado.caja">Sin asignar</span>
                             </td>
-                            <td data-label="Acciones" class="acciones">
-                                <!-- Botones con texto (solo ≥1200px) -->
-                                <div class="d-none d-xl-flex gap-2">
 
-                                    <!-- OffCanvas Modificar Empleado -->
+                            <!-- Acciones -->
+                            <td data-label="Acciones" class="acciones">
+                                <!-- Botones con texto (≥1200px) -->
+                                <div class="d-none d-xl-flex gap-2">
                                     <button (click)="guardarId(empleado.id)" class="btn modificar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyEmpleado" aria-controls="offcanvasModifyEmpleado">
                                         <span class="texto">Modificar</span>
                                     </button>
-
                                     <button (click)="eliminarEmpleado(empleado.id)" class="btn elimi">Eliminar</button>
                                 </div>
 
@@ -114,8 +117,12 @@
                                 </div>
                             </td>
                         </tr>
-                        <tr *ngIf="empleados.length === 0">
-                            <td colspan="7" class="text-center">No hay Empleados registrados</td>
+
+                        <!-- Sin resultados / Sin empleados -->
+                        <tr *ngIf="list.length === 0">
+                            <td colspan="4" class="text-center">
+                                {{ lastSearchTerm ? ('No se encontró ningún empleado para "' + lastSearchTerm + '".') : 'No hay Empleados registrados' }}
+                            </td>
                         </tr>
                     </tbody>
                 </table>

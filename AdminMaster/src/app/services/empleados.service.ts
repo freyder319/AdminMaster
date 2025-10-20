@@ -15,9 +15,6 @@ export interface Empleados {
   cajaId?: number | null; 
 }
 
-
-
-
 @Injectable({
   providedIn: 'root'
 })
@@ -47,6 +44,12 @@ export class EmpleadosService {
 
   getCajas(): Observable<any[]> {
     return this.http.get<any[]>('http://localhost:3000/caja'); 
+  }
+
+  verificarExistencia(correo: string, telefono: string): Observable<{ correo: boolean, telefono: boolean }> {
+    return this.http.get<{ correo: boolean, telefono: boolean }>(
+      `${this.apiUrl}/verificar?correo=${correo}&telefono=${telefono}`
+    );
   }
 
 }

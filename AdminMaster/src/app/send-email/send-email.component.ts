@@ -23,7 +23,17 @@ export class SendEmailComponent {
 
   enviarCodigo() {
     const correo = this.emailForm.value.correo;
+    console.log('Correo a enviar:', correo);
 
+    if (!correo || this.emailForm.invalid) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Correo inválido',
+        text: 'Por favor ingresa un correo válido.',
+        confirmButtonText: 'Entendido'
+      });
+      return;
+    }
     this.authService.recuperarPorCorreo(correo).subscribe({
       next: () => {
         Swal.fire({

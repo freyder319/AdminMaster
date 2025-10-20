@@ -6,6 +6,7 @@ import { Empleados ,EmpleadosService } from '../services/empleados.service';
 import Swal from 'sweetalert2';
 import { AddEmpleadosComponent } from '../add-empleados/add-empleados.component';
 import { ModifyEmpleadoComponent } from '../modify-empleado/modify-empleado.component';
+import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
 
 @Component({
   selector: 'app-empleados',
@@ -18,6 +19,9 @@ export class EmpleadosComponent {
   mostrarAddEmpleado = false; 
   mostrarModificarEmpleado = false;
   empleados:Empleados[] = [];
+  private search$ = new BehaviorSubject<string>('');
+  filteredEmpleados$!: Observable<Empleados[]>;
+  lastSearchTerm = '';
 
   constructor (private empleadosServices: EmpleadosService){}
 
@@ -25,6 +29,20 @@ export class EmpleadosComponent {
     this.empleadosServices.getEmpleados().subscribe({
       next: (data) => {
         this.empleados = data;
+        // recompute filtered stream when base data changes
+        this.filteredEmpleados$ = combineLatest([
+          this.search$,
+        ]).pipe(
+          map(([term]) => {
+            const t = (term || '').trim().toLowerCase();
+            if (!t) return this.empleados;
+            return this.empleados.filter(e =>
+              (e.correo?.toLowerCase().includes(t)) ||
+              (e.telefono?.toLowerCase().includes(t)) ||
+              (e.caja?.nombre?.toLowerCase().includes(t))
+            );
+          })
+        );
       },
       error: (err) => {
         console.error('Error al cargar empleados:', err);
@@ -32,8 +50,16 @@ export class EmpleadosComponent {
     });
   }
 
-  guardarId(id:number){
+  onSearch(value: string): void {
+    this.lastSearchTerm = value || '';
+    this.search$.next(this.lastSearchTerm);
+  }
+
+  guardarId(id: number) {
     this.empleadoSeleccionado = this.empleados.find(c => c.id === id) || null;
+    if (window.innerWidth < 768) {
+      this.mostrarModificarEmpleado = true;
+    }
   }
 
   mostrarInterfazReponsive(id:number){

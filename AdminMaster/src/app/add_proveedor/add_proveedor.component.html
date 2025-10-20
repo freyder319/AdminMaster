@@ -19,10 +19,20 @@
         </div>
         <div class="container act-inac">
             <div class="activo">
-                <button class="btn-act">Activo</button>
+                <button
+                  type="button"
+                  class="btn-act"
+                  [class.is-selected]="form.value?.activo === true"
+                  [attr.aria-pressed]="form.value?.activo === true"
+                  (click)="form.patchValue({activo: true})">Activo</button>
             </div>
             <div class="inactivo">
-                <button class="btn-inac">Inactivo</button>
+                <button
+                  type="button"
+                  class="btn-inac"
+                  [class.is-selected]="form.value?.activo === false"
+                  [attr.aria-pressed]="form.value?.activo === false"
+                  (click)="form.patchValue({activo: false})">Inactivo</button>
             </div>
         </div><br>
     </section>
@@ -31,26 +41,56 @@
     <section>
         <div class="container form">
             <div class="formulario">
-                <form>
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
                     <div class="mb-3">
-                        <label for="exampleInputText" class="form-label">Nombre del Proveedor</label>
-                        <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                        <label for="nombre" class="form-label">Nombre del Proveedor</label>
+                        <input type="text" class="form-control" id="nombre" formControlName="nombre">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputText" class="form-label">Apellido del Proveedor</label>
-                        <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                        <label for="apellido" class="form-label">Apellido del Proveedor</label>
+                        <input type="text" class="form-control" id="apellido" formControlName="apellido">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputText" class="form-label">Telefono</label>
-                        <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Correo Electronico</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                    </div><br>
+                        <label for="telefono" class="form-label">Telefono</label>
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="telefono"
+                          formControlName="telefono"
+                          [ngClass]="{
+                            'is-invalid': (form.get('telefono')?.invalid && form.get('telefono')?.touched) || telefonoDuplicado,
+                            'is-valid': form.get('telefono')?.valid && !telefonoDuplicado && form.get('telefono')?.touched
+                          }"
+                        >
+                        <div class="invalid-feedback" *ngIf="form.get('telefono')?.hasError('pattern') && form.get('telefono')?.touched">
+                          Solo números y máximo 10 dígitos.
+                        </div>
+                        <div class="invalid-feedback" *ngIf="telefonoDuplicado">
+                          El teléfono ya existe.
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="correo" class="form-label">Correo Electronico</label>
+                        <input
+                          type="email"
+                          class="form-control"
+                          id="correo"
+                          formControlName="correo"
+                          [ngClass]="{
+                            'is-invalid': (form.get('correo')?.invalid && form.get('correo')?.touched) || correoDuplicado,
+                            'is-valid': form.get('correo')?.valid && !correoDuplicado && form.get('correo')?.touched
+                          }"
+                        >
+                        <div class="invalid-feedback" *ngIf="form.get('correo')?.hasError('email') && form.get('correo')?.touched">
+                          Debes ingresar un correo válido (ejemplo&#64;dominio.com).
+                        </div>
+                        <div class="invalid-feedback" *ngIf="correoDuplicado">
+                          El correo ya existe.
+                        </div>
+                      </div><br>
 
                     <div class="confirmarfinal">
-                        <button type="submit" class="btn confir">Confirmar</button>
+                        <button type="submit" class="btn confir" [disabled]="form.invalid || telefonoDuplicado || correoDuplicado">Confirmar</button>
                     </div>
                 </form>
             </div>

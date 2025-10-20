@@ -48,29 +48,15 @@ export class LoginComponent {
     this.auth.login(correo, password).subscribe({
       next: (res) => {
         localStorage.setItem('token', res.access_token);
-        localStorage.setItem('rol', res.rol);
-
+        const rol = (res.rol || '').trim().toLowerCase();
+        localStorage.setItem('rol', rol);
+        // Ingreso normal: no iniciar turno automáticamente
         Swal.fire({
           toast: true,
           position: 'top-end',
           icon: 'success',
-          title: '¡Bienvenido!',
-          text: 'Has iniciado sesión exitosamente',
-          showConfirmButton: false,
-          timer: 2500,
-          timerProgressBar: true,
-          customClass: {
-            popup: 'custom-toast',
-            title: 'custom-title',
-            icon: 'custom-icon'
-          },
-          showClass: {
-            popup: 'animate__animated animate__fadeInDown animate__faster'
-          },
-          hideClass: {
-            popup: 'animate__animated animate__fadeOutUp animate__faster'
-          }
-        }).then(() => this.redirigirPorRol(res.rol));
+          title: '¡Bienvenido!'
+        }).then(() => this.redirigirPorRol(rol));
       },
       error: () => {
         Swal.fire({
@@ -89,7 +75,7 @@ export class LoginComponent {
         this.router.navigate(['/movimientos']);
         break;
       case 'punto_pos':
-        this.router.navigate(['/movimientos']);
+        this.router.navigate(['/turno-empleado']);
         break;
       default:
         this.router.navigate(['/login']);

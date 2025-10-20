@@ -18,6 +18,8 @@ export class AddEmpleadosComponent {
   correoInvalido: boolean = false;
   empleadoExcede: boolean = false;
   empleadoNoNumerico: boolean = false;
+  correoDuplicado: boolean = false;
+  telefonoDuplicado: boolean = false;
   cajas: any[] = [];
 
   @Output() empleadoAgregado = new EventEmitter();
@@ -46,56 +48,148 @@ export class AddEmpleadosComponent {
   }
 
   agregarEmpleado(form: NgForm) {
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(this.empleado.contrasena, salt);
+    if (!form.valid) {
+      Swal.fire({
+        title: "Formulario inválido",
+        icon: "warning",
+        text: "Por favor completa todos los campos correctamente.",
+        confirmButtonText: "Entendido"
+      });
+      return;
+    }
 
-    const empleadoFinal = {
-      ...this.empleado,
-      contrasena: hashedPassword
-    };
+    const { correo, telefono, contrasena } = this.empleado;
 
-    this.empleadosServices.createEmpleado(empleadoFinal).subscribe({
-      next: () => {
-        Swal.fire({
-          title: "Empleado Registrado!",
-          icon: "success",
-          html: `El Empleado <b>${this.empleado.correo}</b> fue Registrado con Éxito`,
-          timer: 2500,
-          showConfirmButton: false
-        });
+    if (!correo || !telefono || !contrasena) {
+      Swal.fire({
+        title: "Campos incompletos",
+        icon: "warning",
+        text: "Todos los campos son obligatorios.",
+        confirmButtonText: "Ok"
+      });
+      return;
+    }
 
-        this.empleado = {
-          telefono: '',
-          correo: '',
-          contrasena: '',
-          cajaId: null as number | null
+    this.empleadosServices.verificarExistencia(correo, telefono).subscribe({
+      next: (existe) => {
+        if (existe.correo) {
+          Swal.fire({
+            title: "Correo ya registrado",
+            icon: "error",
+            text: `El correo ${correo} ya está en uso.`,
+            confirmButtonText: "Cambiar correo"
+          });
+          return;
+        }
+
+        if (existe.telefono) {
+          Swal.fire({
+            title: "Teléfono ya registrado",
+            icon: "error",
+            text: `El teléfono ${telefono} ya está en uso.`,
+            confirmButtonText: "Cambiar teléfono"
+          });
+          return;
+        }
+
+        const salt = bcrypt.genSaltSync(10);
+        const hashedPassword = bcrypt.hashSync(contrasena, salt);
+
+        const empleadoFinal = {
+          ...this.empleado,
+          contrasena: hashedPassword
         };
 
-        form.resetForm();
-        this.empleadoAgregado.emit();
+        this.empleadosServices.createEmpleado(empleadoFinal).subscribe({
+          next: () => {
+            Swal.fire({
+              title: "Empleado Registrado!",
+              icon: "success",
+              html: `El Empleado <b>${correo}</b> fue Registrado con Éxito`,
+              timer: 2500,
+              showConfirmButton: false
+            });
+
+            this.empleado = {
+              telefono: '',
+              correo: '',
+              contrasena: '',
+              cajaId: null
+            };
+
+            form.resetForm();
+            this.empleadoAgregado.emit();
+          },
+          error: (err) => {
+            console.error(err);
+            this.errorMessage = err.status === 400 ? err.error.message : 'Error inesperado';
+            Swal.fire({
+              title: "Error al registrar",
+              icon: "error",
+              text: this.errorMessage,
+              confirmButtonText: "Cerrar"
+            });
+          }
+        });
       },
-      error: (err) => {
-        console.log(err);
-        this.errorMessage = err.status === 400 ? err.error.message : 'Error inesperado';
+      error: () => {
         Swal.fire({
-          title: "Error",
+          title: "Error de validación",
           icon: "error",
-          text: this.errorMessage
+          text: "No se pudo verificar la existencia del empleado.",
+          confirmButtonText: "Cerrar"
         });
       }
     });
   }
+
 
   validarCorreo() {
     const regexCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     this.correoInvalido = this.empleado.correo
       ? !regexCorreo.test(this.empleado.correo)
       : false;
+
+    // Verificar duplicados si formato válido y hay teléfono para consulta conjunta
+    if (!this.correoInvalido) {
+      const correo = this.empleado.correo || '';
+      const telefono = this.empleado.telefono || '';
+      if (correo || telefono) {
+        this.empleadosServices.verificarExistencia(correo, telefono).subscribe({
+          next: (existe) => {
+            this.correoDuplicado = !!correo && existe.correo;
+            this.telefonoDuplicado = !!telefono && existe.telefono;
+          },
+          error: () => {
+            this.correoDuplicado = false;
+            this.telefonoDuplicado = false;
+          }
+        });
+      }
+    }
   }
 
   validarTelefono() {
     const soloNumeros = /^[0-9]*$/.test(this.empleado.telefono);
     this.empleadoNoNumerico = !soloNumeros;
     this.empleadoExcede = this.empleado.telefono.length > 10;
+
+    // Verificar duplicados si cumple reglas básicas
+    if (!this.empleadoNoNumerico && !this.empleadoExcede) {
+      const correo = this.empleado.correo || '';
+      const telefono = this.empleado.telefono || '';
+      if (correo || telefono) {
+        this.empleadosServices.verificarExistencia(correo, telefono).subscribe({
+          next: (existe) => {
+            this.correoDuplicado = !!correo && existe.correo;
+            this.telefonoDuplicado = !!telefono && existe.telefono;
+          },
+          error: () => {
+            this.correoDuplicado = false;
+            this.telefonoDuplicado = false;
+          }
+        });
+      }
+    }
   }
 }
