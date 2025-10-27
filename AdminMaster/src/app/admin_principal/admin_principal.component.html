@@ -2,7 +2,7 @@
   <app-admin-navbar></app-admin-navbar>
 </header>
 
-<main>
+<div class="main">
   <!-- Título -->
   <section>
     <div class="container">
@@ -14,6 +14,76 @@
     </div>
   </section>
   <br>
+  <!-- Modal Reportes -->
+  <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reportModalLabel">Generar reporte</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">
+            <label class="form-label d-block">Incluir en el reporte</label>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="repVentas" [(ngModel)]="repVentas" (change)="onToggleTipo()">
+              <label class="form-check-label" for="repVentas">Ventas</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="repGastos" [(ngModel)]="repGastos" (change)="onToggleTipo()">
+              <label class="form-check-label" for="repGastos">Gastos</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="repInventario" [(ngModel)]="repInventario">
+              <label class="form-check-label" for="repInventario">Inventario</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="repCajas" [(ngModel)]="repCajas">
+              <label class="form-check-label" for="repCajas">Cajas</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="repProveedores" [(ngModel)]="repProveedores">
+              <label class="form-check-label" for="repProveedores">Proveedores</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="repClientes" [(ngModel)]="repClientes">
+              <label class="form-check-label" for="repClientes">Clientes</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="repEmpleados" [(ngModel)]="repEmpleados">
+              <label class="form-check-label" for="repEmpleados">Empleados</label>
+            </div>
+          </div>
+          <div class="row g-2 align-items-end">
+            <div class="col">
+              <label class="form-label">Desde</label>
+              <input type="date" class="form-control" [(ngModel)]="repFrom">
+            </div>
+            <div class="col">
+              <label class="form-label">Hasta</label>
+              <input type="date" class="form-control" [(ngModel)]="repTo">
+            </div>
+          </div>
+          <div class="mt-2" *ngIf="showFormaPagoOpt">
+            <label class="form-label">Forma de Pago (opcional)</label>
+            <select class="form-select" [(ngModel)]="repFormaPago">
+              <option [ngValue]="''">Todas</option>
+              <option value="efectivo">Efectivo</option>
+              <option value="transferencia">Transferencia</option>
+              <option value="tarjeta">Tarjeta</option>
+              <option value="nequi">Nequi</option>
+              <option value="daviplata">Daviplata</option>
+              <option value="otros">Otros</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" (click)="generateReport()">Generar</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <!-- Botones Principales y Offcanvas -->
   <section>
     <div class="container unicion fixed-bottom">
@@ -51,154 +121,23 @@
           Nuevo Gasto
         </button>
         <!-- Offcanvas Venta Libre -->
-        <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="venta-libre" aria-labelledby="staticBackdropLabel">
+        <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="venta-libre" aria-labelledby="staticBackdropLabel" style="--bs-offcanvas-width: 600px;">
           <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="staticBackdropLabel">Crear Venta Libre</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
-          <div class="offcanvas-body">
-            <!-- Botones Activo-Inactivo -->
-            <div class="container paga-credit">
-              <div class="activo">
-                <button class="btn-paga">Pagada</button>
-              </div>
-              <div class="inactivo">
-                <button class="btn-credit">A Credito</button>
-              </div>
-            </div><br>
-            <!-- Formulario Registro -->
-            <div class="container form">
-              <div class="formulario">
-                <form>
-                  <div class="mb-3">
-                    <label for="exampleInputText" class="form-label">Nombre de la Venta</label>
-                    <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
-                  </div>
-                  <div class="mb-3">
-                    <label for="exampleInputDate" class="form-label">Fecha de la Venta</label>
-                    <input type="date" class="form-control" id="exampleInputDate" aria-describedby="dateHelp" >
-                  </div>
-                  <div class="mb-3">
-                    <label for="exampleInputDate" class="form-label">Cliente</label>
-                    <select class="form-select" aria-label="Default select example">
-                      <option selected>Selecciona un Cliente</option>
-                      <option value="1">Claudia</option>
-                      <option value="2">Freyder</option>
-                    </select>
-                  </div>
-                  <div class="mb-3">
-                    <label for="exampleInputText" class="form-label">Valor</label>
-                    <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
-                  </div>
-                  <label for="exampleInputText" class="form-label">Selecciona el Metodo de pago</label>
-                  <div class="metodo-pago mb-3">
-                    <button type="button" class="item">
-                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/efectivo.png" alt="" width="30px" height="30px">
-                      <p class="texto">Efectivo</p>
-                    </button>
-                    <button type="button"  class="item">
-                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/targeta.png" alt="" width="30px" height="30px">
-                      <p class="texto">Targeta</p>
-                    </button>
-                    <button type="button"  class="item">
-                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/banco.png" alt="" width="30px" height="30px">
-                      <p class="texto">Transferencia Bancaria</p>
-                    </button>
-                    <button type="button"  class="item">
-                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/daviplata.ico" alt="" width="30px" height="30px">
-                      <p class="texto">Daviplata</p>
-                    </button>
-                    <button type="button"  class="item">
-                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/nequi.ico" alt="" width="30px" height="30px">
-                      <p class="texto">Nequi</p>
-                    </button>
-                    <button type="button"  class="item">
-                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/otro.png" alt="" width="30px" height="30px">
-                      <p class="texto">Otros</p>
-                    </button>
-                  </div>   
-                </form>
-              </div>
-            </div>
-          </div>
-          <div class="confirmarfinal">
-            <button type="submit" class="btn create-venta">Confirmar Venta</button>
+          <div class="offcanvas-body" style="padding-left: 8px; padding-right: 8px;">
+            <app-add-venta-libre></app-add-venta-libre>
           </div>
         </div>
         <!-- Offcanvas Gasto -->
-        <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="gasto" aria-labelledby="staticBackdropLabel">
+        <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="gasto" aria-labelledby="staticBackdropLabel" style="--bs-offcanvas-width: 440px;">
           <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="staticBackdropLabel">Crear Gasto</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
           <div class="offcanvas-body">
-            <!-- Botones Activo-Inactivo -->
-            <div class="container paga-credit">
-              <div class="activo">
-                <button class="btn-paga">Pagada</button>
-              </div>
-              <div class="inactivo">
-                <button class="btn-credit">A Credito</button>
-              </div>
-            </div><br>
-            <!-- Formulario Registro -->
-            <div class="container form">
-              <div class="formulario">
-                <form>
-                  <div class="mb-3">
-                    <label for="exampleInputText" class="form-label">Nombre del Gasto</label>
-                    <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
-                  </div>
-                  <div class="mb-3">
-                    <label for="exampleInputDate" class="form-label">Fecha del Gasto</label>
-                    <input type="date" class="form-control" id="exampleInputDate" aria-describedby="dateHelp" >
-                  </div>
-                  <div class="mb-3">
-                    <label for="exampleInputDate" class="form-label">Categoria del Gasto</label>
-                    <select class="form-select" aria-label="Default select example">
-                      <option selected>Selecciona una Categoria</option>
-                      <option value="1">Panaderia</option>
-                      <option value="2">Pasteleria</option>
-                      <option value="3">Bebidas</option>
-                    </select>
-                  </div>
-                  <div class="mb-3">
-                    <label for="exampleInputText" class="form-label">Valor</label>
-                    <input type="text" class="form-control" id="exampleInputText" aria-describedby="textHelp">
-                  </div>
-                  <label for="exampleInputText" class="form-label">Selecciona el Metodo de pago</label>
-                  <div class="metodo-pago mb-3">
-                    <button type="button"  class="item">
-                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/efectivo.png" alt="" width="30px" height="30px">
-                      <p class="texto">Efectivo</p>
-                    </button>
-                    <button type="button"  class="item">
-                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/targeta.png" alt="" width="30px" height="30px">
-                      <p class="texto">Targeta</p>
-                    </button>
-                    <button type="button"  class="item">
-                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/banco.png" alt="" width="30px" height="30px">
-                      <p class="texto">Transferencia Bancaria</p>
-                    </button>
-                    <button type="button"  class="item">
-                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/daviplata.ico" alt="" width="30px" height="30px">
-                      <p class="texto">Daviplata</p>
-                    </button>
-                    <button type="button"  class="item">
-                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/nequi.ico" alt="" width="30px" height="30px">
-                      <p class="texto">Nequi</p>
-                    </button>
-                    <button type="button"  class="item">
-                      <img class="img-todas" src="../../assets/img/icons-metodo de pago/otro.png" alt="" width="30px" height="30px">
-                      <p class="texto">Otros</p>
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div class="confirmarfinal">
-            <button type="submit" class="btn create-gasto">Crear Gasto</button>
+            <app-add-gasto></app-add-gasto>
           </div>
         </div>
       </div>
@@ -237,47 +176,69 @@
               <h5 class="offcanvas-title" id="staticBackdropLabel">Filtro</h5>
               <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-            <div class="offcanvas-body">
-              <div>
+            <div class="offcanvas-body d-flex flex-column h-100">
+              <div class="flex-grow-1 overflow-auto">
                 <app-filter></app-filter>
-              </div>
-            </div>
-            <div class="limpiar-filtrar">
-              <div class="limpi">
-                <button type="submit" class="btn limpiar">Limpiar Filtros</button>
-              </div>
-              <div class="filt">
-                <button type="submit" class="btn filtrar">Filtrar</button>
               </div>
             </div>
           </div>
         </div>
         <!-- Calendario -->
-        <div class="col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center text-center">
-          <button id="button_calendar" class="btn btn-primary calendar bg-white" >Calendario</button>
+        <div class="col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center text-center dropdown">
+          <button id="button_calendar" class="btn btn-primary calendar bg-white dropdown-toggle" data-bs-toggle="dropdown" (click)="prefillCustomRange()">Calendario</button>
+          <div class="dropdown-menu p-3" style="min-width: 320px;">
+            <div class="row g-2 align-items-end">
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100" [class.is-invalid]="isCustomRangeInvalid">
+                  <mat-label>Desde</mat-label>
+                  <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="dateFromModel">
+                  <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerFrom></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-12">
+                <mat-form-field appearance="outline" class="w-100" [class.is-invalid]="isCustomRangeInvalid">
+                  <mat-label>Hasta</mat-label>
+                  <input matInput [matDatepicker]="pickerTo" [(ngModel)]="dateToModel">
+                  <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerTo></mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+            <div *ngIf="isCustomRangeInvalid" class="text-danger small mt-1">El rango es inválido: "Desde" no puede ser mayor que "Hasta".</div>
+            <div class="d-flex gap-2 justify-content-end mt-2">
+              <button type="button" class="btn btn-sm btn-outline-secondary" (click)="$event.preventDefault()">Cancelar</button>
+              <button type="button" class="btn btn-sm btn-primary" [disabled]="isCustomRangeInvalid || !dateFromModel || !dateToModel" (click)="applyCustomRange(); $event.preventDefault()">Aplicar</button>
+            </div>
+          </div>
         </div>
         <!-- Rango -->
         <div class="col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center text-center">
           <button id="button" class="btn btn-primary dropdown-toggle bg-white range" data-bs-toggle="dropdown">
-            Semanal
+            {{ rangeLabel }}
           </button>
           <div class="dropdown-menu ">
-            <a class="dropdown-item " href="#">
+            <a class="dropdown-item flexible2" href="#" (click)="clearRange(); $event.preventDefault()">
+              <div class="contenido-botones2">
+                <h6>Sin Filtro</h6>
+              </div>
+            </a>
+            <a class="dropdown-item " href="#" (click)="setRange('diario'); $event.preventDefault()">
               <div class="contenido-botones2">
                 <h6>Diario</h6>
               </div>
             </a>
-            <a class="dropdown-item flexible2" href="#">
+            <a class="dropdown-item flexible2" href="#" (click)="setRange('semanal'); $event.preventDefault()">
               <div class="contenido-botones2">
                 <h6>Semanal</h6>
               </div>
             </a>
-            <a class="dropdown-item flexible2" href="#">
+            <a class="dropdown-item flexible2" href="#" (click)="setRange('mensual'); $event.preventDefault()">
               <div class="contenido-botones2">
                 <h6>Mensual</h6>
               </div>
             </a>
-            <a class="dropdown-item flexible2" href="#">
+            <a class="dropdown-item flexible2" href="#" (click)="setRange('personalizado'); $event.preventDefault()">
               <div class="contenido-botones2">
                 <h6>Rango Personalizado</h6>
               </div>
@@ -286,29 +247,36 @@
         </div>
         <!-- Buscador -->
         <div class="col-sm-12 col-md-10 col-lg-4 buscador-reportes">
-          <form class="busc" role="search">
+          <form class="busc" role="search" (submit)="$event.preventDefault()">
             <div class="input-group busca">
-              <button class="btn btn-primary boton_buscador" type="submit">
-                <img width="28px" src="../../assets/img/Logos Admin/Buscador.png" alt="">.
+              <button class="btn btn-primary boton_buscador" type="button">
+                <img width="28px" src="../../assets/img/Logos Admin/Buscador.png" alt="">
               </button>
-              <input class="form-control input-buscador" type="search" placeholder="Buscar" aria-label="Buscar">
+              <input class="form-control input-buscador" type="search" placeholder="Buscar" aria-label="Buscar" [(ngModel)]="searchTerm" name="search" (ngModelChange)="onSearchChange()">
             </div>
           </form>
         </div>
-        <!-- Descargar reporte -->
-        <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center text-center">
-          <div class="report">
-            <a class="reporte_cuadro" href="">
-              <img width="35px" src="../../assets/img/Logos Admin/xls.png" alt="">
-              <p>Reportes</p>
-            </a>
+        <!-- Descuentos + Reportes juntos -->
+        <div class="col-sm-12 col-md-6 col-lg-2 d-flex justify-content-center text-center">
+          <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-primary p-0 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;" data-bs-toggle="offcanvas" data-bs-target="#descuentos" aria-label="Descuentos">
+              <img width="24" height="24" src="../../assets/img/Logos Admin/venta_productos.png" alt="">
+            </button>
+            <button type="button" class="btn btn-primary p-0 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;"
+                    data-bs-toggle="modal" data-bs-target="#reportModal" aria-label="Reportes">
+              <img width="24" height="24" src="../../assets/img/Logos Admin/xls.png" alt="">
+            </button>
+          </div>
+          <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="descuentos" aria-labelledby="descuentosLabel" style="--bs-offcanvas-width: 520px;">
+            <div class="offcanvas-header">
+              <h5 class="offcanvas-title" id="descuentosLabel">Gestionar Descuentos</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+              <app-descuentos></app-descuentos>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
-  <br>
-  <!-- Datos de Dinero -->
   <section>
     <div class="container unicion ">
       <div class="row">
@@ -316,8 +284,8 @@
           <div class="balance balances">
             <img class="img-balance " width="100px" src="../../assets/img/Logos Admin/Balance.png" alt="">
             <div class="balance-precio ">
-              <h4>Balance</h4>
-              <h5>$0</h5>
+              <h4>Balance<span *ngIf="showRangeTag"> (en rango)</span></h4>
+              <h5><span [ngClass]="{ 'text-success': balance > 0, 'text-danger': balance < 0 }">{{ formatCop(balance) }}</span></h5>
             </div>
           </div>
         </div>
@@ -325,8 +293,8 @@
           <div class="balance balances">
             <img class="img-balance " width="100px" src="../../assets/img/Logos Admin/ventas.png" alt="">
             <div class="balance-precio">
-              <h4>Ventas Totales</h4>
-              <h5> <span class="precio_letra">$0</span></h5>
+              <h4>Ventas Totales<span *ngIf="showRangeTag"> (en rango)</span></h4>
+              <h5> <span class="precio_letra">{{ formatCop(ventasTotales) }}</span></h5>
             </div>
           </div>
         </div>
@@ -334,8 +302,8 @@
           <div class="balance gastos">
             <img class="img-balance" width="105px" src="../../assets/img/Logos Admin/gastos.png" alt="">
             <div class="balance-precio">
-              <h4>Gastos Totales</h4>
-              <h5> <span class="precio_letra_rojo">$0</span></h5>
+              <h4>Gastos Totales<span *ngIf="showRangeTag"> (en rango)</span></h4>
+              <h5> <span class="precio_letra_rojo">{{ formatCop(gastosTotales) }}</span></h5>
             </div>
           </div>
         </div>
@@ -349,70 +317,125 @@
       <div class="row">
         <div class="col">
           <div>
-            <button class="seleccion">Ingresos</button>
+            <button class="seleccion" (click)="selectTab('ingresos')" [class.active]="selectedTab==='ingresos'">Ingresos<span *ngIf="showRangeTag" class="text-primary small ms-1">(en rango)</span></button>
           </div>
         </div>
         <div class="col">
           <div>
-            <button class="seleccion">Egresos</button>
+            <button class="seleccion" (click)="selectTab('egresos')" [class.active]="selectedTab==='egresos'">Egresos<span *ngIf="showRangeTag" class="text-primary small ms-1">(en rango)</span></button>
           </div>
         </div>
         <div class="col">
           <div>
-            <button class="seleccion">Por Cobrar</button>
+            <button class="seleccion" (click)="selectTab('por_cobrar')" [class.active]="selectedTab==='por_cobrar'">Por Cobrar<span *ngIf="showRangeTag" class="text-primary small ms-1">(en rango)</span></button>
           </div>
         </div>
         <div class="col">
           <div>
-            <button class="seleccion">Por Pagar</button>
+            <button class="seleccion" (click)="selectTab('por_pagar')" [class.active]="selectedTab==='por_pagar'">Por Pagar<span *ngIf="showRangeTag" class="text-primary small ms-1">(en rango)</span></button>
           </div>
         </div>
       </div>
     </div>
   </section><br>
-  <!-- Tablas -->
-  <section>
+  
+  <!-- Tabla Ingresos -->
+  <section *ngIf="selectedTab==='ingresos'">
     <div class="container">
       <div class="row">
-        <table class="table table-bordered">
-          <thead class="table-secondary">
+        <table class="table table-hover align-middle shadow-sm rounded overflow-hidden">
+          <thead class="table-light">
             <tr>
               <th>Nombre Productos</th>
-              <th>Valor</th>
-              <th>Medio de Pago</th>
-              <th>Fecha y Hora</th>
-              <th>Estado</th>
+              <th class="text-end">Valor</th>
+              <th class="ocultar-en-movil">Medio de Pago</th>
+              <th class="ocultar-en-movil">Fecha y Hora</th>
+              <th class="ocultar-en-movil">Estado</th>
             </tr>
           </thead>
           <tbody>
-            <tr (click)="abrirDialogo({
-              producto: '1 Cocacola 1.5L, 2 Calados',
-              valor: '$7.000',
-              pago: 'Efectivo',
-              fecha: '14/feb/2025 | 11:52AM',
-              estado: 'Pagada'
-            })">
+            <tr *ngFor="let v of filteredVentas" class="table-row-click" (click)="abrirDialogoVenta(v)">
               <td data-label="Nombre Productos">
-                <div class="producto-resumen">
-                  <img src="../../assets/img/Logos Admin/ventas.png" alt="" class="img-responsive">
-                  <div class="info-producto">
-                    <span class="nom_produc">1 Cocacola 1.5L, 2 Calados</span>
-                    <span class="status active">Pagada</span>
+                <div class="producto-resumen d-flex gap-2 align-items-center">
+                  <img src="../../assets/img/Logos Admin/ventas.png" alt="" class="img-responsive" width="36" height="36">
+                  <div class="info-producto d-flex flex-column">
+                    <span class="nom_produc fw-semibold text-truncate" style="max-width: 240px;">{{ 'Venta #' + (v.id || '') }}</span>
+                    <small class="text-muted">Por: {{ empleadoNombreById(getUsuarioIdFromVenta(v)) }} • Turno: {{ getTurnoIdFromVenta(v) || '—' }}</small>
+                    <small class="text-muted d-md-none">{{ v.forma_pago || '-' }} • {{ v.fecha_hora | date:'dd/MM/yyyy | hh:mm a' }}</small>
                   </div>
                 </div>
               </td>
-              <td class="valo" data-label="Valor">
-                <span class="valor-derecha">$7.000</span>
+              <td class="valo text-end" data-label="Valor">
+                <span class="valor-derecha fw-bold text-success">{{ v.total | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
               </td>
-              <td class="ocultar-en-movil" data-label="Medio de Pago">Efectivo</td>
-              <td class="ocultar-en-movil" data-label="Fecha y Hora">14/feb/2025 | 11:52AM</td>
+              <td class="ocultar-en-movil" data-label="Medio de Pago">{{ v.forma_pago || '-' }}</td>
+              <td class="ocultar-en-movil" data-label="Fecha y Hora">{{ v.fecha_hora | date:'dd/MM/yyyy | hh:mm a' }}</td>
               <td class="ocultar-en-movil" data-label="Estado">
-                <span class="status activo">Pagada</span>
+                <span class="status" [class.activo]="(v.estado||'').toLowerCase()==='pagada'" [class.text-muted]="(v.estado||'').toLowerCase()!=='pagada'">{{ v.estado || 'Pagada' }}</span>
               </td>
+            </tr>
+            <tr *ngIf="filteredVentas.length === 0">
+              <td colspan="5" class="text-center text-muted py-4">No hay ventas registradas.</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
   </section>
-</main>
+
+  <!-- Tabla Gastos -->
+  <section *ngIf="selectedTab==='egresos'">
+    <div class="container">
+      <div class="row">
+        <table class="table table-hover align-middle shadow-sm rounded overflow-hidden">
+          <thead class="table-light">
+            <tr>
+              <th>Nombre</th>
+              <th class="ocultar-en-movil">Descripción</th>
+              <th class="text-end">Monto</th>
+              <th class="ocultar-en-movil">Medio de Pago</th>
+              <th class="ocultar-en-movil">Fecha</th>
+              <th class="ocultar-en-movil">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let g of filteredGastos">
+              <td data-label="Nombre">
+                <div class="producto-resumen d-flex gap-2 align-items-center">
+                  <img src="../../assets/img/Logos Admin/gastos.png" alt="" class="img-responsive" width="36" height="36">
+                  <div class="info-producto d-flex flex-column">
+                    <span class="nom_produc fw-semibold text-truncate" style="max-width: 240px;">{{ g.nombre || ('Gasto #' + g.id) }}</span>
+                    <small class="text-muted">Por: {{ empleadoNombreById(getUsuarioIdFromGasto(g)) }} • Turno: {{ getTurnoIdFromGasto(g) || '—' }}</small>
+                    <small class="text-muted d-md-none">{{ g.forma_pago || '-' }} • {{ g.fecha | date:'dd/MM/yyyy' }}</small>
+                  </div>
+                </div>
+              </td>
+              <td class="ocultar-en-movil" data-label="Descripción">
+                <span class="text-truncate" style="max-width: 260px; display: inline-block;">{{ g.descripcion || '-' }}</span>
+              </td>
+              <td class="valo text-end" data-label="Monto">
+                <span class="valor-derecha fw-bold text-danger">{{ (g.monto || 0) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+              </td>
+              <td class="ocultar-en-movil" data-label="Medio de Pago">{{ g.forma_pago || '-' }}</td>
+              <td class="ocultar-en-movil" data-label="Fecha">{{ g.fecha | date:'dd/MM/yyyy' }}</td>
+              <td class="ocultar-en-movil" data-label="Estado">
+                <span
+                  class="status"
+                  [class.activo]="(g.estado||'').toLowerCase()==='confirmado'"
+                  [ngClass]="{
+                    'bg-primary-subtle text-primary': (g.estado||'').toLowerCase()==='pendiente',
+                    'bg-danger-subtle text-danger': (g.estado||'').toLowerCase()==='anulado',
+                    'text-muted': ['confirmado','pendiente','anulado'].indexOf((g.estado||'').toLowerCase()) === -1
+                  }"
+                >{{ g.estado }}</span>
+              </td>
+            </tr>
+            <tr *ngIf="filteredGastos.length === 0">
+              <td colspan="6" class="text-center text-muted py-4">No hay gastos registrados.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>

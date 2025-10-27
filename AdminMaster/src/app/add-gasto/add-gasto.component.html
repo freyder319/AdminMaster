@@ -1,0 +1,109 @@
+<!-- Estado del gasto -->
+<div class="container paga-credit">
+  <div class="estado-buttons">
+    <button type="button" class="btn-confirmado" [class.active]="isEstado('confirmado')" (click)="setEstado('confirmado')" title="Confirmado">Confirmado</button>
+    <button type="button" class="btn-pendiente" [class.active]="isEstado('pendiente')" (click)="setEstado('pendiente')" title="Pendiente">Pendiente</button>
+    <button type="button" class="btn-anulado" [class.active]="isEstado('anulado')" (click)="setEstado('anulado')" title="Anulado">Anulado</button>
+  </div>
+</div>
+<br>
+
+<!-- Formulario Registro de Gasto -->
+<div class="container-fluid form">
+  <div class="formulario">
+    <form (ngSubmit)="onSubmit()" #gastoForm="ngForm">
+      <div class="form-grid">
+        <!-- id -->
+        <div class="mb-3">
+          <label for="nombreGasto" class="form-label">Nombre del Gasto</label>
+          <input type="text" class="form-control" id="nombreGasto" name="nombreGasto" [(ngModel)]="nombreGasto" placeholder="Nombre del gasto" />
+        </div>
+
+        <!-- fecha -->
+        <div class="mb-3">
+          <label for="fechaGasto" class="form-label">Fecha</label>
+          <input type="date" class="form-control" id="fechaGasto" name="fechaGasto" [(ngModel)]="fechaGasto" />
+        </div>
+
+        <!-- monto -->
+        <div class="mb-3">
+          <label for="montoGasto" class="form-label">Monto</label>
+          <input type="number" class="form-control" id="montoGasto" name="montoGasto" [(ngModel)]="montoGasto" placeholder="0" min="0" step="0.01" />
+        </div>
+
+        <!-- descripcion -->
+        <div class="mb-3 span-2">
+          <label for="descripcionGasto" class="form-label">Descripción</label>
+          <textarea id="descripcionGasto" name="descripcionGasto" [(ngModel)]="descripcionGasto" class="form-control" rows="2" placeholder="Compra de harina, Pago de servicios, ..."></textarea>
+        </div>
+
+        <!-- categoria_id -->
+        <div class="mb-3">
+          <label for="categoriaGasto" class="form-label">Categoría</label>
+          <select id="categoriaGasto" name="categoriaId" [(ngModel)]="categoriaId" class="form-select">
+            <option selected disabled>Selecciona una categoría</option>
+            <option *ngFor="let c of categorias" [ngValue]="c.idCategoria">
+              {{ c.nombreCategoria }}
+            </option>
+          </select>
+        </div>
+
+        <!-- proveedor_id -->
+        <div class="mb-3">
+          <label for="proveedorGasto" class="form-label">Proveedor (opcional)</label>
+          <select id="proveedorGasto" name="proveedorId" [(ngModel)]="proveedorId" class="form-select">
+            <option selected disabled>Selecciona un proveedor</option>
+            <option *ngFor="let p of proveedores" [ngValue]="p.id">
+              {{ p.nombre }}{{ p.apellido ? ' ' + p.apellido : '' }}
+            </option>
+          </select>
+        </div>
+
+        <!-- forma_pago -->
+        <div class="mb-3 span-2">
+          <label class="form-label d-block">Forma de Pago</label>
+          <div class="pago-options">
+            <label class="pago-option">
+              <input type="radio" name="formaPago" [(ngModel)]="formaPago" value="efectivo" />
+              <img class="img-pago" src="../../assets/img/icons-metodo de pago/efectivo.png" alt="Efectivo" />
+              <span>Efectivo</span>
+            </label>
+            <label class="pago-option">
+              <input type="radio" name="formaPago" [(ngModel)]="formaPago" value="transferencia" />
+              <img class="img-pago" src="../../assets/img/icons-metodo de pago/banco.png" alt="Transferencia" />
+              <span>Transferencia</span>
+            </label>
+            <label class="pago-option">
+              <input type="radio" name="formaPago" [(ngModel)]="formaPago" value="tarjeta" />
+              <img class="img-pago" src="../../assets/img/icons-metodo de pago/targeta.png" alt="Tarjeta" />
+              <span>Tarjeta</span>
+            </label>
+            <label class="pago-option">
+              <input type="radio" name="formaPago" [(ngModel)]="formaPago" value="nequi" />
+              <img class="img-pago" src="../../assets/img/icons-metodo de pago/nequi.ico" alt="Nequi" />
+              <span>Nequi</span>
+            </label>
+            <label class="pago-option">
+              <input type="radio" name="formaPago" [(ngModel)]="formaPago" value="daviplata" />
+              <img class="img-pago" src="../../assets/img/icons-metodo de pago/daviplata.ico" alt="Daviplata" />
+              <span>Daviplata</span>
+            </label>
+            <label class="pago-option">
+              <input type="radio" name="formaPago" [(ngModel)]="formaPago" value="otros" />
+              <img class="img-pago" src="../../assets/img/icons-metodo de pago/otro.png" alt="Otros" />
+              <span>Otros</span>
+            </label>
+          </div>
+        </div>
+
+        
+
+        
+
+        <div class="confirmarfinal">
+          <button type="submit" class="btn create-gasto">Crear Gasto</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

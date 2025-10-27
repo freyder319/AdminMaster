@@ -60,6 +60,7 @@
                 <table class="table table-bordered">
                     <thead class="table-secondary">
                         <tr>
+                        <th>Nombre</th>
                         <th>Correo</th>
                         <th>Teléfono</th>
                         <th>Caja Asignada</th>
@@ -67,20 +68,21 @@
                         </tr>
                     </thead>
                     <tbody *ngIf="(filteredEmpleados$ | async) as list">
-                        <tr *ngFor="let empleado of list">
-                            <td data-label="Correo">
-                                <!-- Móvil -->
-                                <div class="perfil clickable d-md-none" (click)="mostrarInterfazReponsive(empleado.id)">
-                                    <img src="../../assets/img/icons-navbar/Empleados.png" alt="Empleado">
+                        <tr *ngFor="let empleado of list" class="align-middle">
+                            <td data-label="Nombre">
+                                <!-- Escritorio y móvil: mostrar nombre y apellido (clickable en móvil) -->
+                                <div class="perfil clickable d-flex align-items-center gap-2" (click)="mostrarInterfazReponsive(empleado.id)">
+                                    <img src="../../assets/img/icons-navbar/Empleados.png" alt="Empleado" width="40" height="40">
                                     <div class="info">
-                                        <p class="correo">{{empleado.correo}}</p>
-                                        <p class="caja">{{empleado.caja?.nombre || 'Sin asignar'}}</p>
+                                        <p class="mb-0 fw-bold">{{empleado.nombre}} {{empleado.apellido}}</p>
+                                        <!-- Mostrar caja asociada solo en móvil para evitar duplicados -->
+                                        <p class="caja d-md-none m-0">{{empleado.caja?.nombre || 'Sin asignar'}}</p>
                                     </div>
                                 </div>
-
+                            </td>
+                            <td data-label="Correo" class="align-middle">
                                 <!-- Escritorio -->
-                                <div class="perfil d-none d-md-flex">
-                                    <img src="../../assets/img/icons-navbar/Empleados.png" alt="Empleado" width="50px" height="50px">
+                                <div class="perfil d-none d-md-flex align-items-center">
                                     <div class="info">
                                         <p class="correo">{{empleado.correo}}</p>
                                     </div>
@@ -120,7 +122,7 @@
 
                         <!-- Sin resultados / Sin empleados -->
                         <tr *ngIf="list.length === 0">
-                            <td colspan="4" class="text-center">
+                            <td colspan="5" class="text-center">
                                 {{ lastSearchTerm ? ('No se encontró ningún empleado para "' + lastSearchTerm + '".') : 'No hay Empleados registrados' }}
                             </td>
                         </tr>

@@ -13,6 +13,20 @@
       <mat-icon class="icon producto" color="accent">shopping_cart</mat-icon>
       <span><strong>Producto:</strong> {{ data.producto }}</span>
     </div>
+    <div class="detalle-item" *ngIf="data.items && data.items.length">
+      <mat-icon class="icon" color="primary">list</mat-icon>
+      <div>
+        <strong>Productos comprados:</strong>
+        <ul class="lista-items">
+          <li *ngFor="let it of data.items">
+            <span class="item-nombre">{{ it.nombre }}</span>
+            <span class="item-cant">x{{ it.cantidad }}</span>
+            <span class="item-precio">{{ it.precio }}</span>
+            <span class="item-subtotal">= {{ it.subtotal }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
     <div class="detalle-item">
       <mat-icon class="icon valor" color="warn">attach_money</mat-icon>
       <span><strong>Valor:</strong> {{ data.valor }}</span>
@@ -23,7 +37,10 @@
     </div>
     <div class="detalle-item">
       <mat-icon class="icon fecha" color="accent">schedule</mat-icon>
-      <span><strong>Fecha y hora:</strong> {{ data.fecha }}</span>
+      <div>
+        <div><strong>Fecha:</strong> {{ data.fecha | date:'dd/MM/yyyy' }}</div>
+        <div><strong>Hora:</strong> {{ data.fecha | date:'hh:mm a' }}</div>
+      </div>
     </div>
     <div class="detalle-item estado" [ngClass]="data.estado.toLowerCase()">
       <mat-icon class="icon estado-icon" color="primary">check_circle</mat-icon>

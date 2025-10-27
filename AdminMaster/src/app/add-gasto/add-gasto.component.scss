@@ -1,0 +1,163 @@
+/* Estilos de inputs como en add_clientes */
+.form-control,
+.form-select,
+textarea {
+  border: none;
+  box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+  outline: none;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea:focus {
+  border: 1px solid #5adbff;
+  box-shadow: 0 0 6px 0.5px #5adbff;
+  outline: none;
+}
+/* Controles de estado visual (pagada / crédito) */
+.paga-credit {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  .btn-paga,
+  .btn-credit,
+  .btn-confirmado,
+  .btn-pendiente,
+  .btn-anulado {
+    padding: 8px 14px;
+    border: 0;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform .05s ease, filter .15s ease;
+  }
+  .btn-paga,
+  .btn-confirmado {
+    background: #16a34a; /* green-600 */
+    color: #fff;
+  }
+  .btn-credit,
+  .btn-anulado {
+    background: #dc2626; /* red-600 */
+    color: #fff;
+  }
+  .btn-pendiente {
+    background: #2563eb; /* blue-600 */
+    color: #fff;
+  }
+  .hint {
+    margin-left: auto;
+    color: #6b7280; /* gray-500 */
+    font-size: 12px;
+  }
+}
+
+/* Botonera de estado arriba del formulario */
+.estado-buttons {
+  display: flex;
+  gap: 10px; /* separa los botones */
+  justify-content: center; /* centrar estados */
+  width: 100%;
+}
+
+/* Estado seleccionado: borde destacado y leve sombra */
+.estado-buttons .btn-confirmado.active { filter: brightness(0.9); }
+.estado-buttons .btn-pendiente.active  { filter: brightness(0.9); }
+.estado-buttons .btn-anulado.active    { filter: brightness(0.9); }
+
+/* Layout del formulario */
+.formulario {
+  background: #ffffff;
+  border: 0;
+  border-radius: 12px;
+  padding: 8px; /* menos padding para mayor ancho útil */
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr !important; /* apilar inputs verticalmente */
+  gap: 6px; /* menor distancia entre filas */
+}
+
+/* Asegurar que cada bloque ocupe toda la fila */
+:host ::ng-deep .form-grid > .mb-3,
+:host ::ng-deep .form-grid > .span-2 {
+  grid-column: 1 / -1 !important;
+}
+
+/* Reducir margen inferior de cada bloque .mb-3 para no duplicar espacio con el gap */
+:host ::ng-deep .form-grid > .mb-3 {
+  margin-bottom: 4px;
+}
+
+/* Inputs/selects al 100% del ancho */
+:host ::ng-deep .form-control,
+:host ::ng-deep .form-select,
+:host ::ng-deep textarea {
+  width: 100% !important;
+}
+
+/* Campos que ocupan dos columnas */
+.span-2 {
+  grid-column: span 2;
+}
+
+/* Opciones de forma de pago */
+.pago-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+}
+
+.pago-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f9fafb; /* gray-50 */
+  cursor: pointer;
+}
+
+/* Ícono dentro de cada opción de pago */
+.img-pago {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+/* Botón Crear Gasto estilizado */
+.confirmarfinal {
+  margin-top: 12px;
+  display: flex;
+  height: 70px;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-gasto {
+  width: 100%;
+  background-color: #5adbff;
+  box-shadow: 0 0 6px 0.5px #5adbff;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  border-radius: 10px;
+  padding: 10px 16px;
+}
+
+.create-gasto:hover {
+  filter: brightness(0.95);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .span-2 {
+    grid-column: span 1;
+  }
+}

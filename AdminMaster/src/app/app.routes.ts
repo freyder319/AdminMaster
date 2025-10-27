@@ -18,6 +18,8 @@ import { LoginComponent } from './auth/login/login.component';
 import { SendEmailComponent } from './send-email/send-email.component';
 import { EmpleadosComponent } from './empleados/empleados.component';
 import { EmpleadoTurnoComponent } from './empleado-turno/empleado-turno.component';
+import { RecoveryEmailGuard } from './guards/recovery-email.guard';
+import { RecoveryVerifiedGuard } from './guards/recovery-verified.guard';
 
 export const routes: Routes = [
     // Rutas para administrador
@@ -37,8 +39,8 @@ export const routes: Routes = [
     { path: "login", component: LoginComponent },
     
     // Rutas para cliente
-    { path: "recuperar-email", component: SecurityEmailComponent },
-    { path: "restablecer-contrasena", component: ResetPasswordComponent },
+    { path: "recuperar-email", component: SecurityEmailComponent, canActivate: [RecoveryEmailGuard] },
+    { path: "restablecer-contrasena", component: ResetPasswordComponent, canActivate: [RecoveryVerifiedGuard] },
     { path: "donde-estamos", component: DondeEstamosComponent },
     { path: "pqrs", component: PqrsComponent },
     { path: "", component: ProductsComponent},

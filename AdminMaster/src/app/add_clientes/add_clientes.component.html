@@ -23,10 +23,10 @@
                         </div>
                         <div class="container act-inac">
                         <div class="activo">
-                            <button type="button" [ngClass]="{'btn-active': cliente?.estado === 'activo'}" (click)="cambiarEstado('activo')" class="btn-act">Activo</button>
+                            <button type="button" [ngClass]="{'btn-active': cliente.estado === 'activo'}" (click)="cambiarEstado('activo')" class="btn-act">Activo</button>
                         </div>
                         <div class="inactivo">
-                            <button type="button" [ngClass]="{'btn-negative': cliente?.estado === 'inactivo'}" (click)="cambiarEstado('inactivo')" class="btn-inac">Inactivo</button>
+                            <button type="button" [ngClass]="{'btn-negative': cliente.estado === 'inactivo'}" (click)="cambiarEstado('inactivo')" class="btn-inac">Inactivo</button>
                         </div>
                         </div><br>
                     </section>

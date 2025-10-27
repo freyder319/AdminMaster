@@ -1,12 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private apiUrl = 'http://localhost:3000/auth';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object) {}
+
+  private isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
+  }
 
   login(correo: string, contrasena: string) {
     return this.http.post<{ access_token: string; rol: string; userId?: number; cajaId?: number }>(
@@ -14,30 +19,37 @@ export class AuthService {
       { correo, contrasena }
     ).pipe(
       tap(res => {
-        localStorage.setItem('token', res.access_token);
-        const rol = (res.rol || '').trim().toLowerCase();
-        localStorage.setItem('rol', rol);
-        if (typeof res.userId === 'number') {
-          localStorage.setItem('userId', String(res.userId));
-        }
-
-        if (rol === 'punto_pos' && res.cajaId !== undefined) {
-          localStorage.setItem('cajaId', res.cajaId.toString());
+        if (this.isBrowser()) {
+          localStorage.setItem('token', res.access_token);
+          const rol = (res.rol || '').trim().toLowerCase();
+          localStorage.setItem('rol', rol);
+          if (typeof res.userId === 'number') {
+            localStorage.setItem('userId', String(res.userId));
+          }
+          if (rol === 'punto_pos' && res.cajaId !== undefined) {
+            localStorage.setItem('cajaId', res.cajaId.toString());
+          }
         }
       })
     );
   }
 
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('rol');
+    if (this.isBrowser()) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('rol');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('cajaId');
+    }
   }
 
   getToken() {
+    if (!this.isBrowser()) return null;
     return localStorage.getItem('token');
   }
 
   getRole() {
+    if (!this.isBrowser()) return null;
     const r = localStorage.getItem('rol');
     return r ? r.trim().toLowerCase() : null;
   }

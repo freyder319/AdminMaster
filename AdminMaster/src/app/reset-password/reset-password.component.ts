@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { PasswordRecoveryFlowService } from '../services/password-recovery-flow.service';
 import { NgClass } from '@angular/common';
 import Swal from 'sweetalert2';
 
@@ -12,7 +13,7 @@ import Swal from 'sweetalert2';
   styleUrl: './reset-password.component.scss',
   standalone: true
 })
-export class ResetPasswordComponent {
+export class ResetPasswordComponent implements OnInit {
   showPassword = false;
   resetForm: FormGroup;
   correo = '';
@@ -21,7 +22,8 @@ export class ResetPasswordComponent {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private recoveryFlow: PasswordRecoveryFlowService
   ) {
     this.resetForm = this.fb.group({
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
@@ -31,6 +33,16 @@ export class ResetPasswordComponent {
     this.route.queryParams.subscribe(params => {
       this.correo = params['correo'] || '';
     });
+  }
+
+  ngOnInit(): void {
+    // Validar que pasó por verificación
+    if (!this.recoveryFlow.isEmailSent() || !this.recoveryFlow.isCodeVerified()) {
+      // Redirigir al paso correspondiente
+      const url = this.recoveryFlow.isEmailSent() ? '/recuperar-email' : '/verificar-email';
+      this.router.navigate([url], { replaceUrl: true });
+      return;
+    }
   }
 
   togglePasswordVisibility() {
@@ -51,8 +63,10 @@ export class ResetPasswordComponent {
             timer: 2500,
             showConfirmButton: false,
           }).then(() => {
-            this.router.navigate(['/login']).then(() => {
-              window.location.reload(); 
+            // Limpiar flujo y evitar volver atrás
+            try { this.recoveryFlow.resetAll(); } catch {}
+            this.router.navigate(['/login'], { replaceUrl: true }).then(() => {
+              window.location.reload();
             });
           });
         },

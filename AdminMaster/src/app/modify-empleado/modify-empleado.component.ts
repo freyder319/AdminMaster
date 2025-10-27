@@ -52,7 +52,14 @@ export class ModifyEmpleadoComponent implements OnInit {
     if (this.empleadoId && this.empleado) {
       const { contrasena, caja, ...resto } = this.empleado;
 
+      if (!this.empleado.nombre || !this.empleado.apellido || !this.empleado.correo || !this.empleado.telefono) {
+        Swal.fire({ title: 'Campos incompletos', icon: 'warning', text: 'Nombre, apellido, correo y teléfono son obligatorios.' });
+        return;
+      }
+
       const empleadoFinal = {
+        nombre: this.empleado.nombre,
+        apellido: this.empleado.apellido,
         correo: this.empleado.correo,
         telefono: this.empleado.telefono,
         contrasena: this.empleado.contrasena,

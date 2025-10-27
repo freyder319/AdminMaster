@@ -50,12 +50,18 @@ export class LoginComponent {
         localStorage.setItem('token', res.access_token);
         const rol = (res.rol || '').trim().toLowerCase();
         localStorage.setItem('rol', rol);
-        // Ingreso normal: no iniciar turno automáticamente
         Swal.fire({
           toast: true,
           position: 'top-end',
           icon: 'success',
-          title: '¡Bienvenido!'
+          title: 'Sesión iniciada correctamente',
+          timer: 2000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+          }
         }).then(() => this.redirigirPorRol(rol));
       },
       error: () => {

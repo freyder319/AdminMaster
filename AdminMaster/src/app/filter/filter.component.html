@@ -1,119 +1,77 @@
-<!-- Formulario Registro -->
+<!-- Formulario Filtro -->
 
-<div class="container form">
-    <div class="formulario">
-        <form>
-            <label for="exampleInputText" class="form-label">Selecciona el Metodo de pago</label>
-            <div class="metodo-pago mb-3">
-                <button type="button" class="item">
-                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/efectivo.png" alt="" width="30px" height="30px">
-                    <p class="texto">Efectivo</p>
-                </button>
-                <button type="button" class="item">
-                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/targeta.png" alt="" width="30px" height="30px">
-                    <p class="texto">Targeta</p>
-                </button>
-                <button type="button" class="item">
-                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/banco.png" alt="" width="30px" height="30px">
-                    <p class="texto">Transferencia Bancaria</p>
-                </button>
-                <button type="button" class="item">
-                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/daviplata.ico" alt="" width="30px" height="30px">
-                    <p class="texto">Daviplata</p>
-                </button>
-                <button type="button" class="item">
-                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/nequi.ico" alt="" width="30px" height="30px">
-                    <p class="texto">Nequi</p>
-                </button>
-                <button type="button" class="item">
-                    <img class="img-todas" src="../../assets/img/icons-metodo de pago/otro.png" alt="" width="30px" height="30px">
-                    <p class="texto">Otros</p>
-                </button>
+<div class="container form h-100 d-flex flex-column">
+    <div class="formulario d-flex flex-column flex-grow-1 p-0">
+        <form class="d-flex flex-column flex-grow-1" (submit)="$event.preventDefault(); filtrar()">
+            <label class="form-label d-block">Forma de Pago</label>
+            <div class="pago-options mb-3">
+              <label class="pago-option">
+                <input type="radio" name="formaPagoFiltros" [(ngModel)]="selectedMetodo" [value]="'efectivo'" />
+                <img class="img-pago" src="../../assets/img/icons-metodo de pago/efectivo.png" alt="Efectivo" />
+                <span>Efectivo</span>
+              </label>
+              <label class="pago-option">
+                <input type="radio" name="formaPagoFiltros" [(ngModel)]="selectedMetodo" [value]="'transferencia'" />
+                <img class="img-pago" src="../../assets/img/icons-metodo de pago/banco.png" alt="Transferencia" />
+                <span>Transferencia</span>
+              </label>
+              <label class="pago-option">
+                <input type="radio" name="formaPagoFiltros" [(ngModel)]="selectedMetodo" [value]="'tarjeta'" />
+                <img class="img-pago" src="../../assets/img/icons-metodo de pago/targeta.png" alt="Tarjeta" />
+                <span>Tarjeta</span>
+              </label>
+              <label class="pago-option">
+                <input type="radio" name="formaPagoFiltros" [(ngModel)]="selectedMetodo" [value]="'nequi'" />
+                <img class="img-pago" src="../../assets/img/icons-metodo de pago/nequi.ico" alt="Nequi" />
+                <span>Nequi</span>
+              </label>
+              <label class="pago-option">
+                <input type="radio" name="formaPagoFiltros" [(ngModel)]="selectedMetodo" [value]="'daviplata'" />
+                <img class="img-pago" src="../../assets/img/icons-metodo de pago/daviplata.ico" alt="Daviplata" />
+                <span>Daviplata</span>
+              </label>
+              <label class="pago-option">
+                <input type="radio" name="formaPagoFiltros" [(ngModel)]="selectedMetodo" [value]="'otros'" />
+                <img class="img-pago" src="../../assets/img/icons-metodo de pago/otro.png" alt="Otros" />
+                <span>Otros</span>
+              </label>
             </div>
             <div class="mb-3">
-                <label for="exampleInputDate" class="form-label">Cliente</label>
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Todos los Clientes</option>
-                    <option value="1">Claudia Peñuela</option>
-                    <option value="2">Henry Forero</option>
+                <label class="form-label">Cliente</label>
+                <select class="form-select" [(ngModel)]="selectedClienteId" name="cliente">
+                    <option [ngValue]="''">Todos los Clientes</option>
+                    <option *ngFor="let c of clientes" [ngValue]="c.id">{{ c.nombre }} {{ c.apellido }}</option>
                 </select>
             </div>
             <div class="mb-3">
-                <label for="exampleInputDate" class="form-label">Proveedor</label>
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Todos los Proveedores</option>
-                    <option value="1">Coca Cola</option>
-                    <option value="2">Henry Forero</option>
+                <label class="form-label">Proveedor</label>
+                <select class="form-select" [(ngModel)]="selectedProveedorId" name="proveedor">
+                    <option [ngValue]="''">Todos los Proveedores</option>
+                    <option *ngFor="let p of proveedores" [ngValue]="p.id">{{ p.nombre }}</option>
                 </select>
             </div>
-        </form>
-  
-    <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop" aria-labelledby="staticBackdropLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="staticBackdropLabel">Filtros</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-    <div class="offcanvas-body">
-        <div>
-            <!-- Formulario Registro -->
-
-            <div class="container form">
-                <div class="formulario">
-                    <form>
-                        <label for="exampleInputText" class="form-label">Selecciona el Metodo de pago</label>
-                        <div class="metodo-pago mb-3">
-                            <button type="button" class="item">
-                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/efectivo.png" alt="" width="30px" height="30px">
-                                <p class="texto">Efectivo</p>
-                            </button>
-                            <button type="button" class="item">
-                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/targeta.png" alt="" width="30px" height="30px">
-                                <p class="texto">Targeta</p>
-                            </button>
-                            <button type="button" class="item">
-                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/banco.png" alt="" width="30px" height="30px">
-                                <p class="texto">Transferencia Bancaria</p>
-                            </button>
-                            <button type="button" class="item">
-                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/daviplata.ico" alt="" width="30px" height="30px">
-                                <p class="texto">Daviplata</p>
-                            </button>
-                            <button type="button" class="item">
-                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/nequi.ico" alt="" width="30px" height="30px">
-                                <p class="texto">Nequi</p>
-                            </button>
-                            <button type="button" class="item">
-                                <img class="img-todas" src="../../assets/img/icons-metodo de pago/otro.png" alt="" width="30px" height="30px">
-                                <p class="texto">Otros</p>
-                            </button>
-                        </div>
-                        <div class="mb-3">
-                            <label for="exampleInputDate" class="form-label">Cliente</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Todos los Clientes</option>
-                                <option value="1">Claudia Peñuela</option>
-                                <option value="2">Henry Forero</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="exampleInputDate" class="form-label">Proveedor</label>
-                            <select class="form-select" aria-label="Default select example">
-                                <option selected>Todos los Proveedores</option>
-                                <option value="1">Coca Cola</option>
-                                <option value="2">Henry Forero</option>
-                            </select>
-                        </div>
-                        <div class="limpiar-filtrar">
-                            <div class="limpi">
-                                <button type="submit" class="btn limpiar">Limpiar Filtros</button>
-                            </div>
-                            <div class="filt">
-                                <button type="submit" class="btn filtrar">Filtrar</button>
-                            </div>
-                        </div>
-                    </form>
+            <div class="resultados flex-grow-1 overflow-auto mt-3" *ngIf="resultados?.length">
+                <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th *ngFor="let col of columns">{{ col }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let row of resultados">
+                            <td *ngFor="let col of columns">{{ row[col] }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="limpiar-filtrar d-flex gap-2 mt-auto">
+                <div class="limpi">
+                    <button type="button" class="btn limpiar" (click)="limpiar()">Limpiar Filtros</button>
+                </div>
+                <div class="filt">
+                    <button type="button" class="btn filtrar" (click)="filtrar()">Filtrar</button>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>

@@ -28,7 +28,7 @@
         <div class="img-box">
           <img src="../../assets/img/icons-navbar/money-costo-inven.png" alt="" width="60px" height="60px">
         </div>
-        <div class="cant-inven">$ {{CostoTotal}}</div>
+        <div class="cant-inven">{{ CostoTotal | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
         <div class="text">Costo Total del Inventario</div>
       </div>
     </div>
@@ -211,8 +211,8 @@
                           <td>{{ producto.nombreProducto }}</td>
                           <td>{{ producto.categoria?.nombreCategoria || producto.idCategoria || '-' }}</td>
                           <td>{{ producto.stockProducto }}</td>
-                          <td>{{ producto.precioUnitario | currency:'COP':'symbol-narrow' }}</td>
-                          <td>{{ producto.precioComercial | currency:'COP':'symbol-narrow' }}</td>
+                          <td>{{ producto.precioUnitario | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                          <td>{{ producto.precioComercial | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
                           <td class="text-center">
                             <button title="Modificar" class="btn modificar2 btn-sm me-1" (click)="abrirEditar(producto)" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAgregarProducto" aria-controls="offcanvasAgregarProducto">
                               <i class="bi bi-pencil-square">Modificar</i>

@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { EmpleadosService } from '../services/empleados.service';
 import * as bcrypt from 'bcryptjs';
 import { CajasService } from '../services/cajas.service';
+declare const bootstrap: any;
 
 @Component({
   selector: 'app-add-empleados',
@@ -25,6 +26,8 @@ export class AddEmpleadosComponent {
   @Output() empleadoAgregado = new EventEmitter();
 
   empleado = {
+    nombre: '',
+    apellido: '',
     telefono: '',
     correo: '',
     contrasena: '',
@@ -47,6 +50,15 @@ export class AddEmpleadosComponent {
     });
   }
 
+  private closeOffcanvasIfAny() {
+    try {
+      const el = document.getElementById('offcanvasAddEmpleado');
+      if (!el) return;
+      const instance = bootstrap?.Offcanvas?.getInstance(el) || new bootstrap.Offcanvas(el);
+      instance?.hide();
+    } catch {}
+  }
+
   agregarEmpleado(form: NgForm) {
     if (!form.valid) {
       Swal.fire({
@@ -58,13 +70,13 @@ export class AddEmpleadosComponent {
       return;
     }
 
-    const { correo, telefono, contrasena } = this.empleado;
+    const { nombre, apellido, correo, telefono, contrasena } = this.empleado;
 
-    if (!correo || !telefono || !contrasena) {
+    if (!nombre || !apellido || !correo || !telefono || !contrasena) {
       Swal.fire({
         title: "Campos incompletos",
         icon: "warning",
-        text: "Todos los campos son obligatorios.",
+        text: "Todos los campos (nombre, apellido, correo, teléfono, contraseña y caja) son obligatorios.",
         confirmButtonText: "Ok"
       });
       return;
@@ -110,7 +122,12 @@ export class AddEmpleadosComponent {
               showConfirmButton: false
             });
 
+            // Cerrar offcanvas si existe (vista escritorio)
+            this.closeOffcanvasIfAny();
+
             this.empleado = {
+              nombre: '',
+              apellido: '',
               telefono: '',
               correo: '',
               contrasena: '',

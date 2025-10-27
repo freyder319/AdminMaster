@@ -475,6 +475,76 @@ body{
     font-weight: bold;
 }
 
+/* Modern search bar styles */
+.buscador-reportes .input-group.busca{
+  border: 1px solid rgba(143,143,143,0.25);
+  border-radius: 9999px;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  overflow: hidden;
+  transition: box-shadow .2s ease, border-color .2s ease;
+}
+
+.buscador-reportes .input-group.busca:focus-within{
+  border-color: #5adbff;
+  box-shadow: 0 0 0 3px rgba(90,219,255,0.25);
+}
+
+.buscador-reportes .boton_buscador{
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: transform .15s ease, box-shadow .2s ease, background-color .2s ease;
+}
+
+.buscador-reportes .boton_buscador:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+}
+
+.buscador-reportes .boton_buscador img{
+  width: 20px;
+  height: 20px;
+}
+
+.buscador-reportes .input-buscador{
+  height: 44px;
+  border: none;
+  background: transparent;
+  padding-left: 10px;
+  box-shadow: none;
+}
+
+.buscador-reportes .input-buscador::placeholder{
+  color: #9096a6;
+}
+
+/* Bordered controls for Filtro, Calendario, Rango */
+.filtro,
+.calendar,
+.range{
+  border: 1px solid rgba(143,143,143,0.25) !important;
+  border-radius: 9999px !important;
+  background: #ffffff !important;
+  color: #000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  transition: box-shadow .2s ease, border-color .2s ease, background-color .2s ease;
+}
+
+.filtro:focus,
+.calendar:focus,
+.range:focus{
+  outline: none;
+  border-color: #5adbff !important;
+  box-shadow: 0 0 0 3px rgba(90,219,255,0.25);
+}
+
 body{
     background-color: #FBF8F8;
 }
@@ -503,9 +573,26 @@ body{
     border: none;
     background-color: #FBF8F8;
     border-radius: 30px;
+    position: relative;
+    border-bottom: 5px solid transparent; /* reserva espacio para evitar salto */
+    transition: background-color .2s ease, transform .2s ease, box-shadow .2s ease, border-bottom-color .25s ease;
 }
 .seleccion:focus{
-    border-bottom: 5px solid #5adbff;
+    outline: none;
+}
+/* Estado activo muestra el borde real, como antes */
+.seleccion.active{
+    border-bottom-color: #5adbff;
+}
+
+/* Animación del borde real en foco cuando aún no está activa */
+.seleccion:focus:not(.active){
+    border-bottom-color: #5adbff;
+}
+
+.seleccion:hover{
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.06);
 }
 // Tabla
 .table {
@@ -524,8 +611,55 @@ body{
 }
 
 .table tbody tr {
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    background-color: #ffffff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: background-color .2s ease, box-shadow .2s ease, transform .2s ease, opacity .2s ease;
+    opacity: 0;
+    transform: translateY(6px);
+    animation: fadeSlideIn .28s ease forwards;
+}
+
+.table tbody td {
+    padding: 16px 10px;
+    border: none;
+}
+
+.table tbody tr:hover {
+    background-color: #f8fbff;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+}
+
+/* Cursor pointer for clickable rows */
+.table-row-click {
+  cursor: pointer;
+}
+
+/* Staggered appearance for nicer feel */
+.table tbody tr:nth-child(1)  { animation-delay: 0s; }
+.table tbody tr:nth-child(2)  { animation-delay: .03s; }
+.table tbody tr:nth-child(3)  { animation-delay: .06s; }
+.table tbody tr:nth-child(4)  { animation-delay: .09s; }
+.table tbody tr:nth-child(5)  { animation-delay: .12s; }
+.table tbody tr:nth-child(6)  { animation-delay: .15s; }
+.table tbody tr:nth-child(7)  { animation-delay: .18s; }
+.table tbody tr:nth-child(8)  { animation-delay: .21s; }
+.table tbody tr:nth-child(9)  { animation-delay: .24s; }
+.table tbody tr:nth-child(10) { animation-delay: .27s; }
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Accessibility: respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .table tbody tr {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    transition: background-color .2s ease, box-shadow .2s ease;
+  }
 }
 
 .td1 {
@@ -707,6 +841,13 @@ body{
     width: fit-content;
     margin-top: 4px;
 }
+
+/* Visual invalid state for Material outlined fields inside this component */
+:host ::ng-deep .is-invalid .mdc-notched-outline__leading,
+:host ::ng-deep .is-invalid .mdc-notched-outline__notch,
+:host ::ng-deep .is-invalid .mdc-notched-outline__trailing {
+  border-color: #dc3545 !important; /* Bootstrap danger */
+}
 // tabla puntos suspensivos
 @media screen and (max-width: 768px) {
     .table thead {
@@ -720,7 +861,7 @@ body{
 
     .table tr {
         margin-bottom: 15px;
-        border: 1px solid #ccc;
+        border: none;
         border-radius: 8px;
         padding: 10px;
         background-color: #f9f9f9;
