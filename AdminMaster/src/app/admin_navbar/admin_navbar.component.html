@@ -52,5 +52,12 @@
             </a>
         </div>
     </nav>
+    <!-- Indicador de turno activo (persistente) -->
+    <div *ngIf="(turno$ | async) as turno" class="alert alert-success py-1 m-0 text-center">
+        <span>
+            Turno iniciado: {{ turno.inicioTurno | date:'short' }}
+            <ng-container *ngIf="turno.observaciones"> · {{ turno.observaciones }}</ng-container>
+        </span>
+    </div>
 </main>
 

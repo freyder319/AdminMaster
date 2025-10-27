@@ -1,0 +1,101 @@
+<!-- Estados de la venta -->
+<div class="container paga-credit">
+  <div class="estado-buttons">
+    <button type="button" class="btn-confirmado" [class.active]="isEstado('confirmada')" (click)="setEstado('confirmada')">Confirmada</button>
+    <button type="button" class="btn-pendiente" [class.active]="isEstado('pendiente')" (click)="setEstado('pendiente')">Pendiente</button>
+    <button type="button" class="btn-anulado" [class.active]="isEstado('anulada')" (click)="setEstado('anulada')">Anulada</button>
+  </div>
+</div>
+<br>
+
+<!-- Formulario Registro Venta Libre -->
+<div class="container-fluid form">
+  <div class="formulario">
+    <form (ngSubmit)="onSubmit()" #ventaForm="ngForm">
+      <div class="form-grid">
+        <!-- nombre de la venta -->
+        <div class="mb-3">
+          <label class="form-label">Nombre de la Venta</label>
+          <input type="text" class="form-control" name="nombreVenta" [(ngModel)]="nombreVenta" placeholder="Venta mostrador, Venta rápida..." />
+        </div>
+
+        <!-- fecha y hora -->
+        <div class="mb-3">
+          <label class="form-label">Fecha y hora</label>
+          <input type="datetime-local" class="form-control" name="fechaHora" [(ngModel)]="fechaHora" />
+        </div>
+
+        <!-- productos -->
+        <div class="mb-3 span-2">
+          <label class="form-label d-block">Productos</label>
+          <div class="productos">
+            <div class="producto" *ngFor="let p of productos; let i = index">
+              <input class="form-control" placeholder="Nombre del producto" [(ngModel)]="p.nombre" name="prodNombre{{i}}" />
+              <input type="number" class="form-control" placeholder="Cantidad" min="1" [(ngModel)]="p.cantidad" name="prodCant{{i}}" (input)="updateSubtotal(i)" />
+              <input type="number" class="form-control" placeholder="Precio unitario" min="0" step="1" inputmode="numeric" [(ngModel)]="p.precio" name="prodPrecio{{i}}" (input)="updateSubtotal(i)" />
+              <input class="form-control" placeholder="Subtotal" [value]="p.subtotal | number:'1.0-0'" readonly />
+              <button type="button" class="btn btn-danger" (click)="removeProducto(i)" *ngIf="productos.length > 1">Eliminar</button>
+            </div>
+            <div class="mt-2">
+              <button type="button" class="btn btn-secondary" (click)="addProducto()">Agregar producto</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- total -->
+        <div class="mb-3">
+          <label class="form-label">Total</label>
+          <input class="form-control" [value]="total | number:'1.0-0'" readonly />
+        </div>
+
+        <!-- observaciones -->
+        <div class="mb-3 span-2">
+          <label class="form-label">Observaciones</label>
+          <textarea class="form-control" rows="2" name="observaciones" [(ngModel)]="observaciones" placeholder="cliente pidió sin factura, venta rápida, ..."></textarea>
+        </div>
+
+        <!-- forma_pago -->
+        <div class="mb-3 span-2">
+          <label class="form-label d-block">Forma de Pago</label>
+          <div class="pago-options">
+            <label class="pago-option">
+              <input type="radio" name="formaPago" [(ngModel)]="formaPago" value="efectivo" />
+              <img class="img-pago" src="../../assets/img/icons-metodo de pago/efectivo.png" alt="Efectivo" />
+              <span>Efectivo</span>
+            </label>
+            <label class="pago-option">
+              <input type="radio" name="formaPago" [(ngModel)]="formaPago" value="tarjeta" />
+              <img class="img-pago" src="../../assets/img/icons-metodo de pago/targeta.png" alt="Tarjeta" />
+              <span>Tarjeta</span>
+            </label>
+            <label class="pago-option">
+              <input type="radio" name="formaPago" [(ngModel)]="formaPago" value="transferencia" />
+              <img class="img-pago" src="../../assets/img/icons-metodo de pago/banco.png" alt="Transferencia" />
+              <span>Transferencia</span>
+            </label>
+            <label class="pago-option">
+              <input type="radio" name="formaPago" [(ngModel)]="formaPago" value="daviplata" />
+              <img class="img-pago" src="../../assets/img/icons-metodo de pago/daviplata.ico" alt="Daviplata" />
+              <span>Daviplata</span>
+            </label>
+            <label class="pago-option">
+              <input type="radio" name="formaPago" [(ngModel)]="formaPago" value="nequi" />
+              <img class="img-pago" src="../../assets/img/icons-metodo de pago/nequi.ico" alt="Nequi" />
+              <span>Nequi</span>
+            </label>
+            <label class="pago-option">
+              <input type="radio" name="formaPago" [(ngModel)]="formaPago" value="otros" />
+              <img class="img-pago" src="../../assets/img/icons-metodo de pago/otro.png" alt="Otros" />
+              <span>Otros</span>
+            </label>
+          </div>
+        </div>
+        
+        <!-- confirmar -->
+        <div class="confirmarfinal">
+          <button type="submit" class="btn create-venta" [disabled]="submitting">Confirmar Venta</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

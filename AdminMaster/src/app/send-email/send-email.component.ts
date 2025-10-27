@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { PasswordRecoveryFlowService } from '../services/password-recovery-flow.service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
 
@@ -15,7 +16,7 @@ import { CommonModule } from '@angular/common';
 export class SendEmailComponent {
   emailForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private recoveryFlow: PasswordRecoveryFlowService) {
     this.emailForm = this.fb.group({
       correo: ['', [Validators.required, Validators.email]]
     });
@@ -39,12 +40,14 @@ export class SendEmailComponent {
         Swal.fire({
           icon: 'success',
           title: 'Código enviado',
-          html: `Se ha enviado un código de verificación a <strong>${this.ocultarCorreo(correo)}</strong>`,
+          html: `Se ha enviado un código de verificación a <strong>${this.ocultarCorreo(correo)}</strong><br><small>Este código expira en 5 minutos.</small>`,
           timer: 3000,
           showConfirmButton: false
         }).then(() => {
+          this.recoveryFlow.setEmailSent(correo);
           this.router.navigate(['/recuperar-email'], {
-            queryParams: { correo }
+            queryParams: { correo },
+            replaceUrl: true
           });
         });
       },

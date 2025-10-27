@@ -22,6 +22,12 @@ export class InfoDialogComponent {
     pago: string;
     fecha: string;
     estado: string;
+    items?: Array<{
+      nombre: string;
+      cantidad: number;
+      precio: string;
+      subtotal: string;
+    }>;
   }) {}
 }
 

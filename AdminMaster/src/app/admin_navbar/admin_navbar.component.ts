@@ -1,12 +1,14 @@
-import { NgIf } from '@angular/common';
+import { NgIf, AsyncPipe, DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { TurnosService } from '../services/turnos.service';
+import { TurnoStateService, TurnoActivoState } from '../services/turno-state.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-admin-navbar',
-  imports: [RouterModule, NgIf],
+  imports: [RouterModule, NgIf, AsyncPipe, DatePipe],
   templateUrl: './admin_navbar.component.html',
   styleUrl: './admin_navbar.component.scss'
 })
@@ -14,8 +16,9 @@ import { TurnosService } from '../services/turnos.service';
 export class AdminNavbarComponent {
   correo: string | null = null;
   rol: string | null = null;
+  turno$!: Observable<TurnoActivoState | null>;
 
-  constructor(private router: Router, private turnosService: TurnosService) {}
+  constructor(private router: Router, private turnosService: TurnosService, private turnoState: TurnoStateService) {}
 
   cerrarSesion(): void {
     const rol = localStorage.getItem('rol') ?? 'usuario';
@@ -52,6 +55,8 @@ export class AdminNavbarComponent {
   ngOnInit() {
     this.correo = localStorage.getItem('correo');
     this.rol = localStorage.getItem('rol');
+    try { this.turnoState.hydrateFromStorage(); } catch {}
+    this.turno$ = this.turnoState.turnoActivo$;
   }
 
 }

@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 
 export interface Empleados {
   id: number;
+  nombre: string;
+  apellido: string;
   correo: string;
   telefono: string;
   contrasena?: string;

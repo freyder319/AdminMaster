@@ -4,6 +4,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { Categorias, CategoriaService } from '../services/categoria.service';
 import { Producto, ProductoService } from '../services/producto.service';
 import Swal from 'sweetalert2';
+declare const bootstrap: any;
 
 @Component({
   selector: 'app-create-producto',
@@ -136,6 +137,7 @@ export class CreateProductoComponent implements OnInit {
       this.productoService.create(payload).subscribe({
         next: () => {
           Swal.fire('Producto Creado', 'Se registró correctamente.', 'success');
+          this.closeOffcanvas();
           this.resetForm();
           this.guardado.emit();
         },
@@ -143,6 +145,17 @@ export class CreateProductoComponent implements OnInit {
           Swal.fire('Error', err?.error?.message || 'No se pudo crear el producto', 'error');
         }
       });
+    }
+  }
+  private closeOffcanvas() {
+    const el = document.querySelector('.offcanvas.show') as HTMLElement | null;
+    if (!el) return;
+    try {
+      const instance = bootstrap?.Offcanvas?.getInstance(el) || new bootstrap.Offcanvas(el);
+      instance?.hide();
+    } catch {
+      const btn = el.querySelector('.btn-close') as HTMLElement | null;
+      btn?.click();
     }
   }
   abrirSelectorImagen() {

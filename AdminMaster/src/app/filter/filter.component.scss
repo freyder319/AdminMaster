@@ -25,7 +25,7 @@
 .metodo-pago{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
+    gap: 12px;
     text-align: center;
 }
 
@@ -34,26 +34,140 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(143, 143, 143, 0.413);
-    border-radius: 15px;
-    padding: 20px;
-    background-color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 10px;
+    background-color: #fff;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.03), 0 1px 6px rgba(0,0,0,0.06);
     cursor: pointer;
     width: 100%;
-    height: 90%;
+    min-height: 96px;
+    transition: transform .08s ease, box-shadow .18s ease, border-color .18s ease, background-color .18s ease;
 }
-  
-.item:focus {
-    border: none;
-    box-shadow: 0 0 6px 0.5px #5adbff;
+
+.item:hover {
+    box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+    transform: translateY(-1px);
+}
+
+.item:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+}
+
+.item:focus-visible {
+    outline: 2px solid #5adbff;
+    outline-offset: 2px;
+}
+
+.item.active {
+    background: linear-gradient(180deg, #f0fff7 0%, #ffffff 60%);
+    box-shadow: 0 6px 18px rgba(16,185,129,0.18);
+    border: 1px solid rgba(16,185,129,0.25);
 }
 
 .img-todas{
-    margin-top: 10px;
+    margin-top: 6px;
+    width: 36px;
+    height: 36px;
 }
 
 .texto {
-    font-size: 12px;
-    margin-top: 5px;
-    color: #333;
+    font-size: 12.5px;
+    margin-top: 6px;
+    color: #374151;
+    font-weight: 600;
 }
+
+.item.active .texto {
+    color: #065f46;
+}
+
+/* Responsive tweaks */
+@media (max-width: 575px) {
+    .metodo-pago{ grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .img-todas{ width: 32px; height: 32px; }
+    .item{ min-height: 90px; padding: 12px 8px; }
+}
+@media (min-width: 576px) and (max-width: 767px) {
+    .metodo-pago{ grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Igualar estilo de add-gasto para opciones de pago */
+.pago-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+}
+
+.pago-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #f9fafb; /* gray-50 */
+    cursor: pointer;
+    transition: filter .15s ease;
+}
+
+.pago-option:hover { filter: brightness(0.98); }
+
+.img-pago {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+}
+
+/* Botonera Limpiar / Filtrar */
+.limpiar-filtrar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.btn.limpiar {
+    background: #f3f4f6; /* gray-100 */
+    color: #374151;      /* gray-700 */
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    transition: filter .15s ease, transform .05s ease;
+}
+.btn.limpiar:hover { filter: brightness(0.98); }
+.btn.limpiar:active { transform: translateY(1px); }
+
+.btn.filtrar {
+    background-color: #5adbff;
+    color: #0b1220;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 700;
+    box-shadow: 0 0 6px 0.5px #5adbff;
+    transition: filter .15s ease, transform .05s ease;
+}
+.btn.filtrar:hover { filter: brightness(0.97); }
+.btn.filtrar:active { transform: translateY(1px); }
+
+  /* Footer fijo en offcanvas */
+  #staticBackdrop .offcanvas-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 100%;
+  }
+  #staticBackdrop .offcanvas-body .container.form { flex: 1 1 auto; overflow-y: auto; padding-bottom: 16px; }
+  .offcanvas-filter-footer {
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    padding: 12px 0 10px;
+    border-top: 1px solid #e5e7eb;
+    margin-top: 12px; /* separación clara del contenido anterior */
+  }

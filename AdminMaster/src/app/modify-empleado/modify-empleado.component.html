@@ -24,6 +24,18 @@
         <div class="container form">
             <div class="formulario">
                 <form *ngIf="empleado" (ngSubmit)="modificarEmpleado()">
+                    <!-- Nombre -->
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" [(ngModel)]="empleado.nombre" name="nombre" id="nombre" class="form-control" required maxlength="100">
+                    </div>
+
+                    <!-- Apellido -->
+                    <div class="mb-3">
+                        <label for="apellido" class="form-label">Apellido</label>
+                        <input type="text" [(ngModel)]="empleado.apellido" name="apellido" id="apellido" class="form-control" required maxlength="100">
+                    </div>
+
                     <!-- Correo -->
                     <div class="mb-3">
                         <label for="correo" class="form-label">Correo Electrónico</label>

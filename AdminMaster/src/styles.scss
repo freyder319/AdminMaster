@@ -34,3 +34,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .offcanvas {
   z-index: 2005 !important; /* above backdrop */
 }
+
+/* Ensure Material dialogs overlay above navbar */
+.cdk-overlay-container {
+  z-index: 5000 !important;
+}

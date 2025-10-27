@@ -4,6 +4,7 @@ import { DatePipe, DecimalPipe, NgIf, NgFor, isPlatformBrowser } from '@angular/
 import { AdminNavbarComponent } from "../admin_navbar/admin_navbar.component";
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { TurnoStateService } from '../services/turno-state.service';
 
 @Component({
   selector: 'app-empleado-turno',
@@ -22,7 +23,7 @@ export class EmpleadoTurnoComponent implements OnInit {
   modalAbierto = false;
   seleccionado: TurnoActivoItem | null = null;
 
-  constructor(private turnoService: TurnosService, @Inject(PLATFORM_ID) private platformId: Object, private router: Router) {}
+  constructor(private turnoService: TurnosService, @Inject(PLATFORM_ID) private platformId: Object, private router: Router, private turnoState: TurnoStateService) {}
 
   ngOnInit(): void {
     // Evitar llamadas en SSR (no hay localStorage, no se adjunta token)
@@ -30,6 +31,7 @@ export class EmpleadoTurnoComponent implements OnInit {
       return;
     }
     const rol = (localStorage.getItem('rol') || '').trim().toLowerCase();
+    try { this.turnoState.hydrateFromStorage(); } catch {}
     this.isAdmin = rol === 'admin';
     if (this.isAdmin) {
       this.cargarActivos();
@@ -40,6 +42,25 @@ export class EmpleadoTurnoComponent implements OnInit {
 
   private cargarEstado() {
     this.cargando = true;
+    // Si hay estado persistido, mostrar inmediatamente un resumen básico
+    const snap = this.turnoState.snapshot;
+    if (snap) {
+      try {
+        this.resumen = {
+          turno: {
+            inicioTurno: new Date(snap.inicioTurno) as any,
+            finTurno: undefined as any,
+            observaciones: snap.observaciones || undefined,
+          },
+          aperturaCaja: undefined as any,
+          cierreCaja: undefined as any,
+          actividad: { totalVentas: 0, transacciones: 0 } as any,
+        } as any;
+        this.sinTurnoActivo = false;
+        // Mostrar de inmediato sin esperar al backend
+        this.cargando = false;
+      } catch {}
+    }
     if (this.empleadoId) {
       this.turnoService.getResumenTurno(this.empleadoId).subscribe({
         next: (data) => {
@@ -49,8 +70,10 @@ export class EmpleadoTurnoComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error al cargar resumen de turno:', err);
-          this.sinTurnoActivo = true;
-          this.resumen = undefined as any;
+          if (!snap) { // solo marcar sin turno si no había persistencia
+            this.sinTurnoActivo = true;
+            this.resumen = undefined as any;
+          }
           this.cargando = false;
         },
       });
@@ -64,11 +87,15 @@ export class EmpleadoTurnoComponent implements OnInit {
         error: (err) => {
           if (err?.status === 401) {
             // Mantener al usuario en la vista para evitar rebote al login
-            this.sinTurnoActivo = true;
-            this.resumen = undefined as any;
+            if (!snap) {
+              this.sinTurnoActivo = true;
+              this.resumen = undefined as any;
+            }
           } else if (err?.status === 404) {
-            this.sinTurnoActivo = true;
-            this.resumen = undefined as any;
+            if (!snap) {
+              this.sinTurnoActivo = true;
+              this.resumen = undefined as any;
+            }
           } else {
             console.error('Error al cargar turno activo:', err);
           }
@@ -147,6 +174,14 @@ export class EmpleadoTurnoComponent implements OnInit {
           this.resumen = data;
           this.sinTurnoActivo = false;
           Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Turno iniciado', timer: 2000, showConfirmButton: false });
+          // persistir estado de turno activo
+          const userIdStr = typeof window !== 'undefined' ? localStorage.getItem('userId') : null;
+          const usuarioId = userIdStr ? Number(userIdStr) : NaN;
+          this.turnoState.setActivo({
+            inicioTurno: String(this.resumen?.turno?.inicioTurno || new Date().toISOString()),
+            observaciones: this.resumen?.turno?.observaciones || null,
+            usuarioId: Number.isFinite(usuarioId) ? usuarioId : 0,
+          });
         },
         error: (err) => {
           console.error('No se pudo iniciar el turno', err);
@@ -161,6 +196,11 @@ export class EmpleadoTurnoComponent implements OnInit {
                   this.resumen = data2;
                   this.sinTurnoActivo = false;
                   Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Turno iniciado', timer: 2000, showConfirmButton: false });
+                  this.turnoState.setActivo({
+                    inicioTurno: String(this.resumen?.turno?.inicioTurno || new Date().toISOString()),
+                    observaciones: this.resumen?.turno?.observaciones || null,
+                    usuarioId: Number.isFinite(userId) ? userId : 0,
+                  });
                 },
                 error: (err2) => {
                   console.error('Fallback público falló', err2);
@@ -189,7 +229,7 @@ export class EmpleadoTurnoComponent implements OnInit {
       title: 'Terminar turno',
       text: 'Ingresa el monto final de caja',
       input: 'number',
-      inputAttributes: { min: '0', step: '0.01' },
+      inputAttributes: { min: '0', step: '1' },
       inputValue: 0,
       showCancelButton: true,
       confirmButtonText: 'Terminar',
@@ -203,9 +243,11 @@ export class EmpleadoTurnoComponent implements OnInit {
       }
       this.turnoService.cerrarTurno(monto).subscribe({
         next: (data) => {
-          this.resumen = data;
-          this.sinTurnoActivo = false;
+          this.resumen = undefined as any;
+          this.sinTurnoActivo = true;
           Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Turno cerrado', timer: 2000, showConfirmButton: false });
+          // limpiar indicador persistente al cerrar turno
+          try { this.turnoState.clear(); } catch {}
         },
         error: (err) => {
           const msg = (err?.error && (err.error.message || err.error.error)) || 'Intenta nuevamente.';
@@ -218,9 +260,10 @@ export class EmpleadoTurnoComponent implements OnInit {
             if (!isNaN(userId) && userId > 0) {
               this.turnoService.cerrarTurnoPorUsuario(userId, monto).subscribe({
                 next: (data2) => {
-                  this.resumen = data2;
-                  this.sinTurnoActivo = false;
+                  this.resumen = undefined as any;
+                  this.sinTurnoActivo = true;
                   Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Turno cerrado', timer: 2000, showConfirmButton: false });
+                  try { this.turnoState.clear(); } catch {}
                 },
                 error: (err2) => {
                   console.error('Fallback público de cierre falló', err2);

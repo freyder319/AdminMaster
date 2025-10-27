@@ -14,7 +14,17 @@
             <div class="container text-center my-4">
               <p class="text-security fw-bold">{{ correoOculto }}</p>
               <div class="d-flex justify-content-center gap-2">
-                 <input *ngFor="let i of [0,1,2,3,4,5]" type="text" maxlength="1" class="form-control otp-input text-center" [formControlName]="'codigo' + i" (keyup)="autoFocusSiguiente($event, i)"/>
+                 <input *ngFor="let i of [0,1,2,3,4,5]"
+                        #otp
+                        type="text"
+                        inputmode="numeric"
+                        autocomplete="one-time-code"
+                        maxlength="1"
+                        class="form-control otp-input text-center"
+                        [formControlName]="'codigo' + i"
+                        (input)="onInput($event, i)"
+                        (paste)="onPaste($event)"
+                        (keyup)="autoFocusSiguiente($event, i)"/>
               </div>
             </div>
             <div class="d-grid gap-2">

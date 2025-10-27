@@ -19,6 +19,13 @@ export interface TurnoResumen {
   actividad: {
     totalVentas: number;
     transacciones: number;
+    totalVentasLibres: number;
+    transaccionesLibres: number;
+    totalGastos: number;
+    cantidadGastos: number;
+    ventas: Array<{ id: number; total: number }>;
+    ventasLibres: Array<{ id: number; total: number }>;
+    gastos: Array<{ id: number; monto: number; nombre?: string | null; forma_pago?: string | null }>;
   };
 }
 
@@ -49,7 +56,7 @@ export class TurnosService {
   }
 
   getResumenTurno(empleadoId: number): Observable<TurnoResumen> {
-    return this.http.get<TurnoResumen>(`${this.apiUrl}/resumen/${empleadoId}`);
+    return this.http.get<TurnoResumen>(`${this.apiUrl}/resumen/${empleadoId}`, this.authOptions());
   }
 
   iniciarTurno(montoInicial: number, observaciones?: string): Observable<TurnoResumen> {
@@ -75,7 +82,7 @@ export class TurnosService {
   }
 
   getUltimoTurno(empleadoId: number): Observable<TurnoResumen> {
-    return this.http.get<TurnoResumen>(`${this.apiUrl}/ultimo/${empleadoId}`);
+    return this.http.get<TurnoResumen>(`${this.apiUrl}/ultimo/${empleadoId}`, this.authOptions());
   }
 
   getTurnosActivos(): Observable<TurnoActivoItem[]> {
