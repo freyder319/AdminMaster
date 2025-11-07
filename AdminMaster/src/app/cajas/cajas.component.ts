@@ -23,8 +23,9 @@ export class CajasComponent {
   mostrarModificarCaja = false;
   cajas:Cajas[] = [];
   cajasFiltrar: Cajas[] = []; 
-  // búsqueda reactiva
+  // streams reactivos
   private search$ = new BehaviorSubject<string>('');
+  private cajas$ = new BehaviorSubject<Cajas[]>([]);
   filteredCajas$!: Observable<Cajas[]>;
   lastSearchTerm = '';
   constructor (private cajasServices: CajasService){}
@@ -34,14 +35,16 @@ export class CajasComponent {
       next: (data) => {
         this.cajasFiltrar = data;
         this.cajas = data;
-        // construir stream filtrado basado en término de búsqueda
+        this.cajas$.next(this.cajas);
+        // construir stream filtrado basado en término de búsqueda y lista
         this.filteredCajas$ = combineLatest([
+          this.cajas$,
           this.search$,
         ]).pipe(
-          map(([term]) => {
+          map(([cajas, term]) => {
             const t = (term || '').trim().toLowerCase();
-            if (!t) return this.cajas;
-            return this.cajas.filter(caja =>
+            if (!t) return cajas;
+            return cajas.filter(caja =>
               caja.nombre?.toLowerCase().includes(t) ||
               caja.codigoCaja?.toLowerCase().includes(t) ||
               caja.estado?.toLowerCase().includes(t)
@@ -66,6 +69,7 @@ export class CajasComponent {
       next: (data) => {
         this.cajasFiltrar = data;
         this.cajas = data;
+        this.cajas$.next(this.cajas);
       },
       error: (error) => console.error('Error al Cargar Cajas:', error)
     });
@@ -82,8 +86,14 @@ export class CajasComponent {
   }
 
   onCajaAgregada(caja: Cajas) {
-    this.cajas.unshift(caja);
-    this.mostrarAddCaja = false; 
+    // Optimistic update
+    this.cajas = [caja, ...(this.cajas || [])];
+    this.cajas$.next(this.cajas);
+    // Then refetch to sync with server
+    this.obtenerCajas();
+    this.mostrarAddCaja = false;
+    this.lastSearchTerm = '';
+    this.search$.next(this.lastSearchTerm);
   }
 
   abrirModificarCaja(caja: Cajas) {
@@ -96,8 +106,18 @@ export class CajasComponent {
   }
 
   onCajaModificada(cajaActualizada: any) {
-    this.obtenerCajas(); 
-    this.mostrarModificarCaja = false; 
+    // Optimistic update
+    const idx = (this.cajas || []).findIndex(c => c.id === cajaActualizada?.id);
+    if (idx >= 0) {
+      this.cajas[idx] = { ...this.cajas[idx], ...cajaActualizada } as Cajas;
+      this.cajas = [...this.cajas];
+      this.cajas$.next(this.cajas);
+    }
+    // Then refetch to sync with server
+    this.obtenerCajas();
+    this.mostrarModificarCaja = false;
+    this.lastSearchTerm = '';
+    this.search$.next(this.lastSearchTerm);
   }
 
   eliminarCaja(id: number) {
@@ -122,7 +142,13 @@ export class CajasComponent {
               icon: "success"
             });
             this.mostrarModificarCaja = false;
-            this.ngOnInit();
+            // Optimistic removal
+            this.cajas = (this.cajas || []).filter(c => c.id !== id);
+            this.cajas$.next(this.cajas);
+            // Then refetch to sync with server
+            this.obtenerCajas();
+            this.lastSearchTerm = '';
+            this.search$.next(this.lastSearchTerm);
           },
           error: (err) => {
             let mensaje = 'Ocurrió un Error al Eliminar la Caja';

@@ -33,14 +33,6 @@
   <section>
     <div class="container text-center py-4">
       <h1 class="fw-bold mb-4">Productos en Venta</h1>
-      <div class="d-flex justify-content-center px-3">
-        <div class="search-icon-wrapper p-3 rounded-4">
-          <form role="search">
-            <input class="form-control rounded-4 border" type="search" placeholder="Buscar Producto..." aria-label="Search">
-            <i class="bi bi-search"></i>
-          </form>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -52,18 +44,29 @@
       <button class="categoria-btn mx-2" [class.active]="categoriaSeleccionada === 'bebidas'" (click)="seleccionarCategoria('bebidas')">Bebidas</button>
     </div>
 
+    <!-- Buscador debajo de categorías -->
+    <div class="d-flex justify-content-center px-3 mb-3">
+      <div class="search-icon-wrapper p-3 rounded-4">
+        <form role="search">
+          <input class="form-control rounded-4 border" type="search" placeholder="Buscar producto por nombre..." aria-label="Search"
+                 [(ngModel)]="searchTerm" name="q" (ngModelChange)="onSearchChange()">
+          <i class="bi bi-search"></i>
+        </form>
+      </div>
+    </div>
+
     <div class="products-panaderia bg-light py-4">
       <p class="cate-nom" [class.animate-categoria]="animarTitulo">{{ categoriaSeleccionada | titlecase }}</p>
+      <p class="cate-count">Total de Productos: {{ productosFiltrados.length }}</p>
       <div class="products-wrapper row">
-        <div class="product-card col-sm-12 col-md-6 col-lg-3" *ngFor="let producto of productosFiltrados; let i = index">
+        <div class="product-card col-sm-12 col-md-6 col-lg-3" *ngFor="let producto of paginatedProductos; let i = index">
           <div class="card-modern card-animada" [style.animationDelay]="(i * 100) + 'ms'">
             <div class="card-image">
               <img title="img" [src]="producto.imagen" [alt]="producto.nombre">
-              <a [routerLink]="['/detalle-producto', producto.nombre]" class="icon-overlay">
-              </a>
             </div>
             <div class="card-info">
               <h3>{{ producto.nombre }}</h3>
+              <p>Stock: {{ producto.stock }} unidades</p>
               <p class="price">$ {{ producto.precio }}</p>
             </div>
           </div>
@@ -74,16 +77,16 @@
       <div class="container pagination-wrapper d-flex justify-content-center mt-4">
         <nav aria-label="Page navigation">
           <ul class="pagination custom-pagination">
-            <li class="page-item">
-              <a class="page-link" href="#" aria-label="Previous">
+            <li class="page-item" [class.disabled]="currentPage === 1">
+              <a class="page-link" href="javascript:void(0)" aria-label="Previous" (click)="prevPage()">
                 <span aria-hidden="true">&laquo;</span>
               </a>
             </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-              <a class="page-link" href="#" aria-label="Next">
+            <li class="page-item" *ngFor="let p of pages" [class.active]="p === currentPage">
+              <a class="page-link" href="javascript:void(0)" (click)="setPage(p)">{{ p }}</a>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage === totalPages">
+              <a class="page-link" href="javascript:void(0)" aria-label="Next" (click)="nextPage()">
                 <span aria-hidden="true">&raquo;</span>
               </a>
             </li>

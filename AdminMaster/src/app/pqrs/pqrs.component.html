@@ -19,76 +19,98 @@
 </div>
 <!-- Formulario -->
 <br><br>
-<div class="container">
+<form class="container" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
     <div class="row">
         <div class="d-flex flex-column">
-            <label for="exampleFormControlInput1" class="form-label">Nombre Completo *</label>
+            <label class="form-label">Nombre Completo *</label>
             <div class="d-flex gap-3">
-                <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Nombre">
-                <input type="text" class="form-control" id="exampleFormControlInput2" placeholder="Apellido">
+                <div class="flex-grow-1">
+                    <input type="text" class="form-control" placeholder="Nombre" formControlName="nombre">
+                    <div class="mt-1">
+                        <small class="text-danger" *ngIf="(submitted || f['nombre'].touched) && f['nombre'].errors?.['required']">El nombre es obligatorio.</small>
+                        <small class="text-danger" *ngIf="(submitted || f['nombre'].touched) && f['nombre'].errors?.['minlength']">Mínimo 2 caracteres.</small>
+                        <small class="text-danger" *ngIf="(submitted || f['nombre'].touched) && f['nombre'].errors?.['maxlength']">Máximo 60 caracteres.</small>
+                    </div>
+                </div>
+                <div class="flex-grow-1">
+                    <input type="text" class="form-control" placeholder="Apellido" formControlName="apellido">
+                    <div class="mt-1">
+                        <small class="text-danger" *ngIf="(submitted || f['apellido'].touched) && f['apellido'].errors?.['required']">El apellido es obligatorio.</small>
+                        <small class="text-danger" *ngIf="(submitted || f['apellido'].touched) && f['apellido'].errors?.['minlength']">Mínimo 2 caracteres.</small>
+                        <small class="text-danger" *ngIf="(submitted || f['apellido'].touched) && f['apellido'].errors?.['maxlength']">Máximo 60 caracteres.</small>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<br>
-<div class="container">
-    <div class="row">
+
+    <div class="row mt-3">
         <div class="col-12">
-            <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">Correo Electronico*</label>
-                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="nombre@ejemplo.com">
-              </div>
-        </div>
-    </div>
-</div>
-<br>
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">Celular / WhatsApp*</label>
-                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Numero Telefonico">
-              </div>
-        </div>
-    </div>
-</div>
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">Comentarios*</label>
-                <textarea class="form-control tarea" id="exampleFormControlTextarea1" rows="3" placeholder="Comentarios..."></textarea>
+            <div class="mb-1">
+                <label class="form-label">Correo Electrónico *</label>
+                <input type="email" class="form-control" placeholder="nombre@ejemplo.com" formControlName="correo">
+            </div>
+            <div class="mt-1">
+                <small class="text-danger" *ngIf="(submitted || f['correo'].touched) && f['correo'].errors?.['required']">El correo es obligatorio.</small>
+                <small class="text-danger" *ngIf="(submitted || f['correo'].touched) && f['correo'].errors?.['email']">Formato de correo inválido.</small>
+                <small class="text-danger" *ngIf="(submitted || f['correo'].touched) && f['correo'].errors?.['maxlength']">Máximo 80 caracteres.</small>
             </div>
         </div>
     </div>
-</div>
-<div class="container">
-    <div class="row">
+
+    <div class="row mt-3">
         <div class="col-12">
-            <label for="exampleFormControlTextarea1" class="form-label">Concentimiento*</label>
+            <div class="mb-1">
+                <label class="form-label">Celular / WhatsApp *</label>
+                <input type="text" class="form-control" placeholder="Número telefónico" formControlName="numero" (input)="onNumeroInput($event)" maxlength="10">
+            </div>
+            <div class="mt-1">
+                <small class="text-danger" *ngIf="(submitted || f['numero'].touched) && f['numero'].errors?.['required']">El número es obligatorio.</small>
+                <small class="text-danger" *ngIf="(submitted || f['numero'].touched) && f['numero'].errors?.['pattern']">El número debe tener exactamente 10 dígitos.</small>
+                <small class="text-muted" *ngIf="f['numero'].value as v">{{ (v || '').length }}/10</small>
+            </div>
         </div>
     </div>
-</div>
-<div class="container">
+
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="mb-1">
+                <label class="form-label">Comentarios *</label>
+                <textarea class="form-control tarea" rows="3" placeholder="Comentarios..." formControlName="comentarios"></textarea>
+            </div>
+            <div class="mt-1">
+                <small class="text-danger" *ngIf="(submitted || f['comentarios'].touched) && f['comentarios'].errors?.['required']">El comentario es obligatorio.</small>
+                <small class="text-danger" *ngIf="(submitted || f['comentarios'].touched) && f['comentarios'].errors?.['minlength']">Mínimo 10 caracteres.</small>
+                <small class="text-danger" *ngIf="(submitted || f['comentarios'].touched) && f['comentarios'].errors?.['maxlength']">Máximo 1000 caracteres.</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            <label class="form-label">Consentimiento *</label>
+        </div>
+    </div>
     <div class="row">
         <div class="col-12">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                <input class="form-check-input" type="checkbox" id="defaultCheck1" formControlName="autorizo">
                 <label class="form-check-label autorizo" for="defaultCheck1">
                   Autorizo a la Panaderia y Reposteria Antojitos de Doima enviarme mensajes a través de sus diferentes medios.
                 </label>
-              </div>
+            </div>
+            <div class="mt-1">
+                <small class="text-danger" *ngIf="(submitted || f['autorizo'].touched) && f['autorizo'].errors?.['requiredTrue']">Debes autorizar el consentimiento.</small>
+            </div>
         </div>
     </div>
-</div>
-<br>
-<div class="container">
-    <div class="row">
+
+    <div class="row mt-4">
         <div class="col-12">
             <div class="d-grid gap-2">
-                <button class="btn btn-primary" type="button">Enviar</button>
-              </div>
+                <button class="btn btn-primary" type="submit" [disabled]="form.invalid">Enviar</button>
+            </div>
         </div>
     </div>
-</div>
+</form>
 <app-footer></app-footer>

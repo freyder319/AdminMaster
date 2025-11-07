@@ -18,8 +18,13 @@ import { LoginComponent } from './auth/login/login.component';
 import { SendEmailComponent } from './send-email/send-email.component';
 import { EmpleadosComponent } from './empleados/empleados.component';
 import { EmpleadoTurnoComponent } from './empleado-turno/empleado-turno.component';
+import { ActivosComponent } from './empleado-turno/activos/activos.component';
+import { CerradosComponent } from './empleado-turno/cerrados/cerrados.component';
+import { HistorialComponent } from './empleado-turno/historial/historial.component';
+import { NotificacionesComponent } from './empleado-turno/notificaciones/notificaciones.component';
 import { RecoveryEmailGuard } from './guards/recovery-email.guard';
 import { RecoveryVerifiedGuard } from './guards/recovery-verified.guard';
+import { InfoGastosComponent } from './info-gastos/info-gastos.component';
 
 export const routes: Routes = [
     // Rutas para administrador
@@ -34,13 +39,20 @@ export const routes: Routes = [
     { path: "proveedor", component: ProveedoresComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
     { path: "modificar-proveedor", component: ModifyProveedorComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
     { path: "clientes", component: ClientesComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
-    { path: "turno-empleado", component: EmpleadoTurnoComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
+    { path: "turno-empleado", component: EmpleadoTurnoComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] },children: [
+        { path: "activos", component: ActivosComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
+        { path: "cerrados", component: CerradosComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
+        { path: "historial", component: HistorialComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
+        { path: "notificaciones", component: NotificacionesComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
+        { path: "", redirectTo: "activos", pathMatch: "full" }]
+    },
+    { path: "info-gastos/:id", component: InfoGastosComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
     { path: "verificar-email", component: SendEmailComponent },
     { path: "login", component: LoginComponent },
-    
-    // Rutas para cliente
     { path: "recuperar-email", component: SecurityEmailComponent, canActivate: [RecoveryEmailGuard] },
     { path: "restablecer-contrasena", component: ResetPasswordComponent, canActivate: [RecoveryVerifiedGuard] },
+
+    // Rutas para cliente
     { path: "donde-estamos", component: DondeEstamosComponent },
     { path: "pqrs", component: PqrsComponent },
     { path: "", component: ProductsComponent},

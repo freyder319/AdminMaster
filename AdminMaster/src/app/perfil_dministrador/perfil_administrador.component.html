@@ -14,7 +14,8 @@
                         <div class="row">
                             <div class="col">
                                 <!-- Formulario editable (crear o actualizar según exista config) -->
-                                <form class="row g-3" (ngSubmit)="onSubmit()">
+                                <form class="row g-3" #f="ngForm" (ngSubmit)="onSubmit()" novalidate>
+
                                     <div class="col-12">
                                         <div class="avatar-wrapper">
                                             <div class="avatar">
@@ -29,31 +30,57 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label  text-start d-block">Nombre del Negocio</label>
-                                        <input class="form-control" [(ngModel)]="form.nombreNegocio" name="nombreNegocio" required>
+                                        <input class="form-control" [(ngModel)]="form.nombreNegocio" name="nombreNegocio" #nombreNegocio="ngModel" required minlength="2" placeholder="Ej: Mi Negocio">
+                                        <small class="text-danger" *ngIf="nombreNegocio.invalid && (nombreNegocio.dirty || nombreNegocio.touched)">
+                                            Nombre requerido (mínimo 2 caracteres).
+                                        </small>
                                     </div>
+
                                     <div class="col-md-6">
                                         <label class="form-label  text-start d-block">Dirección del Negocio</label>
-                                        <input class="form-control" [(ngModel)]="form.direccion" name="direccion" required>
+                                        <input class="form-control" [(ngModel)]="form.direccion" name="direccion" #direccion="ngModel" required minlength="4" placeholder="Ej: Calle 123 #45-67">
+                                        <small class="text-danger" *ngIf="direccion.invalid && (direccion.dirty || direccion.touched)">
+                                            Dirección requerida (mínimo 4 caracteres).
+                                        </small>
                                     </div>
+
                                     <div class="col-md-6">
                                         <label class="form-label  text-start d-block">Ciudad Donde se Ubica el Negocio</label>
-                                        <input class="form-control" [(ngModel)]="form.ciudad" name="ciudad" required>
+                                        <input class="form-control" [(ngModel)]="form.ciudad" name="ciudad" #ciudad="ngModel" required minlength="2" placeholder="Ej: Bogotá">
+                                        <small class="text-danger" *ngIf="ciudad.invalid && (ciudad.dirty || ciudad.touched)">
+                                            Ciudad requerida (mínimo 2 caracteres).
+                                        </small>
                                     </div>
+
                                     <div class="col-md-6">
                                         <label class="form-label text-start d-block">Numero de Celular</label>
-                                        <input class="form-control" [(ngModel)]="form.celular" name="celular" required>
+                                        <input class="form-control" type="tel" [(ngModel)]="form.celular" name="celular" #celular="ngModel" required pattern="^[0-9]{7,15}$" placeholder="Ej: 3001234567">
+                                        <small class="text-danger" *ngIf="celular.invalid && (celular.dirty || celular.touched)">
+                                            Ingrese un celular válido (solo dígitos, 7 a 15).
+                                        </small>
                                     </div>
+
                                     <div class="col-md-6">
                                         <label class="form-labe  text-start d-block">Correo Electronico</label>
-                                        <input type="email" class="form-control" [(ngModel)]="form.correo" name="correo" required>
+                                        <input type="email" class="form-control" [(ngModel)]="form.correo" name="correo" #correo="ngModel" required pattern=".*@.*" placeholder="Ej: correo@dominio.com">
+                                        <small class="text-danger" *ngIf="correo.invalid && (correo.dirty || correo.touched)">
+                                            <ng-container *ngIf="correo.errors?.['pattern']; else correoInvalido">El correo debe contener el símbolo '&#64;'.</ng-container>
+                                            <ng-template #correoInvalido>Ingrese un correo electrónico válido.</ng-template>
+                                        </small>
                                     </div>
+
                                     <div class="col-md-6">
                                         <label class="form-label text-start d-block labeldefec">Documento</label>
-                                        <input class="form-control" [(ngModel)]="form.documento" name="documento" required>
+                                        <input class="form-control" [(ngModel)]="form.documento" name="documento" #documento="ngModel" required pattern="^[A-Za-z0-9.-]{5,20}$" placeholder="Ej: 123456789">
+                                        <small class="text-danger" *ngIf="documento.invalid && (documento.dirty || documento.touched)">
+                                            Documento requerido (5 a 20 caracteres, letras/números).
+                                        </small>
                                     </div>
+
                                     <div class="confirmarfinal mas">
-                                        <button type="submit" class="btn confir">{{ config ? 'Guardar cambios' : 'Confirmar' }}</button>
+                                        <button type="submit" class="btn confir" [disabled]="f.invalid">{{ config ? 'Guardar cambios' : 'Confirmar' }}</button>
                                     </div>
+
                                 </form>
                             </div>
                         </div>

@@ -16,6 +16,7 @@ export interface CreateVentaPayload {
   usuario_id?: number;
   turno_id?: number;
   fecha_hora?: string;
+  descuentoId?: number;
   items: VentaItemDTO[];
 }
 

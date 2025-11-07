@@ -4,15 +4,34 @@
 
 <main>
     <section>
+        
+        <!-- Modal de detalle de PQRS -->
+        <div class="modal-backdrop" *ngIf="pqrsModalAbierto" (click)="cerrarDetallePqrs()" style="z-index: 2100;"></div>
+        <div class="modal-contenedor" *ngIf="pqrsModalAbierto" role="dialog" aria-modal="true" style="z-index: 2101; margin-top: 70px;">
+            <div class="modal-header">
+                <h3>Detalle PQRS</h3>
+                <button type="button" class="modal-cerrar" (click)="cerrarDetallePqrs()">✕</button>
+            </div>
+            <div class="modal-body" *ngIf="pqrsSeleccionado as p">
+                <div class="datos-grid">
+                    <div class="kv"><span class="k"><i class="bi bi-person inline" aria-hidden="true"></i> Nombre</span><span class="v">{{ (p.nombre || '') + ' ' + (p.apellido || '') }}</span></div>
+                    <div class="kv"><span class="k"><i class="bi bi-envelope inline" aria-hidden="true"></i> Correo</span><span class="v">{{ p.correo }}</span></div>
+                    <div class="kv"><span class="k"><i class="bi bi-telephone inline" aria-hidden="true"></i> Teléfono</span><span class="v">{{ p.numero }}</span></div>
+                    <div class="kv"><span class="k"><i class="bi bi-calendar inline" aria-hidden="true"></i> Fecha</span><span class="v">{{ p.fecha | date:'short' }}</span></div>
+                    <div class="kv kv-span"><span class="k"><i class="bi bi-chat-left-text inline" aria-hidden="true"></i> Comentarios</span><span class="v">{{ p.comentarios }}</span></div>
+                </div>
 
-        <div *ngIf="cargando" class="turno-card">
-            <h2 class="titulo">Cargando...</h2>
+            </div>
         </div>
 
         <div *ngIf="!isAdmin && !cargando && sinTurnoActivo" class="turno-card">
             <h2 class="titulo">Sin turno activo</h2>
             <p>Para comenzar a operar, inicia un turno.</p>
             <button type="button" class="btn-turno" (click)="iniciarTurno()" *ngIf="!isAdmin">Iniciar turno</button>
+        </div>
+
+        <div *ngIf="!isAdmin && cargando" class="turno-card">
+            <h2 class="titulo">Cargando...</h2>
         </div>
 
         <div *ngIf="!isAdmin && !cargando && resumen" class="turno-card">
@@ -28,7 +47,7 @@
             <div class="bloque">
                 <h4>Caja</h4>
                 <ng-container *ngIf="resumen.aperturaCaja">
-                    <p><strong>Apertura:</strong> {{resumen.aperturaCaja.fecha | date:'shortTime'}}></p>
+                    <p><strong>Apertura:</strong> {{resumen.aperturaCaja.fecha | date:'shortTime'}}</p>
                     <p><strong>Monto Inicial:</strong> ${{resumen.aperturaCaja.montoInicial | number:'1.0-0'}}</p>
                 </ng-container>
                 <ng-container *ngIf="resumen.cierreCaja; else sinCierre">
@@ -82,56 +101,29 @@
             </div>
         </div>
 
-        <!-- Vista ADMIN: listas clicables y modal de detalle -->
-        <div *ngIf="isAdmin">
-            <div class="turno-card">
-                <h2 class="titulo">Turnos activos</h2>
-                <div *ngIf="cargando">Cargando...</div>
-                <div *ngIf="!cargando && activos.length === 0">
-                    <p>No hay turnos activos.</p>
-                </div>
-                <ul class="turno-lista" *ngIf="!cargando && activos.length > 0">
-                    <li class="turno-item" *ngFor="let item of activos" (click)="abrirDetalle(item)">
-                        <i class="bi bi-person-fill item-icon" aria-hidden="true"></i>
-                        <div class="turno-item-info">
-                            <div class="turno-item-primario"><strong>{{item.correo || '—'}}</strong></div>
-                            <div class="turno-item-secundario">
-                                <i class="bi bi-clock inline" aria-hidden="true"></i>
-                                <span>{{item.resumen.turno.inicioTurno | date:'short'}}</span>
-                                <span *ngIf="item.resumen.turno.observaciones">
-                                    <i class="bi bi-sticky inline" aria-hidden="true"></i>
-                                    {{item.resumen.turno.observaciones}}
-                                </span>
-                            </div>
-                        </div>
-                        <i class="bi bi-chevron-right chevron" aria-hidden="true"></i>
-                    </li>
-                </ul>
-            </div>
+        <!-- Vista ADMIN: mini tablero a la izquierda y contenido a la derecha -->
+        <div *ngIf="isAdmin" class="admin-layout">
+            <aside class="mini-tablero" role="navigation" aria-label="Opciones de vista">
+                <a class="mini-btn" routerLink="activos" routerLinkActive="active">
+                    <i class="bi bi-play-circle" aria-hidden="true"></i>
+                    <span>Turnos activos</span>
+                </a>
+                <a class="mini-btn" routerLink="cerrados" routerLinkActive="active">
+                    <i class="bi bi-door-closed" aria-hidden="true"></i>
+                    <span>Turnos cerrados</span>
+                </a>
+                <a class="mini-btn" routerLink="historial" routerLinkActive="active">
+                    <i class="bi bi-journal-text" aria-hidden="true"></i>
+                    <span>Historial</span>
+                </a>
+                <a class="mini-btn" routerLink="notificaciones" routerLinkActive="active">
+                    <i class="bi bi-bell" aria-hidden="true"></i>
+                    <span>Notificaciones</span>
+                </a>
+            </aside>
 
-            <div class="turno-card">
-                <h2 class="titulo">Turnos cerrados</h2>
-                <div *ngIf="cargando">Cargando...</div>
-                <div *ngIf="!cargando && cerrados.length === 0">
-                    <p>No hay turnos cerrados.</p>
-                </div>
-                <ul class="turno-lista" *ngIf="!cargando && cerrados.length > 0">
-                    <li class="turno-item" *ngFor="let item of cerrados" (click)="abrirDetalle(item)">
-                        <i class="bi bi-person-fill item-icon" aria-hidden="true"></i>
-                        <div class="turno-item-info">
-                            <div class="turno-item-primario"><strong>{{item.correo || '—'}}</strong></div>
-                            <div class="turno-item-secundario">
-                                <i class="bi bi-clock inline" aria-hidden="true"></i>
-                                <span>{{item.resumen.turno.inicioTurno | date:'short'}}</span>
-                                <span *ngIf="item.resumen.turno.finTurno">
-                                    · <i class="bi bi-clock-history inline" aria-hidden="true"></i>
-                                    {{item.resumen.turno.finTurno | date:'short'}}
-                                </span>
-                            </div>
-                        </div>
-                        <i class="bi bi-chevron-right chevron" aria-hidden="true"></i>
-                    </li>
-                </ul>
+            <div class="admin-contenido">
+                <router-outlet></router-outlet>
             </div>
         </div>
 
@@ -146,8 +138,11 @@
         </div>
         <div class="modal-body" *ngIf="seleccionado as s">
             <div class="idline">
-                <span class="k"><i class="bi bi-person-fill inline" aria-hidden="true"></i> Usuario/Correo</span>
-                <span class="v">{{s.correo || '—'}}</span>
+                <span class="k"><i class="bi bi-person-fill inline" aria-hidden="true"></i> Empleado</span>
+                <span class="v">
+                  <strong *ngIf="s.nombre || s.apellido; else cargandoNombreModal">{{ (s.nombre || '') + ' ' + (s.apellido || '') }}</strong>
+                  <ng-template #cargandoNombreModal><span class="text-muted">Cargando nombre…</span></ng-template>
+                </span>
             </div>
 
             <h4>Turno</h4>
@@ -159,6 +154,7 @@
 
             <h4>Caja</h4>
             <div class="datos-grid">
+                <div class="kv"><span class="k"><i class="bi bi-hash inline" aria-hidden="true"></i> Código de caja</span><span class="v">{{ seleccionadoCajaCodigo || '—' }}</span></div>
                 <ng-container *ngIf="s.resumen.aperturaCaja">
                     <div class="kv"><span class="k"><i class="bi bi-box-seam inline" aria-hidden="true"></i> Apertura</span><span class="v">{{s.resumen.aperturaCaja.fecha | date:'shortTime'}}</span></div>
                     <div class="kv"><span class="k"><i class="bi bi-currency-dollar inline" aria-hidden="true"></i> Monto inicial</span><span class="v badge badge-info">${{s.resumen.aperturaCaja.montoInicial | number:'1.0-0'}}</span></div>
@@ -232,4 +228,67 @@
             <button type="button" class="btn-turno" (click)="cerrarDetalle()">Cerrar</button>
         </div>
     </div>
-</main>
+   
+    <!-- Modal Detalle Historial (global) -->
+    <div class="modal-backdrop" *ngIf="historyModalAbierto" (click)="cerrarDetalleHistorial()" style="z-index: 2100;"></div>
+    <div class="modal-contenedor" *ngIf="historyModalAbierto" role="dialog" aria-modal="true" style="z-index: 2101; margin-top: 70px;">
+      <div class="modal-header">
+          <h3>Detalle de evento</h3>
+          <button type="button" class="modal-cerrar" (click)="cerrarDetalleHistorial()">✕</button>
+      </div>
+      <div class="modal-body" *ngIf="historySeleccionado as evd">
+        <div class="datos-grid">
+          <div class="kv"><span class="k">Módulo</span><span class="v">{{ tModule(evd.module) }}</span></div>
+          <div class="kv"><span class="k">Acción</span><span class="v badge bg-secondary">{{ tAction(evd.action) }}</span></div>
+          <div class="kv"><span class="k">Fecha</span><span class="v">{{ evd.timestamp | date:'short' }}</span></div>
+          <ng-container *ngIf="evd.module === 'categoria'; else normalEntityId">
+            <div class="kv"><span class="k">Entidad</span><span class="v">Categoría</span></div>
+            <div class="kv"><span class="k">Nombre</span><span class="v">{{ (evd.details?.after?.nombre) || (evd.details?.changes?.nombre?.after) || (evd.details?.nombre) || ('#' + (evd.entityId || '')) }}</span></div>
+          </ng-container>
+          <ng-template #normalEntityId>
+            <div class="kv" *ngIf="evd.entity"><span class="k">Entidad</span><span class="v">{{ evd.entity }}</span></div>
+            <div class="kv" *ngIf="evd.entityId"><span class="k">ID</span><span class="v">{{ evd.entityId }}</span></div>
+          </ng-template>
+          <div class="kv"><span class="k">Usuario</span><span class="v">{{ evd.actorUserId || '—' }}</span></div>
+          <div class="kv"><span class="k">Rol</span><span class="v">{{ evd.actorRol || '—' }}</span></div>
+        </div>
+        <h4 style="margin-top: 12px;">Campos modificados (antes → después)</h4>
+        <!-- Si hay diffs antes/después -->
+        <ng-container *ngIf="buildDiff(evd.details) as diffs; else detailsFallback">
+          <div class="tabla-simple">
+            <div class="tabla-header">
+              <div>Campo</div>
+              <div>Antes</div>
+              <div>Después</div>
+            </div>
+            <div class="tabla-row" *ngFor="let r of diffs">
+              <div class="c">{{ r.field }}</div>
+              <div class="c"><span style="color:#c0392b;">{{ r.before }}</span></div>
+              <div class="c"><span style="color:#1e7e34;">{{ r.after }}</span></div>
+            </div>
+          </div>
+        </ng-container>
+        <!-- Si no se pudo construir diff, mostrar detalles sanitizados -->
+        <ng-template #detailsFallback>
+          <p class="text-muted" style="margin: 6px 0 8px;">No se detectaron cambios campo por campo. Detalle completo:</p>
+          <ng-container *ngIf="isObject(evd.details); else detailsJson">
+            <div class="datos-grid">
+              <div class="kv" *ngFor="let d of evd.details | keyvalue">
+                <ng-container *ngIf="!shouldSkipDiffKey(d.key)">
+                  <span class="k">{{ d.key }}</span>
+                  <span class="v">{{ sanitizeValue(d.value) }}</span>
+                </ng-container>
+              </div>
+            </div>
+          </ng-container>
+          <ng-template #detailsJson>
+            <pre class="code-block"><code>{{ evd.details | json }}</code></pre>
+          </ng-template>
+        </ng-template>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-turno" (click)="cerrarDetalleHistorial()">Cerrar</button>
+      </div>
+    </div>
+
+  </main>

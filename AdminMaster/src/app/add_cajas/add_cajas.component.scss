@@ -69,12 +69,16 @@ input.form-control.is-valid:focus {
 }
 
 .form-control:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 0.5px #5adbff;
     outline: none; 
+    border-radius: 9999px !important;
 }
 
 .form-control{
     border: none;
     box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+    border-radius: 9999px !important;
 }
 
 .valid-feedback {
@@ -119,6 +123,7 @@ input.form-control.is-valid:focus {
     cursor: pointer;
     color: white;
     font-weight: bold;
+    border-radius: 9999px !important;
 }
 
 .confirmarfinal{

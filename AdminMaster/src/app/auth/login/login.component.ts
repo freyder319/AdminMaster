@@ -5,11 +5,12 @@ import Swal from 'sweetalert2';
 import { AuthService } from '../../services/auth.service';
 import { RouterLink } from '@angular/router';
 import { NgClass } from '@angular/common';
+import { NavBarComponent } from '../../nav-bar/nav-bar.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink, NgClass],
+  imports: [ReactiveFormsModule, RouterLink, NgClass, NavBarComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })

@@ -15,8 +15,9 @@ export class CajasService {
   private apiUrl = 'http://localhost:3000/caja';
   constructor(private http: HttpClient) { }
 
-  getCajas(): Observable<Cajas[]>{
-    return this.http.get<Cajas[]>(this.apiUrl);
+  getCajas(): Observable<Cajas[]> {
+    const url = `${this.apiUrl}?t=${Date.now()}`;
+    return this.http.get<Cajas[]>(url);
   }
 
   getCaja(id:number): Observable<Cajas>{

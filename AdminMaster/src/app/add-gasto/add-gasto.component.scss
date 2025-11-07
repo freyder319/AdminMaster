@@ -1,18 +1,32 @@
 /* Estilos de inputs como en add_clientes */
 .form-control,
-.form-select,
+.form-select {
+  border: none;
+  box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+  outline: none;
+  border-radius: 9999px !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border: 1px solid #5adbff;
+  box-shadow: 0 0 6px 0.5px #5adbff;
+  outline: none;
+  border-radius: 9999px !important;
+}
+
+/* Textarea sin pill redondeado (solo sombra y focus) */
 textarea {
   border: none;
   box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
   outline: none;
+  border-radius: 10px; /* borde estándar más discreto */
 }
-
-.form-control:focus,
-.form-select:focus,
 textarea:focus {
   border: 1px solid #5adbff;
   box-shadow: 0 0 6px 0.5px #5adbff;
   outline: none;
+  border-radius: 10px;
 }
 /* Controles de estado visual (pagada / crédito) */
 .paga-credit {
@@ -144,7 +158,7 @@ textarea:focus {
   cursor: pointer;
   color: white;
   font-weight: bold;
-  border-radius: 10px;
+  border-radius: 9999px !important;
   padding: 10px 16px;
 }
 
