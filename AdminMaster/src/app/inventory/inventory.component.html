@@ -92,7 +92,7 @@
   <div class="offcanvas-body">
     <div class="container form">
 
-      <!-- FORMULARIO AGREGAR -->
+      <!-- FORMULARIO AGREGAR CATEGORIA -->
       <div class="formulario">
         <form #formCategoria="ngForm" (ngSubmit)="agregarCategoria(formCategoria)" novalidate>
           <div class="mb-3">
@@ -100,7 +100,7 @@
             <input [(ngModel)]="categoria.nombreCategoria" type="text" name="nombreCategoria" id="nombreCategoria" class="form-control" required>
           </div>
           <div class="fila-inferior mt-3">
-            <button type="submit" class="btn create_cate" [disabled]="!formCategoria.valid">
+            <button type="submit" data-bs-dismiss="offcanvas" class="btn create_cate" [disabled]="!formCategoria.valid">
               Crear Categoría
             </button>
           </div>

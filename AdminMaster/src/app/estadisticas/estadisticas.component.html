@@ -3,15 +3,177 @@
 </header>
 
 <main>
-  <!-- Título -->
-  <section>
-    <div class="container text-center">
-      <div class="row">
-        <div class="col">
-          <h1>Estadísticas</h1>
-        </div>
+  <div class="stats-container">
+    <br>
+    <h1 class="text-center mb-5 titulo_estadisticas">Estadísticas</h1>
+    
+    <!-- ✅ Selector de opciones -->
+    <div class="options-grid">
+      <div class="option-card" [class.active]="selectedOption === 'inventario'" (click)="selectOption('inventario')">
+        <img src="assets/img/icon_estadisticas/gestion-de-materiales.png" class="custom-icon">
+        <h3>Rendimiento del Inventario</h3>
+        <div class="indicator"></div>
+      </div>
+
+      <div class="option-card" [class.active]="selectedOption === 'comercial'" (click)="selectOption('comercial')">
+        <img src="assets/img/icon_estadisticas/sitio-web.png" class="custom-icon">
+        <h3>Desempeño Comercial</h3>
+        <div class="indicator"></div>
+      </div>
+
+      <div class="option-card" [class.active]="selectedOption === 'finanzas'" (click)="selectOption('finanzas')">
+        <img src="assets/img/icon_estadisticas/presupuesto (1).png" class="custom-icon">
+        <h3>Salud Financiera</h3>
+        <div class="indicator"></div>
       </div>
     </div>
-  </section>
-  
+
+    <!-- ✅ CONTENIDO CAMBIANTE -->
+    <div class="content-container" [@fadeInOut]>
+
+      <!-- ✅ INVENTARIO -->
+      <div *ngIf="selectedOption === 'inventario'" class="content-pane">
+        <h2>Rendimiento del Inventario</h2>
+
+        <div class="chart-grid">
+
+          <div class="chart-container">
+            <h3>Distribución del inventario por categoría</h3>
+            <canvas baseChart [data]="pieChartCategorias" [options]="pieChartOptions" [type]="pieChartType"></canvas>
+          </div>
+
+          <div class="chart-container">
+            <h3>Productos con mayor precio comercial</h3>
+            <canvas baseChart [data]="barChartDataPrecios" [options]="barChartOptions" [type]="barChartType"></canvas>
+          </div>
+
+          <div class="chart-container">
+            <h3>Top 5 productos por valor económico del inventario</h3>
+            <canvas baseChart [type]="barChartType" [data]="barChartValor" [options]="barChartValorOptions"></canvas>
+          </div>
+
+          <div class="chart-container">
+            <h3>Productos con menor rotación</h3>
+            <canvas baseChart [data]="barChartRotacion" [type]="'bar'" [options]="{ responsive: true }"></canvas>
+          </div>
+
+          <div class="chart-container" *ngIf="hasStockCritico">
+            <h3>Productos con stock crítico</h3>
+            <canvas baseChart [data]="barChartStockCritico" [options]="barChartStockCriticoOptions" [type]="'bar'"></canvas>
+          </div>
+
+          <p *ngIf="!hasStockCritico">✅ No hay productos con stock crítico.</p>
+
+          <div class="chart-container">
+            <h3>Promedio de rotación (Stock / Ventas)</h3>
+            <canvas baseChart [data]="bubbleChartRotacion" [type]="'bubble'" [options]="bubbleChartRotacionOptions"></canvas>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ✅ COMERCIAL -->
+      <div *ngIf="selectedOption === 'comercial'" class="content-pane">
+        <h2>Desempeño Comercial</h2>
+
+        <div class="chart-grid">
+          <div class="chart-container">
+            <h3>Productos más vendidos</h3>
+            <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType"></canvas>
+          </div>
+
+          <div class="chart-container">
+            <h3>Gráfico de ventas</h3>
+            <canvas baseChart [data]="lineChartVentas" [options]="lineChartVentasOptions" [type]="'line'"></canvas>
+          </div>
+          <div class="chart-container">
+            <h3>Ventas por método de pago</h3>
+            <canvas baseChart [data]="pieChartMetodosPago" [type]="'pie'"></canvas>
+          </div>
+
+          <div class="chart-container">
+            <h3>Ventas por categoría</h3>
+            <canvas baseChart [data]="pieChartCategoriasVenta" [type]="'pie'"></canvas>
+          </div>
+
+          <div class="chart-container">
+            <h3>Cantidad de ventas por mes</h3>
+            <canvas baseChart [data]="barChartVentasMes" [type]="'bar'"></canvas>
+          </div>
+
+          <div class="chart-container">
+            <h3>Productos más rentables</h3>
+            <canvas baseChart [data]="barChartProductosRentables" [type]="'bar'" [options]="{ indexAxis: 'y' }"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!--  FINANZAS -->
+      <div *ngIf="selectedOption === 'finanzas'" class="content-pane">
+        <h2>Salud Financiera</h2>
+        <div class="chart-grid">
+
+    <!-- 1. Ingresos vs Gastos mensual -->
+    <div class="chart-container">
+      <h3>Ingresos vs Gastos (Mensual)</h3>
+      <canvas baseChart
+        [data]="lineIngresosGastos"
+        [type]="'line'"
+        [options]="{ responsive: true }">
+      </canvas>
+    </div>
+
+    <!-- 2. Margen de beneficio -->
+    <div class="chart-container">
+      <h3>Margen de Beneficio (%)</h3>
+      <canvas baseChart
+        [data]="barMargenBeneficio"
+        [type]="'bar'"
+        [options]="{ responsive: true }">
+      </canvas>
+    </div>
+
+    <!-- 3. Evolución de ganancias mensuales -->
+    <div class="chart-container">
+      <h3>Evolución de ganancias mensuales</h3>
+      <canvas baseChart
+        [data]="lineGananciasMensuales"
+        [type]="'line'"
+        [options]="{ responsive: true }">
+      </canvas>
+    </div>
+
+    <!-- 4. Distribución de gastos -->
+    <div class="chart-container">
+      <h3>Distribución de gastos</h3>
+      <canvas baseChart
+        [data]="pieGastos"
+        [type]="'pie'">
+      </canvas>
+    </div>
+
+    <!-- 5. Ticket promedio de venta -->
+    <div class="chart-container">
+      <h3>Ticket promedio de venta</h3>
+      <canvas baseChart
+        [data]="barTicketPromedio"
+        [type]="'bar'"
+        [options]="{ responsive: true }">
+      </canvas>
+    </div>
+
+    <!-- 6. Productos más rentables (finanzas) -->
+    <div class="chart-container">
+      <h3>Productos con mayor ganancia total</h3>
+      <canvas baseChart
+        [data]="barProductosGanancia"
+        [type]="'bar'"
+        [options]="{ indexAxis: 'y' }">
+      </canvas>
+    </div>
+        </div>
+      </div>
+
+    </div> 
+  </div>
 </main>
