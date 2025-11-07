@@ -132,7 +132,6 @@ export class TurnosService {
     }
     if (this.inflightActivos$) return this.inflightActivos$;
     this.inflightActivos$ = this.http.get<TurnoActivoItem[]>(`${this.apiUrl}/activos-public`).pipe(
-      this.retryOn429<TurnoActivoItem[]>(5, 1500),
       tap(data => { this.cacheActivosPublic = { data: data || [], ts: Date.now() }; }),
       catchError(() => of(this.cacheActivosPublic?.data || [])),
       finalize(() => { this.inflightActivos$ = undefined; }),
@@ -152,7 +151,6 @@ export class TurnosService {
     }
     if (this.inflightCerrados$) return this.inflightCerrados$;
     this.inflightCerrados$ = this.http.get<TurnoActivoItem[]>(`${this.apiUrl}/cerrados-public`).pipe(
-      this.retryOn429<TurnoActivoItem[]>(5, 1500),
       tap(data => { this.cacheCerradosPublic = { data: data || [], ts: Date.now() }; }),
       catchError(() => of(this.cacheCerradosPublic?.data || [])),
       finalize(() => { this.inflightCerrados$ = undefined; }),

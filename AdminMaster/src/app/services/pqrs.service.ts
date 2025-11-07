@@ -57,7 +57,6 @@ export class PqrsService {
     }
     if (this.inflightAll$) return this.inflightAll$;
     this.inflightAll$ = this.http.get<any[]>(this.apiUrl).pipe(
-      this.retryOn429<any[]>(5, 1500),
       tap(data => { this.cacheAll = { data: data || [], ts: Date.now() }; }),
       catchError(() => of(this.cacheAll?.data || [])),
       finalize(() => { this.inflightAll$ = undefined; }),

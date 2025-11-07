@@ -187,10 +187,13 @@ export class InventoryComponent {
             this.onGuardado();
           },
           error: (err) => {
-            let mensaje = 'Ocurrió un error al eliminar el producto';
-            if (err.status >= 500) mensaje = 'Error en el servidor. Intente más tarde.';
-            else if (err.status === 404) mensaje = 'El producto no existe o ya fue eliminado.';
-            else if (err.status === 400) mensaje = 'Solicitud inválida.';
+            // Priorizar mensaje del servidor (por ejemplo, FK violation: producto enlazado a una venta)
+            let mensaje = err?.error?.message || 'Ocurrió un error al eliminar el producto';
+            if (!err?.error?.message) {
+              if (err.status >= 500) mensaje = 'Error en el servidor. Intente más tarde.';
+              else if (err.status === 404) mensaje = 'El producto no existe o ya fue eliminado.';
+              else if (err.status === 400) mensaje = 'Solicitud inválida.';
+            }
             Swal.fire('Error', mensaje, 'error');
           }
         });
