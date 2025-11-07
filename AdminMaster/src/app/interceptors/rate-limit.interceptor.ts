@@ -8,7 +8,7 @@ export const rateLimitInterceptor: HttpInterceptorFn = (req, next) => {
       errors.pipe(
         scan((state: { count: number; delayMs: number }, err: any) => {
           const status = err?.status;
-          if (status === 429 && state.count < 5) {
+          if (status === 429 && state.count < 3) {
             let retryAfterMs = 0;
             try {
               const hdr = err?.headers?.get?.('Retry-After');

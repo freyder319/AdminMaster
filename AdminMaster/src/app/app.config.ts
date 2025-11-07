@@ -5,7 +5,6 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { authInterceptor } from './interceptors/auth.interceptor';
-import { rateLimitInterceptor } from './interceptors/rate-limit.interceptor';
 import { concurrencyInterceptor } from './interceptors/concurrency.interceptor';
 import { TurnoStateService } from './services/turno-state.service';
 
@@ -15,7 +14,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     provideAnimationsAsync(),
-    provideHttpClient(withFetch(), withInterceptors([concurrencyInterceptor, rateLimitInterceptor, authInterceptor])),
+    provideHttpClient(withFetch(), withInterceptors([concurrencyInterceptor, authInterceptor])),
     {
       provide: APP_INITIALIZER,
       multi: true,
