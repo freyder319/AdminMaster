@@ -1,3 +1,9 @@
+.text-brown{
+  color: brown !important;
+}
+.toggler-brown{
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='brown' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
 .shadow-bottom{
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.09);
 }
@@ -8,16 +14,74 @@
   font-size: 1.8rem;
   color: #000000; 
 }
+.offcanvas-body .nav-link .icon{
+  width: 1.2em;
+  height: 1.2em;
+  margin-right: 8px;
+  vertical-align: -0.2em;
+  fill: currentColor;
+}
+.offcanvas-body .nav-link.active{
+  color: #772929 !important;
+  position: relative;
+}
+.offcanvas-body .nav-link.active::after{
+  content: '';
+  display: block;
+  height: 3px;
+  background-color: #772929;
+  border-radius: 2px;
+  margin-top: 4px;
+  width: 100%;
+}
 .navbar {
-  background-color: transparent !important;  /* en serio transparente */
+  background-color: transparent !important;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   padding: 1rem 1.5rem;
   height: 100px;
   z-index: 1050;
-  position: fixed;   /* debe ser fixed-top para que se quede arriba */
+  position: fixed;   
   top: 0;
   left: 0;
   width: 100%;
+}
+
+/* Dropdown compacto del menú */
+.dropdown-menu{
+  min-width: 120px;
+  padding: 0.4rem 0.25rem;
+  border-radius: 12px;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  padding: 12px;
+}
+.dropdown-item{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Baloo 2', cursive;
+  font-weight: 800;
+  font-size: 1.2rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+}
+.dropdown-item .icon{
+  width: 1.25em;
+  height: 1.25em;
+  margin-right: 6px;
+  fill: currentColor;
+}
+.dropdown-item:hover{
+  background-color: rgba(119,41,41,0.08);
+  color: #772929;
+}
+.dropdown-item.active{
+  background-color: rgba(119,41,41,0.12);
+  color: #772929;
+}
+.dropdown-menu .dropdown-item + li,
+.dropdown-menu li + li{
+  margin-top: 2px;
 }
 .offcanvas{
   z-index: 2005;
@@ -54,6 +118,19 @@ a{
 
 .navbar-toggler-icon {
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.btn-pqrs {
+  color: #772929 !important;
+}
+
+.toggler-pqrs {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='%23772929' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/* Override placed AFTER the default icon to win specificity/order on /login */
+.navbar .navbar-toggler-icon.toggler-brown {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='brown' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 @media(max-width: 991px) {
     li{

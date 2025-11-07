@@ -12,13 +12,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AddGastoComponent } from "../add-gasto/add-gasto.component";
 import { AddVentaLibreComponent } from "../add-venta-libre/add-venta-libre.component";
 import { VentaService } from '../services/venta.service';
 import { GastoService, Gasto } from '../services/gasto.service';
 import { EmpleadosService, Empleados } from '../services/empleados.service';
 import { DescuentosComponent } from "../descuentos/descuentos.component";
+import { InfoGastosComponent } from "../info-gastos/info-gastos.component";
 
 
 @Component({
@@ -78,6 +79,7 @@ export class AdministradorPrincipalComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     public route: ActivatedRoute,
+    private router: Router,
     private ventaSrv: VentaService,
     private gastoSrv: GastoService,
     private empleadosSrv: EmpleadosService,
@@ -97,6 +99,22 @@ export class AdministradorPrincipalComponent implements OnInit {
     if (!this.dateFrom || !this.dateTo) this.setRange(this.selectedRange || 'semanal', false);
     // Forzar inicio en 'Sin Filtro' al entrar a la ruta
     this.clearRange();
+  }
+
+  verGasto(g: any) {
+    const id = Number(g?.id);
+    if (!Number.isFinite(id)) return;
+    this.router.navigate(['/info-gastos', id]);
+  }
+
+  abrirDialogoGasto(g: any) {
+    const id = Number(g?.id);
+    if (!Number.isFinite(id)) return;
+    this.dialog.open(InfoGastosComponent, {
+      data: { id },
+      width: '720px',
+      maxHeight: '80vh'
+    });
   }
 
   selectTab(tab: 'ingresos' | 'egresos' | 'por_cobrar' | 'por_pagar'): void {
@@ -284,19 +302,28 @@ export class AdministradorPrincipalComponent implements OnInit {
   }
 
   abrirDialogoVenta(v: any) {
-    const items = Array.isArray(v?.items) ? v.items.map((i: any) => ({
+    const rawItems = Array.isArray(v?.items) ? v.items : [];
+    const subtotalRaw = rawItems.reduce((sum: number, i: any) => sum + (Number(i?.subtotal) || 0), 0);
+    const porcentaje = Number(v?.descuentoPorcentaje) || 0;
+    const descuentoMontoRaw = Math.round(subtotalRaw * (porcentaje / 100));
+    const items = rawItems.map((i: any) => ({
       nombre: i?.producto?.nombreProducto ?? (`Producto #${i?.producto?.id ?? ''}`),
       cantidad: Number(i?.cantidad) || 0,
       precio: this.formatCop(Number(i?.precio) || 0),
       subtotal: this.formatCop(Number(i?.subtotal) || 0),
-    })) : [];
+    }));
     const detalle = {
       producto: (v?.resumen || v?.descripcion || `Venta #${v?.id ?? ''}`),
       valor: this.formatCop(Number(v?.total) || 0),
       pago: (v?.forma_pago || '-'),
       fecha: (v?.fecha_hora || v?.created_at || '-'),
       estado: (v?.estado || 'Pagada'),
+      descuentoNombre: (v?.descuentoNombre || null),
+      descuentoPorcentaje: (v?.descuentoPorcentaje ?? null),
+      descuentoMonto: porcentaje > 0 ? this.formatCop(descuentoMontoRaw) : null,
       items,
+      empleadoNombre: this.displayEmpleadoVenta(v),
+      turnoId: this.getTurnoIdFromVenta(v) || null,
     } as any;
     this.dialog.open(InfoDialogComponent, {
       data: detalle,

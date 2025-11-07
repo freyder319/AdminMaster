@@ -1,57 +1,72 @@
-<mat-card class="venta-card">
-  <mat-card-header>
-    <mat-card-title>
-      <mat-icon color="primary">receipt_long</mat-icon>
-      <strong>Detalle de Venta</strong>
-    </mat-card-title>
-  </mat-card-header>
-
-  <mat-divider></mat-divider>
-
-  <mat-card-content>
-    <div class="detalle-item">
-      <mat-icon class="icon producto" color="accent">shopping_cart</mat-icon>
-      <span><strong>Producto:</strong> {{ data.producto }}</span>
+<div class="card shadow-sm">
+  <div class="card-header">
+    <div class="d-flex justify-content-between align-items-center">
+      <h5 class="m-0">Detalle de la Venta</h5>
+      <div class="text-muted" *ngIf="data.empleadoNombre || data.turnoId">
+        <span *ngIf="data.empleadoNombre" class="text-dark fw-semibold" style="font-size: 1.05rem;">{{ data.empleadoNombre }}</span>
+        <span *ngIf="data.empleadoNombre && data.turnoId" class="mx-1">•</span>
+        <span *ngIf="data.turnoId" class="text-dark fw-semibold" style="font-size: 1.05rem;">Turno: {{ data.turnoId }}</span>
+      </div>
     </div>
-    <div class="detalle-item" *ngIf="data.items && data.items.length">
-      <mat-icon class="icon" color="primary">list</mat-icon>
-      <div>
-        <strong>Productos comprados:</strong>
-        <ul class="lista-items">
-          <li *ngFor="let it of data.items">
-            <span class="item-nombre">{{ it.nombre }}</span>
-            <span class="item-cant">x{{ it.cantidad }}</span>
-            <span class="item-precio">{{ it.precio }}</span>
-            <span class="item-subtotal">= {{ it.subtotal }}</span>
+  </div>
+  <div class="card-body">
+    <div class="row g-3">
+      <div class="col-12">
+        <div class="text-muted small">Resumen</div>
+        <div class="fw-semibold">{{ data.producto }}</div>
+      </div>
+
+      <div class="col-12" *ngIf="data.items && data.items.length">
+        <div class="text-muted small mb-1">Productos</div>
+        <ul class="list-group">
+          <li class="list-group-item py-1 px-2 d-flex justify-content-between align-items-center" *ngFor="let it of data.items">
+            <div>
+              <div class="fw-semibold small">{{ it.nombre }}</div>
+              <small class="text-muted">x{{ it.cantidad }} • {{ it.precio }}</small>
+            </div>
+            <div class="fw-semibold small">{{ it.subtotal }}</div>
           </li>
         </ul>
       </div>
-    </div>
-    <div class="detalle-item">
-      <mat-icon class="icon valor" color="warn">attach_money</mat-icon>
-      <span><strong>Valor:</strong> {{ data.valor }}</span>
-    </div>
-    <div class="detalle-item">
-      <mat-icon class="icon pago" color="primary">credit_card</mat-icon>
-      <span><strong>Medio de pago:</strong> {{ data.pago }}</span>
-    </div>
-    <div class="detalle-item">
-      <mat-icon class="icon fecha" color="accent">schedule</mat-icon>
-      <div>
-        <div><strong>Fecha:</strong> {{ data.fecha | date:'dd/MM/yyyy' }}</div>
-        <div><strong>Hora:</strong> {{ data.fecha | date:'hh:mm a' }}</div>
+
+      <div class="col-sm-6" *ngIf="data.descuentoNombre">
+        <div class="text-muted small">Descuento</div>
+        <div>{{ data.descuentoNombre }}<span *ngIf="data.descuentoPorcentaje"> ({{ data.descuentoPorcentaje }}%)</span></div>
+      </div>
+      <div class="col-sm-6" *ngIf="data.descuentoMonto">
+        <div class="text-muted small">Descuento aplicado</div>
+        <div class="fw-semibold text-danger">{{ data.descuentoMonto }}</div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="text-muted small">Total</div>
+        <div class="fw-bold text-success">{{ data.valor }}</div>
+      </div>
+      <div class="col-sm-6">
+        <div class="text-muted small">Medio de Pago</div>
+        <div>{{ data.pago }}</div>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="text-muted small">Fecha</div>
+        <div>{{ data.fecha | date:'dd/MM/yyyy' }}</div>
+      </div>
+      <div class="col-sm-6">
+        <div class="text-muted small">Hora</div>
+        <div>{{ data.fecha | date:'hh:mm a' }}</div>
+      </div>
+
+      <div class="col-12">
+        <div class="text-muted small">Estado</div>
+        <div>{{ data.estado }}</div>
       </div>
     </div>
-    <div class="detalle-item estado" [ngClass]="data.estado.toLowerCase()">
-      <mat-icon class="icon estado-icon" color="primary">check_circle</mat-icon>
-      <span><strong>Estado:</strong> {{ data.estado }}</span>
-    </div>
-  </mat-card-content>
-
-  <mat-divider></mat-divider>
-
-  <mat-card-actions align="end">
-    <button mat-raised-button color="primary" mat-dialog-close>Cerrar</button>
-  </mat-card-actions>
-</mat-card>
+  </div>
+  <div class="card-footer text-end">
+    <button class="btn btn-outline-secondary rounded-pill px-3 shadow-sm d-inline-flex align-items-center gap-2" mat-dialog-close>
+      <i class="bi bi-x-lg"></i>
+      <span>Cerrar</span>
+    </button>
+  </div>
+</div>
 

@@ -1,11 +1,11 @@
 main{
-    margin-top: 140px;
+  margin-top: 140px;
 }
 
 @media (max-width: 768px) {
-    main{
-        margin-top: 0; 
-    }
+  main{
+      margin-top: 0; 
+  }
 }
 
 
@@ -96,7 +96,7 @@ main{
 .turno-item {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 10px;
   padding: 12px 14px;
   border: 1px solid #e5e7eb;
@@ -129,6 +129,8 @@ main{
   display: flex;
   flex-direction: column;
   gap: 4px;
+  align-items: flex-start;
+  text-align: left;
 }
 
 .chevron {
@@ -279,4 +281,89 @@ main{
   font-size: 18px;
   line-height: 1;
   cursor: pointer;
+}
+
+/* Layout admin con mini tablero a la izquierda */
+.admin-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mini-tablero {
+  position: sticky;
+  top: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-left: 6px solid #5adbff; /* borde izquierdo acento */
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.mini-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #f3f4f6; /* más contraste para ver la separación */
+  color: #0b1b2b;
+  font-weight: 600;
+  min-height: 56px; /* altura fija para evitar movimientos al cambiar de opción */
+  cursor: pointer;
+  transition: background-color .15s ease, box-shadow .2s ease, transform .05s ease;
+  position: relative;
+}
+
+.mini-btn .bi { color: inherit; }
+
+.mini-btn:hover {
+  background: #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.mini-btn.active {
+  background: linear-gradient(135deg, #5adbff, #39c751);
+  color: #ffffff;
+  border-color: transparent;
+}
+
+.mini-btn.active .bi,
+.mini-btn.active span:not(.badge-count) { color: #ffffff; }
+
+/* Burbuja de conteo en botones del mini tablero */
+.badge-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #0b1b2b;
+  border: 1px solid rgba(0,0,0,0.08);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 22px;
+  margin-top: 2px;
+}
+
+.admin-contenido {
+  min-width: 0; /* evitar overflow en grid */
 }

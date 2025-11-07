@@ -42,7 +42,7 @@ export class AddEmpleadosComponent {
   ngOnInit(): void {
     this.cajasService.getCajas().subscribe({
       next: (data) => {
-        this.cajas = data;
+        this.cajas = (data || []).filter(c => String((c?.estado || '')).toLowerCase() === 'activo');
       },
       error: (err) => {
         console.error('Error al cargar cajas:', err);
@@ -79,6 +79,14 @@ export class AddEmpleadosComponent {
         text: "Todos los campos (nombre, apellido, correo, teléfono, contraseña y caja) son obligatorios.",
         confirmButtonText: "Ok"
       });
+      return;
+    }
+
+    // Validar caja activa seleccionada
+    const cajaId = this.empleado.cajaId;
+    const cajaSel = this.cajas.find(c => c.id === cajaId);
+    if (!cajaId || !cajaSel) {
+      Swal.fire({ title: 'Caja requerida', icon: 'warning', text: 'Debes seleccionar una caja activa.' });
       return;
     }
 

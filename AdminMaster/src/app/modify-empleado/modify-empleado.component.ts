@@ -43,7 +43,7 @@ export class ModifyEmpleadoComponent implements OnInit {
     }
 
     this.empleadoServices.getCajas().subscribe({
-      next: (data) => this.cajas = data,
+      next: (data) => this.cajas = (data || []).filter(c => String((c?.estado || '')).toLowerCase() === 'activo'),
       error: () => console.error("Error al cargar Cajas")
     });
   }
@@ -55,6 +55,15 @@ export class ModifyEmpleadoComponent implements OnInit {
       if (!this.empleado.nombre || !this.empleado.apellido || !this.empleado.correo || !this.empleado.telefono) {
         Swal.fire({ title: 'Campos incompletos', icon: 'warning', text: 'Nombre, apellido, correo y teléfono son obligatorios.' });
         return;
+      }
+
+      // Validar caja activa seleccionada (si hay selección)
+      if (this.cajaIdSeleccionada) {
+        const cajaSel = this.cajas.find(c => c.id === this.cajaIdSeleccionada);
+        if (!cajaSel) {
+          Swal.fire({ title: 'Caja inactiva', icon: 'warning', text: 'Solo puedes asignar cajas activas.' });
+          return;
+        }
       }
 
       const empleadoFinal = {

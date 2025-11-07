@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError, timer, of, OperatorFunction } from 'rxjs';
+import { mergeMap, tap, retryWhen, scan, catchError, shareReplay, finalize } from 'rxjs/operators';
 
 export interface TurnoResumen {
   turno: {
@@ -32,6 +33,8 @@ export interface TurnoResumen {
 export interface TurnoActivoItem {
   usuarioId: number;
   correo: string;
+  nombre?: string;
+  apellido?: string;
   resumen: TurnoResumen;
 }
 
@@ -42,6 +45,39 @@ export class TurnosService {
   private apiUrl = 'http://localhost:3000/turno'; 
 
   constructor(private http: HttpClient) {}
+
+  // Cache sencillo en memoria para endpoints públicos
+  private cacheActivosPublic: { data: TurnoActivoItem[]; ts: number } | null = null;
+  private cacheCerradosPublic: { data: TurnoActivoItem[]; ts: number } | null = null;
+  private cacheTtlMs = 60_000; // 60s
+  private inflightActivos$?: Observable<TurnoActivoItem[]>;
+  private inflightCerrados$?: Observable<TurnoActivoItem[]>;
+
+  private retryOn429<T>(maxRetries: number = 3, baseDelayMs: number = 1000): OperatorFunction<T, T> {
+    type RetryState = { count: number; delayMs: number };
+    return retryWhen<T>((errors: Observable<any>) =>
+      errors.pipe(
+        scan((state: RetryState, err: any) => {
+          const status = err?.status;
+          if (status === 429 && state.count < maxRetries) {
+            // Intentar leer Retry-After (segundos) del backend
+            let retryAfterMs = 0;
+            try {
+              const hdr = err?.headers?.get?.('Retry-After');
+              const seconds = hdr ? Number(hdr) : NaN;
+              if (!isNaN(seconds) && seconds > 0) retryAfterMs = seconds * 1000;
+            } catch {}
+            const base = state.count > 0 ? baseDelayMs * Math.pow(2, state.count - 1) : 0;
+            const jitter = Math.floor(Math.random() * 300);
+            const delayMs = Math.max(retryAfterMs, base + jitter);
+            return { count: state.count + 1, delayMs } as RetryState;
+          }
+          throw err;
+        }, { count: 0, delayMs: 0 } as RetryState),
+        mergeMap((s: RetryState) => timer(s.delayMs))
+      )
+    );
+  }
 
   private authOptions() {
     try {
@@ -90,7 +126,19 @@ export class TurnosService {
   }
 
   getTurnosActivosPublic(): Observable<TurnoActivoItem[]> {
-    return this.http.get<TurnoActivoItem[]>(`${this.apiUrl}/activos-public`);
+    const now = Date.now();
+    if (this.cacheActivosPublic && (now - this.cacheActivosPublic.ts) < this.cacheTtlMs) {
+      return of(this.cacheActivosPublic.data);
+    }
+    if (this.inflightActivos$) return this.inflightActivos$;
+    this.inflightActivos$ = this.http.get<TurnoActivoItem[]>(`${this.apiUrl}/activos-public`).pipe(
+      this.retryOn429<TurnoActivoItem[]>(5, 1500),
+      tap(data => { this.cacheActivosPublic = { data: data || [], ts: Date.now() }; }),
+      catchError(() => of(this.cacheActivosPublic?.data || [])),
+      finalize(() => { this.inflightActivos$ = undefined; }),
+      shareReplay({ bufferSize: 1, refCount: true })
+    );
+    return this.inflightActivos$;
   }
 
   getTurnosCerrados(): Observable<TurnoActivoItem[]> {
@@ -98,6 +146,18 @@ export class TurnosService {
   }
 
   getTurnosCerradosPublic(): Observable<TurnoActivoItem[]> {
-    return this.http.get<TurnoActivoItem[]>(`${this.apiUrl}/cerrados-public`);
+    const now = Date.now();
+    if (this.cacheCerradosPublic && (now - this.cacheCerradosPublic.ts) < this.cacheTtlMs) {
+      return of(this.cacheCerradosPublic.data);
+    }
+    if (this.inflightCerrados$) return this.inflightCerrados$;
+    this.inflightCerrados$ = this.http.get<TurnoActivoItem[]>(`${this.apiUrl}/cerrados-public`).pipe(
+      this.retryOn429<TurnoActivoItem[]>(5, 1500),
+      tap(data => { this.cacheCerradosPublic = { data: data || [], ts: Date.now() }; }),
+      catchError(() => of(this.cacheCerradosPublic?.data || [])),
+      finalize(() => { this.inflightCerrados$ = undefined; }),
+      shareReplay({ bufferSize: 1, refCount: true })
+    );
+    return this.inflightCerrados$;
   }
 }

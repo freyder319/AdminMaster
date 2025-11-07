@@ -1,13 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { DescuentoService, Descuento, CreateDescuento } from '../services/descuento.service';
+import Swal from 'sweetalert2';
 
-type Descuento = {
-  id: string;
-  nombre: string;
-  porcentaje: number; // 1 - 100
-  creadoEn: number;
-};
+type LocalDescuento = Descuento;
 
 @Component({
   selector: 'app-descuentos',
@@ -16,48 +13,75 @@ type Descuento = {
   templateUrl: './descuentos.component.html',
   styleUrl: './descuentos.component.scss'
 })
-export class DescuentosComponent {
+export class DescuentosComponent implements OnInit {
   form: FormGroup;
-  descuentos: Descuento[] = [];
-  private readonly KEY = 'admin_descuentos';
+  descuentos: LocalDescuento[] = [];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private descuentoService: DescuentoService) {
     this.form = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2)]],
       porcentaje: [null, [Validators.required, Validators.min(1), Validators.max(100)]]
     });
-    this.load();
   }
 
-  private load() {
-    try {
-      const raw = localStorage.getItem(this.KEY);
-      this.descuentos = raw ? JSON.parse(raw) : [];
-    } catch {
-      this.descuentos = [];
-    }
-  }
-
-  private persist() {
-    try { localStorage.setItem(this.KEY, JSON.stringify(this.descuentos)); } catch {}
+  ngOnInit(): void {
+    this.descuentoService.items$.subscribe((list) => (this.descuentos = list));
+    this.descuentoService.fetchAll().subscribe();
   }
 
   add() {
     if (this.form.invalid) return;
     const v = this.form.value;
-    const nuevo: Descuento = {
-      id: crypto.randomUUID?.() || Math.random().toString(36).slice(2),
+    const payload: CreateDescuento = {
       nombre: String(v.nombre).trim(),
       porcentaje: Number(v.porcentaje),
-      creadoEn: Date.now()
+      creadoEn: Date.now(),
     };
-    this.descuentos = [nuevo, ...this.descuentos];
-    this.persist();
-    this.form.reset();
+    this.descuentoService.create(payload).subscribe({
+      next: () => {
+        this.form.reset();
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          icon: 'success',
+          title: 'Descuento creado con éxito',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      },
+      error: (err) => {
+        const msg = (err?.error && (err.error.message || err.error.error)) || 'Intenta nuevamente.';
+        Swal.fire({ icon: 'error', title: 'No se pudo crear', text: msg });
+      }
+    });
   }
 
-  remove(id: string) {
-    this.descuentos = this.descuentos.filter(d => d.id !== id);
-    this.persist();
+  remove(id: number) {
+    Swal.fire({
+      title: '¿Eliminar descuento?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (!result.isConfirmed) return;
+      this.descuentoService.remove(id).subscribe({
+        next: () => {
+          Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'success',
+            title: 'Descuento eliminado',
+            showConfirmButton: false,
+            timer: 1500
+          });
+        },
+        error: (err) => {
+          const msg = (err?.error && (err.error.message || err.error.error)) || 'Intenta nuevamente.';
+          Swal.fire({ icon: 'error', title: 'No se pudo eliminar', text: msg });
+        }
+      });
+    });
   }
 }

@@ -1,0 +1,46 @@
+<div class="turno-card">
+  <h2 class="titulo">Historial</h2>
+  <div *ngIf="cargando">Cargando...</div>
+  <div *ngIf="!cargando && items.length === 0">
+    <p>Sin eventos por ahora.</p>
+  </div>
+  <ul class="turno-lista" *ngIf="!cargando && items.length > 0">
+    <li class="turno-item" *ngFor="let ev of items" (click)="abrirDetalle(ev)" role="button" tabindex="0">
+      <i class="bi bi-activity item-icon" aria-hidden="true"></i>
+      <div class="turno-item-info">
+        <div class="turno-item-primario">
+          <strong>{{ ev.module }}</strong>
+          <span class="badge bg-secondary ms-2">{{ ev.action }}</span>
+        </div>
+        <div class="turno-item-secundario text-muted">
+          <i class="bi bi-clock inline" aria-hidden="true"></i>
+          {{ ev.timestamp | date:'short' }} ·
+          <span *ngIf="ev.entity">{{ ev.entity }}</span>
+          <span *ngIf="ev.entityId">#{{ ev.entityId }}</span>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<div class="modal-backdrop" *ngIf="modalAbierto" (click)="cerrarDetalle()"></div>
+<div class="modal-contenedor" *ngIf="modalAbierto" role="dialog" aria-modal="true">
+  <div class="modal-header">
+    <h3>Detalle de evento</h3>
+    <button type="button" class="modal-cerrar" (click)="cerrarDetalle()">✕</button>
+  </div>
+  <div class="modal-body" *ngIf="seleccionado as evd">
+    <div class="datos-grid">
+      <div class="kv"><span class="k">Módulo</span><span class="v">{{ evd.module }}</span></div>
+      <div class="kv"><span class="k">Acción</span><span class="v">{{ evd.action }}</span></div>
+      <div class="kv"><span class="k">Fecha</span><span class="v">{{ evd.timestamp | date:'short' }}</span></div>
+      <div class="kv" *ngIf="evd.entity"><span class="k">Entidad</span><span class="v">{{ evd.entity }}</span></div>
+      <div class="kv" *ngIf="evd.entityId"><span class="k">ID</span><span class="v">{{ evd.entityId }}</span></div>
+      <div class="kv"><span class="k">Usuario</span><span class="v">{{ evd.actorUserId || '—' }}</span></div>
+      <div class="kv"><span class="k">Rol</span><span class="v">{{ evd.actorRol || '—' }}</span></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn-turno" (click)="cerrarDetalle()">Cerrar</button>
+  </div>
+</div>

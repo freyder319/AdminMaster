@@ -165,7 +165,18 @@
   <!-- Filtros, Calendario, Rango, Buscador, Reporte -->
   <section>
     <div class="container d-flex justify-content-center">
-      <div class="row g-3">
+      <div class="row toolbar-equal">
+        <!-- Buscador -->
+        <div class="col-sm-12 col-md-10 col-lg-4 buscador-reportes">
+          <form class="busc" role="search" (submit)="$event.preventDefault()">
+            <div class="input-group busca">
+              <button class="btn btn-primary boton_buscador" type="button">
+                <img width="28px" src="../../assets/img/Logos Admin/Buscador.png" alt="">
+              </button>
+              <input class="form-control input-buscador" type="search" placeholder="Buscar" aria-label="Buscar" [(ngModel)]="searchTerm" name="search" (ngModelChange)="onSearchChange()">
+            </div>
+          </form>
+        </div>
         <!-- Filtro -->
         <div class="col-sm-12 col-md-4 col-lg-2 d-flex justify-content-center text-center ">
           <button  id="" class="btn btn-primary filtro bg-white" data-bs-toggle="offcanvas" data-bs-target="#filtro">
@@ -184,9 +195,15 @@
           </div>
         </div>
         <!-- Calendario -->
-        <div class="col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center text-center dropdown">
-          <button id="button_calendar" class="btn btn-primary calendar bg-white dropdown-toggle" data-bs-toggle="dropdown" (click)="prefillCustomRange()">Calendario</button>
-          <div class="dropdown-menu p-3" style="min-width: 320px;">
+        <div class="col-sm-6 col-md-4 col-lg-2 d-flex justify-content-start text-start dropdown">
+          <button id="button_calendar" class="btn btn-primary calendar bg-white dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" data-bs-offset="-24,0" (click)="prefillCustomRange()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-1" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v1H0V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5z"/>
+              <path d="M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5h16v9z"/>
+            </svg>
+            Calendario
+          </button>
+          <div class="dropdown-menu p-3 calendar-menu">
             <div class="row g-2 align-items-end">
               <div class="col-12">
                 <mat-form-field appearance="outline" class="w-100" [class.is-invalid]="isCustomRangeInvalid">
@@ -213,11 +230,11 @@
           </div>
         </div>
         <!-- Rango -->
-        <div class="col-sm-6 col-md-4 col-lg-2 d-flex justify-content-center text-center">
+        <div class="col-sm-6 col-md-4 col-lg-2 d-flex justify-content-start text-start dropdown">
           <button id="button" class="btn btn-primary dropdown-toggle bg-white range" data-bs-toggle="dropdown">
-            {{ rangeLabel }}
+            <img width="20" height="20" class="me-1" src="../../assets/img/Logos Admin/filtro.png" alt="">{{ rangeLabel }}
           </button>
-          <div class="dropdown-menu ">
+          <div class="dropdown-menu">
             <a class="dropdown-item flexible2" href="#" (click)="clearRange(); $event.preventDefault()">
               <div class="contenido-botones2">
                 <h6>Sin Filtro</h6>
@@ -245,29 +262,13 @@
             </a>
           </div>
         </div>
-        <!-- Buscador -->
-        <div class="col-sm-12 col-md-10 col-lg-4 buscador-reportes">
-          <form class="busc" role="search" (submit)="$event.preventDefault()">
-            <div class="input-group busca">
-              <button class="btn btn-primary boton_buscador" type="button">
-                <img width="28px" src="../../assets/img/Logos Admin/Buscador.png" alt="">
-              </button>
-              <input class="form-control input-buscador" type="search" placeholder="Buscar" aria-label="Buscar" [(ngModel)]="searchTerm" name="search" (ngModelChange)="onSearchChange()">
-            </div>
-          </form>
-        </div>
-        <!-- Descuentos + Reportes juntos -->
-        <div class="col-sm-12 col-md-6 col-lg-2 d-flex justify-content-center text-center">
-          <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-primary p-0 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;" data-bs-toggle="offcanvas" data-bs-target="#descuentos" aria-label="Descuentos">
-              <img width="24" height="24" src="../../assets/img/Logos Admin/venta_productos.png" alt="">
-            </button>
-            <button type="button" class="btn btn-primary p-0 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;"
-                    data-bs-toggle="modal" data-bs-target="#reportModal" aria-label="Reportes">
-              <img width="24" height="24" src="../../assets/img/Logos Admin/xls.png" alt="">
-            </button>
-          </div>
-          <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="descuentos" aria-labelledby="descuentosLabel" style="--bs-offcanvas-width: 520px;">
+        <!-- Descuentos -->
+        <div class="col-sm-6 col-md-3 col-lg-2 d-flex justify-content-center text-center">
+          <button type="button" class="btn chip-btn d-inline-flex align-items-center" data-bs-toggle="offcanvas" data-bs-target="#descuentos" aria-label="Descuentos">
+            <img class="icon-quick" src="../../assets/img/Logos Admin/venta_productos.png" alt="">
+            <span>Descuentos</span>
+          </button>
+          <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="descuentos" aria-labelledby="descuentosLabel">
             <div class="offcanvas-header">
               <h5 class="offcanvas-title" id="descuentosLabel">Gestionar Descuentos</h5>
               <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -277,6 +278,18 @@
             </div>
           </div>
         </div>
+
+        <!-- Reportes -->
+        <div class="col-sm-6 col-md-3 col-lg-2 d-flex justify-content-center text-center">
+          <button type="button" class="btn chip-btn d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#reportModal" aria-label="Reportes">
+            <img class="icon-quick" src="../../assets/img/Logos Admin/xls.png" alt="">
+            <span>Reportes</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
   <section>
     <div class="container unicion ">
       <div class="row">
@@ -366,6 +379,7 @@
                 </div>
               </td>
               <td class="valo text-end" data-label="Valor">
+                <span *ngIf="v.descuentoPorcentaje" class="badge text-bg-danger me-2">-{{ v.descuentoPorcentaje }}%</span>
                 <span class="valor-derecha fw-bold text-success">{{ v.total | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
               </td>
               <td class="ocultar-en-movil" data-label="Medio de Pago">{{ v.forma_pago || '-' }}</td>
@@ -399,7 +413,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let g of filteredGastos">
+            <tr *ngFor="let g of filteredGastos" class="table-row-click" (click)="abrirDialogoGasto(g)" style="cursor: pointer;">
               <td data-label="Nombre">
                 <div class="producto-resumen d-flex gap-2 align-items-center">
                   <img src="../../assets/img/Logos Admin/gastos.png" alt="" class="img-responsive" width="36" height="36">

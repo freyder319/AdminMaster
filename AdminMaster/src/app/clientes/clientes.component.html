@@ -77,7 +77,7 @@
                 <div class="perfil clickable d-md-none" (click)="mostrarInterfazReponsive(cliente.id)">
                   <img src="../../assets/img/icons-navbar/Clientes.png" alt="cliente">
                   <div class="info">
-                    <p class="nombre">{{cliente.nombre}}</p>
+                    <p class="nombre"><strong>{{cliente.nombre}} {{cliente.apellido}}</strong></p>
                     <p class="correo">{{cliente.correo}}</p>
                   </div>
                 </div>
@@ -86,7 +86,7 @@
                 <div class="perfil d-none d-md-flex">
                   <img src="../../assets/img/icons-navbar/Clientes.png" alt="Camión Coca-Cola" width="50px" height="50px" style="margin-top: -10px;">
                   <div class="info">
-                    <p class="nombre" style="margin-left: 10px;">{{cliente.nombre}}</p>
+                    <p class="nombre" style="margin-left: 10px;"><strong>{{cliente.nombre}} {{cliente.apellido}}</strong></p>
                   </div>
                 </div>
                 </td>

@@ -1,0 +1,58 @@
+<div class="container my-3">
+  <button class="btn btn-outline-secondary mb-3" type="button" (click)="volver()">← Volver</button>
+
+  <div *ngIf="loading" class="text-muted">Cargando gasto...</div>
+  <div *ngIf="!loading && error" class="alert alert-danger">{{ error }}</div>
+
+  <div *ngIf="!loading && gasto as g" class="card shadow-sm">
+    <div class="card-header">
+      <div class="d-flex justify-content-between align-items-center">
+        <h5 class="m-0">Detalle del Gasto</h5>
+        <div class="text-muted" *ngIf="empleadoNombre || g.usuarioId === 1 || g.turnoId">
+          <span *ngIf="empleadoNombre || g.usuarioId === 1" class="text-dark fw-semibold" style="font-size: 1.05rem;">{{ empleadoNombre || 'Admin' }}</span>
+          <span *ngIf="empleadoNombre && g.turnoId" class="mx-1">•</span>
+          <span *ngIf="g.turnoId" class="text-dark fw-semibold" style="font-size: 1.05rem;">Turno: {{ g.turnoId }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-sm-6">
+          <div class="text-muted small">Nombre</div>
+          <div class="fw-semibold">{{ g.nombre || ('Gasto #' + g.id) }}</div>
+        </div>
+        <div class="col-sm-6">
+          <div class="text-muted small">Monto</div>
+          <div class="fw-bold text-danger">{{ (g.monto || 0) | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="text-muted small">Medio de Pago</div>
+          <div>{{ g.forma_pago || '-' }}</div>
+        </div>
+        <div class="col-sm-6">
+          <div class="text-muted small">Fecha</div>
+          <div>{{ g.fecha | date:'dd/MM/yyyy' }}</div>
+        </div>
+
+        <div class="col-12">
+          <div class="text-muted small">Descripción</div>
+          <div>{{ g.descripcion || '-' }}</div>
+        </div>
+
+        <div class="col-sm-4">
+          <div class="text-muted small">Estado</div>
+          <div>{{ g.estado }}</div>
+        </div>
+        <div class="col-sm-4">
+          <div class="text-muted small">Empleado</div>
+          <div>{{ empleadoNombre || (g.usuarioId === 1 ? 'Admin' : ('ID: ' + (g.usuarioId || '-'))) }}</div>
+        </div>
+        <div class="col-sm-4">
+          <div class="text-muted small">Turno</div>
+          <div>{{ g.turnoId || '—' }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
