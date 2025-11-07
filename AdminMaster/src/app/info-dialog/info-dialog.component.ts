@@ -22,12 +22,17 @@ export class InfoDialogComponent {
     pago: string;
     fecha: string;
     estado: string;
+    descuentoNombre?: string | null;
+    descuentoPorcentaje?: number | null;
+    descuentoMonto?: string | null;
     items?: Array<{
       nombre: string;
       cantidad: number;
       precio: string;
       subtotal: string;
     }>;
+    empleadoNombre?: string | null;
+    turnoId?: number | null;
   }) {}
 }
 

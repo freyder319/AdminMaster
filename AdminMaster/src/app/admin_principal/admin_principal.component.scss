@@ -1,10 +1,59 @@
-main{
+/* Barra con separación uniforme */
+.toolbar-equal{
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  column-gap: 10px;
+  row-gap: 6px;
+}
+
+/* Asegurar que cada columna se centre y reciba la misma separación visual */
+.toolbar-equal > [class^="col-"],
+.toolbar-equal > [class*=" col-"]{
+  display: flex;
+  justify-content: center;
+}
+
+/* md y abajo: permitir saltos de línea y mantener separación uniforme */
+@media (max-width: 991.98px){
+  .toolbar-equal{
+    flex-wrap: wrap;
+    justify-content: center;
+    column-gap: 10px;
+    row-gap: 8px;
+  }
+}
+
+/* sm (>=576px y <768px): 2 por fila según clases col-sm-6; mantener centrado */
+@media (min-width: 576px) and (max-width: 767.98px){
+  .toolbar-equal{
+    column-gap: 10px;
+    row-gap: 8px;
+  }
+}
+
+/* xs (<576px): botones a ancho completo para facilidad de uso */
+@media (max-width: 575.98px){
+  .toolbar-equal{
+    column-gap: 8px;
+    row-gap: 10px;
+  }
+  .toolbar-equal > [class^="col-"],
+  .toolbar-equal > [class*=" col-"]{
+    justify-content: stretch;
+  }
+  .toolbar-equal .btn{
+    width: 100%;
+  }
+}
+.main{
     margin-top: 140px;
     padding-bottom: 120px;
 }
 
 @media (max-width: 768px) {
-    main {
+    .main {
         margin-top: 0; 
     }
 }
@@ -246,7 +295,7 @@ body{
 
 // calendario
 .calendar{
-    width: 120px;
+    width: 150px;
     height: 40px;
 }
 .calendar-container {
@@ -255,11 +304,11 @@ body{
 }
 // Rango de fechas, semanal, mensual, anual
 .rango{
-    width: 100px;
+    width: 120px;
     height: 50px;
 }
 .range{
-    width: 120px;
+    width: 130px;
     height: 40px;
 }
 .contenido-botone2{
@@ -1027,10 +1076,10 @@ body{
         display: none;
     }
     td{
-        font-size: 12px;
+        font-size: 10px;
     }
     th{
-        font-size: 12px;
+        font-size: 10px;
     }
     .balance{
         width: 320px;
@@ -1106,3 +1155,120 @@ body{
     }
 }
 
+/* Ajustes de menú Calendario: inputs sin sobresalir; sin forzar ancho/offset */
+.dropdown .calendar-menu{
+    min-width: 0 !important;
+    max-width: none !important;
+    left: auto !important;
+    right: auto !important;
+}
+
+.calendar-menu .row{ margin-left: 0; margin-right: 0; }
+.calendar-menu .col-12{ padding-left: 0; padding-right: 0; }
+
+:host ::ng-deep .calendar-menu .mat-mdc-form-field{ width: 100% !important; }
+:host ::ng-deep .calendar-menu .mdc-text-field{ width: 100% !important; box-sizing: border-box; }
+:host ::ng-deep .calendar-menu .mat-mdc-form-field-flex{ width: 100% !important; }
+:host ::ng-deep .calendar-menu .mat-mdc-form-field-infix{ width: 100% !important; min-width: 0 !important; }
+:host ::ng-deep .calendar-menu .mat-mdc-input-element{ width: 100% !important; overflow: hidden; text-overflow: ellipsis; }
+
+/* Neutralizar resaltado y usar gris suave en interacción para el botón Venta Libre (#button2) */
+#button2 {
+    background-color: white !important;
+    color: black !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Quick action icons (Descuentos, Reporte) */
+.quick-actions {
+    flex-wrap: nowrap;
+    margin-left: 0; /* sin desplazamiento global */
+}
+
+.qa-item {
+    white-space: nowrap;
+}
+
+.icon-btn {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.icon-btn:hover,
+.icon-btn:focus,
+.icon-btn:active {
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.icon-quick {
+    width: 28px;
+    height: 28px;
+    display: block;
+}
+
+/* Chip-style unified button for quick actions */
+.chip-btn {
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 9999px;
+    border: 1px solid rgba(143,143,143,0.25) !important;
+    background: #ffffff !important;
+    color: #333 !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06) !important;
+    outline: none !important;
+    white-space: nowrap;
+}
+
+.chip-btn:hover,
+.chip-btn:focus,
+.chip-btn:active,
+.chip-btn:focus-visible {
+    background: #f8fbff !important;
+    border-color: #5adbff !important;
+    color: #333 !important;
+    box-shadow: 0 0 0 3px rgba(90,219,255,0.25) !important;
+    outline: none !important;
+}
+
+.dropdown-menu.ancho a.dropdown-item.flexible {
+    background-color: white !important;
+    color: black !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.dropdown-menu.ancho a.dropdown-item.flexible:hover,
+.dropdown-menu.ancho a.dropdown-item.flexible:focus,
+.dropdown-menu.ancho a.dropdown-item.flexible:active,
+.dropdown-menu.ancho a.dropdown-item.flexible:focus-visible,
+.dropdown-menu.ancho a.dropdown-item.flexible.active {
+    background-color: #f2f2f2 !important;
+    color: black !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+#button2:hover,
+#button2:focus,
+#button2:active,
+#button2:focus-visible,
+#button2.show,
+#button2.dropdown-item:active,
+#button2.dropdown-item.active {
+    background-color: #f2f2f2 !important; /* gris suave */
+    color: black !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}

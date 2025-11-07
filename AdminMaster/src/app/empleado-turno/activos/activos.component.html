@@ -1,0 +1,44 @@
+<div class="turno-card">
+  <h2 class="titulo">Turnos activos</h2>
+  <div *ngIf="cargando">Cargando...</div>
+  <div *ngIf="!cargando && activos.length === 0">
+    <p>No hay turnos activos.</p>
+  </div>
+  <ul class="turno-lista" *ngIf="!cargando && activos.length > 0">
+    <li class="turno-item" *ngFor="let item of activos" (click)="abrirDetalle(item)" role="button" tabindex="0">
+      <i class="bi bi-person-fill item-icon" aria-hidden="true"></i>
+      <div class="turno-item-info">
+        <div class="turno-item-primario">
+          <strong>{{ (item.nombre || '') + ' ' + (item.apellido || '') }}</strong>
+        </div>
+        <div class="turno-item-secundario text-muted">
+          <i class="bi bi-clock inline" aria-hidden="true"></i>
+          Inicio: {{item.resumen.turno.inicioTurno | date:'short'}}
+        </div>
+        <div class="turno-item-secundario text-muted" *ngIf="item.resumen.turno.finTurno">
+          <i class="bi bi-clock-history inline" aria-hidden="true"></i>
+          Fin: {{item.resumen.turno.finTurno | date:'short'}}
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<div class="modal-backdrop" *ngIf="modalAbierto" (click)="cerrarDetalle()"></div>
+<div class="modal-contenedor" *ngIf="modalAbierto" role="dialog" aria-modal="true">
+  <div class="modal-header">
+    <h3>Detalle del turno activo</h3>
+    <button type="button" class="modal-cerrar" (click)="cerrarDetalle()">✕</button>
+  </div>
+  <div class="modal-body" *ngIf="seleccionado as s">
+    <div class="datos-grid">
+      <div class="kv"><span class="k">Empleado</span><span class="v">{{ (s.nombre || '') + ' ' + (s.apellido || '') }}</span></div>
+      <div class="kv"><span class="k">Inicio</span><span class="v">{{ s.resumen.turno.inicioTurno | date:'short' }}</span></div>
+      <div class="kv"><span class="k">Fin</span><span class="v">{{ s.resumen.turno.finTurno | date:'short' }}</span></div>
+      <div class="kv kv-span"><span class="k">Observaciones</span><span class="v">{{ s.resumen.turno.observaciones || 'Sin comentarios' }}</span></div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn-turno" (click)="cerrarDetalle()">Cerrar</button>
+  </div>
+</div>

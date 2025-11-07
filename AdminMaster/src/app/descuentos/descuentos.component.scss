@@ -1,0 +1,30 @@
+/* Botón Agregar moderno */
+.add-btn {
+  border: none;
+  border-radius: 9999px;
+  background: #5adbff;
+  color: #fff;
+  font-weight: 600;
+  height: 44px;
+  box-shadow: 0 0 6px 0.5px #5adbff;
+  transition: box-shadow .2s ease, border-color .2s ease, background-color .2s ease, transform .15s ease;
+}
+
+.add-btn:hover {
+  background: #46d3fb;
+  color: #fff;
+  box-shadow: 0 0 6px 2px #5adbff;
+  transform: translateY(-1px);
+}
+
+.add-btn:focus,
+.add-btn:active {
+  outline: none;
+  color: #fff;
+  box-shadow: 0 0 0 3px rgba(90,219,255,0.25);
+}
+
+.add-btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}

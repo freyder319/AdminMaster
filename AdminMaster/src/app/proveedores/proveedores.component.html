@@ -75,7 +75,7 @@
                 <div class="perfil clickable d-md-none" (click)="seleccionar(p); mostrarModificarProveedor = true">
                   <img src="../../assets/img/icons-navbar/Proovedores.png" alt="Proveedor">
                   <div class="info">
-                    <p class="nombre">{{ p.nombre }}</p>
+                    <p class="nombre"><strong>{{ p.nombre }} {{ p.apellido }}</strong></p>
                     <p class="correo">{{ p.correo }}</p>
                   </div>
                 </div>
@@ -84,7 +84,7 @@
                 <div class="perfil d-none d-md-flex">
                   <img src="../../assets/img/icons-navbar/Proovedores.png" alt="Proveedor" width="50px" height="50px" style="margin-top: -10px;">
                   <div class="info">
-                    <p class="nombre" style="margin-left: 10px;">{{ p.nombre }}</p>
+                    <p class="nombre" style="margin-left: 10px;"><strong>{{ p.nombre }} {{ p.apellido }}</strong></p>
                   </div>
                 </div>
               </td>

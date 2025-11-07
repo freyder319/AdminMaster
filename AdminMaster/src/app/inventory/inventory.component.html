@@ -28,7 +28,7 @@
         <div class="img-box">
           <img src="../../assets/img/icons-navbar/money-costo-inven.png" alt="" width="60px" height="60px">
         </div>
-        <div class="cant-inven">{{ CostoTotal | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
+        <div class="cant-inven text-success"><strong><span>$</span><span class="ms-1">{{ CostoTotal | number:'1.0-0' }}</span></strong></div>
         <div class="text">Costo Total del Inventario</div>
       </div>
     </div>

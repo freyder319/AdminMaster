@@ -1,5 +1,6 @@
 .pqrs-img{
     border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
 .parrafo{
     font-family: "Special Gothic", sans-serif;
@@ -7,6 +8,10 @@
 h3{
     text-align: center;
     color:#772929 ;
+    margin: 18px 0 6px;
+    line-height: 1.35;
+    font-weight: 500;
+    font-family: Georgia, "Times New Roman", Times, serif;
 }
 @media(max-width: 991px) {
     h3{
@@ -27,12 +32,108 @@ h3{
 }
 .tarea{
     height: 220px;
+    resize: vertical;
 }
 button{
     background-color: #772929;
     color: white;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 10px;
+    letter-spacing: 0.2px;
+    box-shadow: 0 6px 14px rgba(119,41,41,0.25);
+    transition: transform .06s ease, box-shadow .2s ease, background-color .2s ease;
 }
 button:hover{
     background-color: #612121;
     color: white;
+    box-shadow: 0 8px 18px rgba(97,33,33,0.28);
+}
+button:active{
+    transform: translateY(1px);
+}
+button:focus{
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(119,41,41,0.18);
+}
+
+:host{
+    display: block;
+}
+.container{
+    max-width: 960px;
+    margin-inline: auto;
+}
+.container + .container{
+    margin-top: 16px;
+}
+
+.form-label{
+    font-weight: 600;
+    color: #4a4a4a;
+}
+.form-control,
+textarea.form-control{
+    border: 1px solid #e3e3e3;
+    border-radius: 10px;
+    background-color: #ffffff;
+    padding: 0.75rem 1rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+.form-control:focus,
+textarea.form-control:focus{
+    border-color: #772929;
+    box-shadow: 0 0 0 3px rgba(119,41,41,0.15);
+}
+
+/* Validation messages: better readability */
+small.text-danger{
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", system-ui, -apple-system, sans-serif;
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.25;
+    letter-spacing: 0.1px;
+}
+
+.d-flex.gap-3{
+    flex-wrap: wrap;
+}
+.d-flex.gap-3 > .form-control{
+    flex: 1 1 260px;
+    min-width: 0;
+}
+@media (max-width: 576px){
+    .d-flex.gap-3 > .form-control{
+        flex: 1 1 100%;
+    }
+}
+
+.form-check-input{
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.2rem;
+    accent-color: #772929;
+}
+.form-check-input:checked{
+    background-color: #772929;
+    border-color: #772929;
+}
+.form-check-input:focus{
+    border-color: #772929;
+    box-shadow: 0 0 0 3px rgba(119,41,41,0.18);
+}
+.form-check-input:not(:checked){
+    border-color: #a8a8a8;
+}
+.form-check-label.autorizo{
+    color: #414141;
+}
+
+.btn.btn-primary{
+    background-color: #772929;
+    border-color: #772929;
+}
+.btn.btn-primary:hover{
+    background-color: #612121;
+    border-color: #612121;
 }

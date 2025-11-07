@@ -1,18 +1,18 @@
 /* Estilos de inputs como en add_clientes */
 .form-control,
-.form-select,
-textarea {
+.form-select {
   border: none;
   box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
   outline: none;
+  border-radius: 9999px !important;
 }
 
 .form-control:focus,
-.form-select:focus,
-textarea:focus {
+.form-select:focus {
   border: 1px solid #5adbff;
   box-shadow: 0 0 6px 0.5px #5adbff;
   outline: none;
+  border-radius: 9999px !important;
 }
 
 /* Controles de estado visual */
@@ -163,7 +163,7 @@ textarea:focus {
   cursor: pointer;
   color: white;
   font-weight: bold;
-  border-radius: 10px;
+  border-radius: 9999px !important;
   padding: 10px 16px;
 }
 

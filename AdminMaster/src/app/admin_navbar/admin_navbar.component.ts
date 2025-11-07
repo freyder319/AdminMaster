@@ -21,6 +21,19 @@ export class AdminNavbarComponent {
   constructor(private router: Router, private turnosService: TurnosService, private turnoState: TurnoStateService) {}
 
   cerrarSesion(): void {
+    const turnoActivo = this.turnoState.snapshot;
+    if (turnoActivo) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Turno activo',
+        html: 'No puedes cerrar sesión mientras haya un turno activo. Por favor, cierra el turno primero.',
+        confirmButtonText: 'Ir a Turno',
+        confirmButtonColor: '#0d6efd'
+      }).then(() => {
+        this.router.navigate(['/turno-empleado']);
+      });
+      return;
+    }
     const rol = localStorage.getItem('rol') ?? 'usuario';
 
     const rolTexto = {

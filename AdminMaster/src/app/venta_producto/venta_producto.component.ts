@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Producto, ProductoService } from '../services/producto.service';
 import { VentaService, CreateVentaPayload } from '../services/venta.service';
+import { DescuentoService, Descuento } from '../services/descuento.service';
 import Swal from 'sweetalert2';
 declare const bootstrap: any;
 
@@ -24,10 +25,43 @@ export class VentaProductoComponent {
   amountReceived: number | null = null;
   formaPago: 'efectivo' | 'tarjeta' | 'transferencia' | 'nequi' | 'daviplata' | 'otros' = 'efectivo';
   isSubmitting = false;
+  descuentos: Descuento[] = [];
+  selectedDescuentoId: number | null = null;
 
   private toPesos(n: any): number {
     const num = Number(n);
     return Number.isFinite(num) ? Math.round(num) : 0;
+  }
+
+  private showDeltaBubble(delta: number): void {
+    try {
+      const cartEl: HTMLElement | null = this.getCartTarget();
+      if (!cartEl) return;
+      const rect = cartEl.getBoundingClientRect();
+      const bubble = document.createElement('div');
+      bubble.textContent = `${delta > 0 ? '+' : ''}${delta}`;
+      bubble.style.position = 'fixed';
+      bubble.style.left = `${rect.right - 6}px`;
+      bubble.style.top = `${rect.top}px`;
+      bubble.style.transform = 'translate(-50%, -50%)';
+      bubble.style.padding = '2px 6px';
+      bubble.style.borderRadius = '999px';
+      bubble.style.fontWeight = '700';
+      bubble.style.fontSize = '12px';
+      bubble.style.color = '#fff';
+      bubble.style.background = delta > 0 ? '#10b981' : '#ef4444';
+      bubble.style.zIndex = '10002';
+      bubble.style.pointerEvents = 'none';
+      bubble.style.opacity = '0.95';
+      document.body.appendChild(bubble);
+      bubble.animate(
+        [
+          { transform: 'translate(-50%, -50%) translateY(0)', opacity: 0.95 },
+          { transform: 'translate(-50%, -50%) translateY(-18px)', opacity: 0 }
+        ],
+        { duration: 520, easing: 'ease-out' }
+      ).addEventListener('finish', () => { try { bubble.remove(); } catch {} });
+    } catch {}
   }
 
   get cartCount(): number {
@@ -86,10 +120,11 @@ export class VentaProductoComponent {
       } catch {}
       return;
     }
-    const computedTotal = this.toPesos(items.reduce((sum, it) => sum + it.subtotal, 0));
+    const computedTotal = this.cartTotal; // total ya con descuento aplicado
     const payload: CreateVentaPayload = {
       total: computedTotal,
       forma_pago: this.formaPago,
+      descuentoId: this.selectedDescuentoId ?? undefined,
       items,
     };
     try {
@@ -148,9 +183,29 @@ export class VentaProductoComponent {
       }
     });
   }
-  get cartTotal(): number {
+  get grossTotal(): number {
     const sum = this.cart.reduce((acc, it) => acc + this.toPesos(it.subtotal), 0);
     return this.toPesos(sum);
+  }
+
+  get selectedDescuento(): Descuento | null {
+    const id = Number(this.selectedDescuentoId);
+    if (!Number.isFinite(id)) return null;
+    return this.descuentos.find(d => d.id === id) || null;
+  }
+
+  get discountPercent(): number {
+    return this.selectedDescuento?.porcentaje ?? 0;
+  }
+
+  get discountAmount(): number {
+    const amt = Math.round(this.grossTotal * (this.discountPercent / 100));
+    return amt > 0 ? this.toPesos(amt) : 0;
+  }
+
+  get cartTotal(): number {
+    const discounted = this.grossTotal - this.discountAmount;
+    return discounted > 0 ? this.toPesos(discounted) : 0;
   }
 
   get canPay(): boolean {
@@ -172,6 +227,15 @@ export class VentaProductoComponent {
     }
   }
 
+  private isAnimating = false;
+
+  onProductClick(evt: MouseEvent, p: Producto): void {
+    if (this.isAnimating) return;
+    this.addToCart(p);
+    this.isAnimating = true;
+    this.modernFlyToCart(evt).finally(() => { this.isAnimating = false; });
+  }
+
   addToCart(p: Producto): void {
     if ((p.stockProducto ?? 0) <= 0) return;
     const price = this.toPesos((p.precioComercial ?? p.precioUnitario) || 0);
@@ -188,6 +252,165 @@ export class VentaProductoComponent {
     this.saveCart();
   }
 
+  private modernFlyToCart(evt: MouseEvent): Promise<void> {
+    try {
+      return new Promise<void>((resolve) => {
+        const sourceEl = (evt.currentTarget as HTMLElement) || (evt.target as HTMLElement);
+        if (!sourceEl) { resolve(); return; }
+        const img: HTMLImageElement | null = sourceEl.querySelector('img');
+        if (!img) { resolve(); return; }
+        const cartEl: HTMLElement | null = this.getCartTarget();
+        if (!cartEl) { resolve(); return; }
+
+        const imgRect = img.getBoundingClientRect();
+        const cartRect = cartEl.getBoundingClientRect();
+
+        const startX = imgRect.left + imgRect.width / 2;
+        const startY = imgRect.top + imgRect.height / 2;
+        const endX = cartRect.left + cartRect.width / 2;
+        const endY = cartRect.top + cartRect.height / 2;
+
+        const blob = document.createElement('div');
+        const size = Math.max(32, Math.min(56, Math.floor(Math.min(imgRect.width, imgRect.height) * 0.35)));
+        blob.style.position = 'fixed';
+        blob.style.left = `${startX - size / 2}px`;
+        blob.style.top = `${startY - size / 2}px`;
+        blob.style.width = `${size}px`;
+        blob.style.height = `${size}px`;
+        blob.style.borderRadius = '999px';
+        blob.style.background = 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.95), rgba(99,102,241,0.95) 55%, rgba(99,102,241,0.6) 80%, rgba(99,102,241,0.0) 100%)';
+        blob.style.boxShadow = '0 10px 24px rgba(99,102,241,0.45), 0 3px 10px rgba(99,102,241,0.35)';
+        blob.style.filter = 'blur(0.3px)';
+        blob.style.zIndex = '10000';
+        blob.style.pointerEvents = 'none';
+        document.body.appendChild(blob);
+
+        // Trayecto curvo más marcado
+        const midX = startX + (endX - startX) * 0.55;
+        const midY = startY + (endY - startY) * 0.55 - Math.max(100, Math.min(200, (endY - startY) * -0.25));
+
+        const keyframes: Keyframe[] = [
+          { transform: 'translate(0,0) scale(0.9) rotate(-6deg)', opacity: 0.98, offset: 0 },
+          { transform: `translate(${midX - startX}px, ${midY - startY}px) scale(1.08) rotate(6deg)`, opacity: 1, offset: 0.55 },
+          { transform: `translate(${endX - startX}px, ${endY - startY}px) scale(0.42) rotate(0deg)`, opacity: 0.75, offset: 1 }
+        ];
+        const timing: KeyframeAnimationOptions = { duration: 900, easing: 'cubic-bezier(0.18, 0.8, 0.2, 1)', fill: 'forwards' };
+        const anim = blob.animate(keyframes, timing);
+
+        // Partículas en el trayecto (trail)
+        try {
+          const trailCount = 5;
+          for (let i = 0; i < trailCount; i++) {
+            const t = document.createElement('div');
+            t.style.position = 'fixed';
+            t.style.left = `${startX - 3}px`;
+            t.style.top = `${startY - 3}px`;
+            t.style.width = '6px';
+            t.style.height = '6px';
+            t.style.borderRadius = '999px';
+            t.style.background = 'rgba(99,102,241,0.65)';
+            t.style.boxShadow = '0 0 10px rgba(99,102,241,0.6)';
+            t.style.pointerEvents = 'none';
+            t.style.zIndex = '9999';
+            document.body.appendChild(t);
+            const tDelay = 60 * i;
+            const tAnim = t.animate(
+              [
+                { transform: 'translate(0,0)', opacity: 0.0 },
+                { transform: `translate(${(midX - startX) * 0.9}px, ${(midY - startY) * 0.9}px)`, opacity: 0.5 },
+                { transform: `translate(${endX - startX}px, ${endY - startY}px)`, opacity: 0 }
+              ],
+              { duration: 900, delay: tDelay, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)', fill: 'forwards' }
+            );
+            tAnim.addEventListener('finish', () => { try { t.remove(); } catch {} });
+          }
+        } catch {}
+
+        const finish = () => {
+          try { blob.remove(); } catch {}
+          // Sparkles al llegar
+          try {
+            const sparks = 8;
+            for (let i = 0; i < sparks; i++) {
+              const sp = document.createElement('div');
+              sp.style.position = 'fixed';
+              sp.style.left = `${endX}px`;
+              sp.style.top = `${endY}px`;
+              sp.style.width = '6px';
+              sp.style.height = '6px';
+              sp.style.borderRadius = '999px';
+              const colors = ['#818cf8', '#34d399', '#fbbf24', '#f472b6'];
+              sp.style.background = colors[i % colors.length];
+              sp.style.zIndex = '10001';
+              sp.style.pointerEvents = 'none';
+              document.body.appendChild(sp);
+              const angle = (Math.PI * 2 * i) / sparks;
+              const dist = 18 + Math.random() * 12;
+              sp.animate(
+                [
+                  { transform: 'translate(-50%,-50%) scale(1)', opacity: 1 },
+                  { transform: `translate(${Math.cos(angle) * dist - 50}%, ${Math.sin(angle) * dist - 50}%) scale(0)`, opacity: 0 }
+                ],
+                { duration: 450, easing: 'ease-out' }
+              ).addEventListener('finish', () => { try { sp.remove(); } catch {} });
+            }
+          } catch {}
+          // Cart/list pulse y +1 cerca del objetivo
+          try {
+            cartEl.animate(
+              [
+                { transform: 'scale(1)', filter: 'drop-shadow(0 0 0 rgba(59,130,246,0))' },
+                { transform: 'scale(1.15)', filter: 'drop-shadow(0 0 10px rgba(99,102,241,0.55))' },
+                { transform: 'scale(1)' }
+              ],
+              { duration: 340, easing: 'ease-out' }
+            );
+            const bubble = document.createElement('div');
+            bubble.textContent = '+1';
+            bubble.style.position = 'fixed';
+            bubble.style.left = `${cartRect.right - 6}px`;
+            bubble.style.top = `${cartRect.top}px`;
+            bubble.style.transform = 'translate(-50%, -50%)';
+            bubble.style.padding = '2px 6px';
+            bubble.style.borderRadius = '999px';
+            bubble.style.fontWeight = '700';
+            bubble.style.fontSize = '12px';
+            bubble.style.color = '#fff';
+            bubble.style.background = '#10b981';
+            bubble.style.zIndex = '10002';
+            bubble.style.pointerEvents = 'none';
+            bubble.style.opacity = '0.95';
+            document.body.appendChild(bubble);
+            bubble.animate(
+              [
+                { transform: 'translate(-50%, -50%) translateY(0)', opacity: 0.95 },
+                { transform: 'translate(-50%, -50%) translateY(-18px)', opacity: 0 }
+              ],
+              { duration: 520, easing: 'ease-out' }
+            ).addEventListener('finish', () => { try { bubble.remove(); } catch {}; resolve(); });
+          } catch {}
+        };
+        anim.addEventListener('finish', finish, { once: true });
+      });
+    } catch { return Promise.resolve(); }
+  }
+
+  private getCartTarget(): HTMLElement | null {
+    try {
+      const isDesktop = (window.innerWidth || 0) >= 768;
+      const desktopList = document.getElementById('canasta-lista-desktop');
+      if (isDesktop && desktopList) {
+        const lastItem = desktopList.querySelector('li.list-group-item:last-child') as HTMLElement | null;
+        if (lastItem) return lastItem;
+        return desktopList;
+      }
+      const mobileCount = document.getElementById('cart-count');
+      if (mobileCount) return mobileCount as HTMLElement;
+      const fallback = document.querySelector('.cart-float') as HTMLElement | null;
+      return fallback;
+    } catch { return null; }
+  }
+
   increment(item: { producto: Producto; cantidad: number; subtotal: number }): void {
     const p = item.producto;
     const price = this.toPesos((p.precioComercial ?? p.precioUnitario) || 0);
@@ -195,6 +418,7 @@ export class VentaProductoComponent {
       item.cantidad += 1;
       item.subtotal = this.toPesos(item.cantidad * price);
       this.saveCart();
+      this.showDeltaBubble(+1);
     }
   }
 
@@ -205,8 +429,10 @@ export class VentaProductoComponent {
       item.cantidad -= 1;
       item.subtotal = this.toPesos(item.cantidad * price);
       this.saveCart();
+      this.showDeltaBubble(-1);
     } else {
       this.remove(item);
+      this.showDeltaBubble(-1);
     }
   }
 
@@ -261,11 +487,18 @@ export class VentaProductoComponent {
     return list;
   }
 
-  constructor(private productoService: ProductoService, private ventaService: VentaService) {}
+  constructor(
+    private productoService: ProductoService,
+    private ventaService: VentaService,
+    private descuentoService: DescuentoService,
+  ) {}
 
   ngOnInit(): void {
     this.loadCart();
     this.loadProductos();
+    // cargar descuentos
+    this.descuentoService.items$.subscribe((list) => (this.descuentos = list || []));
+    this.descuentoService.fetchAll().subscribe();
   }
 
   private loadProductos(): void {
