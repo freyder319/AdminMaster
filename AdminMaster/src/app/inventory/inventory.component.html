@@ -48,7 +48,7 @@
         </div>
 
         <!-- Ver todas las Categorias -->
-        <div class="col-lg-3 col-md-6 col-sm-12">
+        <div class="col-lg-2 col-md-6 col-sm-12">
           <div class="ver-cate">
             <select title="categorias" class="form-select" name="categoria" [(ngModel)]="selectedCategoryId" (change)="onCategoryChange()">
               <option value="" selected>Todas</option>
@@ -60,20 +60,101 @@
         </div>
 
         <!-- Crear Categoria -->
-        <div class="col-lg-3 col-md-6 col-sm-12">
+        <div class="col-lg-2 col-md-6 col-sm-12">
           <div class="crear-cate">
             <button class="btn crear" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCrearCategoria" aria-controls="offcanvasCrearCategoria">
               Categorias
             </button>
           </div>
         </div>
-
-        <!-- Agregar Producto -->
+        <!-- Entrada de Productos -->
         <div class="col-lg-3 col-md-6 col-sm-12">
+          <div class="crear-cate">
+            <button class="btn crear" type="button"
+              data-bs-toggle="modal"
+              data-bs-target="#modalEntradaInventario">
+              Entrada de Productos
+            </button>
+          </div>
+        </div>
+<!-- Modal Entrada Inventario -->
+<div class="modal fade" id="modalEntradaInventario" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalEntradaInventarioLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="modalEntradaInventarioLabel">Entrada de Inventario</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <div class="row">
+          
+          <!-- FORM IZQUIERDA -->
+          <div class="col-md-6">
+            <form #formEntrada="ngForm" (ngSubmit)="registrarEntrada(formEntrada)">
+              
+              <div class="mb-3">
+                <label class="form-label">Código del Producto</label>
+                <input type="text" class="form-control"
+                  name="codigo"
+                  [(ngModel)]="entrada.codigo"
+                  (input)="buscarProductoPorCodigo()"
+                  required>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">Cantidad Recibida</label>
+                <input type="number" class="form-control"
+                  name="cantidad"
+                  [(ngModel)]="entrada.cantidad"
+                  required min="1">
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100"
+                data-bs-dismiss="modal"
+                [disabled]="!formEntrada.valid || !productoEncontrado">
+                Registrar Entrada
+              </button>
+
+            </form>
+          </div>
+
+          <!-- VISTA DEL PRODUCTO DERECHA -->
+          <div class="col-md-6 d-flex flex-column align-items-center justify-content-center border-start">
+
+            <ng-container *ngIf="productoEncontrado; else sinProducto">
+              <img [src]="toImageUrl(productoEncontrado.imgProducto)" class="rounded mb-3"
+                width="150" height="150" alt="Producto">
+
+              <h5 class="text-center">{{ productoEncontrado.nombreProducto }}</h5>
+
+              <p class="text-muted">
+                Stock actual: <strong>{{ productoEncontrado.stockProducto }}</strong>
+              </p>
+            </ng-container>
+
+            <ng-template #sinProducto>
+              <p class="text-muted fst-italic text-center">
+                Ingresa un código válido para ver detalles del producto.
+              </p>
+            </ng-template>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+        <!-- Agregar Producto -->
+        <div class="col-lg-2 col-md-6 col-sm-12">
           <div class="agg-produc">
             <button class="btn agregar" type="button" (click)="abrirCrear()" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAgregarProducto" aria-controls="offcanvasAgregarProducto">
-              <span class="texto">Agregar Producto</span>
-              <img width="80px" src="../../assets/img/icono_inventario/Proveedores__7_-removebg-preview.png" alt="">
+            <span class="texto">Agregar Producto</span>
+            <img width="80px" src="../../assets/img/icono_inventario/Proveedores__7_-removebg-preview.png" alt="">
             </button>
           </div>
         </div>
@@ -81,7 +162,7 @@
     </div>
 
     <!-- Offcanvas Crear Categoria -->
-    <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="offcanvasCrearCategoria" aria-labelledby="offcanvasCrearCategoriaLabel">
+<div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="offcanvasCrearCategoria" aria-labelledby="offcanvasCrearCategoriaLabel">
   <div class="offcanvas-header">
     <h5 class="offcanvas-title" id="offcanvasCrearCategoriaLabel">
       Agregar Categoría
