@@ -46,4 +46,12 @@ export class ProductoService {
   delete(id: number): Observable<{deleted:boolean} | void> {
     return this.http.delete<{deleted:boolean} | void>(`${this.apiUrl}/${id}`);
   }
+  buscarPorCodigo(codigo: string): Observable<Producto | null> {
+    return this.http.get<Producto | null>(`${this.apiUrl}/buscar/${codigo}`);
+  }
+
+  // Actualizar el stock de un producto
+  actualizarStock(id: number, nuevaCantidad: number): Observable<Producto> {
+    return this.http.put<Producto>(`${this.apiUrl}/${id}/stock`, { stock: nuevaCantidad });
+  }
 }
