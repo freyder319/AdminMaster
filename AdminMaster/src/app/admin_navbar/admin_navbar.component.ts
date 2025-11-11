@@ -1,4 +1,4 @@
-import { NgIf, AsyncPipe, DatePipe } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-admin-navbar',
-  imports: [RouterModule, NgIf, AsyncPipe, DatePipe],
+  imports: [RouterModule, NgIf],
   templateUrl: './admin_navbar.component.html',
   styleUrl: './admin_navbar.component.scss'
 })
@@ -22,7 +22,8 @@ export class AdminNavbarComponent {
 
   cerrarSesion(): void {
     const turnoActivo = this.turnoState.snapshot;
-    if (turnoActivo) {
+    const isAdmin = ((this.rol || localStorage.getItem('rol') || '').toLowerCase() === 'admin');
+    if (turnoActivo && !isAdmin) {
       Swal.fire({
         icon: 'warning',
         title: 'Turno activo',

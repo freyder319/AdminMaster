@@ -1,15 +1,23 @@
 <div class="turno-card">
   <h2 class="titulo">Turnos activos</h2>
+  <div class="filtros" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;">
+    <div class="input-icon" style="flex:1 1 220px;min-width:200px;">
+      <i class="bi bi-search" aria-hidden="true"></i>
+      <input type="search" [(ngModel)]="q" placeholder="Buscar por nombre/correo" class="form-control" aria-label="Buscar">
+    </div>
+    <input type="date" [(ngModel)]="from" class="form-control" aria-label="Desde" placeholder="Desde (fecha)" title="Desde (fecha)">
+    <input type="date" [(ngModel)]="to" class="form-control" aria-label="Hasta" placeholder="Hasta (fecha)" title="Hasta (fecha)">
+  </div>
   <div *ngIf="cargando">Cargando...</div>
-  <div *ngIf="!cargando && activos.length === 0">
+  <div *ngIf="!cargando && view.length === 0">
     <p>No hay turnos activos.</p>
   </div>
-  <ul class="turno-lista" *ngIf="!cargando && activos.length > 0">
-    <li class="turno-item" *ngFor="let item of activos" (click)="abrirDetalle(item)" role="button" tabindex="0">
+  <ul class="turno-lista" *ngIf="!cargando && view.length > 0">
+    <li class="turno-item" *ngFor="let item of view" (click)="abrirDetalle(item)" role="button" tabindex="0">
       <i class="bi bi-person-fill item-icon" aria-hidden="true"></i>
       <div class="turno-item-info">
         <div class="turno-item-primario">
-          <strong>{{ (item.nombre || '') + ' ' + (item.apellido || '') }}</strong>
+          <strong>{{ (item?.fullName || item?.nombreCompleto) || ((((item?.nombres || item?.nombre || '') + ' ' + (item?.apellidos || item?.apellido || '')).trim())) || item?.correo || ('Usuario ' + (item?.usuarioId || '')) }}</strong>
         </div>
         <div class="turno-item-secundario text-muted">
           <i class="bi bi-clock inline" aria-hidden="true"></i>
@@ -24,13 +32,13 @@
   </ul>
 </div>
 
-<div class="modal-backdrop" *ngIf="modalAbierto" (click)="cerrarDetalle()"></div>
-<div class="modal-contenedor" *ngIf="modalAbierto" role="dialog" aria-modal="true">
+<div class="modal-backdrop" [hidden]="!modalAbierto"></div>
+<div class="modal-contenedor" [hidden]="!modalAbierto" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
   <div class="modal-header">
     <h3>Detalle del turno activo</h3>
-    <button type="button" class="modal-cerrar" (click)="cerrarDetalle()">✕</button>
+    <button type="button" class="modal-cerrar" (click)="cerrarDetalle($event)">✕</button>
   </div>
-  <div class="modal-body" *ngIf="seleccionado as s">
+  <div class="modal-body" *ngIf="seleccionado as s" (click)="$event.stopPropagation()">
     <div class="datos-grid">
       <div class="kv"><span class="k">Empleado</span><span class="v">{{ (s.nombre || '') + ' ' + (s.apellido || '') }}</span></div>
       <div class="kv"><span class="k">Inicio</span><span class="v">{{ s.resumen.turno.inicioTurno | date:'short' }}</span></div>
@@ -38,7 +46,7 @@
       <div class="kv kv-span"><span class="k">Observaciones</span><span class="v">{{ s.resumen.turno.observaciones || 'Sin comentarios' }}</span></div>
     </div>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn-turno" (click)="cerrarDetalle()">Cerrar</button>
+  <div class="modal-footer" (click)="$event.stopPropagation()">
+    <button type="button" class="btn-turno" (click)="cerrarDetalle($event)">Cerrar</button>
   </div>
 </div>

@@ -539,15 +539,44 @@ export class AdministradorPrincipalComponent implements OnInit {
     if (this.showFormaPagoOpt && this.repFormaPago) params.set('forma_pago', String(this.repFormaPago));
 
     const url = `http://localhost:3000/report/general?${params.toString()}`;
-    window.open(url, '_blank');
+    try { console.log('[Report] URL:', url); } catch {}
 
+    const headers: any = {};
     try {
-      // Cerrar modal si está abierto
-      const el = document.getElementById('reportModal');
-      // @ts-ignore
-      const modal = (window as any).bootstrap?.Modal?.getInstance?.(el) || (el ? new (window as any).bootstrap.Modal(el) : null);
-      modal?.hide?.();
+      const token = localStorage.getItem('token') || localStorage.getItem('auth_token') || '';
+      if (token) headers['Authorization'] = `Bearer ${token}`;
     } catch {}
+
+    this.http.get(url, { responseType: 'blob', withCredentials: true, headers, observe: 'response' }).subscribe({
+      next: (resp) => {
+        const blob = resp.body as Blob;
+        try {
+          const file = new Blob([blob], { type: 'application/octet-stream' });
+          const link = document.createElement('a');
+          const urlObj = window.URL.createObjectURL(file);
+          link.href = urlObj;
+          const cd = resp.headers.get('content-disposition') || '';
+          const match = /filename="?([^";]+)"?/i.exec(cd);
+          const suggested = match?.[1] || 'reporte_general.xlsx';
+          link.download = suggested;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(urlObj);
+        } catch (e) { console.error('[Report] Error al descargar blob', e); }
+
+        // Cerrar modal si está abierto
+        try {
+          const el = document.getElementById('reportModal');
+          const modal = (window as any).bootstrap?.Modal?.getInstance?.(el) || (el ? new (window as any).bootstrap.Modal(el) : null);
+          modal?.hide?.();
+        } catch {}
+      },
+      error: (err) => {
+        console.error('[Report] Error HTTP', err);
+        alert('No se pudo generar el reporte. Verifica tu sesión (401) o intenta de nuevo.');
+      }
+    });
   }
 
 }

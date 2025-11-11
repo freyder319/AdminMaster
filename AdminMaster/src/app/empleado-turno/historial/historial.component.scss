@@ -1,14 +1,40 @@
 .turno-card {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,.08);
-  padding: 16px;
+  background: linear-gradient(180deg, #ffffff, #f4f6ff);
+  border: 1px solid #e6e9ff;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0, .08);
+  padding: 18px;
+}
+
+.filtros { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; align-items:center; }
+.filtros .form-control { border:1px solid #c7d2fe; border-radius:10px; padding:8px 10px; background:#ffffff; }
+input[type="search"] { min-height: 38px; }
+input[type="date"] { min-height: 38px; }
+/* Focus state */
+.filtros .form-control:focus,
+input[type="search"]:focus,
+input[type="date"]:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.18);
+}
+/* Search icon inside input on the right */
+.input-icon { position: relative; }
+.input-icon i { position:absolute; right:10px; top:50%; transform:translateY(-50%); color:#6366f1; font-size: 16px; pointer-events: none; }
+.input-icon input { padding-right: 40px; width: 100%; }
+.filtro-label { color:#3730a3; font-weight:600; }
+
+@media (min-width: 576px) {
+  .filtros { flex-wrap: nowrap; }
+  .input-icon { flex: 1 1 260px; min-width: 220px; }
+  .filtros input[type="date"] { flex: 0 0 170px; }
 }
 
 .titulo {
   margin: 0 0 12px;
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: 700;
+  color: #3730a3;
 }
 
 .turno-lista {
@@ -24,44 +50,56 @@
   display: flex;
   gap: 12px;
   align-items: center;
-  padding: 10px 12px;
-  border: 1px solid #e9ecef;
-  border-radius: 8px;
-  background: #fafafa;
+  padding: 12px 14px;
+  border: 1px solid #c7d2fe;
+  border-radius: 10px;
+  background: #f5f7ff;
   cursor: pointer;
-  transition: background .15s ease, border-color .15s ease;
+  transition: background .15s ease, border-color .15s ease, transform .12s ease;
 }
 
 .turno-item:hover,
 .turno-item:focus {
-  background: #f8f9fa;
-  border-color: #e2e6ea;
-  outline: none;
+  background: #eef2ff;
+  border-color: #c7d2fe;
+  transform: translateY(-1px);
+  outline: 2px solid rgba(99, 102, 241, .18);
 }
 
-.item-icon { font-size: 20px; color: #495057; }
+.item-icon { font-size: 20px; color: #6366f1; }
 .turno-item-info { flex: 1; }
 .turno-item-primario { font-weight: 600; }
-.turno-item-secundario { color: #6c757d; font-size: 13px; }
+.turno-item-secundario { color: #3730a3; font-size: 13px; }
 
 /* Modal */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.35);
-  z-index: 1040;
+  background: transparent;
+  z-index: 1990;
+  pointer-events: auto;
 }
 
 .modal-contenedor {
   position: fixed;
   left: 50%;
-  top: 20vh;
-  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
   width: min(680px, 92vw);
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 12px 30px rgba(0,0,0,.2);
-  z-index: 1050;
+  background: #ffffff;
+  border: 1px solid #dfe3ff;
+  border-radius: 12px;
+  box-shadow: 0 18px 44px rgba(0,0,0,.18);
+  z-index: 2000;
+  pointer-events: auto;
+  animation: modalIn 160ms ease-out;
+}
+
+.modal-header button,
+.modal-footer button { pointer-events: auto; }
+@keyframes modalIn {
+  from { opacity: 0; transform: translate(calc(-50%), calc(-50% - 8px)) scale(0.985); }
+  to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
 .modal-header,
@@ -70,22 +108,19 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  border-bottom: 1px solid #f1f3f5;
+  border-bottom: 1px solid #eef0ff;
 }
 
-.modal-footer {
-  border-top: 1px solid #f1f3f5;
-  border-bottom: none;
-}
+.modal-footer { border-top: 1px solid #eef0ff; border-bottom: none; }
 
 .modal-body { padding: 12px 16px; }
 .modal-cerrar { background: transparent; border: 0; font-size: 18px; cursor: pointer; }
 
-.btn-turno { background: #0d6efd; color: #fff; border: 0; padding: 8px 14px; border-radius: 8px; cursor: pointer; }
-.btn-turno:hover { background: #0b5ed7; }
+.btn-turno { background: #6366f1; color: #fff; border: 0; padding: 9px 16px; border-radius: 10px; cursor: pointer; }
+.btn-turno:hover { background: #3730a3; }
 
 .datos-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 8px 12px; }
 .kv { display: contents; }
 .kv-span { grid-column: 1 / -1; }
-.k { color: #6c757d; }
+.k { color: #3730a3; }
 .v { font-weight: 500; }

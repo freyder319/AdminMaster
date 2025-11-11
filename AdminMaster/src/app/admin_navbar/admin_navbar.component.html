@@ -2,11 +2,11 @@
     <nav class="navbar" id="navContainer">
         <div class="container-fluid">
 
-            <a class="img-navbar" [routerLink]="['/perfil_administrador']" routerLinkActive="active2" [routerLinkActiveOptions]="{ exact: true }" aria-label="Abrir menú">
+            <a class="img-navbar" [routerLink]="rol === 'admin' ? ['/perfil_administrador'] : null" routerLinkActive="active2" [routerLinkActiveOptions]="{ exact: true }" [class.disabled]="rol !== 'admin'" [attr.aria-disabled]="rol !== 'admin' ? 'true' : null" [tabindex]="rol !== 'admin' ? -1 : 0" (click)="rol !== 'admin' && $event.preventDefault()" aria-label="Abrir menú">
                 <img class="foto_perfil" src="../../assets/img/Logo-removebg-preview.png" alt="Logo" width="110" height="80">
             </a>
 
-            <a class="navbar-brand" [routerLink]="['/turno-empleado']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <a class="navbar-brand" [routerLink]="['/turno-empleado']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
                 <img [src]="rol === 'admin' ? '../../assets/img/icons-navbar/Admin.png' : '../../assets/img/icons-navbar/PuntoPOS.png'" alt="Perfil" width="30" height="30">
                 <span class="nav-text">{{ correo || 'Usuario' }}</span>
             </a>
@@ -52,12 +52,6 @@
             </a>
         </div>
     </nav>
-    <!-- Indicador de turno activo (persistente) -->
-    <div *ngIf="(turno$ | async) as turno" class="alert alert-success py-1 m-0 text-center">
-        <span>
-            Turno iniciado: {{ turno.inicioTurno | date:'short' }}
-            <ng-container *ngIf="turno.observaciones"> · {{ turno.observaciones }}</ng-container>
-        </span>
-    </div>
+
 </main>
 

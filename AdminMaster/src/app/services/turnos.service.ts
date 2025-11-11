@@ -35,6 +35,13 @@ export interface TurnoActivoItem {
   correo: string;
   nombre?: string;
   apellido?: string;
+  // Alternative optional fields that some endpoints might return
+  empleadoNombre?: string;
+  empleadoApellido?: string;
+  nombres?: string;
+  apellidos?: string;
+  fullName?: string;
+  nombreCompleto?: string;
   resumen: TurnoResumen;
 }
 

@@ -25,6 +25,7 @@ import { NotificacionesComponent } from './empleado-turno/notificaciones/notific
 import { RecoveryEmailGuard } from './guards/recovery-email.guard';
 import { RecoveryVerifiedGuard } from './guards/recovery-verified.guard';
 import { InfoGastosComponent } from './info-gastos/info-gastos.component';
+import { DetalleTurnoCerradoComponent } from './detalle-turno-cerrado/detalle-turno-cerrado.component';
 
 export const routes: Routes = [
     // Rutas para administrador
@@ -47,6 +48,7 @@ export const routes: Routes = [
         { path: "", redirectTo: "activos", pathMatch: "full" }]
     },
     { path: "info-gastos/:id", component: InfoGastosComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
+    { path: "detalle-turno-cerrado", component: DetalleTurnoCerradoComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
     { path: "verificar-email", component: SendEmailComponent },
     { path: "login", component: LoginComponent },
     { path: "recuperar-email", component: SecurityEmailComponent, canActivate: [RecoveryEmailGuard] },

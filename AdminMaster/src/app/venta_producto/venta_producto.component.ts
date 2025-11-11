@@ -21,6 +21,8 @@ export class VentaProductoComponent {
   private storageKey = 'venta_cart';
   searchTerm: string = '';
   sortOption: 'masVendidos' | 'alfabetico' | 'masRentables' | 'ultimasUnidades' = 'masVendidos';
+  // Mostrar también productos inhabilitados en la grilla
+  showDisabled: boolean = false;
   cart: { producto: Producto; cantidad: number; subtotal: number }[] = [];
   amountReceived: number | null = null;
   formaPago: 'efectivo' | 'tarjeta' | 'transferencia' | 'nequi' | 'daviplata' | 'otros' = 'efectivo';
@@ -231,6 +233,8 @@ export class VentaProductoComponent {
 
   onProductClick(evt: MouseEvent, p: Producto): void {
     if (this.isAnimating) return;
+    // No permitir seleccionar si el producto está inhabilitado
+    if (p?.estado === false) return;
     this.addToCart(p);
     this.isAnimating = true;
     this.modernFlyToCart(evt).finally(() => { this.isAnimating = false; });
@@ -466,8 +470,12 @@ export class VentaProductoComponent {
 
   get productosFiltrados(): Producto[] {
     const q = (this.searchTerm || '').trim().toLowerCase();
-    if (!q) return this.productos;
-    return this.productos.filter(p =>
+    let list = this.productos;
+    if (!this.showDisabled) {
+      list = list.filter(p => p.estado !== false);
+    }
+    if (!q) return list;
+    return list.filter(p =>
       String(p.nombreProducto || '').toLowerCase().includes(q) ||
       String(p.codigoProducto || '').toLowerCase().includes(q)
     );
@@ -502,7 +510,8 @@ export class VentaProductoComponent {
   }
 
   private loadProductos(): void {
-    this.productoService.getAll().subscribe({
+    // Mostrar todos en POS, incluidos inhabilitados (se verán grises y no seleccionables)
+    this.productoService.getAll(true).subscribe({
       next: (data) => (this.productos = data || []),
       error: () => (this.productos = [])
     });

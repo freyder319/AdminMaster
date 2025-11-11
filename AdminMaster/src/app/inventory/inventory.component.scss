@@ -31,7 +31,26 @@ main{
     color: white;
 }
 .eliminar2{
+    border: 1px solid #e81313;
     box-shadow: 0 0 3px 1px #e81313;
+    color: #e81313;
+    font-weight: 900;
+}
+.eliminar2:hover{
+    background-color: #e81313;
+    color: #fff;
+}
+
+/* Botón Inhabilitar con sombra y hover estilo Modificar */
+.inhabilitar2{
+    border: 1px solid #ffc107;
+    box-shadow: 0 0 3px 1px #ffc107;
+    color: #ffc107;
+    font-weight: 900;
+}
+.inhabilitar2:hover{
+    background-color: #ffc107;
+    color: #fff;
 }
 .body1, .body2 {
     width: 350px;

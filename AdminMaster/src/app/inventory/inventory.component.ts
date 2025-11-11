@@ -26,7 +26,30 @@ export class InventoryComponent {
   categoria:any={
     nombreCategoria:''
   }
-  // Productos filtrados en tiempo real (categoría + texto)
+  nombreCategoriaDuplicado: boolean = false;
+  // Mapa para saber si cada producto puede ser eliminado (sin ventas asociadas)
+  private canDeleteMap: Record<number, boolean> = {};
+  canDeleteFlag(p?: Producto | null): boolean {
+    if (!p?.id) return true;
+    const v = this.canDeleteMap[p.id];
+    return v === undefined ? true : v;
+  }
+  toggleEstado(prod: Producto) {
+    if (!prod?.id) return;
+    const nuevo = !(prod.estado === false ? false : true);
+    this.productoService.setEstado(prod.id, nuevo).subscribe({
+      next: (actualizado) => {
+        // Actualizar en memoria
+        const idx = this.productos.findIndex(p => p.id === prod.id);
+        if (idx >= 0) this.productos[idx] = { ...this.productos[idx], ...actualizado };
+      },
+      error: (err) => {
+        const msg = err?.error?.message || 'No se pudo cambiar el estado del producto';
+        Swal.fire('Error', msg, 'error');
+      }
+    });
+  }
+  // Productos filtrados en tiempo real (categoría + texto) y ordenados (habilitados primero)
   get productosFiltrados(): Producto[] {
     const q = (this.searchTerm || '').trim().toLowerCase();
     const tokens = q ? q.split(/\s+/).filter(Boolean) : [];
@@ -36,6 +59,13 @@ export class InventoryComponent {
       const sel = Number(this.selectedCategoryId);
       lista = lista.filter(p => (p.categoria?.idCategoria ?? p.idCategoria) == sel);
     }
+    // Ordenar: habilitados primero, luego por nombre
+    lista = [...lista].sort((a, b) => {
+      const ah = (a.estado === false || (a.stockProducto ?? 0) === 0) ? 0 : 1;
+      const bh = (b.estado === false || (b.stockProducto ?? 0) === 0) ? 0 : 1;
+      if (ah !== bh) return bh - ah; // 1 (true) primero
+      return String(a.nombreProducto || '').localeCompare(String(b.nombreProducto || ''));
+    });
     if (tokens.length === 0) return lista;
     const contiene = (val?: any, t?: string) =>
       (String(val || '').toLowerCase().includes(t || ''));
@@ -51,6 +81,7 @@ export class InventoryComponent {
     idCategoria: null,
     nombreCategoria: ''
   };
+  nombreCategoriaModificarDuplicado: boolean = false;
   categoriaSeleccionada?: Categorias;
   modificarActivo=false;
   // Productos
@@ -139,9 +170,18 @@ export class InventoryComponent {
     });
   }
   cargarProductos(): void {
-    this.productoService.getAll().subscribe({
+    // Inventario debe ver todos (incluye inhabilitados)
+    this.productoService.getAll(true).subscribe({
       next: (data) => {
         this.productos = data || [];
+        // Prefetch de flags canDelete para cada producto
+        for (const prod of this.productos) {
+          if (!prod?.id) continue;
+          this.productoService.canDelete(prod.id).subscribe({
+            next: (res) => { this.canDeleteMap[prod.id!] = !!res?.canDelete; },
+            error: () => { this.canDeleteMap[prod.id!] = false; }
+          });
+        }
         // Asegurar que la página actual sea válida cuando cambie la data
         if (this.pageIndex > this.totalPages - 1) {
           this.pageIndex = 0;
@@ -169,6 +209,11 @@ export class InventoryComponent {
   onCategoryChange(): void {
     // Reiniciar a la primera página al cambiar la categoría
     this.pageIndex = 0;
+  }
+  onNombreCategoriaChange(val: string): void {
+    const nombre = String(val || '').trim().toLowerCase();
+    if (!nombre) { this.nombreCategoriaDuplicado = false; return; }
+    this.nombreCategoriaDuplicado = (this.categorias || []).some(c => String(c?.nombreCategoria || '').trim().toLowerCase() === nombre);
   }
   eliminarProducto(id: number) {
     Swal.fire({
@@ -212,6 +257,16 @@ export class InventoryComponent {
     return this.baseImageUrl + s.replace(/^\/+/, '');
   }
   agregarCategoria(form:NgForm){
+    const nombre = String(this.categoria?.nombreCategoria || '').trim();
+    // Si el formulario es inválido o hay duplicado, marcar el control y no continuar
+    if (!form.valid || this.nombreCategoriaDuplicado) {
+      const ctrl = (form.controls as any)['nombreCategoria'];
+      if (ctrl && typeof ctrl.control?.markAsTouched === 'function') {
+        ctrl.control.markAsTouched();
+      }
+      return;
+    }
+    this.categoria.nombreCategoria = nombre;
     this.categoriaService.createCategorie(this.categoria).subscribe({
           next:()=>{
             Swal.fire({
@@ -263,7 +318,12 @@ export class InventoryComponent {
             },
             error: (err)=> {
               let mensaje = 'Ocurrió un error al eliminar el cliente';
-              if (err.status >= 500) {
+              const fkViolation = err?.error?.code === '23503' ||
+                                  (typeof err?.error?.detail === 'string' && err.error.detail.includes('referida')) ||
+                                  (typeof err?.error?.detail === 'string' && err.error.detail.includes('productos'));
+              if (fkViolation) {
+                mensaje = 'No se puede eliminar la categoría porque está ligada a uno o más productos.';
+              } else if (err.status >= 500) {
                 mensaje = 'Error en el servidor. Intente más tarde.';
               } else if (err.status === 404) {
                 mensaje = 'La Categoria no existe o ya fue eliminada.';
@@ -283,11 +343,26 @@ export class InventoryComponent {
   }
   abrirModal(cate:any){
     this.categoriaModificar = { ...cate}
+    // Reset duplicate flag when opening modal
+    this.nombreCategoriaModificarDuplicado = false;
+  }
+  onNombreCategoriaModificarChange(val: string): void {
+    const nombre = String(val || '').trim().toLowerCase();
+    if (!nombre) { this.nombreCategoriaModificarDuplicado = false; return; }
+    const currentId = this.categoriaModificar?.idCategoria;
+    this.nombreCategoriaModificarDuplicado = (this.categorias || []).some(c => {
+      const sameName = String(c?.nombreCategoria || '').trim().toLowerCase() === nombre;
+      const differentId = (c as any).idCategoria !== currentId;
+      return sameName && differentId;
+    });
   }
   modificarCategoria(id:number,categoriaModificar:any){
-    if(categoriaModificar.nombreCategoria==''){
-      Swal.fire("Error","El campo no puede estar vacio", "error");
-    }else{
+    const nombre = String(categoriaModificar?.nombreCategoria || '').trim();
+    // Validación silenciosa: no enviar si vacío, corto o duplicado
+    if (!nombre || nombre.length < 2 || this.nombreCategoriaModificarDuplicado) {
+      return;
+    }
+    categoriaModificar.nombreCategoria = nombre;
     this.categoriaService.updateCategorie(id,categoriaModificar).subscribe({
       next:(respuesta)=> {
         Swal.fire("Categoria Modificada", `Se Actualizó <strong>${respuesta.nombreCategoria}</strong> Correctamente.`, "success");
@@ -302,9 +377,7 @@ export class InventoryComponent {
           Swal.fire("Error", `No se Pudo Modificar la Categoria. Código: ${error.status}`, "error");
         }
         console.error("Error al Modificar Caja:", error);
-        }
+      }
     });
   }
-  }
-  apiImage="http://localhost:3000/storage/";
 }

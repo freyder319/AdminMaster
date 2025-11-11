@@ -97,10 +97,17 @@
         <form #formCategoria="ngForm" (ngSubmit)="agregarCategoria(formCategoria)" novalidate>
           <div class="mb-3">
             <label for="nombreCategoria" class="form-label">Nombre de la Categoría</label>
-            <input [(ngModel)]="categoria.nombreCategoria" type="text" name="nombreCategoria" id="nombreCategoria" class="form-control" required>
+            <input [(ngModel)]="categoria.nombreCategoria" (ngModelChange)="onNombreCategoriaChange($event)" #nombreCtrl="ngModel" minlength="2" type="text" name="nombreCategoria" id="nombreCategoria" class="form-control" required>
+            <div class="mt-1 small text-danger" *ngIf="(nombreCtrl.invalid && (nombreCtrl.dirty || nombreCtrl.touched))">
+              <div *ngIf="nombreCtrl.errors?.['required']">El nombre de la categoría es obligatorio.</div>
+              <div *ngIf="nombreCtrl.errors?.['minlength']">El nombre debe tener al menos 2 caracteres.</div>
+            </div>
+            <div class="mt-1 small text-danger" *ngIf="!nombreCtrl.errors && nombreCategoriaDuplicado">
+              La categoría "{{ (categoria?.nombreCategoria || '').trim() }}" ya existe.
+            </div>
           </div>
           <div class="fila-inferior mt-3">
-            <button type="submit" data-bs-dismiss="offcanvas" class="btn create_cate" [disabled]="!formCategoria.valid">
+            <button type="submit" data-bs-dismiss="offcanvas" class="btn create_cate" [disabled]="!formCategoria.valid || nombreCategoriaDuplicado">
               Crear Categoría
             </button>
           </div>
@@ -144,12 +151,19 @@
       <div class="modal-body">
         <div class="mb-3">
           <label for="nombreCategoria" class="form-label">Nombre de Categoría</label>
-          <input [(ngModel)]="categoriaModificar.nombreCategoria" type="text" name="nombreCategoria" id="nombreCategoria" class="form-control w-100" required>
+          <input [(ngModel)]="categoriaModificar.nombreCategoria" (ngModelChange)="onNombreCategoriaModificarChange($event)" #nombreModCtrl="ngModel" minlength="2" type="text" name="nombreCategoria" id="nombreCategoria" class="form-control w-100" required>
+          <div class="mt-1 small text-danger" *ngIf="(nombreModCtrl.invalid && (nombreModCtrl.dirty || nombreModCtrl.touched))">
+            <div *ngIf="nombreModCtrl.errors?.['required']">El nombre de la categoría es obligatorio.</div>
+            <div *ngIf="nombreModCtrl.errors?.['minlength']">El nombre debe tener al menos 2 caracteres.</div>
+          </div>
+          <div class="mt-1 small text-danger" *ngIf="!nombreModCtrl.errors && nombreCategoriaModificarDuplicado">
+            La categoría "{{ (categoriaModificar?.nombreCategoria || '').trim() }}" ya existe.
+          </div>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" data-bs-dismiss="modal" (click)="modificarCategoria(categoriaModificar.idCategoria,categoriaModificar)" class="btn btn-primary">Modificar</button>
+        <button type="button" [disabled]="!nombreModCtrl.valid || nombreCategoriaModificarDuplicado" data-bs-dismiss="modal" (click)="modificarCategoria(categoriaModificar.idCategoria,categoriaModificar)" class="btn btn-primary">Modificar</button>
       </div>
     </div>
   </div>
@@ -181,7 +195,7 @@
           <div class="row">
             <div class="col-12">
                   <div class="table-responsive">
-                    <table class="table  align-middle mb-0 fade-in">
+                    <table class="table align-middle mb-0 fade-in">
                       <thead class="table-light">
                         <tr>
                           <th>#</th>
@@ -202,24 +216,40 @@
                             <ng-container *ngIf="searchTerm"> con el término "{{ searchTerm }}"</ng-container>.
                           </td>
                         </tr>
-                        <tr *ngFor="let producto of paginatedProductos; let i = index">
+                        <tr *ngFor="let producto of paginatedProductos; let i = index" [ngClass]="{ 'opacity-50': (producto.estado === false) || (producto.stockProducto === 0) }">
                           <td>{{ i + 1 + (pageIndex * pageSize) }}</td>
                           <td>
                             <img [src]="toImageUrl(producto.imgProducto)" alt="Producto" class="rounded" width="60">
                           </td>
                           <td>{{ producto.codigoProducto }}</td>
-                          <td>{{ producto.nombreProducto }}</td>
+                          <td>
+                            {{ producto.nombreProducto }}
+                            <small *ngIf="(producto.estado === false) || (producto.stockProducto === 0)" class="text-muted ms-2">(Inhabilitado)</small>
+                          </td>
                           <td>{{ producto.categoria?.nombreCategoria || producto.idCategoria || '-' }}</td>
                           <td>{{ producto.stockProducto }}</td>
                           <td>{{ producto.precioUnitario | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
                           <td>{{ producto.precioComercial | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
+                          
                           <td class="text-center">
                             <button title="Modificar" class="btn modificar2 btn-sm me-1" (click)="abrirEditar(producto)" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAgregarProducto" aria-controls="offcanvasAgregarProducto">
                               <i class="bi bi-pencil-square">Modificar</i>
                             </button>
-                            <button title="Eliminar" class="btn btn-outline-danger eliminar2 btn-sm" (click)="eliminarProducto(producto.id!)">
-                              <i class="bi bi-trash">Eliminar</i>
-                            </button>
+                            <!-- Si NO se puede eliminar (tiene ventas asociadas), mostrar Inhabilitar/Habilitar -->
+                            <ng-container *ngIf="!canDeleteFlag(producto); else eliminarBtn">
+                              <button *ngIf="producto.estado !== false" title="Inhabilitar" class="btn btn-outline-warning btn-sm inhabilitar2" (click)="toggleEstado(producto)">
+                                <i class="bi bi-slash-circle">Inhabilitar</i>
+                              </button>
+                              <button *ngIf="producto.estado === false" title="Habilitar" class="btn btn-outline-success btn-sm inhabilitar2" (click)="toggleEstado(producto)">
+                                <i class="bi bi-check-circle">Habilitar</i>
+                              </button>
+                            </ng-container>
+                            <!-- Si se puede eliminar, mostrar Eliminar -->
+                            <ng-template #eliminarBtn>
+                              <button title="Eliminar" class="btn btn-outline-danger btn-sm eliminar2" (click)="eliminarProducto(producto.id!)">
+                                <i class="bi bi-trash">Eliminar</i>
+                              </button>
+                            </ng-template>
                           </td>
                         </tr>
                       </tbody>
