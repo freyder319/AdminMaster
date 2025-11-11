@@ -4,25 +4,6 @@
 
 <main>
     <section>
-        
-        <!-- Modal de detalle de PQRS -->
-        <div class="modal-backdrop" *ngIf="pqrsModalAbierto" (click)="cerrarDetallePqrs()" style="z-index: 2100;"></div>
-        <div class="modal-contenedor" *ngIf="pqrsModalAbierto" role="dialog" aria-modal="true" style="z-index: 2101; margin-top: 70px;">
-            <div class="modal-header">
-                <h3>Detalle PQRS</h3>
-                <button type="button" class="modal-cerrar" (click)="cerrarDetallePqrs()">✕</button>
-            </div>
-            <div class="modal-body" *ngIf="pqrsSeleccionado as p">
-                <div class="datos-grid">
-                    <div class="kv"><span class="k"><i class="bi bi-person inline" aria-hidden="true"></i> Nombre</span><span class="v">{{ (p.nombre || '') + ' ' + (p.apellido || '') }}</span></div>
-                    <div class="kv"><span class="k"><i class="bi bi-envelope inline" aria-hidden="true"></i> Correo</span><span class="v">{{ p.correo }}</span></div>
-                    <div class="kv"><span class="k"><i class="bi bi-telephone inline" aria-hidden="true"></i> Teléfono</span><span class="v">{{ p.numero }}</span></div>
-                    <div class="kv"><span class="k"><i class="bi bi-calendar inline" aria-hidden="true"></i> Fecha</span><span class="v">{{ p.fecha | date:'short' }}</span></div>
-                    <div class="kv kv-span"><span class="k"><i class="bi bi-chat-left-text inline" aria-hidden="true"></i> Comentarios</span><span class="v">{{ p.comentarios }}</span></div>
-                </div>
-
-            </div>
-        </div>
 
         <div *ngIf="!isAdmin && !cargando && sinTurnoActivo" class="turno-card">
             <h2 class="titulo">Sin turno activo</h2>
@@ -107,18 +88,22 @@
                 <a class="mini-btn" routerLink="activos" routerLinkActive="active">
                     <i class="bi bi-play-circle" aria-hidden="true"></i>
                     <span>Turnos activos</span>
+                    <span class="badge-count">{{ countActivos }}</span>
                 </a>
                 <a class="mini-btn" routerLink="cerrados" routerLinkActive="active">
                     <i class="bi bi-door-closed" aria-hidden="true"></i>
                     <span>Turnos cerrados</span>
+                    <span class="badge-count">{{ countCerrados }}</span>
                 </a>
                 <a class="mini-btn" routerLink="historial" routerLinkActive="active">
                     <i class="bi bi-journal-text" aria-hidden="true"></i>
                     <span>Historial</span>
+                    <span class="badge-count">{{ countHistorial }}</span>
                 </a>
                 <a class="mini-btn" routerLink="notificaciones" routerLinkActive="active">
                     <i class="bi bi-bell" aria-hidden="true"></i>
                     <span>Notificaciones</span>
+                    <span class="badge-count">{{ countNotificaciones }}</span>
                 </a>
             </aside>
 
@@ -128,167 +113,4 @@
         </div>
 
     </section>
-
-    <!-- Modal de detalle -->
-    <div class="modal-backdrop" *ngIf="modalAbierto" (click)="cerrarDetalle()" style="z-index: 2000;"></div>
-    <div class="modal-contenedor" *ngIf="modalAbierto" role="dialog" aria-modal="true" style="z-index: 2001; margin-top: 70px;">
-        <div class="modal-header">
-            <h3>Detalle del turno</h3>
-            <button type="button" class="modal-cerrar" (click)="cerrarDetalle()">✕</button>
-        </div>
-        <div class="modal-body" *ngIf="seleccionado as s">
-            <div class="idline">
-                <span class="k"><i class="bi bi-person-fill inline" aria-hidden="true"></i> Empleado</span>
-                <span class="v">
-                  <strong *ngIf="s.nombre || s.apellido; else cargandoNombreModal">{{ (s.nombre || '') + ' ' + (s.apellido || '') }}</strong>
-                  <ng-template #cargandoNombreModal><span class="text-muted">Cargando nombre…</span></ng-template>
-                </span>
-            </div>
-
-            <h4>Turno</h4>
-            <div class="datos-grid">
-                <div class="kv"><span class="k"><i class="bi bi-clock inline" aria-hidden="true"></i> Inicio</span><span class="v">{{s.resumen.turno.inicioTurno | date:'short'}}</span></div>
-                <div class="kv"><span class="k"><i class="bi bi-clock-history inline" aria-hidden="true"></i> Fin</span><span class="v">{{s.resumen.turno.finTurno | date:'short'}}</span></div>
-                <div class="kv kv-span"><span class="k"><i class="bi bi-sticky inline" aria-hidden="true"></i> Observaciones</span><span class="v">{{s.resumen.turno.observaciones || 'Sin comentarios'}}</span></div>
-            </div>
-
-            <h4>Caja</h4>
-            <div class="datos-grid">
-                <div class="kv"><span class="k"><i class="bi bi-hash inline" aria-hidden="true"></i> Código de caja</span><span class="v">{{ seleccionadoCajaCodigo || '—' }}</span></div>
-                <ng-container *ngIf="s.resumen.aperturaCaja">
-                    <div class="kv"><span class="k"><i class="bi bi-box-seam inline" aria-hidden="true"></i> Apertura</span><span class="v">{{s.resumen.aperturaCaja.fecha | date:'shortTime'}}</span></div>
-                    <div class="kv"><span class="k"><i class="bi bi-currency-dollar inline" aria-hidden="true"></i> Monto inicial</span><span class="v badge badge-info">${{s.resumen.aperturaCaja.montoInicial | number:'1.0-0'}}</span></div>
-                </ng-container>
-                <ng-container *ngIf="s.resumen.cierreCaja">
-                    <div class="kv"><span class="k"><i class="bi bi-box-seam inline" aria-hidden="true"></i> Cierre</span><span class="v">{{s.resumen.cierreCaja.fecha | date:'shortTime'}}</span></div>
-                    <div class="kv"><span class="k"><i class="bi bi-currency-dollar inline" aria-hidden="true"></i> Monto final</span><span class="v badge badge-success">${{s.resumen.cierreCaja.montoFinal | number:'1.0-0'}}</span></div>
-                    <div class="kv kv-span" *ngIf="s.resumen.aperturaCaja"><span class="k"><i class="bi bi-star inline" aria-hidden="true"></i> Diferencia</span><span class="v badge badge-dark">${{(s.resumen.cierreCaja.montoFinal - s.resumen.aperturaCaja.montoInicial) | number:'1.0-0'}}</span></div>
-                </ng-container>
-            </div>
-
-            <h4>Actividad</h4>
-            <div class="stats">
-                <div class="stat">
-                    <div class="stat-k"><i class="bi bi-graph-up-arrow inline" aria-hidden="true"></i> Ventas</div>
-                    <div class="stat-v">${{s.resumen.actividad.totalVentas}}</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-k"><i class="bi bi-bar-chart inline" aria-hidden="true"></i> Transacciones</div>
-                    <div class="stat-v">{{s.resumen.actividad.transacciones}}</div>
-                </div>
-            </div>
-
-            <div class="stats" *ngIf="s.resumen.actividad.totalVentasLibres || s.resumen.actividad.transaccionesLibres">
-                <div class="stat">
-                    <div class="stat-k"><i class="bi bi-bag inline" aria-hidden="true"></i> Ventas libres</div>
-                    <div class="stat-v">${{s.resumen.actividad.totalVentasLibres}}</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-k"><i class="bi bi-list-check inline" aria-hidden="true"></i> Transacciones libres</div>
-                    <div class="stat-v">{{s.resumen.actividad.transaccionesLibres}}</div>
-                </div>
-            </div>
-
-            <div class="stats" *ngIf="s.resumen.actividad.totalGastos || s.resumen.actividad.cantidadGastos">
-                <div class="stat">
-                    <div class="stat-k"><i class="bi bi-cash-coin inline" aria-hidden="true"></i> Gastos</div>
-                    <div class="stat-v">${{s.resumen.actividad.totalGastos}}</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-k"><i class="bi bi-receipt inline" aria-hidden="true"></i> Cantidad de gastos</div>
-                    <div class="stat-v">{{s.resumen.actividad.cantidadGastos}}</div>
-                </div>
-            </div>
-
-            <div *ngIf="s.resumen.actividad.ventas?.length || s.resumen.actividad.ventasLibres?.length || s.resumen.actividad.gastos?.length" class="subbloque">
-              <h5>Detalle</h5>
-              <div class="datos-grid">
-                <div class="kv kv-span" *ngIf="s.resumen.actividad.ventas?.length">
-                  <span class="k">Ventas</span>
-                  <span class="v">
-                    <span *ngFor="let v of s.resumen.actividad.ventas; let i = index">#{{v.id}}: ${{v.total}}<span *ngIf="i < s.resumen.actividad.ventas.length-1">, </span></span>
-                  </span>
-                </div>
-                <div class="kv kv-span" *ngIf="s.resumen.actividad.ventasLibres?.length">
-                  <span class="k">Ventas libres</span>
-                  <span class="v">
-                    <span *ngFor="let v of s.resumen.actividad.ventasLibres; let i = index">#{{v.id}}: ${{v.total}}<span *ngIf="i < s.resumen.actividad.ventasLibres.length-1">, </span></span>
-                  </span>
-                </div>
-                <div class="kv kv-span" *ngIf="s.resumen.actividad.gastos?.length">
-                  <span class="k">Gastos</span>
-                  <span class="v">
-                    <span *ngFor="let g of s.resumen.actividad.gastos; let i = index">#{{g.id}}: ${{g.monto}}<span *ngIf="g.nombre"> ({{g.nombre}})</span><span *ngIf="i < s.resumen.actividad.gastos.length-1">, </span></span>
-                  </span>
-                </div>
-              </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn-turno" (click)="cerrarDetalle()">Cerrar</button>
-        </div>
-    </div>
-   
-    <!-- Modal Detalle Historial (global) -->
-    <div class="modal-backdrop" *ngIf="historyModalAbierto" (click)="cerrarDetalleHistorial()" style="z-index: 2100;"></div>
-    <div class="modal-contenedor" *ngIf="historyModalAbierto" role="dialog" aria-modal="true" style="z-index: 2101; margin-top: 70px;">
-      <div class="modal-header">
-          <h3>Detalle de evento</h3>
-          <button type="button" class="modal-cerrar" (click)="cerrarDetalleHistorial()">✕</button>
-      </div>
-      <div class="modal-body" *ngIf="historySeleccionado as evd">
-        <div class="datos-grid">
-          <div class="kv"><span class="k">Módulo</span><span class="v">{{ tModule(evd.module) }}</span></div>
-          <div class="kv"><span class="k">Acción</span><span class="v badge bg-secondary">{{ tAction(evd.action) }}</span></div>
-          <div class="kv"><span class="k">Fecha</span><span class="v">{{ evd.timestamp | date:'short' }}</span></div>
-          <ng-container *ngIf="evd.module === 'categoria'; else normalEntityId">
-            <div class="kv"><span class="k">Entidad</span><span class="v">Categoría</span></div>
-            <div class="kv"><span class="k">Nombre</span><span class="v">{{ (evd.details?.after?.nombre) || (evd.details?.changes?.nombre?.after) || (evd.details?.nombre) || ('#' + (evd.entityId || '')) }}</span></div>
-          </ng-container>
-          <ng-template #normalEntityId>
-            <div class="kv" *ngIf="evd.entity"><span class="k">Entidad</span><span class="v">{{ evd.entity }}</span></div>
-            <div class="kv" *ngIf="evd.entityId"><span class="k">ID</span><span class="v">{{ evd.entityId }}</span></div>
-          </ng-template>
-          <div class="kv"><span class="k">Usuario</span><span class="v">{{ evd.actorUserId || '—' }}</span></div>
-          <div class="kv"><span class="k">Rol</span><span class="v">{{ evd.actorRol || '—' }}</span></div>
-        </div>
-        <h4 style="margin-top: 12px;">Campos modificados (antes → después)</h4>
-        <!-- Si hay diffs antes/después -->
-        <ng-container *ngIf="buildDiff(evd.details) as diffs; else detailsFallback">
-          <div class="tabla-simple">
-            <div class="tabla-header">
-              <div>Campo</div>
-              <div>Antes</div>
-              <div>Después</div>
-            </div>
-            <div class="tabla-row" *ngFor="let r of diffs">
-              <div class="c">{{ r.field }}</div>
-              <div class="c"><span style="color:#c0392b;">{{ r.before }}</span></div>
-              <div class="c"><span style="color:#1e7e34;">{{ r.after }}</span></div>
-            </div>
-          </div>
-        </ng-container>
-        <!-- Si no se pudo construir diff, mostrar detalles sanitizados -->
-        <ng-template #detailsFallback>
-          <p class="text-muted" style="margin: 6px 0 8px;">No se detectaron cambios campo por campo. Detalle completo:</p>
-          <ng-container *ngIf="isObject(evd.details); else detailsJson">
-            <div class="datos-grid">
-              <div class="kv" *ngFor="let d of evd.details | keyvalue">
-                <ng-container *ngIf="!shouldSkipDiffKey(d.key)">
-                  <span class="k">{{ d.key }}</span>
-                  <span class="v">{{ sanitizeValue(d.value) }}</span>
-                </ng-container>
-              </div>
-            </div>
-          </ng-container>
-          <ng-template #detailsJson>
-            <pre class="code-block"><code>{{ evd.details | json }}</code></pre>
-          </ng-template>
-        </ng-template>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn-turno" (click)="cerrarDetalleHistorial()">Cerrar</button>
-      </div>
-    </div>
-
   </main>

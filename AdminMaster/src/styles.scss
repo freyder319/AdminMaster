@@ -35,6 +35,18 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   z-index: 2005 !important; /* above backdrop */
 }
 
+.modal-backdrop {
+  z-index: 3000 !important;
+}
+.modal {
+  z-index: 3010 !important;
+}
+
+/* SweetAlert2 above offcanvas and modals */
+.swal2-container {
+  z-index: 4000 !important;
+}
+
 /* Ensure Material dialogs overlay above navbar */
 .cdk-overlay-container {
   z-index: 5000 !important;

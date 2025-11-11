@@ -1,8 +1,8 @@
-import { Component, Input, OnInit, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { TurnoResumen, TurnosService, TurnoActivoItem } from '../services/turnos.service';
-import { DatePipe, DecimalPipe, NgIf, NgFor, NgClass, JsonPipe, KeyValuePipe, isPlatformBrowser } from '@angular/common';
-import { forkJoin, of, Subscription, timer } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { DatePipe, DecimalPipe, NgIf, NgFor, isPlatformBrowser } from '@angular/common';
+import { forkJoin, of, timer } from 'rxjs';
+import { catchError, switchMap, take } from 'rxjs/operators';
 import { AdminNavbarComponent } from "../admin_navbar/admin_navbar.component";
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
@@ -10,15 +10,15 @@ import { RouterModule } from '@angular/router';
 import { TurnoStateService } from '../services/turno-state.service';
 import { EmpleadosService } from '../services/empleados.service';
 import { PqrsService } from '../services/pqrs.service';
-import { HistoryService, AuditLogDto } from '../services/history.service';
+import { HistoryService } from '../services/history.service';
 
 @Component({
   selector: 'app-empleado-turno',
-  imports: [NgIf, NgFor, DatePipe, DecimalPipe, JsonPipe, KeyValuePipe, AdminNavbarComponent, RouterModule],
+  imports: [NgIf, NgFor, DatePipe, DecimalPipe, AdminNavbarComponent, RouterModule],
   templateUrl: './empleado-turno.component.html',
   styleUrls: ['./empleado-turno.component.scss']
 })
-export class EmpleadoTurnoComponent implements OnInit, OnDestroy {
+export class EmpleadoTurnoComponent implements OnInit {
   @Input() empleadoId!: number;
   resumen!: TurnoResumen;
   sinTurnoActivo = false;
@@ -26,21 +26,12 @@ export class EmpleadoTurnoComponent implements OnInit, OnDestroy {
   isAdmin = false;
   activos: TurnoActivoItem[] = [];
   cerrados: TurnoActivoItem[] = [];
-  modalAbierto = false;
-  seleccionado: TurnoActivoItem | null = null;
-  seleccionadoCajaCodigo: string | null = null;
-  // vista actual para ADMIN: 'activos' | 'cerrados' | 'notificaciones'
-  vista: 'activos' | 'cerrados' | 'notificaciones' | 'historial' = 'activos';
-  // Placeholder de notificaciones (PQRS) hasta tener endpoint GET
-  notificaciones: Array<{ nombre?: string; apellido?: string; correo?: string; numero?: string; comentarios?: string; fecha?: string; }> = [];
-  // Estado para detalle de PQRS
-  pqrsModalAbierto = false;
-  pqrsSeleccionado: { nombre?: string; apellido?: string; correo?: string; numero?: string; comentarios?: string; fecha?: string; } | null = null;
-  // Historial en tiempo casi real
-  historyItems: AuditLogDto[] = [];
-  private historySub?: Subscription;
-  historyModalAbierto = false;
-  historySeleccionado: AuditLogDto | null = null;
+
+  // Contadores para el menú admin
+  countActivos = 0;
+  countCerrados = 0;
+  countHistorial = 0;
+  countNotificaciones = 0;
 
   constructor(
     private turnoService: TurnosService,
@@ -61,107 +52,32 @@ export class EmpleadoTurnoComponent implements OnInit, OnDestroy {
     try { this.turnoState.hydrateFromStorage(); } catch {}
     this.isAdmin = rol === 'admin';
     if (this.isAdmin) {
-      // La carga por vista se realiza en componentes hijos via rutas
+      // Cargar contadores para las opciones del panel admin
+      this.cargarContadoresAdmin();
     } else {
       this.cargarEstado();
     }
   }
 
-  abrirDetalleHistorial(ev: AuditLogDto) {
-    this.historySeleccionado = ev;
-    this.historyModalAbierto = true;
-  }
+  private cargarContadoresAdmin() {
+    this.turnoService.getTurnosActivosPublic()
+      .pipe(catchError(() => of([] as TurnoActivoItem[])))
+      .subscribe(items => this.countActivos = (items || []).length);
 
-  cerrarDetalleHistorial() {
-    this.historyModalAbierto = false;
-    this.historySeleccionado = null;
-  }
+    this.turnoService.getTurnosCerradosPublic()
+      .pipe(catchError(() => of([] as TurnoActivoItem[])))
+      .subscribe(items => this.countCerrados = (items || []).length);
 
-  // Utilidad para renderizar detalles como lista si es objeto plano
-  isObject(val: any): val is Record<string, any> {
-    return val !== null && typeof val === 'object' && !Array.isArray(val);
-  }
+    this.pqrsService.obtenerTodas()
+      .pipe(catchError(() => of([] as any[])))
+      .subscribe(items => this.countNotificaciones = (items || []).length);
 
-  private isImageLike(val: any): boolean {
-    if (typeof val !== 'string') return false;
-    if (val.startsWith('data:image')) return true;
-    return val.length > 200; // evitar blobs/base64 largos
-  }
-
-  private shouldIgnoreKey(key: string): boolean {
-    const k = (key || '').toLowerCase();
-    return ['imagen','image','foto','photo','img','imgproducto','picture','logo','icon','avatar'].includes(k);
-  }
-
-  // Ocultar campos poco útiles (ids y técnicos) en diffs/fallback
-  shouldSkipDiffKey(key: string): boolean {
-    const k = (key || '').toLowerCase();
-    if (this.shouldIgnoreKey(k)) return true;
-    if (k === 'id' || k === 'entidadid' || k === 'usuarioid' || k === 'actoruserid') return true;
-    if (k === 'ruta' || k === 'ip' || k === 'createdat' || k === 'updatedat' || k === 'fecha') return true;
-    if (k.endsWith('id')) return true;
-    return false;
-  }
-
-  sanitizeValue(val: any): any {
-    if (this.isImageLike(val)) return '[imagen omitida]';
-    if (this.isObject(val)) return JSON.stringify(val);
-    return val;
-  }
-
-  // Construye lista de diffs si hay before/after o changes
-  buildDiff(details: any): Array<{ field: string; before: any; after: any }> | null {
-    try {
-      if (!details) return null;
-      // Caso 1: details.before / details.after
-      if (this.isObject(details.before) && this.isObject(details.after)) {
-        const before = details.before as Record<string, any>;
-        const after = details.after as Record<string, any>;
-        const keys = Array.from(new Set([...Object.keys(before), ...Object.keys(after)]));
-        const out: Array<{ field: string; before: any; after: any }> = [];
-        for (const key of keys) {
-          if (this.shouldSkipDiffKey(key)) continue;
-          const b = before[key];
-          const a = after[key];
-          const bSan = this.sanitizeValue(b);
-          const aSan = this.sanitizeValue(a);
-          if (JSON.stringify(bSan) !== JSON.stringify(aSan)) {
-            out.push({ field: key, before: bSan, after: aSan });
-          }
-        }
-        return out.length ? out : null;
-      }
-      // Caso 2: details.changes: { campo: {before, after} }
-      if (this.isObject(details.changes)) {
-        const out: Array<{ field: string; before: any; after: any }> = [];
-        for (const [key, val] of Object.entries(details.changes)) {
-          if (this.shouldSkipDiffKey(key)) continue;
-          const b = (val as any)?.before;
-          const a = (val as any)?.after;
-          const bSan = this.sanitizeValue(b);
-          const aSan = this.sanitizeValue(a);
-          if (JSON.stringify(bSan) !== JSON.stringify(aSan)) {
-            out.push({ field: key, before: bSan, after: aSan });
-          }
-        }
-        return out.length ? out : null;
-      }
-    } catch {}
-    return null;
-  }
-
-  // Obtener nombre de categoría desde details (after.nombre | changes.nombre.after | nombre)
-  getCategoryName(details: any): string | null {
-    try {
-      const name = details?.after?.nombre ?? details?.changes?.nombre?.after ?? details?.nombre ?? null;
-      return name || null;
-    } catch {
-      return null;
-    }
-  }
-
-  ngOnDestroy(): void {
-    try { this.historySub?.unsubscribe(); } catch {}
+    this.history.watchLatest()
+      .pipe(take(1))
+      .subscribe(items => {
+        const list = (items as any[]) || [];
+        this.countHistorial = list.filter(ev => (ev?.module || '').toLowerCase() !== 'pqrs').length;
+      });
   }
 
   private cargarEstado() {
@@ -275,77 +191,7 @@ export class EmpleadoTurnoComponent implements OnInit, OnDestroy {
     return forkJoin(requests);
   }
 
-  abrirDetalle(item: TurnoActivoItem) {
-    this.seleccionado = item;
-    this.seleccionadoCajaCodigo = null;
-    // Cargar el empleado para obtener su caja asignada
-    if (item?.usuarioId) {
-      this.empleadosService.getEmpleado(item.usuarioId).subscribe({
-        next: (emp) => {
-          this.seleccionadoCajaCodigo = emp?.caja?.codigoCaja || null;
-        },
-        error: () => {
-          this.seleccionadoCajaCodigo = null;
-        }
-      });
-    }
-    this.modalAbierto = true;
-  }
-
-  cerrarDetalle() {
-    this.modalAbierto = false;
-    this.seleccionado = null;
-    this.seleccionadoCajaCodigo = null;
-  }
-
-  abrirDetallePqrs(n: { nombre?: string; apellido?: string; correo?: string; numero?: string; comentarios?: string; fecha?: string; }) {
-    try { console.log('abrirDetallePqrs click', n); } catch {}
-    this.pqrsSeleccionado = n;
-    this.pqrsModalAbierto = true;
-  }
-
-  cerrarDetallePqrs() {
-    try { console.log('cerrarDetallePqrs'); } catch {}
-    this.pqrsModalAbierto = false;
-    this.pqrsSeleccionado = null;
-  }
-
-  // Cambiar vista en ADMIN
-  setVista(v: 'activos' | 'cerrados' | 'notificaciones' | 'historial') {
-    this.vista = v;
-    if (v === 'notificaciones' && (!this.notificaciones || this.notificaciones.length === 0)) {
-      this.cargarNotificaciones();
-    }
-    if (v === 'historial') {
-      // iniciar suscripción si no existe
-      if (!this.historySub) {
-        this.historySub = this.history.watchLatest().subscribe(items => {
-          this.historyItems = (items || []).filter(ev => (ev?.module || '').toLowerCase() !== 'pqrs');
-        });
-      }
-    }
-  }
-
-  private cargarNotificaciones() {
-    this.cargando = true;
-    this.pqrsService.obtenerTodas().pipe(
-      catchError((err) => {
-        console.error('Error al cargar PQRS:', err);
-        return of([]);
-      })
-    ).subscribe((items: any[]) => {
-      // Normalizar campos esperados en la UI
-      this.notificaciones = (items || []).map((it: any) => ({
-        nombre: it?.nombre,
-        apellido: it?.apellido,
-        correo: it?.correo,
-        numero: it?.numero,
-        comentarios: it?.comentarios,
-        fecha: it?.creadoEn || it?.createdAt || it?.fecha || null,
-      }));
-      this.cargando = false;
-    });
-  }
+  
  
   iniciarTurno() {
     Swal.fire({
@@ -478,37 +324,4 @@ export class EmpleadoTurnoComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Traducir acciones del historial al español
-  tAction(action: string | null | undefined): string {
-    const a = (action || '').toLowerCase();
-    switch (a) {
-      case 'create': return 'crear';
-      case 'update': return 'modificar';
-      case 'delete': return 'eliminar';
-      case 'open': return 'apertura';
-      case 'close': return 'cierre';
-      default: return a || '';
-    }
-  }
-
-  // Traducir módulos al español para mostrar en UI
-  tModule(mod: string | null | undefined): string {
-    const m = (mod || '').toLowerCase();
-    switch (m) {
-      case 'cliente': return 'Clientes';
-      case 'proveedor': return 'Proveedores';
-      case 'empleado': return 'Empleados';
-      case 'venta': return 'Ventas';
-      case 'venta-libre': return 'Ventas libres';
-      case 'caja': return 'Cajas';
-      case 'gasto': return 'Gastos';
-      case 'pqrs': return 'PQRS';
-      case 'configuracion': return 'Configuración';
-      case 'descuento': return 'Descuentos';
-      case 'report': return 'Reportes';
-      case 'producto': return 'Productos';
-      case 'categoria': return 'Categorías';
-      default: return mod || '';
-    }
-  }
 }
