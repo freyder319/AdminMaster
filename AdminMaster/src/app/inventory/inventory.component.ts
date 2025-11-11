@@ -8,6 +8,8 @@ import { Categorias, CategoriaService } from '../services/categoria.service';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 
+declare var bootstrap: any; // Declaración para acceder a Bootstrap
+
 @Component({
   selector: 'app-inventory',
   standalone: true,
@@ -23,6 +25,10 @@ export class InventoryComponent {
   pageIndex = 0;       // página actual
   pageWindow = 5;      // cantidad de botones visibles
   categorias:Categorias[] = [];
+  entrada:any={
+    codigo:'',
+    cantidad:0
+  }
   categoria:any={
     nombreCategoria:''
   }
@@ -82,6 +88,7 @@ export class InventoryComponent {
     nombreCategoria: ''
   };
   nombreCategoriaModificarDuplicado: boolean = false;
+  productoEncontrado: Producto | null = null;
   categoriaSeleccionada?: Categorias;
   modificarActivo=false;
   // Productos
@@ -105,6 +112,96 @@ export class InventoryComponent {
   ngOnInit():void{
     this.cargarTotal();
     this.cargarProductos();
+  }
+  buscarProductoPorCodigo() {
+    if (!this.entrada.codigo) {
+      this.productoEncontrado = null;
+      return;
+    }
+    
+    this.productoService.buscarPorCodigo(this.entrada.codigo).subscribe({
+      next: (data) => {
+        this.productoEncontrado = data;
+      },
+      error: (err) => {
+        console.error('Error al buscar producto por código', err);
+        this.productoEncontrado = null;
+      }
+    });
+  }
+
+  registrarEntrada(form: NgForm) {
+    if (!this.productoEncontrado) {
+      // Si no hay un producto encontrado, intentar buscarlo primero
+      this.buscarProductoPorCodigo();
+      return;
+    }
+    
+    if (form.valid && this.entrada.cantidad > 0 && this.productoEncontrado.id) {
+      // Asegurarse de que el stock actual sea un número
+      const stockActual = Number(this.productoEncontrado.stockProducto) || 0;
+      const cantidadEntrante = Number(this.entrada.cantidad) || 0;
+      const nuevaCantidad = stockActual + cantidadEntrante;
+      
+      console.log('Actualizando stock:', {
+        productoId: this.productoEncontrado.id,
+        stockActual,
+        cantidadEntrante,
+        nuevaCantidad
+      });
+      
+      this.productoService.actualizarStock(this.productoEncontrado.id, nuevaCantidad).subscribe({
+        next: (productoActualizado) => {
+          console.log('Stock actualizado correctamente:', productoActualizado);
+          Swal.fire({
+            icon: 'success',
+            title: '¡Entrada registrada!',
+            text: `Se agregaron ${cantidadEntrante} unidades al producto`,
+            showConfirmButton: false,
+            timer: 2000
+          });
+          // Actualizar la lista de productos
+          this.cargarProductos();
+          this.cargarTotal();
+          // Limpiar el formulario
+          form.resetForm();
+          this.productoEncontrado = null;
+          // Cerrar el modal después de 2 segundos
+          setTimeout(() => {
+            const modalElement = document.getElementById('modalEntradaInventario');
+            if (modalElement) {
+              // Usar el método nativo de Bootstrap 5
+              const modal = bootstrap.Modal.getInstance(modalElement);
+              if (modal) {
+                modal.hide();
+              } else {
+                // Si no hay instancia, crear una nueva y ocultarla
+                new bootstrap.Modal(modalElement).hide();
+              }
+            }
+          }, 2000);
+        },
+        error: (err) => {
+          console.error('Error al actualizar el stock:', err);
+          let mensajeError = 'No se pudo actualizar el inventario';
+          
+          if (err.error?.message) {
+            mensajeError = err.error.message;
+          } else if (err.status === 404) {
+            mensajeError = 'Producto no encontrado';
+          } else if (err.status === 400) {
+            mensajeError = 'Datos inválidos para actualizar el stock';
+          }
+          
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: mensajeError,
+            confirmButtonText: 'Entendido'
+          });
+        }
+      });
+    }
   }
   cambiarPagina(event: PageEvent) {
     this.pageIndex = event.pageIndex;
