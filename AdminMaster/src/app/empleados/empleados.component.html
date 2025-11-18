@@ -64,11 +64,12 @@
                         <th>Correo</th>
                         <th>Teléfono</th>
                         <th>Caja Asignada</th>
+                        <th>Estado</th>
                         <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody *ngIf="(filteredEmpleados$ | async) as list">
-                        <tr *ngFor="let empleado of list" class="align-middle">
+                        <tr *ngFor="let empleado of list" class="align-middle" [ngClass]="{'fila-inactiva': estadoEmpleado(empleado) === 'Inactivo'}">
                             <td data-label="Nombre">
                                 <!-- Escritorio y móvil: mostrar nombre y apellido (clickable en móvil) -->
                                 <div class="perfil clickable d-flex align-items-center gap-2" (click)="mostrarInterfazReponsive(empleado.id)">
@@ -98,32 +99,70 @@
                                 <span *ngIf="!empleado.caja">Sin asignar</span>
                             </td>
 
+                            <!-- Estado (solo visible en escritorio) -->
+                            <td data-label="Estado" class="d-none d-md-table-cell">
+                                <span class="status" [ngClass]="estadoEmpleado(empleado).toLowerCase()">{{ estadoEmpleado(empleado) }}</span>
+                            </td>
+
                             <!-- Acciones -->
                             <td data-label="Acciones" class="acciones">
                                 <!-- Botones con texto (≥1200px) -->
                                 <div class="d-none d-xl-flex gap-2">
-                                    <button (click)="guardarId(empleado.id)" class="btn modificar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyEmpleado" aria-controls="offcanvasModifyEmpleado">
-                                        <span class="texto">Modificar</span>
-                                    </button>
-                                    <button (click)="eliminarEmpleado(empleado.id)" class="btn elimi">Eliminar</button>
+                                    <ng-container *ngIf="estadoEmpleado(empleado) === 'Inactivo'; else accionesEmpleadoActivoTexto">
+                                        <button (click)="guardarId(empleado.id)" class="btn modificar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyEmpleado" aria-controls="offcanvasModifyEmpleado">
+                                            <i class="bi bi-pencil-square"></i>
+                                            <span class="texto">Modificar</span>
+                                        </button>
+                                        <button class="btn habilitar" (click)="habilitarEmpleado(empleado)">
+                                            <i class="bi bi-check2-circle"></i>
+                                            Habilitar
+                                        </button>
+                                    </ng-container>
+                                    <ng-template #accionesEmpleadoActivoTexto>
+                                        <button (click)="guardarId(empleado.id)" class="btn modificar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyEmpleado" aria-controls="offcanvasModifyEmpleado">
+                                            <i class="bi bi-pencil-square"></i>
+                                            <span class="texto">Modificar</span>
+                                        </button>
+                                        <button *ngIf="!isEmpleadoEnUso(empleado)" (click)="eliminarEmpleado(empleado.id)" class="btn elimi">
+                                            <i class="bi bi-trash"></i>
+                                            Eliminar
+                                        </button>
+                                        <button *ngIf="isEmpleadoEnUso(empleado)" class="btn inhabilitar" (click)="inhabilitarEmpleado(empleado)">
+                                            <i class="bi bi-slash-circle"></i>
+                                            Inhabilitar
+                                        </button>
+                                    </ng-template>
                                 </div>
 
                                 <!-- Botones con íconos (768px – 1200px) -->
                                 <div class="d-none d-md-flex d-xl-none gap-2">
-                                    <button class="btn modificar icon-btn d-none d-md-inline-block" title="Modificar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyEmpleado" aria-controls="offcanvasModifyEmpleado">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </button>
-                                    <button (click)="eliminarEmpleado(empleado.id)" class="btn eliminar-icon icon-btn" title="Eliminar">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
+                                    <ng-container *ngIf="estadoEmpleado(empleado) === 'Inactivo'; else accionesEmpleadoActivoIconos">
+                                        <button class="btn modificar icon-btn d-none d-md-inline-block" title="Modificar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyEmpleado" aria-controls="offcanvasModifyEmpleado">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                        <button class="btn habilitar-icon icon-btn" title="Habilitar" (click)="habilitarEmpleado(empleado)">
+                                            <i class="bi bi-check2-circle"></i>
+                                        </button>
+                                    </ng-container>
+                                    <ng-template #accionesEmpleadoActivoIconos>
+                                        <button class="btn modificar icon-btn d-none d-md-inline-block" title="Modificar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyEmpleado" aria-controls="offcanvasModifyEmpleado">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                        <button *ngIf="!isEmpleadoEnUso(empleado)" (click)="eliminarEmpleado(empleado.id)" class="btn eliminar-icon icon-btn" title="Eliminar">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                        <button *ngIf="isEmpleadoEnUso(empleado)" class="btn inhabilitar-icon icon-btn" title="Inhabilitar" (click)="inhabilitarEmpleado(empleado)">
+                                            <i class="bi bi-slash-circle"></i>
+                                        </button>
+                                    </ng-template>
                                 </div>
                             </td>
                         </tr>
 
                         <!-- Sin resultados / Sin empleados -->
                         <tr *ngIf="list.length === 0">
-                            <td colspan="5" class="text-center">
-                                {{ lastSearchTerm ? ('No se encontró ningún empleado para "' + lastSearchTerm + '".') : 'No hay Empleados registrados' }}
+                            <td colspan="5" class="text-center text-muted py-3">
+                                {{ lastSearchTerm ? ('No se encontró ningún Empleado para "' + lastSearchTerm + '".') : 'No hay Empleados registrados' }}
                             </td>
                         </tr>
                     </tbody>
@@ -149,13 +188,24 @@
         <div class="container mt-4 p-3 shadow rounded bg-light">
         <app-modify-empleado *ngIf="empleadoSeleccionado" [empleadoId]="empleadoSeleccionado.id"></app-modify-empleado>
             <div class="mt-3 space">
-                <button class="btn btn-volver" type="button" (click)="mostrarModificarEmpleado = false; empleadoSeleccionado = null">
-                    <i class="bi bi-arrow-left-short"></i> Volver
-                </button>
-                <!-- MODIFICAR LO DE ELIMINAR -->
-                <button *ngIf="empleadoSeleccionado" (click)="eliminarEmpleado(empleadoSeleccionado.id)" class="btn eliminar">
-                    <i class="bi bi-trash-fill"></i>Eliminar
-                </button>
+              <button class="btn btn-volver" type="button" (click)="mostrarModificarEmpleado = false; empleadoSeleccionado = null">
+                <i class="bi bi-arrow-left-short"></i> Volver
+              </button>
+              <ng-container *ngIf="empleadoSeleccionado as emp">
+                <ng-container *ngIf="estadoEmpleado(emp) === 'Inactivo'; else accionesMovilEmpleadoActivo">
+                  <button class="btn habilitar" (click)="habilitarEmpleado(emp)">
+                    <i class="bi bi-check2-circle"></i> Habilitar
+                  </button>
+                </ng-container>
+                <ng-template #accionesMovilEmpleadoActivo>
+                  <button *ngIf="!isEmpleadoEnUso(emp)" (click)="eliminarEmpleado(emp.id)" class="btn eliminar">
+                    <i class="bi bi-trash-fill"></i> Eliminar
+                  </button>
+                  <button *ngIf="isEmpleadoEnUso(emp)" (click)="inhabilitarEmpleado(emp)" class="btn inhabilitar">
+                    <i class="bi bi-slash-circle"></i> Inhabilitar
+                  </button>
+                </ng-template>
+              </ng-container>
             </div>
         </div>
     </div>

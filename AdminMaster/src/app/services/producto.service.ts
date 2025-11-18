@@ -56,6 +56,8 @@ export class ProductoService {
   // Saber si se puede eliminar (sin ventas asociadas)
   canDelete(id: number): Observable<{ canDelete: boolean }> {
     return this.http.get<{ canDelete: boolean }>(`${this.apiUrl}/${id}/can-delete`);
+  }
+
   buscarPorCodigo(codigo: string): Observable<Producto | null> {
     return this.http.get<Producto | null>(`${this.apiUrl}/buscar/${codigo}`);
   }

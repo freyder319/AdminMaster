@@ -16,6 +16,11 @@
         <div class="fw-semibold">{{ data.producto }}</div>
       </div>
 
+      <div class="col-12">
+        <div class="text-muted small">Cliente</div>
+        <div>{{ data.clienteNombre || 'Sin cliente' }}</div>
+      </div>
+
       <div class="col-12" *ngIf="data.items && data.items.length">
         <div class="text-muted small mb-1">Productos</div>
         <ul class="list-group">

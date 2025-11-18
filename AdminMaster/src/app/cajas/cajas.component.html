@@ -67,7 +67,7 @@
           </thead>
           <tbody *ngIf="(filteredCajas$ | async) as list">
             <!-- Cajas -->
-            <tr *ngFor="let caja of list">
+            <tr *ngFor="let caja of list" [ngClass]="{'fila-inactiva': (caja.estado || '').toLowerCase() === 'inactiva'}">
               <td data-label="Nombre">
                 <!-- Móvil (<768px) → perfil clickeable -->
                 <div class="perfil clickable d-md-none" (click)="mostrarInterfazReponsive(caja.id)">
@@ -96,25 +96,60 @@
               <td data-label="Acciones" class="acciones">
                 <!-- Texto (≥1200px) -->
                 <div class="d-none d-xl-flex gap-2">
-                  <button class="btn modificar d-none d-md-inline-block" type="button" (click)="abrirModificarCaja(caja)" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCaja" aria-controls="offcanvasModifyCaja">
-                    <span class="texto">Modificar</span>
-                  </button>
-                  <button (click)="eliminarCaja(caja.id)" class="btn elimi">Eliminar</button>
+                  <ng-container *ngIf="(caja.estado || '').toLowerCase() === 'inactiva'; else accionesActiva">
+                    <button class="btn modificar d-none d-md-inline-block" type="button" (click)="abrirModificarCaja(caja)" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCaja" aria-controls="offcanvasModifyCaja">
+                      <i class="bi bi-pencil-square"></i>
+                      <span class="texto">Modificar</span>
+                    </button>
+                    <button (click)="habilitarCaja(caja)" class="btn habilitar">
+                      <i class="bi bi-check2-circle"></i>
+                      Habilitar
+                    </button>
+                  </ng-container>
+                  <ng-template #accionesActiva>
+                    <button class="btn modificar d-none d-md-inline-block" type="button" (click)="abrirModificarCaja(caja)" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCaja" aria-controls="offcanvasModifyCaja">
+                      <i class="bi bi-pencil-square"></i>
+                      <span class="texto">Modificar</span>
+                    </button>
+                    <button *ngIf="!isCajaEnUso(caja)" (click)="eliminarCaja(caja.id)" class="btn elimi">
+                      <i class="bi bi-trash"></i>
+                      Eliminar
+                    </button>
+                    <button *ngIf="isCajaEnUso(caja)" (click)="inhabilitarCaja(caja)" class="btn inhabilitar">
+                      <i class="bi bi-slash-circle"></i>
+                      Inhabilitar
+                    </button>
+                  </ng-template>
                 </div>
 
                 <!-- Íconos (768px – 1200px) -->
                 <div class="d-none d-md-flex d-xl-none gap-2">
-                  <button class="btn modificar icon-btn d-none d-md-inline-block" title="Modificar" type="button" (click)="abrirModificarCaja(caja)" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCaja" aria-controls="offcanvasModifyCaja">
-                    <i class="bi bi-pencil-square"></i>
-                  </button>
-                  <button (click)="eliminarCaja(caja.id)" class="btn eliminar-icon icon-btn" title="Eliminar">
-                    <i class="bi bi-trash"></i>
-                  </button>
+                  <ng-container *ngIf="(caja.estado || '').toLowerCase() === 'inactiva'; else accionesActivaIcon">
+                    <button class="btn modificar icon-btn d-none d-md-inline-block" title="Modificar" type="button" (click)="abrirModificarCaja(caja)" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCaja" aria-controls="offcanvasModifyCaja">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button (click)="habilitarCaja(caja)" class="btn habilitar-icon icon-btn" title="Habilitar">
+                      <i class="bi bi-check2-circle"></i>
+                    </button>
+                  </ng-container>
+                  <ng-template #accionesActivaIcon>
+                    <button class="btn modificar icon-btn d-none d-md-inline-block" title="Modificar" type="button" (click)="abrirModificarCaja(caja)" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCaja" aria-controls="offcanvasModifyCaja">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button *ngIf="!isCajaEnUso(caja)" (click)="eliminarCaja(caja.id)" class="btn eliminar-icon icon-btn" title="Eliminar">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                    <button *ngIf="isCajaEnUso(caja)" (click)="inhabilitarCaja(caja)" class="btn inhabilitar-icon icon-btn" title="Inhabilitar">
+                      <i class="bi bi-slash-circle"></i>
+                    </button>
+                  </ng-template>
                 </div>
               </td>
             </tr>
             <tr *ngIf="list.length === 0">
-              <td colspan="7" class="text-center">{{ lastSearchTerm ? ('No se encontró ninguna caja para "' + lastSearchTerm + '".') : 'No hay Cajas Registradas' }}</td>
+              <td colspan="7" class="text-center text-muted py-3">
+                {{ lastSearchTerm ? ('No se encontró ninguna caja para "' + lastSearchTerm + '".') : 'No hay Cajas registradas' }}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -142,9 +177,19 @@
         <button class="btn btn-volver" type="button" (click)="mostrarModificarCaja = false">
           <i class="bi bi-arrow-left-short"></i> Volver
         </button>
-        <button *ngIf="cajaSeleccionada" (click)="eliminarCaja(cajaSeleccionada.id)" class="btn eliminar">
-          <i class="bi bi-trash-fill"></i> Eliminar
-        </button>
+        <ng-container *ngIf="cajaSeleccionada && (cajaSeleccionada.estado || '').toLowerCase() === 'inactiva'; else accionesMovilActiva">
+          <button (click)="habilitarCaja(cajaSeleccionada)" class="btn habilitar">
+            <i class="bi bi-check2-circle"></i> Habilitar
+          </button>
+        </ng-container>
+        <ng-template #accionesMovilActiva>
+          <button *ngIf="cajaSeleccionada && !isCajaEnUso(cajaSeleccionada)" (click)="eliminarCaja(cajaSeleccionada.id)" class="btn eliminar">
+            <i class="bi bi-trash-fill"></i> Eliminar
+          </button>
+          <button *ngIf="cajaSeleccionada && isCajaEnUso(cajaSeleccionada)" (click)="inhabilitarCaja(cajaSeleccionada)" class="btn inhabilitar">
+            <i class="bi bi-slash-circle"></i> Inhabilitar
+          </button>
+        </ng-template>
       </div>
     </div>
   </div>

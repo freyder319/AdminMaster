@@ -272,6 +272,33 @@ export class AdministradorPrincipalComponent implements OnInit {
     return this.empleadoNombreById(uid || undefined);
   }
 
+  // ---------- Cliente asociado a la venta ----------
+  getClienteIdFromVenta(v: any): number | null {
+    return (
+      v?.clienteId ?? v?.cliente_id ?? v?.cliente?.id ?? null
+    );
+  }
+
+  displayClienteVenta(v: any): string {
+    const nested =
+      this.buildNombre(v?.cliente?.nombre, v?.cliente?.apellido) ||
+      (v?.cliente_nombre || '').toString().trim();
+    if (nested) return nested;
+    // Intentar extraer desde observaciones/resumen si viene texto tipo "Cliente: ..."
+    const obs = (v?.observaciones || v?.resumen || '').toString();
+    const marker = 'Cliente:';
+    const idx = obs.indexOf(marker);
+    if (idx !== -1) {
+      const after = obs.substring(idx + marker.length).trim();
+      if (after) return after;
+    }
+    const cid = this.getClienteIdFromVenta(v);
+    if (cid && Number.isFinite(Number(cid))) {
+      return `Cliente #${cid}`;
+    }
+    return 'Sin cliente';
+  }
+
   displayEmpleadoGasto(g: any): string {
     const nested =
       this.buildNombre(g?.usuario?.nombre, g?.usuario?.apellido) ||
@@ -324,6 +351,7 @@ export class AdministradorPrincipalComponent implements OnInit {
       items,
       empleadoNombre: this.displayEmpleadoVenta(v),
       turnoId: this.getTurnoIdFromVenta(v) || null,
+      clienteNombre: this.displayClienteVenta(v),
     } as any;
     this.dialog.open(InfoDialogComponent, {
       data: detalle,

@@ -22,6 +22,7 @@ export class AddEmpleadosComponent {
   correoDuplicado: boolean = false;
   telefonoDuplicado: boolean = false;
   cajas: any[] = [];
+  activo: boolean = true;
 
   @Output() empleadoAgregado = new EventEmitter();
 
@@ -42,7 +43,7 @@ export class AddEmpleadosComponent {
   ngOnInit(): void {
     this.cajasService.getCajas().subscribe({
       next: (data) => {
-        this.cajas = (data || []).filter(c => String((c?.estado || '')).toLowerCase() === 'activo');
+        this.cajas = (data || []).filter(c => String((c?.estado || '')).toLowerCase() === 'activa');
       },
       error: (err) => {
         console.error('Error al cargar cajas:', err);
@@ -82,12 +83,17 @@ export class AddEmpleadosComponent {
       return;
     }
 
-    // Validar caja activa seleccionada
+    // Validar caja según estado
     const cajaId = this.empleado.cajaId;
     const cajaSel = this.cajas.find(c => c.id === cajaId);
-    if (!cajaId || !cajaSel) {
-      Swal.fire({ title: 'Caja requerida', icon: 'warning', text: 'Debes seleccionar una caja activa.' });
-      return;
+    if (this.activo) {
+      if (!cajaId || !cajaSel) {
+        Swal.fire({ title: 'Caja requerida', icon: 'warning', text: 'Debes seleccionar una caja activa.' });
+        return;
+      }
+    } else {
+      // si inactivo, no se requiere caja
+      this.empleado.cajaId = null;
     }
 
     this.empleadosServices.verificarExistencia(correo, telefono).subscribe({
@@ -141,6 +147,7 @@ export class AddEmpleadosComponent {
               contrasena: '',
               cajaId: null
             };
+            this.activo = true;
 
             form.resetForm();
             this.empleadoAgregado.emit();

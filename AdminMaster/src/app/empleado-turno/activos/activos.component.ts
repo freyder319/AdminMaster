@@ -49,9 +49,8 @@ export class ActivosComponent implements OnDestroy {
   }
 
   abrirDetalle(item: TurnoActivoItem) {
-    if (this.closing) { return; }
-    this.seleccionado = item;
-    this.modalAbierto = true;
+    // modal desactivado
+    return;
   }
 
   cerrarDetalle(ev?: Event) {

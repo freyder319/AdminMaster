@@ -7,6 +7,7 @@ import { ModifyProveedorComponent } from '../modify-proveedor/modify-proveedor.c
 import { ProveedorService, Proveedor } from '../services/proveedor.service';
 import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
 import Swal from 'sweetalert2';
+import { GastoService, Gasto } from '../services/gasto.service';
 
 @Component({
   selector: 'app_proveedores',
@@ -25,7 +26,9 @@ export class ProveedoresComponent {
   seleccionado: Proveedor | null = null;
   lastSearchTerm = '';
 
-  constructor(private proveedorService: ProveedorService) {
+  private proveedoresEnUso = new Set<number>();
+
+  constructor(private proveedorService: ProveedorService, private gastoService: GastoService) {
     this.proveedores$ = this.proveedorService.proveedores$;
     this.filteredProveedores$ = combineLatest([
       this.proveedores$,
@@ -33,15 +36,31 @@ export class ProveedoresComponent {
     ]).pipe(
       map(([list, term]) => {
         const t = term.trim().toLowerCase();
-        if (!t) return list;
-        return list.filter(p =>
+        const base = !t ? list : list.filter(p =>
           (p.nombre?.toLowerCase().includes(t)) ||
           (p.apellido?.toLowerCase().includes(t)) ||
           (p.correo?.toLowerCase().includes(t)) ||
           (p.telefono?.toLowerCase().includes(t))
         );
+        // ordenar: activos primero, inactivos al final
+        return [...base].sort((a,b) => (a.activo === b.activo) ? 0 : (a.activo ? -1 : 1));
       })
     );
+
+    // construir set de proveedores en uso desde gastos
+    this.gastoService.gastos$.subscribe((gastos) => {
+      const ids = (gastos || [])
+        .map(g => g.proveedorId)
+        .filter((v): v is number => typeof v === 'number' && Number.isFinite(v));
+      this.proveedoresEnUso = new Set(ids);
+    });
+
+    // cargar gastos al iniciar si no hay snapshot
+    try {
+      if (!this.gastoService.snapshot || this.gastoService.snapshot.length === 0) {
+        this.gastoService.fetchAll().subscribe();
+      }
+    } catch {}
   }
 
   onSearch(value: string): void {
@@ -69,27 +88,25 @@ export class ProveedoresComponent {
   }
 
   onCrear(data: { nombre: string; apellido: string; telefono: string; correo: string; activo: boolean }): void {
-    this.proveedorService.add(data).subscribe({
+    const payload = {
+      nombre: (data.nombre || '').trim(),
+      apellido: (data.apellido || '').trim() || undefined,
+      telefono: (data.telefono || '').trim(),
+      correo: (data.correo || '').trim().toLowerCase(),
+      activo: typeof data.activo === 'boolean' ? data.activo : true,
+    } as Omit<Proveedor, 'id'>;
+    this.proveedorService.add(payload).subscribe({
       next: () => {
         // cerrar vista móvil si está abierta
         this.mostrarAddProveedor = false;
         // cerrar offcanvas de escritorio si está abierto
         this.closeOffcanvas('offcanvasAddProveedor');
-        Swal.fire({
-          title: 'Creado',
-          text: 'Proveedor creado correctamente',
-          icon: 'success',
-          confirmButtonText: 'Aceptar'
-        });
+        Swal.fire({ title: 'Creado', text: 'Proveedor creado correctamente', icon: 'success', confirmButtonText: 'Aceptar' });
       },
       error: (err) => {
-        Swal.fire({
-          title: 'Error',
-          text: 'No se pudo crear el proveedor',
-          icon: 'error',
-          confirmButtonText: 'Aceptar'
-        });
-        console.error(err);
+        const msg = err?.error?.message || err?.message || 'No se pudo crear el proveedor';
+        Swal.fire({ title: 'Error', text: msg, icon: 'error', confirmButtonText: 'Aceptar' });
+        console.error('Error crear proveedor:', err);
       }
     });
   }
@@ -151,13 +168,24 @@ export class ProveedoresComponent {
             });
           },
           error: (err) => {
-            Swal.fire({
-              title: 'Error',
-              text: 'No se pudo eliminar el proveedor',
-              icon: 'error',
-              confirmButtonText: 'Aceptar'
-            });
-            console.error(err);
+            const backendMsg = err?.error?.message || '';
+            const related = typeof backendMsg === 'string' && backendMsg.toLowerCase().includes('relacion');
+            if (related && this.seleccionado && this.seleccionado.id === id) {
+              // si está relacionado, ofrecer inhabilitar en lugar de eliminar
+              Swal.fire({
+                title: 'Proveedor relacionado',
+                text: 'No se puede eliminar porque tiene registros relacionados. ¿Deseas inhabilitarlo?',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Inhabilitar',
+                cancelButtonText: 'Cerrar'
+              }).then(r => {
+                if (r.isConfirmed) this.inhabilitarProveedor(this.seleccionado!);
+              });
+            } else {
+              Swal.fire({ title: 'Error', text: backendMsg || 'No se pudo eliminar el proveedor', icon: 'error', confirmButtonText: 'Aceptar' });
+            }
+            console.error('Error eliminar proveedor:', err);
           }
         });
       }
@@ -169,5 +197,39 @@ export class ProveedoresComponent {
       this.onEliminar(this.seleccionado.id);
       this.mostrarModificarProveedor = false;
     }
+  }
+
+  inhabilitarProveedor(p: Proveedor) {
+    this.proveedorService.update(p.id, { activo: false }).subscribe({
+      next: () => {
+        if (this.seleccionado && this.seleccionado.id === p.id) {
+          this.seleccionado = { ...this.seleccionado, activo: false };
+        }
+      },
+      error: (err) => {
+        Swal.fire({ title: 'Error', text: 'No se pudo inhabilitar el proveedor', icon: 'error' });
+        console.error('Error inhabilitar proveedor:', err);
+      }
+    });
+  }
+
+  habilitarProveedor(p: Proveedor) {
+    this.proveedorService.update(p.id, { activo: true }).subscribe({
+      next: () => {
+        if (this.seleccionado && this.seleccionado.id === p.id) {
+          this.seleccionado = { ...this.seleccionado, activo: true };
+        }
+      },
+      error: (err) => {
+        Swal.fire({ title: 'Error', text: 'No se pudo habilitar el proveedor', icon: 'error' });
+        console.error('Error habilitar proveedor:', err);
+      }
+    });
+  }
+
+  isProveedorEnUso(idOrP: number | Proveedor | null | undefined): boolean {
+    if (idOrP == null) return false;
+    const id = typeof idOrP === 'number' ? idOrP : idOrP.id;
+    return this.proveedoresEnUso.has(id);
   }
 }

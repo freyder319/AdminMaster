@@ -5,11 +5,12 @@ import { AuthService } from '../services/auth.service';
 import { PasswordRecoveryFlowService } from '../services/password-recovery-flow.service';
 import Swal from 'sweetalert2';
 import { CommonModule } from '@angular/common';
+import { NavBarComponent } from "../nav-bar/nav-bar.component";
 
 @Component({
   selector: 'app-send-email',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, NavBarComponent],
   templateUrl: './send-email.component.html',
   styleUrl: './send-email.component.scss'
 })

@@ -1,3 +1,45 @@
+/* Estado Activo/Inactivo (mismo estilo que Clientes/Proveedores) */
+.act-inac {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-act,
+.btn-inac {
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  background: #f8f9fa;
+}
+
+.btn-act.is-selected {
+  background: #39c751;
+  color: #fff;
+  box-shadow: 0 0 3px 1px #39c751;
+  border-color: #39c751;
+}
+
+.btn-inac.is-selected {
+  background: #e81313;
+  color: #fff;
+  box-shadow: 0 0 3px 1px #e81313;
+  border-color: #e81313;
+}
+
+/* Mantener estilo inputs coherente */
+.form-select{
+  border: none;
+  box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+  border-radius: 9999px !important;
+}
+
+.form-select:focus{
+  border: 1px solid #5adbff;
+  box-shadow: 0 0 6px 0.5px #5adbff;
+  outline: none; 
+}
 .tit-empleados{
     font-family: 'poetsen one', cursive;
 }

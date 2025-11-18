@@ -96,40 +96,70 @@
               <td data-label="N° Deudas">0</td>
               <td data-label="N° Compras">0</td>
               <td data-label="Estado de Cliente">
-                <span [ngClass]="{'activo': cliente.estado === 'activo','inactivo': cliente.estado === 'inactivo'}" class="status">{{cliente.estado}}</span>
+                <span class="status" [ngClass]="estadoCliente(cliente).toLowerCase()">{{ estadoCliente(cliente) }}</span>
               </td>
               <td data-label="Acciones" class="acciones">
 
                 <!-- Botones con texto (solo ≥1200px) -->
                 <div class="d-none d-xl-flex gap-2">
-
-                  <!-- OffCanvas Modificar Cliente -->
-                  <button (click)="guardarId(cliente.id)" class="btn modificar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCliente" aria-controls="offcanvasModifyCliente">
-                    <span class="texto">Modificar</span>
-                  </button>
-
-                  <button (click)="eliminarCliente(cliente.id)" class="btn elimi">Eliminar</button>
+                  <ng-container *ngIf="(cliente.estado || '').toLowerCase() === 'inactivo'; else accionesClienteActivoTexto">
+                    <button (click)="guardarId(cliente.id)" class="btn modificar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCliente" aria-controls="offcanvasModifyCliente">
+                      <i class="bi bi-pencil-square"></i>
+                      <span class="texto">Modificar</span>
+                    </button>
+                    <button class="btn habilitar" (click)="habilitarCliente(cliente)">
+                      <i class="bi bi-check2-circle"></i>
+                      Habilitar
+                    </button>
+                  </ng-container>
+                  <ng-template #accionesClienteActivoTexto>
+                    <button (click)="guardarId(cliente.id)" class="btn modificar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCliente" aria-controls="offcanvasModifyCliente">
+                      <i class="bi bi-pencil-square"></i>
+                      <span class="texto">Modificar</span>
+                    </button>
+                    <button *ngIf="!isClienteEnUso(cliente)" (click)="eliminarCliente(cliente.id)" class="btn elimi">
+                      <i class="bi bi-trash"></i>
+                      Eliminar
+                    </button>
+                    <button *ngIf="isClienteEnUso(cliente)" class="btn inhabilitar" (click)="inhabilitarCliente(cliente)">
+                      <i class="bi bi-slash-circle"></i>
+                      Inhabilitar
+                    </button>
+                  </ng-template>
                 </div>
 
                 <!-- Botones con íconos (768px – 1200px) -->
                 <div class="d-none d-md-flex d-xl-none gap-2">
-                  <button class="btn modificar icon-btn d-none d-md-inline-block" title="Modificar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCliente" aria-controls="offcanvasModifyCliente">
-                    <i class="bi bi-pencil-square"></i>
-                  </button>
-                  <button (click)="eliminarCliente(cliente.id)" class="btn eliminar-icon icon-btn" title="Eliminar">
-                    <i class="bi bi-trash"></i>
-                  </button>
+                  <ng-container *ngIf="(cliente.estado || '').toLowerCase() === 'inactivo'; else accionesClienteActivoIconos">
+                    <button class="btn modificar icon-btn d-none d-md-inline-block" title="Modificar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCliente" aria-controls="offcanvasModifyCliente" (click)="guardarId(cliente.id)">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button class="btn habilitar-icon icon-btn" title="Habilitar" (click)="habilitarCliente(cliente)">
+                      <i class="bi bi-check2-circle"></i>
+                    </button>
+                  </ng-container>
+                  <ng-template #accionesClienteActivoIconos>
+                    <button class="btn modificar icon-btn d-none d-md-inline-block" title="Modificar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCliente" aria-controls="offcanvasModifyCliente" (click)="guardarId(cliente.id)">
+                      <i class="bi bi-pencil-square"></i>
+                    </button>
+                    <button *ngIf="!isClienteEnUso(cliente)" class="btn eliminar-icon icon-btn" title="Eliminar" (click)="eliminarCliente(cliente.id)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                    <button *ngIf="isClienteEnUso(cliente)" class="btn inhabilitar-icon icon-btn" title="Inhabilitar" (click)="inhabilitarCliente(cliente)">
+                      <i class="bi bi-slash-circle"></i>
+                    </button>
+                  </ng-template>
                 </div>
               </td>
             </tr>
             <!-- Sin clientes en la base -->
             <tr *ngIf="clientes.length === 0 && !searchTerm">
-              <td colspan="7" class="text-center">No hay clientes registrados</td>
+              <td colspan="7" class="text-center text-muted py-3">No hay Clientes registrados</td>
             </tr>
             <!-- Sin coincidencias con la búsqueda -->
             <tr *ngIf="clientes.length > 0 && clientesFiltrados.length === 0 && searchTerm">
-              <td colspan="7" class="text-center text-muted">
-                No se encontraron clientes para "{{ searchTerm }}".
+              <td colspan="7" class="text-center text-muted py-3">
+                No se encontraron Clientes para "{{ searchTerm }}".
               </td>
             </tr>
           </tbody>
@@ -158,10 +188,20 @@
         <button class="btn btn-volver" type="button" (click)="mostrarModificarCliente = false">
           <i class="bi bi-arrow-left-short"></i> Volver
         </button>
-        <!-- MODIFICAR LO DE ELIMINAR -->
-        <button *ngIf="clienteSeleccionado" (click)="eliminarCliente(clienteSeleccionado.id)" class="btn eliminar">
-            <i class="bi bi-trash-fill"></i>Eliminar
-        </button>
+        <!-- Acciones condicionales según estado y relación -->
+        <ng-container *ngIf="clienteSeleccionado && (clienteSeleccionado.estado || '').toLowerCase() === 'inactivo'; else accionesMovilClienteActivo">
+          <button class="btn habilitar" (click)="habilitarCliente(clienteSeleccionado)">
+            <i class="bi bi-check2-circle"></i> Habilitar
+          </button>
+        </ng-container>
+        <ng-template #accionesMovilClienteActivo>
+          <button *ngIf="clienteSeleccionado && !isClienteEnUso(clienteSeleccionado)" (click)="eliminarCliente(clienteSeleccionado.id)" class="btn eliminar">
+            <i class="bi bi-trash-fill"></i> Eliminar
+          </button>
+          <button *ngIf="clienteSeleccionado && isClienteEnUso(clienteSeleccionado)" (click)="inhabilitarCliente(clienteSeleccionado)" class="btn inhabilitar">
+            <i class="bi bi-slash-circle"></i> Inhabilitar
+          </button>
+        </ng-template>
     </div>
     </div>
   </div>
