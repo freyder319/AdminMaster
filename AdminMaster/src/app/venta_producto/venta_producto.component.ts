@@ -4,14 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Producto, ProductoService } from '../services/producto.service';
 import { VentaService, CreateVentaPayload } from '../services/venta.service';
+import { Clientes, ClientesService } from '../services/clientes.service';
 import { DescuentoService, Descuento } from '../services/descuento.service';
 import Swal from 'sweetalert2';
+import { AdminNavbarComponent } from "../admin_navbar/admin_navbar.component";
 declare const bootstrap: any;
 
 @Component({
   selector: 'app_venta_producto',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, AdminNavbarComponent],
   templateUrl: './venta_producto.component.html',
   styleUrl: './venta_producto.component.scss'
 })
@@ -29,6 +31,9 @@ export class VentaProductoComponent {
   isSubmitting = false;
   descuentos: Descuento[] = [];
   selectedDescuentoId: number | null = null;
+  // Cliente asociado a la venta
+  clientes: Clientes[] = [];
+  selectedClienteId: number | null = null;
 
   private toPesos(n: any): number {
     const num = Number(n);
@@ -123,10 +128,27 @@ export class VentaProductoComponent {
       return;
     }
     const computedTotal = this.cartTotal; // total ya con descuento aplicado
+    const computedChange = this.change; // cambio calculado antes de modificar carrito o amountReceived
+    // Construir un resumen de cliente en observaciones (workaround mientras el backend no soporta clienteId)
+    let observaciones: string | undefined = undefined;
+    try {
+      const cli = this.selectedClienteData;
+      if (cli) {
+        const nombre = (cli.nombre || '').trim();
+        const apellido = (cli.apellido || '').trim();
+        const numero = (cli.numero || '').trim();
+        const full = `${nombre} ${apellido}`.trim();
+        const base = full || numero;
+        if (base) {
+          observaciones = `Cliente: ${base}${numero && base !== numero ? ' - ' + numero : ''}`;
+        }
+      }
+    } catch {}
     const payload: CreateVentaPayload = {
       total: computedTotal,
       forma_pago: this.formaPago,
       descuentoId: this.selectedDescuentoId ?? undefined,
+      observaciones,
       items,
     };
     try {
@@ -156,7 +178,7 @@ export class VentaProductoComponent {
             icon: 'success',
             title: 'Venta registrada',
             html: `Total: <b>${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(payload.total)}</b><br>` +
-                  `Cambio: <b>${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(this.change)}</b>`
+                  `Cambio: <b>${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(computedChange)}</b>`
           }).then(() => {
             // Refrescar solo los productos y resetear filtros básicos
             this.loadProductos();
@@ -218,6 +240,14 @@ export class VentaProductoComponent {
     const recibido = this.toPesos(this.amountReceived ?? 0);
     const r = recibido - this.cartTotal;
     return r > 0 ? this.toPesos(r) : 0;
+  }
+
+  get selectedClienteData(): Clientes | null {
+    const id = this.selectedClienteId;
+    if (id == null) return null;
+    const num = Number(id);
+    if (!Number.isFinite(num)) return null;
+    return this.clientes.find(c => c.id === num) || null;
   }
 
   get sortLabel(): string {
@@ -499,6 +529,7 @@ export class VentaProductoComponent {
     private productoService: ProductoService,
     private ventaService: VentaService,
     private descuentoService: DescuentoService,
+    private clientesService: ClientesService,
   ) {}
 
   ngOnInit(): void {
@@ -507,6 +538,18 @@ export class VentaProductoComponent {
     // cargar descuentos
     this.descuentoService.items$.subscribe((list) => (this.descuentos = list || []));
     this.descuentoService.fetchAll().subscribe();
+    // cargar clientes (por defecto solo activos)
+    try {
+      this.clientesService.getClientes().subscribe({
+        next: (data) => {
+          const list = data || [];
+          this.clientes = list.filter(c => (c.estado || '').toLowerCase() === 'activo');
+        },
+        error: () => {
+          this.clientes = [];
+        }
+      });
+    } catch {}
   }
 
   private loadProductos(): void {

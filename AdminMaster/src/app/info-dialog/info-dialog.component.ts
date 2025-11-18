@@ -33,6 +33,7 @@ export class InfoDialogComponent {
     }>;
     empleadoNombre?: string | null;
     turnoId?: number | null;
+    clienteNombre?: string | null;
   }) {}
 }
 

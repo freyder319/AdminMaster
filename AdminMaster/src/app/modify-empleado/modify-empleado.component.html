@@ -24,6 +24,27 @@
         <div class="container form">
             <div class="formulario">
                 <form *ngIf="empleado" (ngSubmit)="modificarEmpleado()">
+                    <!-- Estado Activo / Inactivo (estilo como Clientes/Proveedores) -->
+                    <section class="mb-3">
+                        <div class="container act-inac">
+                            <div class="activo">
+                                <button
+                                  type="button"
+                                  class="btn-act"
+                                  [class.is-selected]="activo === true"
+                                  [attr.aria-pressed]="activo === true"
+                                  (click)="activo = true">Activo</button>
+                            </div>
+                            <div class="inactivo">
+                                <button
+                                  type="button"
+                                  class="btn-inac"
+                                  [class.is-selected]="activo === false"
+                                  [attr.aria-pressed]="activo === false"
+                                  (click)="activo = false">Inactivo</button>
+                            </div>
+                        </div>
+                    </section>
                     <!-- Nombre -->
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre</label>
@@ -51,7 +72,7 @@
                     <!-- Caja Asignada -->
                     <div class="mb-3">
                         <label for="caja" class="form-label">Caja Asignada</label>
-                        <select [(ngModel)]="cajaIdSeleccionada" name="caja" id="caja" class="form-select" required>
+                        <select [(ngModel)]="cajaIdSeleccionada" name="caja" id="caja" class="form-select" [required]="activo" [disabled]="!activo">
                             <option value="" disabled>Selecciona una caja</option>
                             <option *ngFor="let caja of cajas" [ngValue]="caja.id">
                                 {{ caja.nombre }} ({{ caja.codigoCaja }})

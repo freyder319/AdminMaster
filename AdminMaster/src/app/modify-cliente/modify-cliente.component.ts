@@ -28,7 +28,14 @@ export class ModifyClienteComponent {
   }
   modificarCliente(){
     if(this.clienteId && this.cliente){
-      this.clienteServices.updateCliente(this.clienteId,this.cliente).subscribe({
+      const dto = {
+        nombre: this.cliente.nombre,
+        apellido: this.cliente.apellido,
+        numero: this.cliente.numero,
+        correo: this.cliente.correo,
+        estado: this.cliente.estado,
+      };
+      this.clienteServices.updateCliente(this.clienteId,dto).subscribe({
         next:()=>{
           Swal.fire({
           title: "Cliente Modificado!",

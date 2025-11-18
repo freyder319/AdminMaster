@@ -161,11 +161,15 @@ main{
     box-shadow: 0 0 6px 0.5px #5adbff;
 }
 .btn.confir{
-    width: 88%;
+    width: 95%;
     background-color: #5adbff;
     box-shadow: 0 0 6px 0.5px #5adbff;
     border: none;
     cursor: pointer;
+    border-radius: 18px;
+    color: white;
+    font-weight: bold;
+    margin-top: 20px;
 }
 
 .btn.btn.agregar:active{
@@ -268,6 +272,89 @@ main{
     }
 }
 
+/* === Estilos de acciones igual que en Empleados === */
+
+.btn.elimi {
+    width: 110px;
+    text-align: center;
+    color: white;
+    background-color: #e81313;
+    box-shadow: 0 0 3px 1px #e81313;
+    border-radius: 12px;
+    padding: 7px;
+    font-weight: bold;
+}
+
+.btn.elimi:focus {
+    border: 1px solid #e81313;
+    box-shadow: 0 0 6px 2px #e81313;
+}
+
+.btn.inhabilitar {
+    width: 110px;
+    text-align: center;
+    color: #ffffff !important;
+    background-color: #ffc107 !important; /* amarillo para inhabilitar */
+    box-shadow: 0 0 3px 1px #ffc107 !important;
+    border-radius: 12px;
+    padding: 7px;
+    font-weight: bold;
+    border: none !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.btn.habilitar {
+    width: 110px;
+    text-align: center;
+    color: #ffffff !important;
+    background-color: #4ade80 !important; /* verde clarito */
+    box-shadow: 0 0 3px 1px #4ade80 !important;
+    border-radius: 12px;
+    padding: 7px;
+    font-weight: bold;
+    border: none !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.btn.inhabilitar:focus {
+    border: 1px solid #ffc107 !important;
+    box-shadow: 0 0 6px 2px #ffc107 !important;
+}
+
+.btn.habilitar:focus {
+    border: 1px solid #4ade80 !important;
+    box-shadow: 0 0 6px 2px #4ade80 !important;
+}
+
+.btn.modificar {
+    background-color: #5adbff;
+    box-shadow: 0 0 3px 1px #5adbff;
+    border: none;
+    width: 110px;
+    text-align: center;
+    border-radius: 12px;
+    color: white;
+    padding: 7px;
+    font-weight: bold;
+}
+
+.btn.modificar:focus {
+    border: 1px solid #5adbff;
+    box-shadow: 0 0 6px 2px #5adbff;
+}
+
+/* separación mínima entre icono y texto */
+.bi {
+    margin-right: 4px;
+}
+
+/* Botón eliminar genérico (otras secciones de inventario) */
 .btn.eliminar {
     color: red;
     box-shadow: 0 0 3px 1px #e81313;
@@ -276,17 +363,6 @@ main{
 .btn.eliminar:focus {
     border: 1px solid #e81313;
     box-shadow: 0 0 6px 2px #e81313;
-}
-
-.btn.modificar {
-    box-shadow: 0 0 3px 1px #575757;
-    border: none;
-    color: black !important;
-}
-
-.btn.modificar:focus {
-    border: 1px solid #575757;
-    box-shadow: 0 0 6px 2px #575757;
 }
 
 .confirmarfinal {

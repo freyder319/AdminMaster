@@ -30,8 +30,8 @@ export class NotificacionesComponent {
   }
 
   abrirDetalle(n: any) {
-    this.seleccionado = n;
-    this.modalAbierto = true;
+    // modal desactivado
+    return;
   }
 
   cerrarDetalle(ev?: Event) {

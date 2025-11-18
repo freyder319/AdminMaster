@@ -19,6 +19,7 @@ export class ModifyEmpleadoComponent implements OnInit {
   cajas: any[] = [];
   cajaIdSeleccionada: number | null = null;
   errorMessage: string = '';
+  activo: boolean = true;
 
   constructor(private empleadoServices: EmpleadosService) {}
 
@@ -28,6 +29,8 @@ export class ModifyEmpleadoComponent implements OnInit {
         next: (data) => {
           this.empleado = data;
           this.cajaIdSeleccionada = data.caja?.id || null;
+          // estado derivado de caja asignada
+          this.activo = !!this.cajaIdSeleccionada;
         },
         error: (err) => {
           this.errorMessage = err.status === 404
@@ -43,7 +46,7 @@ export class ModifyEmpleadoComponent implements OnInit {
     }
 
     this.empleadoServices.getCajas().subscribe({
-      next: (data) => this.cajas = (data || []).filter(c => String((c?.estado || '')).toLowerCase() === 'activo'),
+      next: (data) => this.cajas = (data || []).filter(c => String((c?.estado || '')).toLowerCase() === 'activa'),
       error: () => console.error("Error al cargar Cajas")
     });
   }
@@ -57,13 +60,21 @@ export class ModifyEmpleadoComponent implements OnInit {
         return;
       }
 
-      // Validar caja activa seleccionada (si hay selección)
-      if (this.cajaIdSeleccionada) {
-        const cajaSel = this.cajas.find(c => c.id === this.cajaIdSeleccionada);
-        if (!cajaSel) {
-          Swal.fire({ title: 'Caja inactiva', icon: 'warning', text: 'Solo puedes asignar cajas activas.' });
+      // Validar caja según estado
+      if (this.activo) {
+        if (this.cajaIdSeleccionada) {
+          const cajaSel = this.cajas.find(c => c.id === this.cajaIdSeleccionada);
+          if (!cajaSel) {
+            Swal.fire({ title: 'Caja inactiva', icon: 'warning', text: 'Solo puedes asignar cajas activas.' });
+            return;
+          }
+        } else {
+          Swal.fire({ title: 'Caja requerida', icon: 'warning', text: 'Debes seleccionar una caja activa.' });
           return;
         }
+      } else {
+        // Inactivo: desasignar caja
+        this.cajaIdSeleccionada = null;
       }
 
       const empleadoFinal = {
@@ -72,7 +83,7 @@ export class ModifyEmpleadoComponent implements OnInit {
         correo: this.empleado.correo,
         telefono: this.empleado.telefono,
         contrasena: this.empleado.contrasena,
-        cajaId: this.cajaIdSeleccionada ?? undefined
+        cajaId: this.activo ? (this.cajaIdSeleccionada ?? null) : null
       };
 
       this.empleadoServices.updateEmpleado(this.empleadoId, empleadoFinal).subscribe({

@@ -1,61 +1,27 @@
-
+<header>
+  <app-admin-navbar></app-admin-navbar>
+</header>
+<main>
   <div class="container-fluid full-height">
     <div class="row h-100">
-    
-      <!-- Canasta (solo en escritorio) -->
-      <div class="col-md-4 col-lg-3 left-panel d-none d-md-flex flex-column">
-        <h2 class="mb-4 canasta-title"><img class="icon-canasta me-2" src="../../assets/img/Nueva_venta/carrito de compra.png" alt="Canasta"> Canasta</h2>
-
-        <!-- Contenedor con scroll -->
-        <div class="canasta-lista-scroll flex-grow-1 mb-3">
-          <ul class="list-group" id="canasta-lista-desktop">
-            <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of cart">
-              <div class="me-2 text-truncate" style="max-width: 60%;">
-                <strong>{{ item.producto.nombreProducto }}</strong>
-                <div class="small text-muted">{{ item.cantidad }} x {{ (item.producto.precioComercial || item.producto.precioUnitario) | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
-              </div>
-              <div class="d-flex align-items-center gap-2">
-                <div class="btn-group" role="group" aria-label="Cantidad">
-                  <button class="btn btn-sm btn-outline-secondary" (click)="decrement(item)" title="Disminuir">−</button>
-                  <button class="btn btn-sm btn-light" disabled>{{ item.cantidad }}</button>
-                  <button class="btn btn-sm btn-outline-secondary" (click)="increment(item)" [disabled]="item.cantidad >= (item.producto.stockProducto || 0)" [title]="item.cantidad >= (item.producto.stockProducto || 0) ? 'Sin stock' : 'Aumentar'">+</button>
-                </div>
-                <span class="ms-2 fw-semibold">{{ item.subtotal | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
-                <button class="btn btn-sm btn-outline-danger" (click)="remove(item)" title="Quitar">✕</button>
-              </div>
-            </li>
-            <li class="list-group-item text-center text-muted" *ngIf="cart.length === 0">Tu canasta está vacía</li>
-          </ul>
-        </div>
-
-        <!-- Fijo abajo -->
-        <div class="canasta-footer">
-          <div class="total-summary mb-3">
-            <span class="total-label">Total</span>
-            <span id="total-venta-desktop" class="total-amount">{{ cartTotal | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
-          </div>
-          <button class="btn w-100 confirmar-venta-btn" [disabled]="cart.length === 0" data-bs-toggle="modal" data-bs-target="#confirmSaleModal" (click)="openConfirmModal()">Confirmar Venta</button>
-        </div>
-      </div>
 
       <!-- Productos -->
-      <div class="col-md-8 col-lg-9 right-panel d-flex flex-column">
+      <div class="col-md-8 col-lg-9 right-panel d-flex flex-column order-md-1 order-lg-1">
         <div class="row mb-3 nueva-venta-footer">
-          <h1><a title="new_venta" routerLink="/movimientos"><img class="me-3" width="65px" src="../../assets/img/Nueva_venta/arrow-down_icon-icons.com_72377.png" alt=""></a> <img class="me-3" width="80px" src="../../assets/img/Nueva_venta/nueva_venta.png" alt="">Nueva Venta</h1>
+          <h3><a title="new_venta" routerLink="/movimientos"><img class="me-3" width="40px" src="../../assets/img/Nueva_venta/arrow-down_icon-icons.com_72377.png" alt=""></a> <img class="me-3" width="50px" src="../../assets/img/Nueva_venta/nueva_venta.png" alt="">Nueva Venta</h3>
         </div>
-        <br>
         <div class="row align-items-center mb-3">
           <div class="col-sm-12 col-md-6 col-lg-6">
             <form class="d-flex justify-content-center text-center" role="search" (submit)="$event.preventDefault()">
-              <div class="input-group busca">
-                <button title="boton_buscar" class="btn btn-primary boton_buscador" type="submit"><img width="35px" src="../../assets/img/Logos Admin/Buscador.png" alt=""></button>
-                <input class="form-control input-buscador" type="search" placeholder="Buscar productos o códigos" aria-label="Buscar" [(ngModel)]="searchTerm" name="q">
+              <div class="input-group busca control-width">
+                <button title="boton_buscar" class="btn btn-primary btn-sm boton_buscador" type="submit"><img width="16px" src="../../assets/img/Logos Admin/Buscador.png" alt=""></button>
+                <input class="form-control form-control-sm input-buscador" type="search" placeholder="Buscar productos o códigos" aria-label="Buscar" [(ngModel)]="searchTerm" name="q">
               </div>
             </form>
           </div>
           <div class="col-sm-12 col-md-6 col-lg-6">
-            <div class="dropdown w-100">
-              <button class="btn btn-primary dropdown-toggle bg-white range w-100" type="button" data-bs-toggle="dropdown">
+            <div class="dropdown w-100 control-width">
+              <button class="btn btn-primary btn-sm dropdown-toggle bg-white range w-100" type="button" data-bs-toggle="dropdown">
                 Ordenar: {{ sortLabel }}
               </button>
               <div class="dropdown-menu anchor">
@@ -93,13 +59,19 @@
         <!-- Cuadrícula de productos -->
 
         <div class="container-fluid flex-grow-1 products-scroll">
+          <!-- Mensaje superior cuando no hay resultados para el término buscado -->
+          <div *ngIf="productosOrdenados.length === 0 && (searchTerm || '').trim().length > 0" class="text-muted mb-3 text-center">
+            <p class="mb-1">No se encontraron resultados para:</p>
+            <p class="mb-0 fw-semibold">"{{ searchTerm }}"</p>
+          </div>
+
           <div class="products-grid">
             <div class="card" *ngFor="let p of productosOrdenados" (click)="onProductClick($event, p)"
-                 [ngClass]="{ 'opacity-50': p.estado === false, 'non-selectable': p.estado === false }"
-                 [attr.aria-disabled]="p.estado === false ? true : null"
-                 [attr.title]="p.estado === false ? 'Inhabilitado' : null">
+                  [ngClass]="{ 'opacity-50': p.estado === false, 'non-selectable': p.estado === false }"
+                  [attr.aria-disabled]="p.estado === false ? true : null"
+                  [attr.title]="p.estado === false ? 'Inhabilitado' : null">
               <div>
-                <img [src]="toImageUrl(p.imgProducto)" class="img-card" [alt]="p.nombreProducto" width="250px" height="220px">
+                <img [src]="toImageUrl(p.imgProducto)" class="img-card" [alt]="p.nombreProducto">
                 <div class="card-body">
                   <p class="text-prec">{{ (p.precioComercial || p.precioUnitario) | currency:'COP':'symbol-narrow':'1.0-0' }}</p>
                   <p class="text-nom">
@@ -111,6 +83,42 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- Canasta (solo en escritorio) -->
+      <div class="col-md-4 col-lg-3 left-panel d-none d-md-flex flex-column order-md-2 order-lg-2">
+        <h2 class="mb-4 canasta-title"><img class="icon-canasta me-2" src="../../assets/img/Nueva_venta/carrito de compra.png" alt="Canasta"> Canasta</h2>
+
+        <!-- Contenedor con scroll -->
+        <div class="canasta-lista-scroll flex-grow-1 mb-3">
+          <ul class="list-group" id="canasta-lista-desktop">
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of cart">
+              <div class="me-2 text-truncate" style="max-width: 60%;">
+                <strong>{{ item.producto.nombreProducto }}</strong>
+                <div class="small text-muted">{{ item.cantidad }} x {{ (item.producto.precioComercial || item.producto.precioUnitario) | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <div class="btn-group" role="group" aria-label="Cantidad">
+                  <button class="btn btn-sm btn-outline-secondary" (click)="decrement(item)" title="Disminuir">−</button>
+                  <button class="btn btn-sm btn-light" disabled>{{ item.cantidad }}</button>
+                  <button class="btn btn-sm btn-outline-secondary" (click)="increment(item)" [disabled]="item.cantidad >= (item.producto.stockProducto || 0)" [title]="item.cantidad >= (item.producto.stockProducto || 0) ? 'Sin stock' : 'Aumentar'">+</button>
+                </div>
+                <span class="ms-2 fw-semibold">{{ item.subtotal | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+                <button class="btn btn-sm btn-outline-danger" (click)="remove(item)" title="Quitar">✕</button>
+              </div>
+            </li>
+            <li class="list-group-item text-center text-muted" *ngIf="cart.length === 0">Tu canasta está vacía</li>
+          </ul>
+        </div>
+
+        <!-- Fijo abajo -->
+        <div class="canasta-footer">
+          <div class="total-summary mb-3">
+            <span class="total-label">Total</span>
+            <span id="total-venta-desktop" class="total-amount">{{ cartTotal | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+          <button class="btn w-100 confirmar-venta-btn" [disabled]="cart.length === 0" data-bs-toggle="modal" data-bs-target="#confirmSaleModal" (click)="openConfirmModal()">Confirmar Venta</button>
         </div>
       </div>
 
@@ -183,10 +191,29 @@
             <span class="total-label">Total a pagar</span>
             <span class="total-amount">{{ cartTotal | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
           </div>
+          <div class="mb-2">
+            <small class="text-muted">
+              Cliente:
+              <ng-container *ngIf="selectedClienteData as cli; else sinClienteVenta">
+                {{ cli.nombre }} {{ cli.apellido }} - {{ cli.numero }}
+              </ng-container>
+              <ng-template #sinClienteVenta>Sin cliente</ng-template>
+            </small>
+          </div>
           <div class="mb-3">
             <label for="amountReceived" class="form-label">Dinero recibido</label>
             <input id="amountReceived" type="number" min="0" step="1" inputmode="numeric" class="form-control" [(ngModel)]="amountReceived" name="amountReceived" placeholder="Ingresa el efectivo recibido" [disabled]="isSubmitting">
             <div class="form-text" *ngIf="(amountReceived ?? 0) < cartTotal">El dinero ingresado es menor al total.</div>
+          </div>
+          <div class="mb-3">
+            <label for="cliente" class="form-label">Cliente (opcional)</label>
+            <select id="cliente" class="form-select" [(ngModel)]="selectedClienteId" name="cliente" [disabled]="isSubmitting || clientes.length === 0">
+              <option [ngValue]="null">Sin cliente</option>
+              <option *ngFor="let c of clientes" [ngValue]="c.id">
+                {{ c.nombre }} {{ c.apellido }} - {{ c.numero }}
+              </option>
+            </select>
+            <div class="form-text" *ngIf="clientes.length === 0">No hay clientes activos para asociar.</div>
           </div>
           <div class="mb-3">
             <label for="formaPago" class="form-label">Forma de pago</label>
@@ -211,3 +238,4 @@
       </div>
     </div>
   </div>
+</main>

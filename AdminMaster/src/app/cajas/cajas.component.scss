@@ -50,6 +50,7 @@ main {
     cursor: pointer; 
     color: white;
     font-size: 18px;
+    font-weight: bold;
 }
 
 .btn.agregar:focus {
@@ -126,6 +127,13 @@ main {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
+/* Fila inactiva grisecita */
+.fila-inactiva {
+    background-color: #f5f5f5 !important;
+    filter: grayscale(0.4);
+    opacity: 0.85;
+}
+
 .status {
     padding: 5px 10px;
     border-radius: 10px;
@@ -138,6 +146,17 @@ main {
 }
 
 .inactivo {
+    color: #c00013;
+    background-color: #ff828f;
+}
+
+/* Alias para estados femeninos del backend */
+.activa {
+    color: #00b82b;
+    background-color: #9cffb3;
+}
+
+.inactiva {
     color: #c00013;
     background-color: #ff828f;
 }
@@ -242,7 +261,7 @@ main {
 }
 
 .btn.eliminar {
-    width: 110px;
+    width: 120px;
     text-align: center;
     color: white;
     background-color: #e81313;
@@ -250,6 +269,9 @@ main {
     border-radius: 7px;
     padding: 7px;
     font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn.eliminar:focus {
@@ -258,7 +280,7 @@ main {
 }
 
 .btn.elimi {
-    width: 110px;
+    width: 130px;
     text-align: center;
     color: white;
     background-color: #e81313;
@@ -266,6 +288,9 @@ main {
     border-radius: 12px;
     padding: 7px;
     font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn.elimi:focus {
@@ -289,17 +314,103 @@ main {
     box-shadow: 0 0 6px 2px #e81313;
 }
 
+.btn.inhabilitar {
+    width: 130px;
+    text-align: center;
+    color: #ffffff !important;
+    background-color: #ffc107 !important;
+    box-shadow: 0 0 3px 1px #ffc107 !important;
+    border-radius: 12px;
+    padding: 7px;
+    font-weight: bold;
+    border: none !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn.inhabilitar:focus {
+    border: 1px solid #ffc107 !important;
+    box-shadow: 0 0 6px 2px #ffc107 !important;
+}
+
+.btn.inhabilitar-icon {
+    width: 90px;
+    text-align: center;
+    color: #ffffff !important;
+    background-color: #ffc107 !important;
+    box-shadow: 0 0 3px 1px #ffc107 !important;
+    border-radius: 12px;
+    padding: 7px;
+    font-weight: bold;
+    border: none !important;
+}
+
+.btn.inhabilitar-icon:focus {
+    border: 1px solid #ffc107 !important;
+    box-shadow: 0 0 6px 2px #ffc107 !important;
+}
+
+.acciones .btn.inhabilitar,
+.acciones .btn.inhabilitar-icon,
+.space .btn.inhabilitar {
+    color: #ffffff !important;
+    background-color: #ffc107 !important;
+}
+
+/* Habilitar (amarillo) */
+.btn.habilitar {
+    width: 130px;
+    text-align: center;
+    color: #ffffff !important;
+    background-color: #4ade80 !important; /* verde clarito */
+    box-shadow: 0 0 3px 1px #4ade80 !important;
+    border-radius: 12px;
+    padding: 7px;
+    font-weight: bold;
+    border: none !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn.habilitar:focus {
+    border: 1px solid #4ade80 !important;
+    box-shadow: 0 0 6px 2px #4ade80 !important;
+}
+
+.btn.habilitar-icon {
+    width: 90px;
+    text-align: center;
+    color: #ffffff !important;
+    background-color: #4ade80 !important;
+    box-shadow: 0 0 3px 1px #4ade80 !important;
+    border-radius: 12px;
+    padding: 7px;
+    font-weight: bold;
+    border: none !important;
+}
+
+.btn.habilitar-icon:focus {
+    border: 1px solid #4ade80 !important;
+    box-shadow: 0 0 6px 2px #4ade80 !important;
+}
+
 .btn.modificar {
     background-color: #5adbff;
     box-shadow: 0 0 3px 1px #5adbff;
     border: none;
-    width: 90px;
+    width: 120px;
     text-align: center;
     border-radius: 12px;
     color: white;
     padding: 7px;
     margin-left: 12px;
     font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 }
 
 .btn.modificar:focus {
@@ -319,7 +430,7 @@ main {
 }
 
 .bi {
-    margin-right: 6px;
+    margin-right: 4px;
 }
 
 .acciones {

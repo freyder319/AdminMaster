@@ -77,78 +77,78 @@
             </button>
           </div>
         </div>
-<!-- Modal Entrada Inventario -->
-<div class="modal fade" id="modalEntradaInventario" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalEntradaInventarioLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
+        <!-- Modal Entrada Inventario -->
+        <div class="modal fade" id="modalEntradaInventario" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalEntradaInventarioLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
 
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="modalEntradaInventarioLabel">Entrada de Inventario</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-      <div class="modal-body">
-
-        <div class="row">
-          
-          <!-- FORM IZQUIERDA -->
-          <div class="col-md-6">
-            <form #formEntrada="ngForm" (ngSubmit)="registrarEntrada(formEntrada)">
-              
-              <div class="mb-3">
-                <label class="form-label">Código del Producto</label>
-                <input type="text" class="form-control"
-                  name="codigo"
-                  [(ngModel)]="entrada.codigo"
-                  (input)="buscarProductoPorCodigo()"
-                  required>
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalEntradaInventarioLabel">Entrada de Inventario</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
 
-              <div class="mb-3">
-                <label class="form-label">Cantidad Recibida</label>
-                <input type="number" class="form-control"
-                  name="cantidad"
-                  [(ngModel)]="entrada.cantidad"
-                  required min="1">
+              <div class="modal-body">
+
+                <div class="row">
+                  
+                  <!-- FORM IZQUIERDA -->
+                  <div class="col-md-6">
+                    <form #formEntrada="ngForm" (ngSubmit)="registrarEntrada(formEntrada)">
+                      
+                      <div class="mb-3">
+                        <label class="form-label">Código del Producto</label>
+                        <input type="text" class="form-control"
+                          name="codigo"
+                          [(ngModel)]="entrada.codigo"
+                          (input)="buscarProductoPorCodigo()"
+                          required>
+                      </div>
+
+                      <div class="mb-3">
+                        <label class="form-label">Cantidad Recibida</label>
+                        <input type="number" class="form-control"
+                          name="cantidad"
+                          [(ngModel)]="entrada.cantidad"
+                          required min="1">
+                      </div>
+
+                      <button type="submit" class="btn confir"
+                        data-bs-dismiss="modal"
+                        [disabled]="!formEntrada.valid || !productoEncontrado">
+                        Registrar Entrada
+                      </button>
+
+                    </form>
+                  </div>
+
+                  <!-- VISTA DEL PRODUCTO DERECHA -->
+                  <div class="col-md-6 d-flex flex-column align-items-center justify-content-center border-start">
+
+                    <ng-container *ngIf="productoEncontrado; else sinProducto">
+                      <img [src]="toImageUrl(productoEncontrado.imgProducto)" class="rounded mb-3"
+                        width="150" height="150" alt="Producto">
+
+                      <h5 class="text-center">{{ productoEncontrado.nombreProducto }}</h5>
+
+                      <p class="text-muted">
+                        Stock actual: <strong>{{ productoEncontrado.stockProducto }}</strong>
+                      </p>
+                    </ng-container>
+
+                    <ng-template #sinProducto>
+                      <p class="text-muted fst-italic text-center">
+                        Ingresa un código válido para ver detalles del producto.
+                      </p>
+                    </ng-template>
+
+                  </div>
+
+                </div>
               </div>
 
-              <button type="submit" class="btn btn-primary w-100"
-                data-bs-dismiss="modal"
-                [disabled]="!formEntrada.valid || !productoEncontrado">
-                Registrar Entrada
-              </button>
-
-            </form>
+            </div>
           </div>
-
-          <!-- VISTA DEL PRODUCTO DERECHA -->
-          <div class="col-md-6 d-flex flex-column align-items-center justify-content-center border-start">
-
-            <ng-container *ngIf="productoEncontrado; else sinProducto">
-              <img [src]="toImageUrl(productoEncontrado.imgProducto)" class="rounded mb-3"
-                width="150" height="150" alt="Producto">
-
-              <h5 class="text-center">{{ productoEncontrado.nombreProducto }}</h5>
-
-              <p class="text-muted">
-                Stock actual: <strong>{{ productoEncontrado.stockProducto }}</strong>
-              </p>
-            </ng-container>
-
-            <ng-template #sinProducto>
-              <p class="text-muted fst-italic text-center">
-                Ingresa un código válido para ver detalles del producto.
-              </p>
-            </ng-template>
-
-          </div>
-
         </div>
-      </div>
-
-    </div>
-  </div>
-</div>
         <!-- Agregar Producto -->
         <div class="col-lg-2 col-md-6 col-sm-12">
           <div class="agg-produc">
@@ -204,11 +204,11 @@
             <span>{{ cat.nombreCategoria }}</span>
             <div class="d-flex gap-2">
               <button type="button"class="btn btn-sm modificar text-white" (click)="abrirModal(cat)" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                <img src="../../assets/img/icons-crear/modificar.png" alt="Modificar" width="18px" height="18px" class="me-1">
+                <i class="bi bi-pencil-square me-1"></i>
                 Modificar
               </button>
-              <button (click)="eliminarCategoria(cat.idCategoria)" type="button" class="btn btn-sm  eliminar">
-                <img src="../../assets/img/icons-crear/eliminar.png" alt="Eliminar" width="18px" height="18px" class="me-1">
+              <button (click)="eliminarCategoria(cat.idCategoria)" type="button" class="btn btn-sm elimi">
+                <i class="bi bi-trash me-1"></i>
                 Eliminar
               </button>
             </div>
@@ -221,7 +221,7 @@
     </div>
   </div>
 </div>
-<!-- Modal CATEGORIAS-->
+<!-- Modal Modificar CATEGORIAS-->
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -243,8 +243,8 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" [disabled]="!nombreModCtrl.valid || nombreCategoriaModificarDuplicado" data-bs-dismiss="modal" (click)="modificarCategoria(categoriaModificar.idCategoria,categoriaModificar)" class="btn btn-primary">Modificar</button>
+        <button type="button" class="btn elimi" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" [disabled]="!nombreModCtrl.valid || nombreCategoriaModificarDuplicado" data-bs-dismiss="modal" (click)="modificarCategoria(categoriaModificar.idCategoria,categoriaModificar)" class="btn modificar">Modificar</button>
       </div>
     </div>
   </div>
@@ -313,24 +313,30 @@
                           <td>{{ producto.precioComercial | currency:'COP':'symbol-narrow':'1.0-0' }}</td>
                           
                           <td class="text-center">
-                            <button title="Modificar" class="btn modificar2 btn-sm me-1" (click)="abrirEditar(producto)" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAgregarProducto" aria-controls="offcanvasAgregarProducto">
-                              <i class="bi bi-pencil-square">Modificar</i>
-                            </button>
-                            <!-- Si NO se puede eliminar (tiene ventas asociadas), mostrar Inhabilitar/Habilitar -->
-                            <ng-container *ngIf="!canDeleteFlag(producto); else eliminarBtn">
-                              <button *ngIf="producto.estado !== false" title="Inhabilitar" class="btn btn-outline-warning btn-sm inhabilitar2" (click)="toggleEstado(producto)">
-                                <i class="bi bi-slash-circle">Inhabilitar</i>
+                            <div class="d-flex justify-content-center gap-2">
+                              <button title="Modificar" class="btn modificar btn-sm" (click)="abrirEditar(producto)" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAgregarProducto" aria-controls="offcanvasAgregarProducto">
+                                <i class="bi bi-pencil-square"></i>
+                                <span class="texto">Modificar</span>
                               </button>
-                              <button *ngIf="producto.estado === false" title="Habilitar" class="btn btn-outline-success btn-sm inhabilitar2" (click)="toggleEstado(producto)">
-                                <i class="bi bi-check-circle">Habilitar</i>
-                              </button>
-                            </ng-container>
-                            <!-- Si se puede eliminar, mostrar Eliminar -->
-                            <ng-template #eliminarBtn>
-                              <button title="Eliminar" class="btn btn-outline-danger btn-sm eliminar2" (click)="eliminarProducto(producto.id!)">
-                                <i class="bi bi-trash">Eliminar</i>
-                              </button>
-                            </ng-template>
+                              <!-- Si NO se puede eliminar (tiene ventas asociadas), mostrar Inhabilitar/Habilitar -->
+                              <ng-container *ngIf="!canDeleteFlag(producto); else eliminarBtn">
+                                <button *ngIf="producto.estado !== false" title="Inhabilitar" class="btn inhabilitar btn-sm" (click)="toggleEstado(producto)">
+                                  <i class="bi bi-slash-circle"></i>
+                                  <span class="texto">Inhabilitar</span>
+                                </button>
+                                <button *ngIf="producto.estado === false" title="Habilitar" class="btn habilitar btn-sm" (click)="toggleEstado(producto)">
+                                  <i class="bi bi-check2-circle"></i>
+                                  <span class="texto">Habilitar</span>
+                                </button>
+                              </ng-container>
+                              <!-- Si se puede eliminar, mostrar Eliminar -->
+                              <ng-template #eliminarBtn>
+                                <button title="Eliminar" class="btn elimi btn-sm" (click)="eliminarProducto(producto.id!)">
+                                  <i class="bi bi-trash"></i>
+                                  <span class="texto">Eliminar</span>
+                                </button>
+                              </ng-template>
+                            </div>
                           </td>
                         </tr>
                       </tbody>

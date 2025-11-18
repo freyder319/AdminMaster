@@ -61,7 +61,6 @@ export class ProductoService {
   canDelete(id: number): Observable<{ canDelete: boolean }> {
     return this.http.get<{ canDelete: boolean }>(`${this.apiUrl}/${id}/can-delete`);
   }
-  
   // Buscar producto por código
   buscarPorCodigo(codigo: string): Observable<Producto | null> {
     return this.http.get<Producto | null>(`${this.apiUrl}/buscar/${codigo}`);

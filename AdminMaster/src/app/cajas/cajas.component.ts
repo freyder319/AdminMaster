@@ -5,6 +5,7 @@ import { AdminNavbarComponent } from "../admin_navbar/admin_navbar.component";
 import { AddCajasComponent } from "../add_cajas/add_cajas.component";
 import { ModifyCajaComponent } from '../modify-caja/modify-caja.component';
 import { Cajas, CajasService } from '../services/cajas.service';
+import { Empleados, EmpleadosService } from '../services/empleados.service';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
@@ -23,12 +24,15 @@ export class CajasComponent {
   mostrarModificarCaja = false;
   cajas:Cajas[] = [];
   cajasFiltrar: Cajas[] = []; 
+  empleados: Empleados[] = [];
+  private cajasEnUso = new Set<number>();
+  private codigosCajaEnUso = new Set<string>();
   // streams reactivos
   private search$ = new BehaviorSubject<string>('');
   private cajas$ = new BehaviorSubject<Cajas[]>([]);
   filteredCajas$!: Observable<Cajas[]>;
   lastSearchTerm = '';
-  constructor (private cajasServices: CajasService){}
+  constructor (private cajasServices: CajasService, private empleadosService: EmpleadosService){}
 
   ngOnInit(): void {
     this.cajasServices.getCajas().subscribe({
@@ -43,14 +47,21 @@ export class CajasComponent {
         ]).pipe(
           map(([cajas, term]) => {
             const t = (term || '').trim().toLowerCase();
-            if (!t) return cajas;
-            return cajas.filter(caja =>
+            const base = !t ? cajas : cajas.filter(caja =>
               caja.nombre?.toLowerCase().includes(t) ||
               caja.codigoCaja?.toLowerCase().includes(t) ||
               caja.estado?.toLowerCase().includes(t)
             );
+            // ordenar: activas primero, inactivas al final
+            return [...base].sort((a, b) => {
+              const aIna = (a.estado || '').toLowerCase() === 'inactiva' ? 1 : 0;
+              const bIna = (b.estado || '').toLowerCase() === 'inactiva' ? 1 : 0;
+              return aIna - bIna;
+            });
           })
         );
+        // cargar empleados para detectar relaciones de caja
+        this.cargarEmpleados();
       },
       error: (error) => console.error('Error al Cargar Cajas:', error)
     });
@@ -70,6 +81,8 @@ export class CajasComponent {
         this.cajasFiltrar = data;
         this.cajas = data;
         this.cajas$.next(this.cajas);
+        // actualizar relaciones tras recargar cajas
+        this.cargarEmpleados();
       },
       error: (error) => console.error('Error al Cargar Cajas:', error)
     });
@@ -94,6 +107,8 @@ export class CajasComponent {
     this.mostrarAddCaja = false;
     this.lastSearchTerm = '';
     this.search$.next(this.lastSearchTerm);
+    // actualizar relaciones
+    this.cargarEmpleados();
   }
 
   abrirModificarCaja(caja: Cajas) {
@@ -149,6 +164,8 @@ export class CajasComponent {
             this.obtenerCajas();
             this.lastSearchTerm = '';
             this.search$.next(this.lastSearchTerm);
+            // actualizar relaciones
+            this.cargarEmpleados();
           },
           error: (err) => {
             let mensaje = 'Ocurrió un Error al Eliminar la Caja';
@@ -165,6 +182,83 @@ export class CajasComponent {
               text: mensaje,
             });
           }
+        });
+      }
+    });
+  }
+
+  private cargarEmpleados() {
+    this.empleadosService.getEmpleados().subscribe({
+      next: (emps) => {
+        this.empleados = emps || [];
+        const ids = (this.empleados || [])
+          .map(e => {
+            const directId: any = (e as any).cajaId;
+            const nestedId: any = (e as any).caja?.id;
+            const candidate = directId != null ? directId : nestedId;
+            const n = typeof candidate === 'string' ? parseInt(candidate, 10) : candidate;
+            return Number.isFinite(n) ? Number(n) : null;
+          })
+          .filter((v): v is number => typeof v === 'number' && Number.isFinite(v));
+        this.cajasEnUso = new Set<number>(ids);
+        const codes = (this.empleados || [])
+          .map(e => (e as any).caja?.codigoCaja)
+          .filter((v): v is string => typeof v === 'string' && v.trim().length > 0)
+          .map(v => v.trim().toLowerCase());
+        this.codigosCajaEnUso = new Set<string>(codes);
+      },
+      error: (error) => console.error('Error al Cargar Empleados:', error)
+    });
+  }
+
+  isCajaEnUso(idOrCaja: number | Cajas | undefined | null): boolean {
+    if (idOrCaja == null) return false;
+    if (typeof idOrCaja === 'number') {
+      return this.cajasEnUso.has(idOrCaja);
+    }
+    const byId = idOrCaja.id != null && this.cajasEnUso.has(idOrCaja.id);
+    const code = (idOrCaja.codigoCaja || '').toLowerCase().trim();
+    const byCode = !!code && this.codigosCajaEnUso.has(code);
+    return byId || byCode;
+  }
+
+  inhabilitarCaja(caja: Cajas) {
+    this.cajasServices.updateCaja(caja.id, { estado: 'Inactiva' }).subscribe({
+      next: (updated) => {
+        const idx = (this.cajas || []).findIndex(c => c.id === caja.id);
+        if (idx >= 0) {
+          this.cajas[idx] = { ...this.cajas[idx], estado: updated.estado || 'Inactiva' } as Cajas;
+          this.cajas = [...this.cajas];
+          this.cajas$.next(this.cajas);
+        }
+        this.obtenerCajas();
+      },
+      error: () => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error...',
+          text: 'No se pudo inhabilitar la Caja.'
+        });
+      }
+    });
+  }
+
+  habilitarCaja(caja: Cajas) {
+    this.cajasServices.updateCaja(caja.id, { estado: 'Activa' }).subscribe({
+      next: (updated) => {
+        const idx = (this.cajas || []).findIndex(c => c.id === caja.id);
+        if (idx >= 0) {
+          this.cajas[idx] = { ...this.cajas[idx], estado: updated.estado || 'Activa' } as Cajas;
+          this.cajas = [...this.cajas];
+          this.cajas$.next(this.cajas);
+        }
+        this.obtenerCajas();
+      },
+      error: () => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error...',
+          text: 'No se pudo habilitar la Caja.'
         });
       }
     });

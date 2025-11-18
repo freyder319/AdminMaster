@@ -24,6 +24,28 @@
                         </div>
                     </section>
 
+                    <!-- Estado Activo / Inactivo (estilo como Clientes/Proveedores) -->
+                    <section>
+                      <div class="container act-inac">
+                        <div class="activo">
+                          <button
+                            type="button"
+                            class="btn-act"
+                            [class.is-selected]="activo === true"
+                            [attr.aria-pressed]="activo === true"
+                            (click)="activo = true">Activo</button>
+                        </div>
+                        <div class="inactivo">
+                          <button
+                            type="button"
+                            class="btn-inac"
+                            [class.is-selected]="activo === false"
+                            [attr.aria-pressed]="activo === false"
+                            (click)="activo = false">Inactivo</button>
+                        </div>
+                      </div>
+                    </section>
+
                     <!-- Nombre -->
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre</label>
@@ -72,13 +94,13 @@
                     <!-- Asignar Caja -->
                     <div class="mb-3">
                         <label for="caja" class="form-label">Asignar Caja</label>
-                        <select [(ngModel)]="empleado.cajaId" name="cajaId" class="form-select" required>
+                        <select [(ngModel)]="empleado.cajaId" name="cajaId" class="form-select" [required]="activo" [disabled]="!activo">
                             <option [ngValue]="null" disabled>Selecciona una caja</option>
                             <option *ngFor="let caja of cajas" [ngValue]="caja.id">
                                 {{ caja.nombre }} ({{ caja.codigoCaja }})
                             </option>
                         </select>
-                        <div *ngIf="cajas.length === 0" class="alert alert-warning">
+                        <div *ngIf="cajas.length === 0 && activo" class="alert alert-warning">
                             No hay cajas disponibles para asignar.
                         </div>
                     </div><br>

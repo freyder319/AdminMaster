@@ -51,6 +51,7 @@ main{
     cursor: pointer; 
     color: white;
     font-size: 18px;
+    font-weight: bold;
 }
 
 .btn.agregar:focus {
@@ -123,6 +124,12 @@ main{
 .table tbody tr {
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.fila-inactiva {
+    background-color: #f5f5f5 !important;
+    filter: grayscale(0.4);
+    opacity: 0.85;
 }
 
 .td1 {
@@ -292,11 +299,81 @@ img {
     box-shadow: 0 0 6px 2px #e81313;
 }
 
+.btn.inhabilitar {
+    width: 110px;
+    text-align: center;
+    color: #ffffff !important;
+    background-color: #ffc107 !important;
+    box-shadow: 0 0 3px 1px #ffc107 !important;
+    border-radius: 12px;
+    padding: 7px;
+    font-weight: bold;
+    border: none !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn.habilitar {
+    width: 110px;
+    text-align: center;
+    color: #ffffff !important;
+    background-color: #4ade80 !important; /* verde clarito */
+    box-shadow: 0 0 3px 1px #4ade80 !important;
+    border-radius: 12px;
+    padding: 7px;
+    font-weight: bold;
+    border: none !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn.inhabilitar:focus {
+    border: 1px solid #ffc107 !important;
+    box-shadow: 0 0 6px 2px #ffc107 !important;
+}
+
+.btn.habilitar:focus {
+    border: 1px solid #4ade80 !important;
+    box-shadow: 0 0 6px 2px #4ade80 !important;
+}
+
+.btn.inhabilitar-icon {
+    width: 40px;
+    height: 40px;
+    color: #ffffff !important;
+    background-color: #ffc107 !important;
+    box-shadow: 0 0 3px 1px #ffc107 !important;
+    border: none !important;
+    border-radius: 8px;
+}
+
+.btn.habilitar-icon {
+    width: 40px;
+    height: 40px;
+    color: #ffffff !important;
+    background-color: #4ade80 !important;
+    box-shadow: 0 0 3px 1px #4ade80 !important;
+    border: none !important;
+    border-radius: 8px;
+}
+
+.btn.inhabilitar-icon:focus {
+    border: 1px solid #ffc107 !important;
+    box-shadow: 0 0 6px 2px #ffc107 !important;
+}
+
+.btn.habilitar-icon:focus {
+    border: 1px solid #4ade80 !important;
+    box-shadow: 0 0 6px 2px #4ade80 !important;
+}
+
 .btn.modificar {
     background-color: #5adbff;
     box-shadow: 0 0 3px 1px #5adbff;
     border: none;
-    width: 90px;
+    width: 110px;
     text-align: center;
     border-radius: 12px;
     color: white;
@@ -339,7 +416,7 @@ img {
 }
 
 .bi{
-    margin-right: 6px;
+    margin-right: 4px;
 }
 
 .acciones{
