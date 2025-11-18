@@ -120,10 +120,10 @@ export class InventoryComponent {
     }
     
     this.productoService.buscarPorCodigo(this.entrada.codigo).subscribe({
-      next: (data) => {
+      next: (data: Producto | null) => {
         this.productoEncontrado = data;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error al buscar producto por código', err);
         this.productoEncontrado = null;
       }
@@ -151,7 +151,7 @@ export class InventoryComponent {
       });
       
       this.productoService.actualizarStock(this.productoEncontrado.id, nuevaCantidad).subscribe({
-        next: (productoActualizado) => {
+        next: (productoActualizado: Producto) => {
           console.log('Stock actualizado correctamente:', productoActualizado);
           Swal.fire({
             icon: 'success',
@@ -181,7 +181,7 @@ export class InventoryComponent {
             }
           }, 2000);
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Error al actualizar el stock:', err);
           let mensajeError = 'No se pudo actualizar el inventario';
           
@@ -328,7 +328,7 @@ export class InventoryComponent {
             Swal.fire('Eliminado', 'Producto eliminado correctamente', 'success');
             this.onGuardado();
           },
-          error: (err) => {
+          error: (err: any) => {
             // Priorizar mensaje del servidor (por ejemplo, FK violation: producto enlazado a una venta)
             let mensaje = err?.error?.message || 'Ocurrió un error al eliminar el producto';
             if (!err?.error?.message) {
@@ -378,7 +378,7 @@ export class InventoryComponent {
             this.ngOnInit();
             form.resetForm(); 
           },
-          error: (err) => {
+          error: (err: any) => {
             console.log(err)
             if (err.status === 400) {
               this.errorMessage = err.error.message;

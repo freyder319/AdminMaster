@@ -32,6 +32,10 @@ export class ProductoService {
     const qs = all ? '?all=true' : '';
     return this.http.get<Producto[]>(`${this.apiUrl}${qs}`);
   }
+  // Listar productos publicos
+  getPublic(): Observable<Producto[]> {
+    return this.http.get<Producto[]>(`${this.apiUrl}/public`);
+  }
   // Obtener un producto por ID
   get(id: number): Observable<Producto> {
     return this.http.get<Producto>(`${this.apiUrl}/${id}`);
@@ -56,6 +60,9 @@ export class ProductoService {
   // Saber si se puede eliminar (sin ventas asociadas)
   canDelete(id: number): Observable<{ canDelete: boolean }> {
     return this.http.get<{ canDelete: boolean }>(`${this.apiUrl}/${id}/can-delete`);
+  }
+  
+  // Buscar producto por código
   buscarPorCodigo(codigo: string): Observable<Producto | null> {
     return this.http.get<Producto | null>(`${this.apiUrl}/buscar/${codigo}`);
   }
