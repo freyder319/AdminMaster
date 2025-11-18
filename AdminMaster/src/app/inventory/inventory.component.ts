@@ -328,7 +328,7 @@ export class InventoryComponent {
             Swal.fire('Eliminado', 'Producto eliminado correctamente', 'success');
             this.onGuardado();
           },
-          error: (err) => {
+          error: (err: any) => {
             // Priorizar mensaje del servidor (por ejemplo, FK violation: producto enlazado a una venta)
             let mensaje = err?.error?.message || 'Ocurrió un error al eliminar el producto';
             if (!err?.error?.message) {
@@ -378,7 +378,7 @@ export class InventoryComponent {
             this.ngOnInit();
             form.resetForm(); 
           },
-          error: (err) => {
+          error: (err: any) => {
             console.log(err)
             if (err.status === 400) {
               this.errorMessage = err.error.message;
