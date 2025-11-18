@@ -1,9 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { NavBarComponent } from "../nav-bar/nav-bar.component";
 import { FooterComponent } from "../footer/footer.component";
-import { NgFor, NgIf, TitleCasePipe } from '@angular/common';
+import { isPlatformBrowser, NgFor, TitleCasePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
 import { ProductoService, Producto as BackendProducto } from '../services/producto.service';
 import { FormsModule } from '@angular/forms';
 
@@ -20,22 +19,28 @@ interface ProductoCard {
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [NgFor,TitleCasePipe,MatButtonModule,NavBarComponent, FooterComponent, FormsModule],
+  imports: [
+  NgFor,
+  FormsModule,
+  TitleCasePipe,
+  MatButtonModule,
+  NavBarComponent,
+  FooterComponent,
+  ],
   templateUrl: './products.component.html',
-  styleUrl: './products.component.scss'
+  styleUrls: ['./products.component.scss']
 })
-export class ProductsComponent {
-  constructor(private productoService: ProductoService) {}
-  ngOnInit() {
-    this.productoService.getAll().subscribe({
-      next: (data) => this.cargarDesdeBackend(data || []),
-      error: () => this.cargarDesdeBackend([])
-    });
-    this.productoService.getCount().subscribe({
-      next: (res) => this.totalProductos = Number(res?.total ?? 0),
-      error: () => this.totalProductos = 0
-    });
+export class ProductsComponent implements OnInit {
+  constructor(private productoService: ProductoService,@Inject(PLATFORM_ID) private platformId: Object) { }
+
+ngOnInit(): void {
+  if (isPlatformBrowser(this.platformId)) {
+    this.cargarProductos();
+  } else {
+    console.log("Error de Servidor");
   }
+}
+
   categoriaSeleccionada: Categoria = 'panaderia';
   private baseImageUrl = 'http://localhost:3000/storage/';
 
@@ -73,7 +78,10 @@ export class ProductsComponent {
     const base = this.productos[this.categoriaSeleccionada] || [];
     const q = (this.searchTerm || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '');
     if (!q) return base;
-    return base.filter(p => (p.nombre || '').toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').includes(q));
+    return base.filter(p => {
+      const nombre = (p.nombre ?? '').toString().toLowerCase();
+      return nombre.includes(q);
+    });
   }
 
   get paginatedProductos(): ProductoCard[] {
@@ -99,34 +107,118 @@ export class ProductsComponent {
     this.currentPage = 1;
   }
 
-  private cargarDesdeBackend(lista: BackendProducto[]): void {
-    const toImageUrl = (img?: string | null): string => {
-      if (!img) return '';
-      const s = String(img);
-      if (s.startsWith('http') || s.startsWith('data:')) return s;
-      return this.baseImageUrl + s.replace(/^\/+/, '');
-    };
-    const mapToLocal = (p: BackendProducto): ProductoCard => ({
-      nombre: p.nombreProducto,
-      precio: p.precioComercial ?? p.precioUnitario,
-      imagen: toImageUrl(p.imgProducto),
-      stock: p.stockProducto
+  private cargarProductos() {
+    console.log('🔍 Iniciando carga de productos...');
+    this.productoService.getPublic().subscribe({
+      next: (data: any[]) => {
+        console.log("✅ Datos recibidos del servidor:", data);
+        if (!data || !Array.isArray(data)) {
+          console.error('❌ Error: La respuesta del servidor no es un array:', data);
+          return;
+        }
+        if (data.length === 0) {
+          console.warn('⚠️ El servidor devolvió un array vacío de productos');
+        }
+        this.cargarDesdeBackend(data);
+      },
+      error: (err) => {
+        console.error("❌ Error al obtener productos:", err);
+        // Set default products for development
+        if (err.status === 0) {
+          console.warn('⚠️ No se pudo conectar al servidor. Verifica que el backend esté en ejecución.');
+        }
+        // Initialize with empty data to prevent template errors
+        this.productos = {
+          panaderia: [],
+          pasteleria: [],
+          bebidas: []
+        };
+        this.totalProductos = 0;
+      },
+      complete: () => {
+        console.log('✅ Carga de productos completada');
+      }
     });
-    const es = (p: BackendProducto, nombre: string) =>
-      (p.categoria?.nombreCategoria || '').toLowerCase().includes(nombre) ||
-      String(p.idCategoria || '').toLowerCase() === nombre;
-
-    const pan = lista.filter(p => es(p, 'pan') || es(p, 'panaderia')).map(mapToLocal);
-    const past = lista.filter(p => es(p, 'pastel') || es(p, 'pasteleria')).map(mapToLocal);
-    const beb = lista.filter(p => es(p, 'bebida') || es(p, 'bebidas')).map(mapToLocal);
-
-    this.productos = {
-      panaderia: pan,
-      pasteleria: past,
-      bebidas: beb,
-    };
-    // Reiniciar a la primera página al cargar datos
-    this.currentPage = 1;
   }
 
+  private cargarDesdeBackend(productosBackend: any[]): void {
+    console.log('🔄 Procesando', productosBackend.length, 'productos...');
+    
+    // Inicializar arrays para cada categoría
+    const pan: ProductoCard[] = [];
+    const past: ProductoCard[] = [];
+    const beb: ProductoCard[] = [];
+    
+    // Función para normalizar URLs de imágenes
+    const toImageUrl = (img?: string | null): string => {
+      if (!img) return 'assets/img/placeholder.jpg'; // Imagen por defecto
+      const s = String(img).trim();
+      if (s.startsWith('http') || s.startsWith('data:')) return s;
+      // Asegurar que la URL base termine con / y la ruta de la imagen no empiece con /
+      const base = this.baseImageUrl.endsWith('/') ? this.baseImageUrl : this.baseImageUrl + '/';
+      const path = s.startsWith('/') ? s.substring(1) : s;
+      return base + path;
+    };
+
+    try {
+      // Procesar cada producto
+      productosBackend.forEach((prod: any) => {
+        if (!prod) return; // Saltar productos nulos o indefinidos
+        
+        // Crear el objeto de producto
+        const productoCard: ProductoCard = {
+          nombre: prod.nombreProducto || 'Producto sin nombre',
+          precio: prod.precioComercial ?? prod.precioUnitario ?? 0,
+          imagen: toImageUrl(prod.imgProducto),
+          stock: prod.stockProducto ?? 0
+        };
+
+        // Determinar la categoría
+        const catNombre = (prod.categoria?.nombreCategoria || '').toLowerCase();
+        const catId = String(prod.idCategoria || prod.categoria?.idCategoria || '').toLowerCase();
+
+        if (catId === '1' || catNombre.includes('pan') || catNombre.includes('panaderia')) {
+          pan.push(productoCard);
+        } else if (catId === '2' || catNombre.includes('pastel') || catNombre.includes('pasteleria')) {
+          past.push(productoCard);
+        } else if (catId === '3' || catNombre.includes('bebida') || catNombre.includes('bebidas')) {
+          beb.push(productoCard);
+        } else {
+          console.warn('Producto sin categoría definida:', prod);
+          // Por defecto, lo ponemos en panadería
+          pan.push(productoCard);
+        }
+      });
+
+      // Actualizar el estado
+      this.productos = {
+        panaderia: pan,
+        pasteleria: past,
+        bebidas: beb
+      };
+      
+      // Actualizar el contador total
+      this.totalProductos = this.productos[this.categoriaSeleccionada]?.length || 0;
+      
+      // Reiniciar a la primera página
+      this.currentPage = 1;
+      this.animarTitulo = true;
+      
+      console.log(' Productos cargados correctamente:', {
+        panaderia: pan.length,
+        pasteleria: past.length,
+        bebidas: beb.length
+      });
+      
+    } catch (error) {
+      console.error(' Error al procesar los productos:', error);
+      // Asegurarse de que siempre haya una estructura válida
+      this.productos = {
+        panaderia: [],
+        pasteleria: [],
+        bebidas: []
+      };
+      this.totalProductos = 0;
+    }
+  }
 }

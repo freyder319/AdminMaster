@@ -57,6 +57,7 @@ export const routes: Routes = [
     // Rutas para cliente
     { path: "donde-estamos", component: DondeEstamosComponent },
     { path: "pqrs", component: PqrsComponent },
-    { path: "", component: ProductsComponent},
+    { path: "", redirectTo: "products", pathMatch: "full" },
+    { path: "products", component: ProductsComponent},
 
 ];
