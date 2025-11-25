@@ -1,57 +1,366 @@
 <main>
-    <nav class="navbar" id="navContainer">
-        <div class="container-fluid">
+  <!-- Botón móvil para abrir/cerrar la navbar sin afectar el contenido -->
+  <button
+    type="button"
+    class="mobile-nav-toggle"
+    [class.is-hidden]="isMobilePanelOpen"
+    (click)="toggleMobileNav()"
+    aria-label="Abrir menú de navegación">
+    <i class="bi bi-list"></i>
+  </button>
 
-            <a class="img-navbar" [routerLink]="rol === 'admin' ? ['/perfil_administrador'] : null" routerLinkActive="active2" [routerLinkActiveOptions]="{ exact: true }" [class.disabled]="rol !== 'admin'" [attr.aria-disabled]="rol !== 'admin' ? 'true' : null" [tabindex]="rol !== 'admin' ? -1 : 0" (click)="rol !== 'admin' && $event.preventDefault()" aria-label="Abrir menú">
-                <img class="foto_perfil" src="../../assets/img/Logo-removebg-preview.png" alt="Logo" width="110" height="80">
-            </a>
+  <nav class="navbar" id="navContainer" [class.mobile-open]="isMobilePanelOpen">
+    <div class="sidebar-shell">
 
-            <a class="navbar-brand" [routerLink]="['/turno-empleado']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: false }">
-                <img [src]="rol === 'admin' ? '../../assets/img/icons-navbar/Admin.png' : '../../assets/img/icons-navbar/PuntoPOS.png'" alt="Perfil" width="30" height="30">
-                <span class="nav-text">{{ correo || 'Usuario' }}</span>
-            </a>
+      <!-- Rail de grupos (logo + íconos) -->
+      <div class="sidebar-rail">
+        <button type="button" class="rail-item brand-rail" title="AdminMaster" (click)="onRailClick()">
+          <img class="rail-logo" src="../../assets/img/Logo-removebg-preview.png" alt="Logo">
+        </button>
+        <!-- Botones de grupos solo para admin; para punto_pos no se muestran grupos -->
+        <button *ngIf="rol === 'admin'" type="button" class="rail-item" (click)="onRailGroupClick('cuenta')" [class.active-rail]="selectedGroup === 'cuenta'" title="Cuenta">
+          <i class="bi bi-person-circle"></i>
+        </button>
+        <button *ngIf="rol === 'admin'" type="button" class="rail-item" (click)="onRailGroupClick('turnos')" [class.active-rail]="selectedGroup === 'turnos'" title="Turnos y caja">
+          <i class="bi bi-calendar-check"></i>
+        </button>
+        <button *ngIf="rol === 'admin'" type="button" class="rail-item" (click)="onRailGroupClick('operaciones')" [class.active-rail]="selectedGroup === 'operaciones'" title="Operaciones">
+          <i class="bi bi-speedometer2"></i>
+        </button>
+        <button *ngIf="rol === 'admin'" type="button" class="rail-item" (click)="onRailGroupClick('reportes')" [class.active-rail]="selectedGroup === 'reportes'" title="Reportes">
+          <i class="bi bi-bar-chart"></i>
+        </button>
+        <button *ngIf="rol === 'admin'" type="button" class="rail-item" (click)="onRailGroupClick('relaciones')" [class.active-rail]="selectedGroup === 'relaciones'" title="Relaciones">
+          <i class="bi bi-people"></i>
+        </button>
+      </div>
 
-            <a class="navbar-brand" [routerLink]="['/movimientos']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <!-- Panel derecho con contenido del grupo seleccionado -->
+      <div class="sidebar-panel">
+        <div class="container-fluid sidebar-inner">
+
+          <!-- Header / título de app -->
+          <div class="sidebar-header">
+            <span class="sidebar-title">AdminMaster</span>
+          </div>
+
+          <!-- Buscador alineado arriba -->
+          <div class="sidebar-search">
+            <div class="search-icon">
+              <i class="bi bi-search"></i>
+            </div>
+            <input class="search-input" type="text" placeholder="Buscar..." />
+          </div>
+
+          <!-- Menú principal: muestra distinto contenido según grupo (desktop) o plano (móvil) -->
+          <div class="sidebar-menu">
+
+            <!-- Menú plano para móvil o para roles distintos de admin (punto_pos): sin grupos -->
+            <ng-container *ngIf="isMobileView || rol !== 'admin'; else desktopMenu">
+              <button
+                type="button"
+                class="sidebar-section-label sidebar-section-toggle"
+                (click)="toggleMobileGroup('cuenta')">
+                <span>Cuenta</span>
+                <span class="toggle-icon">{{ mobileGroupsExpanded.cuenta ? '▾' : '▸' }}</span>
+              </button>
+
+              <ng-container *ngIf="mobileGroupsExpanded.cuenta">
+                <!-- Cuenta / Perfil -->
+                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/perfil_administrador']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Perfil administrador">
+                  <img src="../../assets/img/icons-navbar/Admin.png" alt="Perfil" width="30" height="30">
+                  <span class="nav-text">Configuración</span>
+                </a>
+              </ng-container>
+
+              <button
+                type="button"
+                class="sidebar-section-label sidebar-section-toggle"
+                (click)="toggleMobileGroup('turnos')">
+                <span>Turnos y caja</span>
+                <span class="toggle-icon">{{ mobileGroupsExpanded.turnos ? '▾' : '▸' }}</span>
+              </button>
+
+              <ng-container *ngIf="mobileGroupsExpanded.turnos">
+                <!-- Turnos admin -->
+                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','registros-turno']" routerLinkActive="active" title="Registro de turnos">
+                  <img src="../../assets/img/icons-navbar/Registro.png" alt="Registro de turnos" width="30" height="30">
+                  <span class="nav-text">Registro de turnos</span>
+                </a>
+
+                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','activos']" routerLinkActive="active" title="Turnos activos">
+                  <img src="../../assets/img/icons-navbar/Activo.png" alt="Turnos activos" width="30" height="30">
+                  <span class="nav-text">Turnos activos</span>
+                </a>
+
+                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','cerrados']" routerLinkActive="active" title="Turnos cerrados">
+                  <img src="../../assets/img/icons-navbar/Cerrado.png" alt="Turnos cerrados" width="30" height="30">
+                  <span class="nav-text">Turnos cerrados</span>
+                </a>
+
+                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','historial']" routerLinkActive="active" title="Historial de turnos">
+                  <img src="../../assets/img/icons-navbar/Historial.png" alt="Historial de turnos" width="30" height="30">
+                  <span class="nav-text">Historial</span>
+                </a>
+
+                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','notificaciones']" routerLinkActive="active" title="Notificaciones de turnos">
+                  <img src="../../assets/img/icons-navbar/Notificacion.png" alt="Notificaciones" width="30" height="30">
+                  <span class="nav-text">Notificaciones</span>
+                </a>
+
+                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','auditoria-caja']" routerLinkActive="active" title="Auditoría de caja">
+                  <img src="../../assets/img/icons-navbar/Cajas.png" alt="Auditoría de caja" width="30" height="30">
+                  <span class="nav-text">Auditoría de caja</span>
+                </a>
+
+                <!-- Turno empleado para otros roles -->
+                <a *ngIf="rol !== 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Turno empleado">
+                  <img src="../../assets/img/icons-navbar/PuntoPOS.png" alt="Turno" width="30" height="30">
+                  <span class="nav-text">Turno empleado</span>
+                </a>
+              </ng-container>
+
+              <button
+                type="button"
+                class="sidebar-section-label sidebar-section-toggle"
+                (click)="toggleMobileGroup('operaciones')">
+                <span>Operaciones</span>
+                <span class="toggle-icon">{{ mobileGroupsExpanded.operaciones ? '▾' : '▸' }}</span>
+              </button>
+
+              <ng-container *ngIf="mobileGroupsExpanded.operaciones">
+                <!-- Operaciones -->
+                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/movimientos']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Movimientos">
+                  <img src="../../assets/img/icons-navbar/Movimientos.png" alt="" width="30" height="30">
+                  <span class="nav-text">Movimientos</span>
+                </a>
+
+                <a *ngIf="rol === 'punto_pos'" class="navbar-brand" [routerLink]="['/crear_venta']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Ventas">
+                  <img src="../../assets/img/icons-navbar/Movimientos.png" alt="" width="30" height="30">
+                  <span class="nav-text">Ventas</span>
+                </a>
+
+                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/inventario']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Inventario">
+                  <img src="../../assets/img/icons-navbar/Inventario.png" alt="" width="30" height="30">
+                  <span class="nav-text">Inventario</span>
+                </a>
+              </ng-container>
+
+              <button
+                type="button"
+                class="sidebar-section-label sidebar-section-toggle"
+                (click)="toggleMobileGroup('reportes')">
+                <span>Reportes</span>
+                <span class="toggle-icon">{{ mobileGroupsExpanded.reportes ? '▾' : '▸' }}</span>
+              </button>
+
+              <ng-container *ngIf="mobileGroupsExpanded.reportes">
+                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/estadisticas']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Estadísticas">
+                  <img src="../../assets/img/icons-navbar/Estadisticas.png" alt="" width="30" height="30">
+                  <span class="nav-text">Estadísticas</span>
+                </a>
+
+                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/reportes-empleados']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Reportes empleados">
+                  <img src="../../assets/img/icons-navbar/Estadisticas.png" alt="Reportes empleados" width="30" height="30">
+                  <span class="nav-text">Reportes empleados</span>
+                </a>
+
+                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/reportes-ventas']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Reportes ventas">
+                  <img src="../../assets/img/icons-navbar/Estadisticas.png" alt="Reportes ventas" width="30" height="30">
+                  <span class="nav-text">Reportes ventas</span>
+                </a>
+
+                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/cajas']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Cajas">
+                  <img src="../../assets/img/icons-navbar/Cajas.png" alt="" width="30" height="30">
+                  <span class="nav-text">Cajas</span>
+                </a>
+              </ng-container>
+
+              <button
+                type="button"
+                class="sidebar-section-label sidebar-section-toggle"
+                (click)="toggleMobileGroup('relaciones')">
+                <span>Relaciones</span>
+                <span class="toggle-icon">{{ mobileGroupsExpanded.relaciones ? '▾' : '▸' }}</span>
+              </button>
+
+              <ng-container *ngIf="mobileGroupsExpanded.relaciones">
+                <!-- Relaciones -->
+                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/proveedor']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Proveedores">
+                  <img src="../../assets/img/icons-navbar/Proovedores.png" alt="" width="30" height="30">
+                  <span class="nav-text">Proveedores</span>
+                </a>
+
+                <a class="navbar-brand" [routerLink]="['/clientes']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Clientes">
+                  <img src="../../assets/img/icons-navbar/Clientes.png" alt="" width="30" height="30">
+                  <span class="nav-text">Clientes</span>
+                </a>
+
+                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/empleados']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Empleados">
+                  <img src="../../assets/img/icons-navbar/Empleados.png" alt="" width="30" height="30">
+                  <span class="nav-text">Empleados</span>
+                </a>
+              </ng-container>
+            </ng-container>
+
+            <!-- Menú agrupado para desktop -->
+            <ng-template #desktopMenu>
+
+            <!-- Grupo: Cuenta -->
+            <ng-container *ngIf="selectedGroup === 'cuenta'">
+              <div class="sidebar-section-label">Cuenta</div>
+
+              <!-- Perfil administrador -->
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/perfil_administrador']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Perfil administrador">
+                <img src="../../assets/img/icons-navbar/Admin.png" alt="Perfil" width="30" height="30">
+                <span class="nav-text">Configuración</span>
+              </a>
+
+              <!-- Para otros roles, un acceso directo al módulo de turno -->
+              <a *ngIf="rol !== 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Turno empleado">
+                <img src="../../assets/img/icons-navbar/PuntoPOS.png" alt="Turno" width="30" height="30">
+                <span class="nav-text">Turno empleado</span>
+              </a>
+            </ng-container>
+
+            <!-- Grupo: Operaciones -->
+            <ng-container *ngIf="selectedGroup === 'operaciones'">
+              <div class="sidebar-section-label">Operaciones</div>
+
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/movimientos']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Movimientos">
                 <img src="../../assets/img/icons-navbar/Movimientos.png" alt="" width="30" height="30">
                 <span class="nav-text">Movimientos</span>
-            </a>
+              </a>
 
-            <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/inventario']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+              <a *ngIf="rol === 'punto_pos'" class="navbar-brand" [routerLink]="['/crear_venta']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Ventas">
+                <img src="../../assets/img/icons-navbar/Movimientos.png" alt="" width="30" height="30">
+                <span class="nav-text">Ventas</span>
+              </a>
+
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/inventario']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Inventario">
                 <img src="../../assets/img/icons-navbar/Inventario.png" alt="" width="30" height="30">
                 <span class="nav-text">Inventario</span>
-            </a>
+              </a>
 
-            <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/estadisticas']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-                <img src="../../assets/img/icons-navbar/Estadisticas.png" alt="" width="30" height="30">
-                <span class="nav-text">Estadísticas</span>
-            </a>
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/promociones']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Promociones">
+                <img src="../../assets/img/Logos Admin/venta_productos.png" alt="" width="30" height="30">
+                <span class="nav-text">Promociones</span>
+              </a>
+            </ng-container>
 
-            <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/cajas']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <!-- Grupo: Turnos y caja -->
+            <ng-container *ngIf="selectedGroup === 'turnos'">
+              <div class="sidebar-section-label">Turnos y caja</div>
+
+              <!-- Turnos (admin: vistas separadas) -->
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','registros-turno']" routerLinkActive="active" title="Registro de turnos">
+                <img src="../../assets/img/icons-navbar/Registro.png" alt="Registro de turnos" width="30" height="30">
+                <span class="nav-text">Registro de turnos</span>
+              </a>
+
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','activos']" routerLinkActive="active" title="Turnos activos">
+                <img src="../../assets/img/icons-navbar/Activo.png" alt="Turnos activos" width="30" height="30">
+                <span class="nav-text">Turnos activos</span>
+              </a>
+
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','cerrados']" routerLinkActive="active" title="Turnos cerrados">
+                <img src="../../assets/img/icons-navbar/Cerrado.png" alt="Turnos cerrados" width="30" height="30">
+                <span class="nav-text">Turnos cerrados</span>
+              </a>
+
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','historial']" routerLinkActive="active" title="Historial de turnos">
+                <img src="../../assets/img/icons-navbar/Historial.png" alt="Historial de turnos" width="30" height="30">
+                <span class="nav-text">Historial</span>
+              </a>
+
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','notificaciones']" routerLinkActive="active" title="Notificaciones de turnos">
+                <img src="../../assets/img/icons-navbar/Notificacion.png" alt="Notificaciones" width="30" height="30">
+                <span class="nav-text">Notificaciones</span>
+              </a>
+
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','auditoria-caja']" routerLinkActive="active" title="Auditoría de caja">
+                <img src="../../assets/img/icons-navbar/Cajas.png" alt="Auditoría de caja" width="30" height="30">
+                <span class="nav-text">Auditoría de caja</span>
+              </a>
+
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/cajas']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Cajas">
                 <img src="../../assets/img/icons-navbar/Cajas.png" alt="" width="30" height="30">
                 <span class="nav-text">Cajas</span>
-            </a>
+              </a>
+            </ng-container>
 
-            <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/proveedor']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <!-- Grupo: Reportes -->
+            <ng-container *ngIf="selectedGroup === 'reportes'">
+              <div class="sidebar-section-label">Reportes</div>
+
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/estadisticas']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Estadísticas">
+                <img src="../../assets/img/icons-navbar/Estadisticas.png" alt="" width="30" height="30">
+                <span class="nav-text">Estadísticas</span>
+              </a>
+
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/reportes-empleados']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Reportes empleados">
+                <img src="../../assets/img/icons-navbar/Estadisticas.png" alt="Reportes empleados" width="30" height="30">
+                <span class="nav-text">Reportes empleados</span>
+              </a>
+
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/reportes-ventas']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Reportes ventas">
+                <img src="../../assets/img/icons-navbar/Estadisticas.png" alt="Reportes ventas" width="30" height="30">
+                <span class="nav-text">Reportes ventas</span>
+              </a>
+            </ng-container>
+
+            <!-- Grupo: Relaciones -->
+            <ng-container *ngIf="selectedGroup === 'relaciones'">
+              <div class="sidebar-section-label">Relaciones</div>
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/proveedor']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Proveedores">
                 <img src="../../assets/img/icons-navbar/Proovedores.png" alt="" width="30" height="30">
                 <span class="nav-text">Proveedores</span>
-            </a>
+              </a>
 
-            <a class="navbar-brand" [routerLink]="['/clientes']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+              <a class="navbar-brand" [routerLink]="['/clientes']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Clientes">
                 <img src="../../assets/img/icons-navbar/Clientes.png" alt="" width="30" height="30">
                 <span class="nav-text">Clientes</span>
-            </a>
+              </a>
 
-            <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/empleados']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/empleados']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Empleados">
                 <img src="../../assets/img/icons-navbar/Empleados.png" alt="" width="30" height="30">
                 <span class="nav-text">Empleados</span>
-            </a>
+              </a>
+            </ng-container>
 
-            <a class="navbar-brand logout-icon" (click)="cerrarSesion()" aria-label="Cerrar sesión">
-                <img src="../../assets/img/icons-navbar/Logout.png" alt="Cerrar sesión" width="30" height="30">
+            </ng-template>
+
+          </div>
+
+          <!-- Footer / usuario + logout -->
+          <div class="sidebar-footer">
+            <div class="sidebar-user-card">
+              <div class="user-avatar">
+                <i class="bi bi-person"></i>
+              </div>
+              <div class="user-info nav-text">
+                <div class="user-name">{{ correo || 'Usuario' }}</div>
+                <div class="user-role">{{ rol === 'admin' ? 'Administrador' : 'Punto de venta' }}</div>
+              </div>
+              <button class="logout-compact" type="button" (click)="cerrarSesion()" aria-label="Cerrar sesión">
+                <img src="../../assets/img/icons-navbar/Logout.png" alt="Cerrar sesión" width="22" height="22">
                 <span class="nav-text">Salir</span>
-            </a>
+              </button>
+            </div>
+          </div>
+
         </div>
-    </nav>
+      </div>
+
+      <!-- Backdrop para móvil/tablet cuando el panel está abierto -->
+      <div
+        class="sidebar-backdrop"
+        *ngIf="isMobilePanelOpen"
+        (click)="closeMobilePanel()">
+      </div>
+
+    </div>
+  </nav>
 
 </main>
 

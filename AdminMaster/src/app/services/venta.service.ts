@@ -12,12 +12,15 @@ export interface VentaItemDTO {
 export interface CreateVentaPayload {
   total: number;
   forma_pago: 'efectivo' | 'tarjeta' | 'transferencia' | 'nequi' | 'daviplata' | 'otros';
+  estado?: 'confirmada' | 'pendiente';
   observaciones?: string;
   usuario_id?: number;
   turno_id?: number;
   fecha_hora?: string;
   descuentoId?: number;
+  clienteId?: number;
   items: VentaItemDTO[];
+  transaccionId?: string;
 }
 
 @Injectable({ providedIn: 'root' })

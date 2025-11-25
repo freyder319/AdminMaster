@@ -1,0 +1,228 @@
+main{
+  margin-top: 16px;
+  padding-bottom: 96px;
+  min-height: calc(100vh - 16px);
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-bg);
+}
+
+@media (max-width: 768px) {
+  main {
+      margin-top: 0; 
+      padding-bottom: 96px;
+      min-height: 100vh;
+  }
+}
+
+// Hacer que la vista de promociones ocupe todo el alto disponible
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+/* Título principal reutilizando estilo de Movimientos/Cajas */
+.tit-movimientos{
+  font-family: 'poetsen one', cursive;
+  text-align: center;
+  color: var(--primary-dark);
+  font-weight: 700;
+  font-size: 2.1rem;
+  position: relative;
+  padding-bottom: 0.9rem;
+}
+
+.tit-movimientos::after{
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--primary-color), #4f46e5);
+}
+
+/* --- Buscar y Agregar, igual que en Cajas --- */
+.buscar-agg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.agg-caja {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Solo el buscador de la barra superior (no afecta inputs del modal) */
+.buscar-agg .form-control {
+  width: 700px;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  box-shadow: 0 2px 8px rgba(148, 163, 184, 0.25);
+  padding: 8px 15px;
+  margin-right: 10px;
+}
+
+.buscar-agg .form-control:focus {
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+  outline: none;
+}
+
+.btn.agregar {
+  background: radial-gradient(circle at 30% 20%, #38bdf8, #1d4ed8);
+  width: 200px;
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(56, 189, 248, 0.55);
+  padding: 8px 15px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.btn.agregar:focus {
+  border: 1px solid #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+  outline: none;
+}
+
+@media (max-width: 768px) {
+  .buscar-agg {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .buscar-agg .form-control {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .btn.agregar {
+    position: fixed;
+    z-index: 10;
+    bottom: 24px;
+    right: 24px;
+    height: 88px;
+    width: 88px;
+    border: 1px solid #5adbff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .btn.agregar .texto {
+    display: none;
+  }
+}
+
+// Contenedor principal a ancho completo, siguiendo el padding lateral global del body
+.promo-container {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+form {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px 18px 12px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.form-label {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #0f172a;
+}
+
+.form-control,
+.form-select {
+  font-size: 0.9rem;
+  border-radius: 18px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  padding: 8px 10px;
+  background: #ffffff;
+}
+
+.form-control:focus,
+.form-select:focus {
+  outline: none;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+}
+
+.form-check-label {
+  font-size: 0.9rem;
+  color: #0f172a;
+}
+
+// Botón principal
+.add-btn {
+  background: linear-gradient(135deg, #1d4ed8, #4f46e5);
+  border-color: transparent;
+  font-weight: 600;
+  border-radius: 999px;
+  padding-inline: 1rem;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.45);
+}
+
+.add-btn:hover {
+  background: linear-gradient(135deg, #1d4ed8, #4f46e5);
+  border-color: transparent;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.5);
+}
+
+// Título de la lista
+.discounts-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+}
+
+// Ítems de la lista de promociones
+.list-group-item {
+  border-radius: 12px !important;
+  margin-bottom: 8px;
+  border: 1px solid #e0e7ff;
+  background: #ffffff;
+  color: #0f172a;
+}
+
+.list-group-item .fw-semibold {
+  font-size: 0.96rem;
+}
+
+.list-group-item small.text-muted {
+  font-size: 0.8rem;
+  color: #6b7280 !important;
+}
+
+// Botón eliminar
+.btn.elimi {
+  border-radius: 10px;
+  padding: 0.45rem 1.1rem;
+  color: #ffffff;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  box-shadow: 0 6px 16px rgba(248, 113, 113, 0.45);
+  border: none;
+}
+
+.btn.elimi:focus {
+  border: 1px solid #ef4444;
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.45);
+}
+
+.btn.elimi .texto {
+  font-size: 0.8rem;
+}

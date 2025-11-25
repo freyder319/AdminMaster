@@ -1,0 +1,28 @@
+ .app-loader {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9f9f9;
+  z-index: 9999;
+}
+
+ .app-loader__spinner {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 6px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #8b4513;
+  animation: app-loader-spin 0.8s linear infinite;
+}
+
+ @keyframes app-loader-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+

@@ -33,6 +33,23 @@ export class EmpleadosComponent {
     private cajasService: CajasService,
   ){}
 
+  focusFirstInput(offcanvasId: string): void {
+    const offcanvas = document.getElementById(offcanvasId);
+    if (!offcanvas) return;
+
+    let input = offcanvas.querySelector('input[data-autofocus="true"]') as HTMLInputElement | null;
+    if (!input) {
+      input = offcanvas.querySelector('input') as HTMLInputElement | null;
+    }
+
+    if (input) {
+      setTimeout(() => {
+        input?.focus();
+        (input as any)?.select?.();
+      }, 50);
+    }
+  }
+
   ngOnInit(): void {
     this.empleadosServices.getEmpleados().subscribe({
       next: (data) => {
@@ -169,6 +186,14 @@ export class EmpleadosComponent {
 
   estadoEmpleado(e: Empleados | null | undefined): 'Activo' | 'Inactivo' {
     if (!e) return 'Inactivo';
+
+    const rawEstado = (e as any).estado as string | undefined;
+    if (rawEstado && rawEstado.toUpperCase() !== 'ACTIVO') {
+      // Si el backend marca el empleado como NO ACTIVO (por ejemplo INACTIVO),
+      // siempre se considera Inactivo, aunque tenga caja asignada.
+      return 'Inactivo';
+    }
+
     const tieneCaja = !!(e.cajaId != null || (e as any).caja?.id);
     return tieneCaja ? 'Activo' : 'Inactivo';
   }
@@ -193,6 +218,19 @@ export class EmpleadosComponent {
   }
 
   habilitarEmpleado(e: Empleados) {
+    // Si el empleado no tiene contraseña registrada, no permitir habilitar
+    const contrasena = (e as any)?.contrasena as string | undefined;
+    const tieneContrasena = !!contrasena && contrasena.trim().length > 0;
+    if (!tieneContrasena) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Cuenta no Activada',
+        html: 'La cuenta del empleado aún no ha sido activada. Debe activar su cuenta desde el correo de activación antes de habilitarlo.',
+        confirmButtonColor: 'brown'
+      });
+      return;
+    }
+
     // Abrir formulario de modificar para asignar caja y mostrar información
     this.empleadoSeleccionado = e;
     if (window.innerWidth < 768) {
@@ -207,6 +245,6 @@ export class EmpleadosComponent {
         instance?.show?.();
       } catch {}
     }
-    Swal.fire({ icon: 'info', title: 'Habilitar Empleado', text: 'Para habilitar al Empleado debes Asignarle una Caja y colocar su Estado en Activo.', timer: 2200, showConfirmButton: false });
+    Swal.fire({ icon: 'info', title: 'Habilitar Empleado', html: 'Para Habilitar al Empleado debes <b>Asignarle una Caja</b> y colocar su <b>Estado en Activo</b>.', timer: 2200, showConfirmButton: false });
   }
 }

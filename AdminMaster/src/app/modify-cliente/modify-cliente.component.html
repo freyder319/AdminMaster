@@ -4,7 +4,10 @@
         <div class="container text-center">
             <div class="row">
             <div class="col">
-                <h1 class="tit-clientes">Modificar Cliente</h1>
+                <h1 class="tit-clientes">
+                  <i class="bi bi-people-fill me-2"></i>
+                  <span>Modificar Clientes</span>
+                </h1>
             </div>
             </div>
         </div>
@@ -33,20 +36,58 @@
             <div class="formulario">
                 <form *ngIf="cliente" (ngSubmit)="modificarCliente()">
                     <div class="mb-3">
-                        <label for="exampleInputText" class="form-label">Nombre del Cliente</label>
-                        <input type="text" [(ngModel)]="cliente.nombre" name="nombre" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                        <label for="nombre" class="form-label">Nombre del Cliente</label>
+                        <input type="text"
+                               [(ngModel)]="cliente.nombre"
+                               name="nombre"
+                               class="form-control"
+                               id="nombre"
+                               #nombreCtrl="ngModel"
+                               [ngClass]="{ 'is-invalid': nombreCtrl.invalid && (nombreCtrl.dirty || nombreCtrl.touched) }">
                     </div>
+
                     <div class="mb-3">
-                        <label for="exampleInputText" class="form-label">Apellido del Cliente</label>
-                        <input type="text" [(ngModel)]="cliente.apellido" name="apellido" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                        <label for="apellido" class="form-label">Apellido del Cliente</label>
+                        <input type="text"
+                               [(ngModel)]="cliente.apellido"
+                               name="apellido"
+                               class="form-control"
+                               id="apellido"
+                               #apellidoCtrl="ngModel"
+                               [ngClass]="{ 'is-invalid': apellidoCtrl.invalid && (apellidoCtrl.dirty || apellidoCtrl.touched) }">
                     </div>
+
                     <div class="mb-3">
-                        <label for="exampleInputText" class="form-label">Telefono</label>
-                        <input type="text" [(ngModel)]="cliente.numero" name="numero" class="form-control" id="exampleInputText" aria-describedby="textHelp">
+                        <label for="documento" class="form-label">Documento</label>
+                        <input type="text"
+                               [(ngModel)]="cliente.documento"
+                               name="documento"
+                               class="form-control"
+                               id="documento"
+                               #documentoCtrl="ngModel"
+                               [ngClass]="{ 'is-invalid': documentoCtrl.invalid && (documentoCtrl.dirty || documentoCtrl.touched) }">
                     </div>
+
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Correo Electronico</label>
-                        <input type="email" [(ngModel)]="cliente.correo" name="correo" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        <label for="telefono" class="form-label">Telefono</label>
+                        <input type="text"
+                               [(ngModel)]="cliente.numero"
+                               name="numero"
+                               class="form-control"
+                               id="telefono"
+                               #telefonoCtrl="ngModel"
+                               [ngClass]="{ 'is-invalid': telefonoCtrl.invalid && (telefonoCtrl.dirty || telefonoCtrl.touched) }">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="correo" class="form-label">Correo Electronico</label>
+                        <input type="email"
+                               [(ngModel)]="cliente.correo"
+                               name="correo"
+                               class="form-control"
+                               id="correo"
+                               #correoCtrl="ngModel"
+                               [ngClass]="{ 'is-invalid': correoCtrl.invalid && (correoCtrl.dirty || correoCtrl.touched) }">
                     </div>
 
                     <div class="confirmarfinal">

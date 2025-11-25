@@ -18,8 +18,8 @@
                 </div>
             </div>
             <div class="container act-inac d-flex justify-content-center gap-3 mt-3">
-                <button type="button" class="btn-act" [ngClass]="{ 'activo-seleccionado': nuevaCaja.estado === 'Activo' }" (click)="nuevaCaja.estado = 'Activo'">Activo</button>
-                <button type="button" class="btn-inac" [ngClass]="{ 'inactivo-seleccionado': nuevaCaja.estado === 'Inactivo' }" (click)="nuevaCaja.estado = 'Inactivo'">Inactivo</button>
+                <button type="button" class="btn-act" [ngClass]="{ 'activo-seleccionado': nuevaCaja.estado === 'Activa' }" (click)="nuevaCaja.estado = 'Activa'">Activa</button>
+                <button type="button" class="btn-inac" [ngClass]="{ 'inactivo-seleccionado': nuevaCaja.estado === 'Inactiva' }" (click)="nuevaCaja.estado = 'Inactiva'">Inactiva</button>
             </div><br>
         </section>
 
@@ -28,7 +28,7 @@
                 <div class="formulario">
                     <div class="mb-3">
                         <label for="validationCustom01" class="form-label">Nombre de Caja</label>
-                        <input type="text" class="form-control" id="validationCustom01" name="nombre" required [(ngModel)]="nuevaCaja.nombre" #nombreCaja="ngModel" [ngClass]="{ 'is-valid': nombreCaja.valid && nombreCaja.touched, 'is-invalid': nombreCaja.invalid && nombreCaja.touched}"/>
+                        <input #nombreInput data-autofocus="true" type="text" class="form-control" id="validationCustom01" name="nombre" required [(ngModel)]="nuevaCaja.nombre" #nombreCaja="ngModel" [ngClass]="{ 'is-valid': nombreCaja.valid && nombreCaja.touched, 'is-invalid': nombreCaja.invalid && nombreCaja.touched}" (keydown.enter)="onEnterFocus(codigoCajaInput, $event, nuevaCaja.nombre)"/>
 
                         <!-- Mensaje de éxito -->
                         <div class="valid-feedback" *ngIf="nombreCaja.valid && nombreCaja.touched" @fadeIn>
@@ -42,7 +42,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Código de Caja</label>
-                        <input type="text" class="form-control" [(ngModel)]="nuevaCaja.codigoCaja" [ngClass]="{ 'is-invalid': codigoCajaExcede || codigoCajaNoNumerico, 'is-valid': !codigoCajaExcede && !codigoCajaNoNumerico }" name="codigoCaja" required maxlength="20" pattern="^[0-9]*$" #codigoCajaRef="ngModel" (input)="validarCodigoCaja()"/>
+                        <input #codigoCajaInput type="text" class="form-control" [(ngModel)]="nuevaCaja.codigoCaja" [ngClass]="{ 'is-invalid': codigoCajaExcede || codigoCajaNoNumerico, 'is-valid': !codigoCajaExcede && !codigoCajaNoNumerico }" name="codigoCaja" required maxlength="20" pattern="^[0-9]*$" #codigoCajaRef="ngModel" (input)="validarCodigoCaja()" (keydown.enter)="onEnterFocus(btnConfirmarCaja, $event, nuevaCaja.codigoCaja)"/>
 
                         <!-- Mensaje de éxito -->
                         <div class="valid-feedback" *ngIf="codigoCajaRef.valid && codigoCajaRef.touched && nuevaCaja.codigoCaja" @fadeIn>
@@ -61,7 +61,7 @@
                     </div>
 
                     <div class="confirmarfinal text-center">
-                        <button type="submit" class="btn confir" [disabled]="formCaja.invalid">Confirmar</button>
+                        <button #btnConfirmarCaja type="submit" class="btn confir" [disabled]="formCaja.invalid">Confirmar</button>
                     </div>
                 </div>
             </div>

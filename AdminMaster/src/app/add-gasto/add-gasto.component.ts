@@ -18,7 +18,7 @@ declare const bootstrap: any;
 export class AddGastoComponent implements OnInit {
   categorias: Categorias[] = [];
   proveedores: Proveedor[] = [];
-  estadoSeleccionado: 'confirmado' | 'pendiente' | 'anulado' = 'pendiente';
+  estadoSeleccionado: 'confirmado' | 'pendiente' = 'confirmado';
 
   // Modelo del formulario
   nombreGasto: string = '';
@@ -29,6 +29,7 @@ export class AddGastoComponent implements OnInit {
   proveedorId?: number;
   formaPago?: 'efectivo' | 'transferencia' | 'tarjeta' | 'nequi' | 'daviplata' | 'otros';
   submitting = false;
+  transaccionId: string = '';
 
   constructor(
     private categoriaService: CategoriaService,
@@ -40,13 +41,32 @@ export class AddGastoComponent implements OnInit {
   ngOnInit(): void {
     this.categoriaService.getCategories().subscribe((cats) => (this.categorias = cats));
     this.proveedorService.fetchAll().subscribe((list) => (this.proveedores = list));
+
+    const el = document.getElementById('gasto');
+    if (el && typeof (window as any)?.bootstrap !== 'undefined') {
+      el.addEventListener('shown.bs.offcanvas', () => {
+        // siempre dejar "confirmado" seleccionado al abrir
+        this.estadoSeleccionado = 'confirmado';
+
+        let input = el.querySelector('input[data-autofocus="true"]') as HTMLInputElement | null;
+        if (!input) {
+          input = el.querySelector('input') as HTMLInputElement | null;
+        }
+        if (input) {
+          setTimeout(() => {
+            input.focus();
+            (input as any)?.select?.();
+          }, 50);
+        }
+      });
+    }
   }
 
-  setEstado(estado: 'confirmado' | 'pendiente' | 'anulado') {
+  setEstado(estado: 'confirmado' | 'pendiente') {
     this.estadoSeleccionado = estado;
   }
 
-  isEstado(estado: 'confirmado' | 'pendiente' | 'anulado') {
+  isEstado(estado: 'confirmado' | 'pendiente') {
     return this.estadoSeleccionado === estado;
   }
 
@@ -55,7 +75,7 @@ export class AddGastoComponent implements OnInit {
     if (issues.length) {
       Swal.fire({
         icon: 'warning',
-        title: 'Completa el formulario',
+        title: 'Completa el Formulario',
         html: `<ul style="text-align:left;margin:0;padding-left:18px;">${issues.map(i => `<li>${i}</li>`).join('')}</ul>`
       });
       return;
@@ -73,16 +93,17 @@ export class AddGastoComponent implements OnInit {
       forma_pago: this.formaPago,
       usuarioId,
       estado: this.estadoSeleccionado,
+      transaccionId: this.formaPago && this.formaPago !== 'efectivo' ? (this.transaccionId || undefined) : undefined,
     };
     this.gastoService.create(payload).subscribe({
       next: (res) => {
         this.submitting = false;
-        console.log('Gasto creado, id:', res?.id, 'usuarioId enviado:', usuarioId);
+        console.log('Gasto Creado, id:', res?.id, 'usuarioId enviado:', usuarioId);
         this.closeGastoOffcanvas();
         Swal.fire({
           icon: 'success',
-          title: 'Gasto creado',
-          text: `ID: ${res?.id}`,
+          title: 'Gasto Registrado!',
+          html: `El <b>Gasto</b> fue Registrado con Éxito`,
           timer: 2000,
           showConfirmButton: false
         });
@@ -93,7 +114,7 @@ export class AddGastoComponent implements OnInit {
         console.error('Error creando gasto', err);
         const beMsg = (err?.error?.message && Array.isArray(err.error.message))
           ? `<ul style="text-align:left;margin:0;padding-left:18px;">${err.error.message.map((m: string) => `<li>${m}</li>`).join('')}</ul>`
-          : (typeof err?.error?.message === 'string' ? err.error.message : 'No se pudo crear el gasto');
+          : (typeof err?.error?.message === 'string' ? err.error.message : 'Ocurrió un error inesperado');
         Swal.fire({
           icon: 'error',
           title: 'Error',
@@ -109,7 +130,7 @@ export class AddGastoComponent implements OnInit {
       issues.push('Ingresa el nombre o la descripción del gasto.');
     }
     if (!this.fechaGasto) {
-      issues.push('Selecciona la fecha del gasto.');
+      issues.push('Selecciona la fecha y la hora del gasto.');
     }
     if (!this.montoGasto || isNaN(Number(this.montoGasto)) || Number(this.montoGasto) <= 0) {
       issues.push('Ingresa un monto válido mayor a 0.');
@@ -130,6 +151,27 @@ export class AddGastoComponent implements OnInit {
       // Fallback: disparar el botón close si existe
       const btn = el.querySelector('.btn-close') as HTMLElement | null;
       btn?.click();
+    }
+  }
+
+  onEnterFocus(next: any, event: Event, value?: any) {
+    event.preventDefault();
+
+    if (value === undefined || value === null) {
+      return;
+    }
+    if (typeof value === 'string' && !value.trim()) {
+      return;
+    }
+    if (typeof value === 'number' && (!Number.isFinite(value) || value <= 0)) {
+      return;
+    }
+
+    if (next && typeof next.focus === 'function') {
+      next.focus();
+      if (typeof next.select === 'function') {
+        next.select();
+      }
     }
   }
 }

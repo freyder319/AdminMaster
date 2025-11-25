@@ -1,50 +1,66 @@
-<div class="turno-card">
-  <h2 class="titulo">Historial</h2>
-  <div class="filtros" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;">
-    <div class="input-icon" style="flex:1 1 220px;min-width:200px;">
-      <i class="bi bi-search" aria-hidden="true"></i>
-      <input type="search" [(ngModel)]="q" placeholder="Buscar (módulo/acción/entidad)" class="form-control" aria-label="Buscar">
-    </div>
-    <input type="date" [(ngModel)]="from" class="form-control" aria-label="Desde" placeholder="Desde (fecha)" title="Desde (fecha)">
-    <input type="date" [(ngModel)]="to" class="form-control" aria-label="Hasta" placeholder="Hasta (fecha)" title="Hasta (fecha)">
-  </div>
-  <div *ngIf="cargando">Cargando...</div>
-  <div *ngIf="!cargando && view.length === 0">
-    <p>Sin eventos por ahora.</p>
-  </div>
-  <ul class="turno-lista" *ngIf="!cargando && view.length > 0">
-    <li class="turno-item" *ngFor="let ev of view" (click)="abrirDetalle(ev)" role="button" tabindex="0">
-      <i class="bi bi-activity item-icon" aria-hidden="true"></i>
-      <div class="turno-item-info">
-        <div class="turno-item-primario">
-          <strong>{{ ev.module }}</strong>
-          <span class="badge bg-secondary ms-2">{{ tAction(ev.action) }}</span>
-        </div>
-        <div class="turno-item-secundario text-muted">
-          <i class="bi bi-clock inline" aria-hidden="true"></i>
-          {{ ev.timestamp | date:'short' }} ·
-          <span *ngIf="ev.entity">{{ ev.entity }}</span>
-          <span *ngIf="ev.entityId">#{{ ev.entityId }}</span>
+<section>
+  <div class="container-fluid historial-container">
+    <div class="row">
+      <div class="col-12">
+        <div class="turno-card">
+          <h2 class="titulo">
+            <i class="bi bi-activity me-2"></i>
+            <span>Historial</span>
+          </h2>
+          <div class="filtros" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;">
+            <div class="input-icon" style="flex:1 1 220px;min-width:200px;">
+              <i class="bi bi-search" aria-hidden="true"></i>
+              <input type="search" [(ngModel)]="q" placeholder="Buscar (módulo/acción/entidad)" class="form-control" aria-label="Buscar">
+            </div>
+            <input type="date" [(ngModel)]="from" class="form-control" aria-label="Desde" placeholder="Desde (fecha)" title="Desde (fecha)">
+            <input type="date" [(ngModel)]="to" class="form-control" aria-label="Hasta" placeholder="Hasta (fecha)" title="Hasta (fecha)">
+          </div>
+          <div *ngIf="cargando">Cargando...</div>
+          <div *ngIf="!cargando && view.length === 0">
+            <p>Sin eventos por ahora.</p>
+          </div>
+          <ul class="turno-lista" *ngIf="!cargando && view.length > 0">
+            <li class="turno-item" *ngFor="let ev of view" (click)="abrirDetalle(ev)" role="button" tabindex="0">
+              <i class="bi bi-activity item-icon" aria-hidden="true"></i>
+              <div class="turno-item-info">
+                <div class="turno-item-primario">
+                  <strong>{{ ev.module }}</strong>
+                  <span class="badge bg-secondary ms-2">{{ tAction(ev.action) }}</span>
+                </div>
+                <div class="turno-item-secundario text-muted">
+                  <i class="bi bi-clock inline" aria-hidden="true"></i>
+                  {{ ev.timestamp | date:'short' }} ·
+                  <span *ngIf="ev.entity">{{ ev.entity }}</span>
+                  <span *ngIf="ev.entityId">#{{ ev.entityId }}</span>
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
-    </li>
-  </ul>
-</div>
+    </div>
+  </div>
+</section>
 
 <div class="modal-backdrop" [hidden]="!modalAbierto"></div>
-<div class="modal-contenedor" [hidden]="!modalAbierto" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
+<div class="modal-contenedor" [hidden]="!modalAbierto" role="dialog" aria-modal="true">
   <div class="modal-header">
-    <h3>Detalle de evento</h3>
+    <h3 class="modal-title">
+      <i class="bi bi-activity me-2"></i>
+      <span>Detalle de evento</span>
+    </h3>
     <button type="button" class="modal-cerrar" (click)="cerrarDetalle($event)">✕</button>
   </div>
-  <div class="modal-body" *ngIf="seleccionado as evd" (click)="$event.stopPropagation()">
+  <div class="modal-body" *ngIf="seleccionado as evd">
     <div class="datos-grid">
-      <div class="kv"><span class="k">Módulo</span><span class="v">{{ evd.module }}</span></div>
+      <div class="kv" *ngIf="evd.entity"><span class="k">Entidad</span><span class="v">{{ evd.entity }}</span></div>
+      <div class="kv" *ngIf="displayEntityId(evd) as id">
+        <span class="k">{{ isProducto(evd) ? 'Código producto' : 'ID' }}</span>
+        <span class="v">{{ id }}</span>
+      </div>
       <div class="kv"><span class="k">Acción</span><span class="v">{{ tAction(evd.action) }}</span></div>
       <div class="kv"><span class="k">Fecha</span><span class="v">{{ evd.timestamp | date:'short' }}</span></div>
-      <div class="kv" *ngIf="evd.entity"><span class="k">Entidad</span><span class="v">{{ evd.entity }}</span></div>
-      <div class="kv" *ngIf="evd.entityId"><span class="k">ID</span><span class="v">{{ evd.entityId }}</span></div>
-      <div class="kv"><span class="k">Usuario</span><span class="v">{{ evd.actorUserId || '—' }}</span></div>
+      <div class="kv"><span class="k">Usuario</span><span class="v">{{ displayUsuario(evd) }}</span></div>
       <div class="kv"><span class="k">Rol</span><span class="v">{{ evd.actorRol || '—' }}</span></div>
     </div>
   </div>

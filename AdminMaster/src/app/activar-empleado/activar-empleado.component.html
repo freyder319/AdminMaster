@@ -1,0 +1,50 @@
+<main class="activar-wrapper">
+  <section class="activar-card">
+    <h1 class="titulo">
+      <i class="bi bi-person-badge-fill me-2"></i>
+      <span>Activar Cuenta de Empleado</span>
+    </h1>
+    <p class="subtitulo" *ngIf="correo">
+      Estás activando la cuenta asociada a <strong>{{ correo }}</strong>
+    </p>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label class="form-label">Nueva contraseña</label>
+        <div class="position-relative">
+          <input
+            [type]="mostrarPassword ? 'text' : 'password'"
+            formControlName="password"
+            class="form-control pe-5"
+            [ngClass]="{ 'is-invalid': form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty) }"
+          >
+          <button type="button" class="btn-icon-password" (click)="toggleMostrarPassword()">
+            <i class="bi" [ngClass]="mostrarPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+        </div>
+        <div class="invalid-feedback" *ngIf="form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty)">
+          <span *ngIf="form.get('password')?.errors?.['required']">La contraseña es obligatoria.</span>
+          <span *ngIf="form.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 10 caracteres.</span>
+          <span *ngIf="!form.get('password')?.errors?.['minlength'] && form.get('password')?.errors?.['pattern']">
+            La contraseña debe tener mínimo 6 letras y 4 números. Se permiten letras, números y signos (sin espacios).
+          </span>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Confirmar contraseña</label>
+        <input
+          type="password"
+          formControlName="confirmPassword"
+          class="form-control"
+          [ngClass]="{ 'is-invalid': form.get('confirmPassword')?.invalid && (form.get('confirmPassword')?.touched || form.get('confirmPassword')?.dirty) }"
+        >
+        <div class="invalid-feedback" *ngIf="form.get('confirmPassword')?.invalid && (form.get('confirmPassword')?.touched || form.get('confirmPassword')?.dirty)">
+          La confirmación es obligatoria.
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mt-2" [disabled]="form.invalid">Activar Cuenta</button>
+    </form>
+  </section>
+</main>

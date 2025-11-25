@@ -1,19 +1,24 @@
-<header>
-  <app-admin-navbar></app-admin-navbar>
-</header>
+<div class="with-sidebar">
+  <header>
+    <app-admin-navbar></app-admin-navbar>
+  </header>
 
-<main>
-  <!-- Título -->
-  <section>
-    <div class="container text-center">
-      <div class="row">
-        <div class="col">
-          <h1 class="tit-inventario">Inventario</h1>
+  <main>
+    <!-- Título -->
+    <section>
+      <div class="container text-center">
+        <div class="row">
+          <div class="col">
+            <h1 class="tit-inventario">
+              <i class="bi bi-box-seam-fill me-2"></i>
+              <span>Inventario</span>
+            </h1>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-  <br>
+    </section>
+
+    <br>
   <!-- Cantidad y Total de Inventario -->
   <section>
     <div class="container cant-total d-flex">
@@ -35,8 +40,8 @@
   </section>
   <br>
   <!-- Busqueda, Crear Categoria y Agregar Productos -->
-  <section>
-    <div class="container agg">
+    <section>
+      <div class="container agg">
       <div class="row fila-opciones">
         <!-- Buscar Productos -->
         <div class="col-lg-3 col-md-6 col-sm-12">
@@ -61,19 +66,22 @@
 
         <!-- Crear Categoria -->
         <div class="col-lg-2 col-md-6 col-sm-12">
-          <div class="crear-cate">
-            <button class="btn crear" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCrearCategoria" aria-controls="offcanvasCrearCategoria">
-              Categorias
+          <div class="crear-cate d-flex justify-content-center">
+            <button class="btn crear d-flex align-items-center gap-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCrearCategoria" aria-controls="offcanvasCrearCategoria">
+              <i class="bi bi-plus-circle-fill" aria-hidden="true"></i>
+              <span>Categorías</span>
             </button>
           </div>
         </div>
         <!-- Entrada de Productos -->
         <div class="col-lg-3 col-md-6 col-sm-12">
           <div class="crear-cate">
-            <button class="btn crear" type="button"
+            <button class="btn crear d-flex align-items-center gap-2" type="button"
+              (click)="onAbrirEntradaInventario()"
               data-bs-toggle="modal"
               data-bs-target="#modalEntradaInventario">
-              Entrada de Productos
+              <i class="bi bi-box-fill" aria-hidden="true"></i>
+              <span>Entrada de Productos</span>
             </button>
           </div>
         </div>
@@ -101,15 +109,23 @@
                           name="codigo"
                           [(ngModel)]="entrada.codigo"
                           (input)="buscarProductoPorCodigo()"
+                          #codigoInput
+                          autofocus
                           required>
                       </div>
 
                       <div class="mb-3">
                         <label class="form-label">Cantidad Recibida</label>
                         <input type="number" class="form-control"
+                          [ngClass]="{ 'is-invalid': cantidadInput.invalid && (cantidadInput.dirty || cantidadInput.touched) }"
                           name="cantidad"
                           [(ngModel)]="entrada.cantidad"
-                          required min="1">
+                          #cantidadInput="ngModel" #cantidadInputEl
+                          required min="1"
+                          [max]="productoEncontrado ? (500 - (productoEncontrado.stockProducto || 0)) : null">
+                        <div class="invalid-feedback d-block" *ngIf="cantidadInput.errors?.['max']">
+                          Las unidades máximas permitidas son 500 por producto.
+                        </div>
                       </div>
 
                       <button type="submit" class="btn confir"
@@ -136,8 +152,14 @@
                     </ng-container>
 
                     <ng-template #sinProducto>
-                      <p class="text-muted fst-italic text-center">
-                        Ingresa un código válido para ver detalles del producto.
+                      <p class="text-muted fst-italic text-center d-flex flex-column align-items-center">
+                        <span class="mb-1" *ngIf="mostrarIconoNoEncontrado; else soloTextoMensaje">
+                          <i class="bi bi-info-circle me-2" style="font-size: 1.4rem;"></i>
+                          {{ mensajeProducto }}
+                        </span>
+                        <ng-template #soloTextoMensaje>
+                          <span>{{ mensajeProducto }}</span>
+                        </ng-template>
                       </p>
                     </ng-template>
 
@@ -178,7 +200,7 @@
         <form #formCategoria="ngForm" (ngSubmit)="agregarCategoria(formCategoria)" novalidate>
           <div class="mb-3">
             <label for="nombreCategoria" class="form-label">Nombre de la Categoría</label>
-            <input [(ngModel)]="categoria.nombreCategoria" (ngModelChange)="onNombreCategoriaChange($event)" #nombreCtrl="ngModel" minlength="2" type="text" name="nombreCategoria" id="nombreCategoria" class="form-control" required>
+            <input [(ngModel)]="categoria.nombreCategoria" (ngModelChange)="onNombreCategoriaChange($event)" #nombreCtrl="ngModel" #nombreCategoriaInput minlength="2" type="text" name="nombreCategoria" id="nombreCategoria" class="form-control" required>
             <div class="mt-1 small text-danger" *ngIf="(nombreCtrl.invalid && (nombreCtrl.dirty || nombreCtrl.touched))">
               <div *ngIf="nombreCtrl.errors?.['required']">El nombre de la categoría es obligatorio.</div>
               <div *ngIf="nombreCtrl.errors?.['minlength']">El nombre debe tener al menos 2 caracteres.</div>
@@ -215,7 +237,7 @@
           </div>
         </div>
         <ng-template #noCategorias>
-          <p class="text-muted fst-italic">No hay categorías registradas.</p>
+          <p class="text-muted fst-italic">No hay Categorías Registradas.</p>
         </ng-template>
       </div>
     </div>
@@ -232,7 +254,7 @@
       <div class="modal-body">
         <div class="mb-3">
           <label for="nombreCategoria" class="form-label">Nombre de Categoría</label>
-          <input [(ngModel)]="categoriaModificar.nombreCategoria" (ngModelChange)="onNombreCategoriaModificarChange($event)" #nombreModCtrl="ngModel" minlength="2" type="text" name="nombreCategoria" id="nombreCategoria" class="form-control w-100" required>
+          <input [(ngModel)]="categoriaModificar.nombreCategoria" (ngModelChange)="onNombreCategoriaModificarChange($event)" #nombreModCtrl="ngModel" #nombreCategoriaModificarInput minlength="2" type="text" name="nombreCategoria" id="nombreCategoria" class="form-control w-100" required autofocus>
           <div class="mt-1 small text-danger" *ngIf="(nombreModCtrl.invalid && (nombreModCtrl.dirty || nombreModCtrl.touched))">
             <div *ngIf="nombreModCtrl.errors?.['required']">El nombre de la categoría es obligatorio.</div>
             <div *ngIf="nombreModCtrl.errors?.['minlength']">El nombre debe tener al menos 2 caracteres.</div>
@@ -318,8 +340,8 @@
                                 <i class="bi bi-pencil-square"></i>
                                 <span class="texto">Modificar</span>
                               </button>
-                              <!-- Si NO se puede eliminar (tiene ventas asociadas), mostrar Inhabilitar/Habilitar -->
-                              <ng-container *ngIf="!canDeleteFlag(producto); else eliminarBtn">
+                              <!-- Si NO se puede eliminar (tiene ventas asociadas) O el stock es 0, mostrar Inhabilitar/Habilitar -->
+                              <ng-container *ngIf="!canDeleteFlag(producto) || producto.stockProducto === 0; else eliminarBtn">
                                 <button *ngIf="producto.estado !== false" title="Inhabilitar" class="btn inhabilitar btn-sm" (click)="toggleEstado(producto)">
                                   <i class="bi bi-slash-circle"></i>
                                   <span class="texto">Inhabilitar</span>
@@ -329,7 +351,7 @@
                                   <span class="texto">Habilitar</span>
                                 </button>
                               </ng-container>
-                              <!-- Si se puede eliminar, mostrar Eliminar -->
+                              <!-- Si se puede eliminar y el stock es mayor que 0, mostrar Eliminar -->
                               <ng-template #eliminarBtn>
                                 <button title="Eliminar" class="btn elimi btn-sm" (click)="eliminarProducto(producto.id!)">
                                   <i class="bi bi-trash"></i>

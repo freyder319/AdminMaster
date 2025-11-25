@@ -24,8 +24,8 @@ export interface TurnoResumen {
     transaccionesLibres: number;
     totalGastos: number;
     cantidadGastos: number;
-    ventas: Array<{ id: number; total: number }>;
-    ventasLibres: Array<{ id: number; total: number }>;
+    ventas: Array<{ id: number; total: number; nombre?: string | null; cantidad?: number | null }>;
+    ventasLibres: Array<{ id: number; total: number; nombre?: string | null; cantidad?: number | null }>;
     gastos: Array<{ id: number; monto: number; nombre?: string | null; forma_pago?: string | null }>;
   };
 }
@@ -102,13 +102,27 @@ export class TurnosService {
     return this.http.get<TurnoResumen>(`${this.apiUrl}/resumen/${empleadoId}`, this.authOptions());
   }
 
-  iniciarTurno(montoInicial: number, observaciones?: string): Observable<TurnoResumen> {
-    return this.http.post<TurnoResumen>(`${this.apiUrl}/iniciar`, { montoInicial, observaciones }, this.authOptions());
+  iniciarTurno(montoInicial: number, observaciones?: string, registroTurnoId?: number): Observable<TurnoResumen> {
+    const payload: any = { montoInicial };
+    if (typeof observaciones === 'string' && observaciones.trim().length > 0) {
+      payload.observaciones = observaciones.trim();
+    }
+    if (typeof registroTurnoId === 'number' && !isNaN(registroTurnoId)) {
+      payload.registroTurnoId = registroTurnoId;
+    }
+    return this.http.post<TurnoResumen>(`${this.apiUrl}/iniciar`, payload, this.authOptions());
   }
 
-  iniciarTurnoPorUsuario(usuarioId: number, montoInicial: number, observaciones?: string): Observable<TurnoResumen> {
+  iniciarTurnoPorUsuario(usuarioId: number, montoInicial: number, observaciones?: string, registroTurnoId?: number): Observable<TurnoResumen> {
     // Fallback sin Authorization
-    return this.http.post<TurnoResumen>(`${this.apiUrl}/iniciar-por-usuario/${usuarioId}`, { montoInicial, observaciones });
+    const payload: any = { montoInicial };
+    if (typeof observaciones === 'string' && observaciones.trim().length > 0) {
+      payload.observaciones = observaciones.trim();
+    }
+    if (typeof registroTurnoId === 'number' && !isNaN(registroTurnoId)) {
+      payload.registroTurnoId = registroTurnoId;
+    }
+    return this.http.post<TurnoResumen>(`${this.apiUrl}/iniciar-por-usuario/${usuarioId}`, payload);
   }
 
   cerrarTurno(montoFinal: number): Observable<TurnoResumen> {

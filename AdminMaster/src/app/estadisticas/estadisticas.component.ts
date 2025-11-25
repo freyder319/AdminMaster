@@ -27,6 +27,9 @@ import { EstadisticasService } from '../services/estadisticas.service';
 })
 export class EstadisticasComponent {
   selectedOption: 'inventario' | 'comercial' | 'finanzas' = 'inventario';
+  periodoSeleccionado: 'semanal' | 'mensual' = 'mensual';
+  mesSeleccionado: string = '';
+  semanaSeleccionada: string = '';
   highlightedIndex: number | null = null;
   productosMasVendidos: any[] = [];
   barChartType: 'bar' = 'bar';
@@ -107,6 +110,34 @@ export class EstadisticasComponent {
     this.cargarInventario();
   }
 
+  cambiarPeriodo(periodo: 'semanal' | 'mensual'): void {
+    if (this.periodoSeleccionado === periodo) return;
+    this.periodoSeleccionado = periodo;
+
+    // Si cambia a mensual, la semana deja de aplicar
+    if (periodo === 'mensual') {
+      this.semanaSeleccionada = '';
+    }
+
+    if (this.selectedOption === 'inventario') this.cargarInventario();
+    if (this.selectedOption === 'comercial') this.cargarComercial();
+    if (this.selectedOption === 'finanzas') this.cargarFinanzas();
+  }
+
+  onMesChange(valor: string): void {
+    this.mesSeleccionado = valor;
+    if (this.selectedOption === 'inventario') this.cargarInventario();
+    if (this.selectedOption === 'comercial') this.cargarComercial();
+    if (this.selectedOption === 'finanzas') this.cargarFinanzas();
+  }
+
+  onSemanaChange(valor: string): void {
+    this.semanaSeleccionada = valor;
+    if (this.selectedOption === 'inventario') this.cargarInventario();
+    if (this.selectedOption === 'comercial') this.cargarComercial();
+    if (this.selectedOption === 'finanzas') this.cargarFinanzas();
+  }
+
   selectOption(option: 'inventario' | 'comercial' | 'finanzas'): void {
     this.selectedOption = option;
 
@@ -117,7 +148,9 @@ export class EstadisticasComponent {
 
   // 🔹 Ejemplo: datos reales desde tu API
   cargarInventario() {
-    this.estadisticasService.getInventario().subscribe((data) => {
+    this.estadisticasService
+      .getInventario(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada)
+      .subscribe((data) => {
 
     // Si backend no envía vendidos, crear array de ceros (evita errores)
     if (!data.vendidos) {
@@ -271,7 +304,9 @@ export class EstadisticasComponent {
 
   cargarComercial() {
     // ✅ 1) Cargar productos más vendidos
-    this.estadisticasService.getProductosMasVendidos().subscribe((data) => {
+    this.estadisticasService
+      .getProductosMasVendidos(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada)
+      .subscribe((data) => {
       this.productosMasVendidos = data;
 
       this.barChartData = {
@@ -287,7 +322,9 @@ export class EstadisticasComponent {
     });
 
     // ✅ 2) Cargar ventas mensuales → gráfica de línea
-    this.estadisticasService.getComercial().subscribe((data) => {
+    this.estadisticasService
+      .getComercial(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada)
+      .subscribe((data) => {
 
       console.log("📌 Datos para la línea:", data);
 
@@ -305,7 +342,9 @@ export class EstadisticasComponent {
         }
       ]
     };
-    this.estadisticasService.getVentasPorMetodoPago().subscribe((data: any) => {
+    this.estadisticasService
+      .getVentasPorMetodoPago(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada)
+      .subscribe((data: any) => {
     this.pieChartMetodosPago = {
       labels: data.labels,
       datasets: [
@@ -318,7 +357,9 @@ export class EstadisticasComponent {
   });
 
   // ✅ Ventas por categoría
-  this.estadisticasService.getVentasPorCategoria().subscribe((data: any) => {
+  this.estadisticasService
+    .getVentasPorCategoria(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada)
+    .subscribe((data: any) => {
     this.pieChartCategoriasVenta = {
       labels: data.labels,
       datasets: [
@@ -331,7 +372,9 @@ export class EstadisticasComponent {
   });
 
   // ✅ Ventas por mes (Cantidad, no dinero)
-  this.estadisticasService.getVentasPorMes().subscribe((data: any) => {
+  this.estadisticasService
+    .getVentasPorMes(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada)
+    .subscribe((data: any) => {
     this.barChartVentasMes = {
       labels: data.labels,
       datasets: [
@@ -345,7 +388,9 @@ export class EstadisticasComponent {
   });
 
   // ✅ Productos más rentables (ganancia = precioComercial - precioUnitario)
-  this.estadisticasService.getProductosRentables().subscribe((data: any) => {
+  this.estadisticasService
+    .getProductosRentables(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada)
+    .subscribe((data: any) => {
     this.barChartProductosRentables = {
       labels: data.labels,
       datasets: [
@@ -371,7 +416,9 @@ export class EstadisticasComponent {
   }
 
   cargarFinanzas() {
-    this.estadisticasService.getFinanzas().subscribe({
+    this.estadisticasService
+      .getFinanzas(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada)
+      .subscribe({
       next: (data: any) => {
         
         console.log("📌 Datos recibidos para Finanzas:", data);

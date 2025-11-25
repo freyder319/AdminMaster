@@ -4,7 +4,10 @@
         <div class="container text-center">
             <div class="row">
                 <div class="col">
-                    <h1 class="tit-empleados">Modificar Empleado</h1>
+                    <h1 class="tit-empleados">
+                      <i class="bi bi-person-badge-fill me-2"></i>
+                      <span>Modificar Empleado</span>
+                    </h1>
                 </div>
             </div>
         </div>
@@ -48,25 +51,67 @@
                     <!-- Nombre -->
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" [(ngModel)]="empleado.nombre" name="nombre" id="nombre" class="form-control" required maxlength="100">
+                        <input type="text"
+                               [(ngModel)]="empleado.nombre"
+                               name="nombre"
+                               id="nombre"
+                               class="form-control"
+                               required
+                               maxlength="100"
+                               #nombreCtrl="ngModel"
+                               [ngClass]="{ 'is-invalid': nombreCtrl.invalid && (nombreCtrl.dirty || nombreCtrl.touched) }">
                     </div>
 
                     <!-- Apellido -->
                     <div class="mb-3">
                         <label for="apellido" class="form-label">Apellido</label>
-                        <input type="text" [(ngModel)]="empleado.apellido" name="apellido" id="apellido" class="form-control" required maxlength="100">
+                        <input type="text"
+                               [(ngModel)]="empleado.apellido"
+                               name="apellido"
+                               id="apellido"
+                               class="form-control"
+                               required
+                               maxlength="100"
+                               #apellidoCtrl="ngModel"
+                               [ngClass]="{ 'is-invalid': apellidoCtrl.invalid && (apellidoCtrl.dirty || apellidoCtrl.touched) }">
+                    </div>
+
+                    <!-- Documento -->
+                    <div class="mb-3">
+                        <label for="documento" class="form-label">Documento</label>
+                        <input type="text"
+                               [(ngModel)]="empleado.documento"
+                               name="documento"
+                               id="documento"
+                               class="form-control"
+                               required
+                               maxlength="15"
+                               #documentoCtrl="ngModel"
+                               [ngClass]="{ 'is-invalid': documentoCtrl.invalid && (documentoCtrl.dirty || documentoCtrl.touched) }">
                     </div>
 
                     <!-- Correo -->
                     <div class="mb-3">
                         <label for="correo" class="form-label">Correo Electrónico</label>
-                        <input type="email" [(ngModel)]="empleado.correo" name="correo" class="form-control" id="correo">
+                        <input type="email"
+                               [(ngModel)]="empleado.correo"
+                               name="correo"
+                               class="form-control"
+                               id="correo"
+                               #correoCtrl="ngModel"
+                               [ngClass]="{ 'is-invalid': correoCtrl.invalid && (correoCtrl.dirty || correoCtrl.touched) }">
                     </div>
 
                     <!-- Teléfono -->
                     <div class="mb-3">
                         <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="text" [(ngModel)]="empleado.telefono" name="telefono" class="form-control" id="telefono">
+                        <input type="text"
+                               [(ngModel)]="empleado.telefono"
+                               name="telefono"
+                               class="form-control"
+                               id="telefono"
+                               #telefonoCtrl="ngModel"
+                               [ngClass]="{ 'is-invalid': telefonoCtrl.invalid && (telefonoCtrl.dirty || telefonoCtrl.touched) }">
                     </div>
 
                     <!-- Caja Asignada -->

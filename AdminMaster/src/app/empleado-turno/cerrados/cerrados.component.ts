@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TurnosService, TurnoActivoItem } from '../../services/turnos.service';
 import { catchError } from 'rxjs/operators';
@@ -9,7 +9,7 @@ import { of, Subscription } from 'rxjs';
 @Component({
   selector: 'app-turnos-cerrados',
   standalone: true,
-  imports: [CommonModule, DatePipe, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './cerrados.component.html',
   styleUrls: ['./cerrados.component.scss']
 })
@@ -50,18 +50,15 @@ export class CerradosComponent implements OnDestroy {
   }
 
   abrirDetalle(item: TurnoActivoItem) {
-    // modal desactivado
-    return;
+    try { console.log('[Cerrados] abrirDetalle', item); } catch {}
+    this.seleccionado = item;
+    this.modalAbierto = true;
   }
 
   cerrarDetalle(ev?: Event) {
-    try { ev?.preventDefault(); (ev as any)?.stopImmediatePropagation?.(); ev?.stopPropagation(); } catch {}
-    this.closing = true;
-    setTimeout(() => {
-      this.modalAbierto = false;
-      this.seleccionado = null;
-      this.closing = false;
-    }, 50);
+    try { ev?.preventDefault(); ev?.stopPropagation(); } catch {}
+    this.modalAbierto = false;
+    this.seleccionado = null;
   }
 
   verMasDetalle(ev?: Event) {

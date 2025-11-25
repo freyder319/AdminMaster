@@ -49,20 +49,15 @@ export class ActivosComponent implements OnDestroy {
   }
 
   abrirDetalle(item: TurnoActivoItem) {
-    // modal desactivado
-    return;
+    try { console.log('[Activos] abrirDetalle', item); } catch {}
+    this.seleccionado = item;
+    this.modalAbierto = true;
   }
 
   cerrarDetalle(ev?: Event) {
-    try { ev?.preventDefault(); (ev as any)?.stopImmediatePropagation?.(); ev?.stopPropagation(); } catch {}
-    this.closing = true;
-    try { console.log('[Activos] cerrarDetalle() called'); } catch {}
-    setTimeout(() => {
-      try { console.log('[Activos] modalAbierto=false'); } catch {}
-      this.modalAbierto = false;
-      this.seleccionado = null;
-      this.closing = false;
-    }, 50);
+    try { ev?.preventDefault(); ev?.stopPropagation(); } catch {}
+    this.modalAbierto = false;
+    this.seleccionado = null;
   }
 
   get view(): TurnoActivoItem[] {

@@ -1,4 +1,5 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+
 import { AdminNavbarComponent } from "../admin_navbar/admin_navbar.component";
 import { CreateProductoComponent } from "../create_producto/create_producto.component";
 import { FormGroup, FormsModule, NgForm } from '@angular/forms';
@@ -11,13 +12,15 @@ import Swal from 'sweetalert2';
 declare var bootstrap: any; // Declaración para acceder a Bootstrap
 
 @Component({
+
   selector: 'app-inventory',
   standalone: true,
   imports: [AdminNavbarComponent,CreateProductoComponent,FormsModule,MatPaginatorModule,CommonModule,],
   templateUrl: './inventory.component.html',
   styleUrls: ['./inventory.component.scss']
 })
-export class InventoryComponent {
+export class InventoryComponent implements AfterViewInit {
+
   errorMessage: string = ''; 
   totalItems:number=0;     // total de productos 
   CostoTotal=0;
@@ -32,7 +35,12 @@ export class InventoryComponent {
   categoria:any={
     nombreCategoria:''
   }
+  private buscarCodigoTimer: any = null;
+  mensajeProducto: string = 'Ingresa un Código Válido para ver Detalles del Producto.';
+  mostrarIconoNoEncontrado: boolean = false;
   nombreCategoriaDuplicado: boolean = false;
+  // Flag para controlar si el modal de entrada viene desde habilitar con stock 0
+  private focusCantidadOnEntrada: boolean = false;
   // Mapa para saber si cada producto puede ser eliminado (sin ventas asociadas)
   private canDeleteMap: Record<number, boolean> = {};
   canDeleteFlag(p?: Producto | null): boolean {
@@ -43,6 +51,35 @@ export class InventoryComponent {
   toggleEstado(prod: Producto) {
     if (!prod?.id) return;
     const nuevo = !(prod.estado === false ? false : true);
+    // Evitar habilitar productos con stock en 0: deben registrar entradas primero
+    if (nuevo === true && (Number(prod.stockProducto) || 0) <= 0) {
+      Swal.fire({
+        icon: 'info',
+        title: 'Stock Insuficiente',
+        html: 'Para <b>Habilitar</b> este Producto debes <b>Registrar Primero una Entrada</b> que <b>Aumente su Stock</b>.'
+      }).then(() => {
+        try {
+          // Preconfigurar el formulario de entrada con el código del producto
+          this.entrada = {
+            codigo: String(prod.codigoProducto || ''),
+            cantidad: 0
+          };
+          // Mostrar de inmediato los datos del producto en el panel derecho
+          this.productoEncontrado = { ...prod };
+          this.mensajeProducto = '';
+          this.mostrarIconoNoEncontrado = false;
+          // Indicar que al abrir el modal se debe enfocar la cantidad
+          this.focusCantidadOnEntrada = true;
+          // Abrir modal de Entrada de Productos
+          const modalElement = document.getElementById('modalEntradaInventario');
+          if (modalElement) {
+            const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+            modal.show();
+          }
+        } catch {}
+      });
+      return;
+    }
     this.productoService.setEstado(prod.id, nuevo).subscribe({
       next: (actualizado) => {
         // Actualizar en memoria
@@ -50,7 +87,7 @@ export class InventoryComponent {
         if (idx >= 0) this.productos[idx] = { ...this.productos[idx], ...actualizado };
       },
       error: (err) => {
-        const msg = err?.error?.message || 'No se pudo cambiar el estado del producto';
+        const msg = err?.error?.message || 'No se pudo Cambiar el Estado del Producto';
         Swal.fire('Error', msg, 'error');
       }
     });
@@ -109,25 +146,148 @@ export class InventoryComponent {
     private productoService:ProductoService,
     private categoriaService:CategoriaService
   ){}
+  @ViewChild('codigoInput') codigoInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('cantidadInput') cantidadInput?: any; // referencia al NgModel en la plantilla
+  @ViewChild('cantidadInputEl') cantidadInputEl?: ElementRef<HTMLInputElement>;
+  @ViewChild('nombreCategoriaInput') nombreCategoriaInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('nombreCategoriaModificarInput') nombreCategoriaModificarInput?: ElementRef<HTMLInputElement>;
+
+  ngAfterViewInit(): void {
+    const modalElement = document.getElementById('modalEntradaInventario');
+    if (modalElement) {
+      modalElement.addEventListener('shown.bs.modal', () => {
+        // Si venimos desde habilitar con stock 0, enfocar cantidad; si no, código
+        if (this.focusCantidadOnEntrada && this.cantidadInputEl?.nativeElement) {
+          this.cantidadInputEl.nativeElement.focus();
+          this.cantidadInputEl.nativeElement.select();
+          this.focusCantidadOnEntrada = false;
+        } else if (this.codigoInput?.nativeElement) {
+          this.codigoInput.nativeElement.focus();
+          this.codigoInput.nativeElement.select();
+        }
+      });
+    }
+
+    const offcanvasCat = document.getElementById('offcanvasCrearCategoria');
+    if (offcanvasCat) {
+      offcanvasCat.addEventListener('shown.bs.offcanvas', () => {
+        setTimeout(() => {
+          if (this.nombreCategoriaInput?.nativeElement) {
+            this.nombreCategoriaInput.nativeElement.focus();
+            this.nombreCategoriaInput.nativeElement.select();
+          }
+        }, 0);
+      });
+    }
+
+    const modalModificar = document.getElementById('staticBackdrop');
+    if (modalModificar) {
+      modalModificar.addEventListener('shown.bs.modal', () => {
+        setTimeout(() => {
+          if (this.nombreCategoriaModificarInput?.nativeElement) {
+            this.nombreCategoriaModificarInput.nativeElement.focus();
+            this.nombreCategoriaModificarInput.nativeElement.select();
+          }
+        }, 0);
+      });
+    }
+  }
+
+  onAbrirEntradaInventario(): void {
+    // Limpiar modelo de entrada cuando se abre el modal
+    this.entrada = { codigo: '', cantidad: 0 };
+    this.productoEncontrado = null;
+    this.mensajeProducto = 'Ingresa un Código Válido para ver Detalles del Producto.';
+    this.mostrarIconoNoEncontrado = false;
+    // En este flujo normal, queremos enfocar el código, no la cantidad
+    this.focusCantidadOnEntrada = false;
+
+    // Reforzar que el input de código quede listo para escribir
+    setTimeout(() => {
+      if (this.codigoInput?.nativeElement) {
+        this.codigoInput.nativeElement.focus();
+        this.codigoInput.nativeElement.select();
+      }
+    }, 0);
+  }
+
   ngOnInit():void{
     this.cargarTotal();
     this.cargarProductos();
   }
   buscarProductoPorCodigo() {
-    if (!this.entrada.codigo) {
-      this.productoEncontrado = null;
-      return;
+
+    // Se llama en cada tecla, pero retrasamos la búsqueda real
+    if (this.buscarCodigoTimer) {
+      clearTimeout(this.buscarCodigoTimer);
     }
-    
-    this.productoService.buscarPorCodigo(this.entrada.codigo).subscribe({
-      next: (data: Producto | null) => {
-        this.productoEncontrado = data;
-      },
-      error: (err: any) => {
-        console.error('Error al buscar producto por código', err);
+
+    this.buscarCodigoTimer = setTimeout(() => {
+      if (!this.entrada.codigo) {
         this.productoEncontrado = null;
+        this.mensajeProducto = 'Ingresa un Código Válido para ver Detalles del Producto.';
+        this.mostrarIconoNoEncontrado = false;
+        return;
       }
-    });
+
+      // Guardar el código que se está buscando para evitar efectos de respuestas antiguas
+      const codigoBuscado = this.entrada.codigo;
+
+      this.productoService.buscarPorCodigo(codigoBuscado).subscribe({
+        next: (data: Producto | null) => {
+
+          // Si mientras llegaba la respuesta el usuario cambió el código, ignorar esta respuesta
+          if (this.entrada.codigo !== codigoBuscado && this.entrada.codigo !== '') {
+            return;
+          }
+          this.productoEncontrado = data;
+          if (this.productoEncontrado) {
+            this.mensajeProducto = '';
+            this.mostrarIconoNoEncontrado = false;
+
+            // Pasar el foco al input de cantidad cuando hay producto válido
+
+            setTimeout(() => {
+              if (this.cantidadInputEl?.nativeElement) {
+                this.cantidadInputEl.nativeElement.focus();
+                this.cantidadInputEl.nativeElement.select();
+              }
+            }, 0);
+          } else {
+            // No se encontró producto con ese código
+            this.entrada.cantidad = 0;
+            this.productoEncontrado = null;
+            this.mensajeProducto = 'No se Encontró un Producto con ese Código. Intenta Nuevamente.';
+            this.mostrarIconoNoEncontrado = true;
+
+            setTimeout(() => {
+              if (this.codigoInput?.nativeElement) {
+                this.codigoInput.nativeElement.focus();
+              }
+            }, 0);
+          }
+        },
+        error: (err: any) => {
+
+          // Igualmente, si el código ya cambió, no hacer nada
+          if (this.entrada.codigo !== codigoBuscado && this.entrada.codigo !== '') {
+            return;
+          }
+          console.error('Error al Buscar Producto por Código', err);
+          this.productoEncontrado = null;
+          this.entrada.cantidad = 0;
+
+          this.mensajeProducto = 'No se pudo Buscar el Producto. Intenta Nuevamente.';
+          this.mostrarIconoNoEncontrado = false;
+
+          setTimeout(() => {
+            if (this.codigoInput?.nativeElement) {
+              this.codigoInput.nativeElement.focus();
+            }
+          }, 0);
+        }
+      });
+    }, 450); // esperar un momento desde la última tecla
   }
 
   registrarEntrada(form: NgForm) {
@@ -152,14 +312,29 @@ export class InventoryComponent {
       
       this.productoService.actualizarStock(this.productoEncontrado.id, nuevaCantidad).subscribe({
         next: (productoActualizado: Producto) => {
-          console.log('Stock actualizado correctamente:', productoActualizado);
+          console.log('Stock Actualizado Correctamente:', productoActualizado);
           Swal.fire({
             icon: 'success',
-            title: '¡Entrada registrada!',
-            text: `Se agregaron ${cantidadEntrante} unidades al producto`,
+            title: '¡Entrada Registrada!',
+            html: `Se Agregaron <b>${cantidadEntrante} Unidades</b> al Producto`,
             showConfirmButton: false,
             timer: 2000
           });
+          // Si el producto estaba inhabilitado y ahora tiene stock > 0, habilitarlo automáticamente
+          const nuevoStock = Number(productoActualizado.stockProducto) || 0;
+          if (productoActualizado.id && nuevoStock > 0 && productoActualizado.estado === false) {
+            this.productoService.setEstado(productoActualizado.id, true).subscribe({
+              next: (prodHabilitado) => {
+                const idx = this.productos.findIndex(p => p.id === prodHabilitado.id);
+                if (idx >= 0) {
+                  this.productos[idx] = { ...this.productos[idx], ...prodHabilitado };
+                }
+              },
+              error: () => {
+                // En caso de error al habilitar, no interrumpir el flujo principal
+              }
+            });
+          }
           // Actualizar la lista de productos
           this.cargarProductos();
           this.cargarTotal();
@@ -182,15 +357,17 @@ export class InventoryComponent {
           }, 2000);
         },
         error: (err: any) => {
-          console.error('Error al actualizar el stock:', err);
-          let mensajeError = 'No se pudo actualizar el inventario';
+          console.error('Error al Actualizar el Stock:', err);
+          let mensajeError = 'No se pudo Actualizar el Inventario';
           
           if (err.error?.message) {
             mensajeError = err.error.message;
+          } else if (err.status >= 500) {
+            mensajeError = 'Error en el Servidor. Intente más Tarde.';
           } else if (err.status === 404) {
-            mensajeError = 'Producto no encontrado';
+            mensajeError = 'Producto NO Encontrado';
           } else if (err.status === 400) {
-            mensajeError = 'Datos inválidos para actualizar el stock';
+            mensajeError = 'Datos Inválidos para Actualizar el Stock';
           }
           
           Swal.fire({
@@ -284,7 +461,7 @@ export class InventoryComponent {
           this.pageIndex = 0;
         }
       },
-      error: (err) => console.error('Error al listar productos', err)
+      error: (err) => console.error('Error al Listar Productos', err)
     });
   }
   abrirCrear() {
@@ -315,7 +492,7 @@ export class InventoryComponent {
   eliminarProducto(id: number) {
     Swal.fire({
       title: '¿Estás seguro?',
-      text: 'Esta acción eliminará el producto.',
+      text: 'Esta acción Eliminará el Producto.',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -325,16 +502,16 @@ export class InventoryComponent {
       if (result.isConfirmed) {
         this.productoService.delete(id).subscribe({
           next: () => {
-            Swal.fire('Eliminado', 'Producto eliminado correctamente', 'success');
+            Swal.fire('Eliminado', '<b>Producto</b> Eliminado Correctamente', 'success');
             this.onGuardado();
           },
           error: (err: any) => {
             // Priorizar mensaje del servidor (por ejemplo, FK violation: producto enlazado a una venta)
-            let mensaje = err?.error?.message || 'Ocurrió un error al eliminar el producto';
+            let mensaje = err?.error?.message || 'Ocurrió un Error al Eliminar el Producto';
             if (!err?.error?.message) {
-              if (err.status >= 500) mensaje = 'Error en el servidor. Intente más tarde.';
-              else if (err.status === 404) mensaje = 'El producto no existe o ya fue eliminado.';
-              else if (err.status === 400) mensaje = 'Solicitud inválida.';
+              if (err.status >= 500) mensaje = 'Error en el Servidor. Intente más Tarde.';
+              else if (err.status === 404) mensaje = 'El Producto NO Éxiste o ya fue Eliminado.';
+              else if (err.status === 400) mensaje = 'Solicitud Inválida.';
             }
             Swal.fire('Error', mensaje, 'error');
           }
@@ -369,7 +546,7 @@ export class InventoryComponent {
             Swal.fire({
               title: "Categoria Registrado!",
               icon: "success",
-              html: `La Categoria <b>${this.categoria.nombreCategoria} </b> fue registrada con éxito`,
+              html: `La Categoria <b>${this.categoria.nombreCategoria} </b> fue Registrada con Éxito`,
               draggable: true
             });
             this.categoria={
@@ -396,7 +573,7 @@ export class InventoryComponent {
   eliminarCategoria(id:number){
     Swal.fire({
         title: "Estas Seguro?",
-        html: `Realmente Deseas Eliminar La Categoria</b>?`,
+        html: `Realmente Deseas Eliminar La <b>Categoria</b>?`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
@@ -408,7 +585,7 @@ export class InventoryComponent {
             next: () => {
               Swal.fire({
                 title: "Eliminado!",
-                html: `Categoria Eliminada.`,
+                html: `<b>Categoria</b> Eliminada.`,
                 icon: "success"
               })
               this.ngOnInit();
@@ -419,11 +596,11 @@ export class InventoryComponent {
                                   (typeof err?.error?.detail === 'string' && err.error.detail.includes('referida')) ||
                                   (typeof err?.error?.detail === 'string' && err.error.detail.includes('productos'));
               if (fkViolation) {
-                mensaje = 'No se puede eliminar la categoría porque está ligada a uno o más productos.';
+                mensaje = 'No se puede Eliminar la Categoría porque está Ligada a Uno o Más Productos.';
               } else if (err.status >= 500) {
-                mensaje = 'Error en el servidor. Intente más tarde.';
+                mensaje = 'Error en el Servidor. Intente más Tarde.';
               } else if (err.status === 404) {
-                mensaje = 'La Categoria no existe o ya fue eliminada.';
+                mensaje = 'La Categoria NO existe o ya fue Eliminada.';
               } else if (err.status === 400) {
                 mensaje = 'Solicitud inválida.';
               }
@@ -434,18 +611,21 @@ export class InventoryComponent {
               });
             }
           })
-          
         }
       });
-  }
-  abrirModal(cate:any){
-    this.categoriaModificar = { ...cate}
+    }
+  abrirModal(cate: any): void {
+    this.categoriaModificar = { ...cate };
     // Reset duplicate flag when opening modal
     this.nombreCategoriaModificarDuplicado = false;
   }
+
   onNombreCategoriaModificarChange(val: string): void {
     const nombre = String(val || '').trim().toLowerCase();
-    if (!nombre) { this.nombreCategoriaModificarDuplicado = false; return; }
+    if (!nombre) {
+      this.nombreCategoriaModificarDuplicado = false;
+      return;
+    }
     const currentId = this.categoriaModificar?.idCategoria;
     this.nombreCategoriaModificarDuplicado = (this.categorias || []).some(c => {
       const sameName = String(c?.nombreCategoria || '').trim().toLowerCase() === nombre;
@@ -453,17 +633,22 @@ export class InventoryComponent {
       return sameName && differentId;
     });
   }
-  modificarCategoria(id:number,categoriaModificar:any){
+
+  modificarCategoria(id: number, categoriaModificar: { nombreCategoria: string }): void {
     const nombre = String(categoriaModificar?.nombreCategoria || '').trim();
     // Validación silenciosa: no enviar si vacío, corto o duplicado
     if (!nombre || nombre.length < 2 || this.nombreCategoriaModificarDuplicado) {
       return;
     }
-    categoriaModificar.nombreCategoria = nombre;
-    this.categoriaService.updateCategorie(id,categoriaModificar).subscribe({
-      next:(respuesta)=> {
-        Swal.fire("Categoria Modificada", `Se Actualizó <strong>${respuesta.nombreCategoria}</strong> Correctamente.`, "success");
-        this.ngOnInit()
+    const payload = { nombreCategoria: nombre };
+    this.categoriaService.updateCategorie(id, payload).subscribe({
+      next: (respuesta) => {
+        Swal.fire(
+          "Categoria Modificada",
+          `Se Actualizó <strong>${respuesta.nombreCategoria}</strong> Correctamente.`,
+          "success"
+        );
+        this.ngOnInit();
       },
       error: (error) => {
         if (error.status === 404) {
@@ -471,7 +656,7 @@ export class InventoryComponent {
         } else if (error.status === 500) {
           Swal.fire("Error del servidor", "Ocurrió un Error Interno (500). Intenta más Tarde.", "error");
         } else {
-          Swal.fire("Error", `No se Pudo Modificar la Categoria. Código: ${error.status}`, "error");
+          Swal.fire("Error", `No se Pudo Modificar la Categoria. Código: ${error.status}` , "error");
         }
         console.error("Error al Modificar Caja:", error);
       }

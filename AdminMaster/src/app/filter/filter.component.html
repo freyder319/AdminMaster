@@ -50,20 +50,6 @@
                     <option *ngFor="let p of proveedores" [ngValue]="p.id">{{ p.nombre }}</option>
                 </select>
             </div>
-            <div class="resultados flex-grow-1 overflow-auto mt-3" *ngIf="resultados?.length">
-                <table class="table table-sm table-striped">
-                    <thead>
-                        <tr>
-                            <th *ngFor="let col of columns">{{ col }}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let row of resultados">
-                            <td *ngFor="let col of columns">{{ row[col] }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
             <div class="limpiar-filtrar d-flex gap-2 mt-auto">
                 <div class="limpi">
                     <button type="button" class="btn limpiar" (click)="limpiar()">Limpiar Filtros</button>

@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 
 export interface VentaLibreProducto {
   nombre: string;
@@ -20,6 +20,7 @@ export interface CreateVentaLibrePayload {
   observaciones?: string;
   tipo_venta: 'libre';
   turno_id?: number;
+  transaccionId?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -27,6 +28,8 @@ export class VentaLibreService {
   private apiUrl = 'http://localhost:3000/venta-libre';
 
   constructor(private http: HttpClient) {}
+  private readonly _refresh$ = new Subject<void>();
+  readonly refresh$ = this._refresh$.asObservable();
 
   private authOptions() {
     try {
@@ -41,6 +44,14 @@ export class VentaLibreService {
   }
 
   create(data: CreateVentaLibrePayload): Observable<{ id: number }> {
-    return this.http.post<{ id: number }>(this.apiUrl, data, this.authOptions());
+    return this.http.post<{ id: number }>(this.apiUrl, data, this.authOptions()).pipe(
+      tap(() => {
+        this._refresh$.next();
+      })
+    );
+  }
+
+  list(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl, this.authOptions());
   }
 }

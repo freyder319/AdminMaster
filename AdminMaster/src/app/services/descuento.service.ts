@@ -7,6 +7,10 @@ export interface DescuentoDto {
   nombre: string;
   porcentaje: number;
   creadoEn: string | number; // backend puede devolver bigint como string
+  tipo?: 'PORCENTAJE' | 'VALOR_FIJO';
+  fechaInicio?: string | null;
+  fechaFin?: string | null;
+  activo?: boolean;
 }
 
 export interface Descuento {
@@ -14,6 +18,10 @@ export interface Descuento {
   nombre: string;
   porcentaje: number;
   creadoEn: number; // epoch ms para usar con date pipe
+  tipo: 'PORCENTAJE' | 'VALOR_FIJO';
+  fechaInicio?: number | null;
+  fechaFin?: number | null;
+  activo: boolean;
 }
 
 export type CreateDescuento = Omit<Descuento, 'id'>;
@@ -44,6 +52,10 @@ export class DescuentoService {
       nombre: dto.nombre,
       porcentaje: dto.porcentaje,
       creadoEn: typeof dto.creadoEn === 'string' ? Number(dto.creadoEn) : dto.creadoEn,
+      tipo: dto.tipo || 'PORCENTAJE',
+      fechaInicio: dto.fechaInicio ? new Date(dto.fechaInicio).getTime() : null,
+      fechaFin: dto.fechaFin ? new Date(dto.fechaFin).getTime() : null,
+      activo: typeof dto.activo === 'boolean' ? dto.activo : true,
     };
   }
 

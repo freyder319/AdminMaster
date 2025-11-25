@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { Producto, ProductoService } from '../services/producto.service';
 import { VentaService, CreateVentaPayload } from '../services/venta.service';
 import { Clientes, ClientesService } from '../services/clientes.service';
@@ -13,38 +12,43 @@ declare const bootstrap: any;
 @Component({
   selector: 'app_venta_producto',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, AdminNavbarComponent],
+  imports: [CommonModule, FormsModule, AdminNavbarComponent],
   templateUrl: './venta_producto.component.html',
   styleUrl: './venta_producto.component.scss'
 })
-export class VentaProductoComponent {
+export class VentaProductoComponent implements AfterViewInit {
   productos: Producto[] = [];
   private baseImageUrl = 'http://localhost:3000/storage/';
   private storageKey = 'venta_cart';
   searchTerm: string = '';
-  sortOption: 'masVendidos' | 'alfabetico' | 'masRentables' | 'ultimasUnidades' = 'masVendidos';
+  sortOption: 'todos' | 'masVendidos' | 'alfabetico' | 'masRentables' | 'ultimasUnidades' = 'todos';
   // Mostrar también productos inhabilitados en la grilla
   showDisabled: boolean = false;
   cart: { producto: Producto; cantidad: number; subtotal: number }[] = [];
   amountReceived: number | null = null;
   formaPago: 'efectivo' | 'tarjeta' | 'transferencia' | 'nequi' | 'daviplata' | 'otros' = 'efectivo';
+  estadoVenta: 'confirmada' | 'pendiente' = 'confirmada';
+  transaccionId: string = '';
   isSubmitting = false;
   descuentos: Descuento[] = [];
   selectedDescuentoId: number | null = null;
   // Cliente asociado a la venta
   clientes: Clientes[] = [];
   selectedClienteId: number | null = null;
+  clienteSearchTerm: string = '';
+
+  @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
 
   private toPesos(n: any): number {
     const num = Number(n);
     return Number.isFinite(num) ? Math.round(num) : 0;
   }
 
-  private showDeltaBubble(delta: number): void {
+  private showDeltaBubble(delta: number, anchorEl?: HTMLElement | null): void {
     try {
-      const cartEl: HTMLElement | null = this.getCartTarget();
-      if (!cartEl) return;
-      const rect = cartEl.getBoundingClientRect();
+      const target: HTMLElement | null = anchorEl || this.getCartTarget();
+      if (!target) return;
+      const rect = target.getBoundingClientRect();
       const bubble = document.createElement('div');
       bubble.textContent = `${delta > 0 ? '+' : ''}${delta}`;
       bubble.style.position = 'fixed';
@@ -75,6 +79,14 @@ export class VentaProductoComponent {
     return this.cart.reduce((acc, it) => acc + it.cantidad, 0);
   }
 
+  setEstado(tipo: 'confirmada' | 'pendiente') {
+    this.estadoVenta = tipo;
+  }
+
+  isEstado(tipo: 'confirmada' | 'pendiente') {
+    return this.estadoVenta === tipo;
+  }
+
   openConfirmModal(): void {
     // Prellenar con el total para facilitar
     this.amountReceived = this.cartTotal;
@@ -92,6 +104,10 @@ export class VentaProductoComponent {
     if (!this.canPay) return;
     // Validaciones básicas
     if (this.cart.length === 0) return;
+    // Guardar las claves de productos vendidos (id o código) para inhabilitar luego los que queden en stock 0
+    const soldKeys = new Set<any>(
+      this.cart.map(ci => (ci.producto.id ?? ci.producto.codigoProducto))
+    );
     // Construir payload para Nueva Venta (no venta libre)
     const items = this.cart
       .filter(ci => typeof ci.producto.id === 'number')
@@ -144,13 +160,27 @@ export class VentaProductoComponent {
         }
       }
     } catch {}
+    if (this.formaPago !== 'efectivo' && (!this.transaccionId || !this.transaccionId.trim())) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'ID de Transacción requerido',
+        html: 'Debes ingresar el <b>ID de la Transacción</b> para pagos que no sean en efectivo.',
+      });
+      return;
+    }
+
     const payload: CreateVentaPayload = {
       total: computedTotal,
       forma_pago: this.formaPago,
+      estado: this.estadoVenta,
       descuentoId: this.selectedDescuentoId ?? undefined,
       observaciones,
       items,
+      transaccionId: this.formaPago !== 'efectivo' ? this.transaccionId.trim() : undefined,
     };
+    if (this.selectedClienteId != null) {
+      (payload as any).clienteId = Number(this.selectedClienteId);
+    }
     try {
       const uid = localStorage.getItem('userId');
       const parsed = uid ? Number(uid) : NaN;
@@ -172,6 +202,7 @@ export class VentaProductoComponent {
         this.cart = [];
         this.saveCart();
         this.amountReceived = null;
+        this.transaccionId = '';
         this.isSubmitting = false;
         try {
           Swal.fire({
@@ -180,8 +211,33 @@ export class VentaProductoComponent {
             html: `Total: <b>${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(payload.total)}</b><br>` +
                   `Cambio: <b>${new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(computedChange)}</b>`
           }).then(() => {
-            // Refrescar solo los productos y resetear filtros básicos
-            this.loadProductos();
+            // Refrescar productos y, para los vendidos que queden en stock 0, inhabilitarlos
+            this.productoService.getAll(true).subscribe({
+              next: (data) => {
+                this.productos = data || [];
+                for (const p of this.productos) {
+                  const key = (p.id ?? p.codigoProducto);
+                  if (!soldKeys.has(key)) continue;
+                  const stock = Number(p.stockProducto ?? 0);
+                  if (stock === 0 && p.id && p.estado !== false) {
+                    this.productoService.setEstado(p.id, false).subscribe({
+                      next: (updated) => {
+                        const idx = this.productos.findIndex(pp => pp.id === updated.id);
+                        if (idx >= 0) {
+                          this.productos[idx] = { ...this.productos[idx], ...updated };
+                        }
+                      },
+                      error: () => {
+                        // En caso de error al inhabilitar, no interrumpir el flujo principal
+                      }
+                    });
+                  }
+                }
+              },
+              error: () => {
+                this.productos = [];
+              }
+            });
             try { this.searchTerm = ''; } catch {}
           });
         } catch {}
@@ -250,8 +306,28 @@ export class VentaProductoComponent {
     return this.clientes.find(c => c.id === num) || null;
   }
 
+  get clientesFiltradosVenta(): Clientes[] {
+    const q = (this.clienteSearchTerm || '').trim().toLowerCase();
+    if (!q) return this.clientes;
+    return this.clientes.filter(c => {
+      const nombre = `${c.nombre || ''} ${c.apellido || ''}`.toLowerCase();
+      const doc = String((c as any).documento || '').toLowerCase();
+      const correo = (c.correo || '').toLowerCase();
+      return nombre.includes(q) || doc.includes(q) || correo.includes(q);
+    });
+  }
+
+  selectCliente(c: Clientes | null): void {
+    if (!c) {
+      this.selectedClienteId = null;
+      return;
+    }
+    this.selectedClienteId = c.id;
+  }
+
   get sortLabel(): string {
     switch (this.sortOption) {
+      case 'todos': return 'Todos';
       case 'alfabetico': return 'Alfabéticamente';
       case 'masRentables': return 'Productos Más Rentables';
       case 'ultimasUnidades': return 'Últimas Unidades Disponibles';
@@ -260,30 +336,78 @@ export class VentaProductoComponent {
   }
 
   private isAnimating = false;
+  addedBubbleVisible = false;
+  addedBubbleText = '';
+  addedBubbleIsError = false;
+  addedBubbleProductName: string | null = null;
+  private addedBubbleTimeout: any;
+  private clearSearchTimeout: any;
 
   onProductClick(evt: MouseEvent, p: Producto): void {
     if (this.isAnimating) return;
     // No permitir seleccionar si el producto está inhabilitado
     if (p?.estado === false) return;
-    this.addToCart(p);
+    // No hacer nada si ya no hay stock disponible (stock físico menos lo que ya está en canasta)
+    const available = this.getAvailableStock(p);
+    if (available <= 0) return;
+    const added = this.addToCart(p);
+    if (!added) return;
     this.isAnimating = true;
     this.modernFlyToCart(evt).finally(() => { this.isAnimating = false; });
   }
 
-  addToCart(p: Producto): void {
-    if ((p.stockProducto ?? 0) <= 0) return;
+  addToCart(p: Producto): boolean {
+    const available = this.getAvailableStock(p);
+    if (available <= 0) return false;
     const price = this.toPesos((p.precioComercial ?? p.precioUnitario) || 0);
     const key = (p.id ?? p.codigoProducto);
     const found = this.cart.find(ci => (ci.producto.id ?? ci.producto.codigoProducto) === key);
+    let changed = false;
     if (found) {
+      // Respetar el stock físico máximo por producto
       if (found.cantidad < (p.stockProducto ?? 0)) {
         found.cantidad += 1;
         found.subtotal = this.toPesos(found.cantidad * price);
+        changed = true;
       }
     } else {
       this.cart.push({ producto: p, cantidad: 1, subtotal: this.toPesos(price) });
+      changed = true;
     }
-    this.saveCart();
+    if (changed) {
+      this.saveCart();
+      this.showAddedBubble(p);
+      return true;
+    }
+    return false;
+  }
+
+  private showAddedBubble(p: Producto): void {
+    const name = (p.nombreProducto || '').toString().trim();
+    this.addedBubbleProductName = name || null;
+    this.addedBubbleIsError = false;
+    this.addedBubbleText = name ? `Producto "${name}" Agregado` : 'Producto Agregado a la Canasta';
+    this.addedBubbleVisible = true;
+    if (this.addedBubbleTimeout) {
+      clearTimeout(this.addedBubbleTimeout);
+    }
+    this.addedBubbleTimeout = setTimeout(() => {
+      this.addedBubbleVisible = false;
+    }, 500);
+  }
+
+  private showNoStockBubble(p?: Producto): void {
+    const name = (p?.nombreProducto || '').toString().trim();
+    this.addedBubbleProductName = name || null;
+    this.addedBubbleIsError = true;
+    this.addedBubbleText = name ? `Producto "${name}" SIN STOCK` : 'Producto SIN STOCK';
+    this.addedBubbleVisible = true;
+    if (this.addedBubbleTimeout) {
+      clearTimeout(this.addedBubbleTimeout);
+    }
+    this.addedBubbleTimeout = setTimeout(() => {
+      this.addedBubbleVisible = false;
+    }, 1000);
   }
 
   private modernFlyToCart(evt: MouseEvent): Promise<void> {
@@ -445,28 +569,117 @@ export class VentaProductoComponent {
     } catch { return null; }
   }
 
-  increment(item: { producto: Producto; cantidad: number; subtotal: number }): void {
+  getCartQuantityFor(p: Producto): number {
+    const key = (p.id ?? p.codigoProducto);
+    const found = this.cart.find(ci => (ci.producto.id ?? ci.producto.codigoProducto) === key);
+    return found?.cantidad ?? 0;
+  }
+
+  getAvailableStock(p: Producto): number {
+    const base = Math.max(0, Number(p.stockProducto ?? 0));
+    const inCart = this.getCartQuantityFor(p);
+    const available = base - inCart;
+    return available > 0 ? available : 0;
+  }
+
+  increment(item: { producto: Producto; cantidad: number; subtotal: number }, event?: Event): void {
     const p = item.producto;
     const price = this.toPesos((p.precioComercial ?? p.precioUnitario) || 0);
     if (item.cantidad < (p.stockProducto ?? 0)) {
       item.cantidad += 1;
       item.subtotal = this.toPesos(item.cantidad * price);
       this.saveCart();
-      this.showDeltaBubble(+1);
+      const anchor = (event?.currentTarget as HTMLElement | null)?.closest('li.list-group-item') as HTMLElement | null;
+      this.showDeltaBubble(+1, anchor);
     }
   }
 
-  decrement(item: { producto: Producto; cantidad: number; subtotal: number }): void {
+  decrement(item: { producto: Producto; cantidad: number; subtotal: number }, event?: Event): void {
     const p = item.producto;
     const price = this.toPesos((p.precioComercial ?? p.precioUnitario) || 0);
     if (item.cantidad > 1) {
       item.cantidad -= 1;
       item.subtotal = this.toPesos(item.cantidad * price);
       this.saveCart();
-      this.showDeltaBubble(-1);
+      const anchor = (event?.currentTarget as HTMLElement | null)?.closest('li.list-group-item') as HTMLElement | null;
+      this.showDeltaBubble(-1, anchor);
     } else {
       this.remove(item);
-      this.showDeltaBubble(-1);
+      const anchor = (event?.currentTarget as HTMLElement | null)?.closest('li.list-group-item') as HTMLElement | null;
+      this.showDeltaBubble(-1, anchor);
+    }
+  }
+
+  updateQuantity(item: { producto: Producto; cantidad: number; subtotal: number }, event: Event): void {
+    const input = event.target as HTMLInputElement | null;
+    const raw = input?.value ?? '';
+    const p = item.producto;
+    const maxStock = Math.max(0, Number(p.stockProducto ?? 0));
+    let qty = Number(raw);
+    if (!Number.isFinite(qty) || qty <= 0) {
+      qty = 1;
+    }
+    if (maxStock > 0 && qty > maxStock) {
+      qty = maxStock;
+    }
+    const prev = item.cantidad;
+    if (qty === prev) {
+      return;
+    }
+    const price = this.toPesos((p.precioComercial ?? p.precioUnitario) || 0);
+    item.cantidad = qty;
+    item.subtotal = this.toPesos(qty * price);
+    if (input) {
+      input.value = String(qty);
+    }
+    this.saveCart();
+    const delta = qty - prev;
+    if (delta !== 0) {
+      const anchor = (event.currentTarget as HTMLElement | null)?.closest('li.list-group-item') as HTMLElement | null;
+      this.showDeltaBubble(delta, anchor);
+    }
+  }
+
+  onQuantityKeyDown(item: { producto: Producto; cantidad: number; subtotal: number }, event: KeyboardEvent): void {
+    const p = item.producto;
+    const maxStock = Math.max(0, Number(p.stockProducto ?? 0));
+    if (!maxStock) {
+      return;
+    }
+    const input = event.target as HTMLInputElement | null;
+    if (!input) {
+      return;
+    }
+
+    const key = event.key;
+
+    // Permitir teclas de control comunes
+    const controlKeys = ['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight', 'Home', 'End'];
+    if (controlKeys.includes(key)) {
+      return;
+    }
+
+    // Bloquear ArrowUp cuando ya está en el máximo
+    const currentVal = Number(input.value || '0');
+    if (key === 'ArrowUp') {
+      if (currentVal >= maxStock) {
+        event.preventDefault();
+      }
+      return;
+    }
+
+    // Solo validar dígitos; dejar pasar otras teclas (por ejemplo, Tab ya salió antes)
+    if (!/^\d$/.test(key)) {
+      return;
+    }
+
+    const value = input.value;
+    const start = input.selectionStart ?? value.length;
+    const end = input.selectionEnd ?? value.length;
+    const newValue = value.slice(0, start) + key + value.slice(end);
+    const num = Number(newValue);
+    if (Number.isFinite(num) && num > maxStock) {
+      event.preventDefault();
     }
   }
 
@@ -525,6 +738,80 @@ export class VentaProductoComponent {
     return list;
   }
 
+  onSearchEnter(event: Event): void {
+    event.preventDefault();
+    const raw = (this.searchTerm || '').trim();
+    if (!raw) {
+      return;
+    }
+    const q = raw.toLowerCase();
+    const found = this.productos.find(p => String(p.codigoProducto || '').trim().toLowerCase() === q);
+    if (!found) {
+      return;
+    }
+    // Si no hay stock disponible (físico menos lo que ya está en canasta), mostrar burbuja de "sin stock" y no agregar
+    const available = this.getAvailableStock(found);
+    if (available <= 0) {
+      this.showNoStockBubble(found);
+      // Limpiar el buscador después de 1 segundos
+      setTimeout(() => {
+        try {
+          this.searchTerm = '';
+          const el = this.searchInput?.nativeElement;
+          if (el) {
+            el.value = '';
+          }
+        } catch {}
+      }, 1000);
+      return;
+    }
+    if (found.estado === false) {
+      return;
+    }
+    const added = this.addToCart(found);
+    if (!added) {
+      return;
+    }
+    // Mostrar burbuja +1 anclada al item correspondiente en la canasta (desktop)
+    try {
+      const key = (found.id ?? found.codigoProducto);
+      const selector = `#canasta-lista-desktop li.list-group-item[data-key="${key}"]`;
+      const liEl = document.querySelector(selector) as HTMLElement | null;
+      this.showDeltaBubble(+1, liEl || undefined);
+    } catch {
+      this.showDeltaBubble(+1);
+    }
+    this.showAddedBubble(found);
+
+    // Mantener el filtro de productos con el código usado por unos segundos
+    const termAtAdd = this.searchTerm;
+
+    // Limpiar inmediatamente solo el input visual para poder tipear el siguiente código
+    setTimeout(() => {
+      try {
+        const el = this.searchInput?.nativeElement;
+        if (el) {
+          el.value = '';
+          el.focus();
+        }
+      } catch {}
+    }, 0);
+
+    // Cancelar cualquier limpieza anterior programada
+    if (this.clearSearchTimeout) {
+      clearTimeout(this.clearSearchTimeout);
+    }
+
+    // Después de ~5 milisegundos, si el usuario no cambió la búsqueda, limpiar el filtro
+    this.clearSearchTimeout = setTimeout(() => {
+      const current = (this.searchTerm || '').trim().toLowerCase();
+      const atAdd = (termAtAdd || '').trim().toLowerCase();
+      if (current === atAdd) {
+        this.searchTerm = '';
+      }
+    }, 500);
+  }
+
   constructor(
     private productoService: ProductoService,
     private ventaService: VentaService,
@@ -532,11 +819,28 @@ export class VentaProductoComponent {
     private clientesService: ClientesService,
   ) {}
 
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      try {
+        this.searchInput?.nativeElement.focus();
+        this.searchInput?.nativeElement.select();
+      } catch {}
+    }, 0);
+  }
+
   ngOnInit(): void {
     this.loadCart();
     this.loadProductos();
-    // cargar descuentos
-    this.descuentoService.items$.subscribe((list) => (this.descuentos = list || []));
+    // cargar promociones/descuentos válidos (activos y dentro de vigencia si aplica)
+    this.descuentoService.items$.subscribe((list) => {
+      const now = Date.now();
+      this.descuentos = (list || []).filter((d) => {
+        if (!d.activo) return false;
+        if (d.fechaInicio && now < d.fechaInicio) return false;
+        if (d.fechaFin && now > d.fechaFin) return false;
+        return true;
+      });
+    });
     this.descuentoService.fetchAll().subscribe();
     // cargar clientes (por defecto solo activos)
     try {

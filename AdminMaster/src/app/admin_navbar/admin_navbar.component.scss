@@ -1,107 +1,479 @@
 .navbar-brand:hover{
-  background-color: #5adbff;
+  background-color: rgba(148, 163, 184, 0.16);
+  box-shadow: none;
+  transform: none;
+}
+
+.sidebar-shell {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.sidebar-rail {
+  width: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 6px;
+  border-radius: 0 18px 18px 0; /* solo redondeo hacia dentro */
+  background: #e5f0ff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.25);
+}
+
+.rail-item {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: #1f2933;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease, transform 0.16s ease;
+}
+
+.brand-rail {
+  margin-bottom: 6px;
+}
+
+.rail-logo {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
+
+.rail-item i {
+  font-size: 16px;
+}
+
+.rail-item:hover {
+  background: rgba(148, 163, 184, 0.25);
+  transform: none;
+}
+
+.active-rail {
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+.sidebar-panel {
+  flex: 1;
+  padding-left: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .navbar {
   position: fixed;
-  width: 100%;
-  top: 0;
+  inset: 0 auto 0 0; /* top:0; bottom:0; left:0; */
+  width: 300px; /* barra completa: rail + panel (un poco más ancha) */
+  height: 100vh;
   z-index: 1040 !important; /* sobre contenido, debajo offcanvas (1055) */
-  background-color: white;
-  overflow-x: auto;
-  white-space: nowrap;
-  box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+  background: #edf2ff; /* fondo claro principal */
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 22px rgba(15, 23, 42, 0.18);
+  border-right: 1px solid rgba(148, 163, 184, 0.6);
+  padding: 10px 10px 16px 0; /* menos padding arriba, rail pegado al borde izquierdo */
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: width 0.22s ease;
 }
 
 .active {
-  background-color: #5adbff;
-  box-shadow: 0 0 6px 0.5px #5adbff;
+  background: #dbeafe; /* un poco más oscuro que el fondo normal */
+  box-shadow: none;
+  border: 1px solid rgba(148, 163, 184, 0.8);
+  color: #0f172a;
+  position: relative;
+}
+
+.active::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.8);
 }
 
 .active2{
-  background-color: #5adbff;
+  background: radial-gradient(circle at 30% 20%, #38bdf8, #0ea5e9);
   box-sizing: border-box;
-  border-radius: 50%;
-  width: 50px; /* O el tamaño que prefieras */
-  height: 50px;
+  border-radius: 999px;
+  width: 54px; /* O el tamaño que prefieras */
+  height: 54px;
+  box-shadow: 0 12px 30px rgba(56, 189, 248, 0.7);
 }
 
 .img-navbar { 
   cursor: pointer;
-  border-radius: 50px;
-  width: 90px;
-  height: 90px;
+  border-radius: 999px;
+  width: 50px;
+  height: 50px;
   object-fit: cover;
   outline: none;
 }
 .img-navbar:active{
-  box-shadow: 0 0 6px 0.5px #5adbff;
+  box-shadow: 0 0 0 3px rgba(90, 219, 255, 0.6);
 }
 
 .foto_perfil{
-  margin-left: -9px;
-  margin-top: 6px;
+  margin-left: 0;
+  margin-top: 0;
+  width: 30px;
+  height: 30px;
 }
 
 .container-fluid {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   flex-wrap: nowrap; 
+  gap: 8px;
+  padding: 0; 
+}
+
+.sidebar-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   gap: 10px;
-  padding: 10px; 
+  background: #f9fbff;
+  border-radius: 18px;
+  padding: 6px 10px 10px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 2px;
+}
+
+.panel-group-heading {
+  margin-top: 0;
+  margin-bottom: 2px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.panel-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.sidebar-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.sidebar-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  align-self: flex-start;
+  max-width: 210px;
+}
+
+.search-icon {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #e5e7eb;
+  font-size: 0.75rem;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+  position: relative; /* para anclar desplegables internos */
+}
+
+.sidebar-section-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  padding: 8px 4px 4px;
+}
+
+/* Entrada de usuario que despliega el menú de turnos */
+.user-entry {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+/* Menú desplegable de vistas de turno que "sale" del botón de usuario */
+.turn-menu {
+  position: absolute;
+  top: 64px; /* justo debajo del primer item (user-entry) */
+  left: 0;
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.35);
+  border: 1px solid rgba(209, 213, 219, 0.95);
+  min-width: 180px;
+}
+
+.turn-menu-item {
+  border: none;
+  outline: none;
+  background: transparent;
+  border-radius: 10px;
+  padding: 6px 10px;
+  text-align: left;
+  font-size: 0.8rem;
+  color: #0f172a;
+  cursor: pointer;
+  transition: background-color 0.16s ease, color 0.16s ease;
+}
+
+.turn-menu-item:hover {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.sidebar-user-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid rgba(203, 213, 225, 0.9);
+}
+
+.user-avatar img {
+  border-radius: 999px;
+  width: 32px;
+  height: 32px;
+}
+
+.user-avatar i {
+  font-size: 20px;
+  color: #4b5563;
+}
+
+.user-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.user-role {
+  font-size: 0.68rem;
+  color: #6b7280;
+}
+
+.logout-compact {
+  margin-left: auto;
+  border: none;
+  outline: none;
+  background: #eff6ff;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 5px 9px;
+  cursor: pointer;
+  transition: background-color 0.18s ease, box-shadow 0.18s ease, transform 0.16s ease;
+}
+
+.logout-compact:hover {
+  background: #dbeafe;
+  box-shadow: 0 4px 10px rgba(148, 163, 184, 0.4);
+  transform: translateY(-1px);
 }
 
 .navbar-brand {
-  margin-right: 15px;
-  border-radius: 15px;
-  padding: 13px;
+  margin-right: 0;
+  border-radius: 12px;
+  padding: 7px 10px;
   cursor: pointer;
   flex: 0 0 auto; 
   display: flex;
   align-items: center;
-  gap: 8px; 
+  gap: 10px; 
+  background: transparent;
+  border: 1px solid transparent;
+  color: #e5e7eb;
+  text-decoration: none;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.18s ease, border-color 0.18s ease, color 0.18s ease;
 }
+
+.navbar-brand img {
+  filter: drop-shadow(0 4px 8px rgba(15, 23, 42, 0.25));
+  transition: transform 0.2s ease;
+}
+
+.navbar-brand:hover img {
+  transform: none;
+}
+
+.nav-text {
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  opacity: 1;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.8rem;
+  color: #111827;
+}
+
+/* Compensar el contenido principal para la sidebar se hará por componente (main/.main),
+   no de forma global en body para evitar efectos secundarios. */
+
+/* En escritorio el panel derecho muestra ícono + texto normalmente.
+   La barra izquierda (sidebar-rail) ya es solo de íconos, así que no
+   necesitamos ocultar .nav-text globalmente. */
 
 
 @media screen and (max-width: 767px) {
   .navbar {
     position: fixed;
-    top: auto;
+    top: 0;
     bottom: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    padding: 10px 10px 16px 0;
+    transform: translateX(-100%);
+    transition: transform 0.22s ease;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.25);
+    z-index: 1050; /* por encima del contenido principal */
+  }
+
+  .navbar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-shell {
+    position: relative;
+  }
+
+  .sidebar-panel {
+    position: relative;
+    top: 0;
+    bottom: 0;
+    left: 0;
     width: 100%;
-    border-top: 2px solid rgb(207, 207, 207);
-    border-bottom: none;
-    background-color: white;
-    z-index: 1040 !important; /* sobre contenido, debajo offcanvas (1055) */
+    max-width: 100%;
+    z-index: 1051; /* por encima del backdrop dentro de la navbar */
   }
 
-  .nav-text {
-    display: none;
+  .sidebar-rail {
+    display: none; /* ocultamos el rail en móvil, solo usamos el panel completo */
   }
 
-  .img-navbar{
-    display: none;
+  .sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(15, 23, 42, 0.45);
+    z-index: 1040; /* debajo del panel (1051), encima del contenido */
   }
 
-  .navbar-brand {
-    flex-direction: column;
-    padding: 10px;
-    justify-content: center;
+  .mobile-nav-toggle {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 1100;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    border: none;
+    background: #0f172a;
+    color: #f9fafb;
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.4);
   }
 
-  .navbar-brand img {
-    width: 70px; 
-    height: 70px;
-    border: #5adbff;
+  .mobile-nav-toggle.is-hidden {
+    display: none;
   }
 
-
-  body {
-    padding-bottom: 80px; 
+  .sidebar-section-toggle {
+    width: 100%;
+    margin-top: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(59, 130, 246, 0.55);
+    background: linear-gradient(135deg, rgba(59,130,246,0.16), rgba(37,99,235,0.10));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #0f172a;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.18s ease, box-shadow 0.18s ease, transform 0.16s ease, border-color 0.16s ease;
   }
-  
-  .turno-alert {
-    display: none !important;
+
+  .sidebar-section-toggle:hover {
+    border-color: rgba(37, 99, 235, 0.85);
+    background: linear-gradient(135deg, rgba(59,130,246,0.22), rgba(37,99,235,0.16));
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.35);
+    transform: translateY(-1px);
+  }
+
+  .sidebar-section-toggle .toggle-icon {
+    font-size: 0.8rem;
+    color: #1d4ed8;
+    margin-left: 6px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .mobile-nav-toggle {
+    display: none;
   }
 }

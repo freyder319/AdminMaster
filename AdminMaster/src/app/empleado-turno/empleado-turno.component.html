@@ -1,8 +1,9 @@
-<header>
-    <app-admin-navbar></app-admin-navbar>
-</header>
+<div class="with-sidebar">
+  <header>
+      <app-admin-navbar></app-admin-navbar>
+  </header>
 
-<main>
+  <main>
     <section>
 
         <div *ngIf="!isAdmin && !cargando && sinTurnoActivo" class="turno-card">
@@ -15,102 +16,180 @@
             <h2 class="titulo">Cargando...</h2>
         </div>
 
-        <div *ngIf="!isAdmin && !cargando && resumen" class="turno-card">
+        <div *ngIf="!isAdmin && !cargando && resumen" class="turno-card" [ngClass]="{ 'punto-pos-layout': isPuntoPos }">
             <h2 class="titulo">Resumen del Turno</h2>
 
-            <div class="bloque">
-                <h4>Turno</h4>
-                <p><strong>Inicio:</strong> {{resumen.turno.inicioTurno | date:'short'}}</p>
-                <p><strong>Fin:</strong> {{resumen.turno.finTurno | date:'short'}}</p>
-                <p><strong>Observaciones:</strong> {{resumen.turno.observaciones || 'Sin comentarios'}}</p>
-            </div>
+            <!-- Layout especial para rol punto_pos -->
+            <div *ngIf="isPuntoPos; else layoutTurnoNormal" class="turno-resumen-grid">
+              <div class="col-izquierda">
+                <div class="bloque">
+                    <h4>Turno</h4>
+                    <p><strong>Inicio:</strong> {{resumen.turno.inicioTurno | date:'short'}}</p>
+                    <p><strong>Fin:</strong> {{resumen.turno.finTurno | date:'short'}}</p>
+                    <p><strong>Observaciones:</strong> {{resumen.turno.observaciones || 'Sin comentarios'}}</p>
+                </div>
 
-            <div class="bloque">
-                <h4>Caja</h4>
-                <ng-container *ngIf="resumen.aperturaCaja">
-                    <p><strong>Apertura:</strong> {{resumen.aperturaCaja.fecha | date:'shortTime'}}</p>
-                    <p><strong>Monto Inicial:</strong> ${{resumen.aperturaCaja.montoInicial | number:'1.0-0'}}</p>
-                </ng-container>
-                <ng-container *ngIf="resumen.cierreCaja; else sinCierre">
-                    <p><strong>Cierre:</strong> {{resumen.cierreCaja.fecha | date:'shortTime'}}</p>
-                    <p><strong>Monto Final:</strong> ${{resumen.cierreCaja.montoFinal | number:'1.0-0'}}</p>
-                    <p *ngIf="resumen.aperturaCaja"><strong>Diferencia:</strong> ${{(resumen.cierreCaja.montoFinal - resumen.aperturaCaja.montoInicial) | number:'1.0-0'}}</p>
-                </ng-container>
-                <ng-template #sinCierre>
-                    <p><em>Aún sin cierre de caja.</em></p>
-                </ng-template>
-            </div>
+                <div class="bloque">
+                    <h4>Caja</h4>
+                    <ng-container *ngIf="resumen.aperturaCaja">
+                        <p><strong>Apertura:</strong> {{resumen.aperturaCaja.fecha | date:'shortTime'}} </p>
+                        <p><strong>Monto Inicial:</strong> ${{resumen.aperturaCaja.montoInicial | number:'1.0-0'}} </p>
+                    </ng-container>
+                    <ng-container *ngIf="resumen.cierreCaja; else sinCierrePuntoPos">
+                        <p><strong>Cierre:</strong> {{resumen.cierreCaja.fecha | date:'shortTime'}}</p>
+                        <p><strong>Monto Final:</strong> ${{resumen.cierreCaja.montoFinal | number:'1.0-0'}} </p>
+                        <p *ngIf="resumen.aperturaCaja"><strong>Diferencia:</strong> ${{(resumen.cierreCaja.montoFinal - resumen.aperturaCaja.montoInicial) | number:'1.0-0'}} </p>
+                    </ng-container>
+                    <ng-template #sinCierrePuntoPos>
+                        <p><em>Aún sin cierre de caja.</em></p>
+                    </ng-template>
+                </div>
 
-            <div class="bloque">
-              <h4>Actividad</h4>
-                <p><strong>Ventas (productos):</strong> ${{resumen.actividad.totalVentas}}</p>
-                <p><strong>Transacciones (productos):</strong> {{resumen.actividad.transacciones}}</p>
+                <div class="bloque">
+                  <h4>Actividad</h4>
+                    <p><strong>Ventas (productos):</strong> ${{resumen.actividad.totalVentas}}</p>
+                    <p><strong>Transacciones (productos):</strong> {{resumen.actividad.transacciones}}</p>
 
-                <p><strong>Ventas libres:</strong> ${{resumen.actividad.totalVentasLibres}}</p>
-                <p><strong>Transacciones libres:</strong> {{resumen.actividad.transaccionesLibres}}</p>
+                    <p><strong>Ventas libres:</strong> ${{resumen.actividad.totalVentasLibres}}</p>
+                    <p><strong>Transacciones libres:</strong> {{resumen.actividad.transaccionesLibres}}</p>
 
-                <p><strong>Gastos:</strong> ${{resumen.actividad.totalGastos}}</p>
-                <p><strong>Cantidad de gastos:</strong> {{resumen.actividad.cantidadGastos}}</p>
+                    <p><strong>Gastos:</strong> ${{resumen.actividad.totalGastos}}</p>
+                    <p><strong>Cantidad de gastos:</strong> {{resumen.actividad.cantidadGastos}}</p>
+                </div>
 
-                <div *ngIf="resumen.actividad.ventas?.length || resumen.actividad.ventasLibres?.length || resumen.actividad.gastos?.length" class="subbloque">
-                  <h5>Detalle</h5>
+                <div class="bloque" *ngIf="!resumen.cierreCaja && !isAdmin">
+                    <button type="button" class="btn-turno" (click)="cerrarTurno()">Terminar turno</button>
+                </div>
+              </div>
+
+              <div class="col-derecha">
+                <div class="bloque" *ngIf="resumen.actividad.ventas?.length || resumen.actividad.ventasLibres?.length || resumen.actividad.gastos?.length">
+                  <h4>Detalle</h4>
                   <div class="datos-grid">
+                    <!-- Ventas -->
                     <div class="kv kv-span" *ngIf="resumen.actividad.ventas?.length">
-                      <span class="k">Ventas</span>
+                      <span class="k">Ventas ({{resumen.actividad.ventas.length}})</span>
                       <span class="v">
-                        <span *ngFor="let v of resumen.actividad.ventas; let i = index">#{{v.id}}: ${{v.total}}<span *ngIf="i < resumen.actividad.ventas.length-1">, </span></span>
+                        <ng-container *ngFor="let v of resumen.actividad.ventas; let i = index">
+                          <span *ngIf="i < 10">
+                            #{{v.id}}: ${{v.total}}<span *ngIf="i < 9 && i < resumen.actividad.ventas.length-1">, </span>
+                          </span>
+                        </ng-container>
+                        <span *ngIf="resumen.actividad.ventas.length > 10">
+                          &nbsp;... y {{resumen.actividad.ventas.length - 10}} más
+                        </span>
                       </span>
                     </div>
+
+                    <!-- Ventas libres -->
                     <div class="kv kv-span" *ngIf="resumen.actividad.ventasLibres?.length">
-                      <span class="k">Ventas libres</span>
+                      <span class="k">Ventas libres ({{resumen.actividad.ventasLibres.length}})</span>
                       <span class="v">
-                        <span *ngFor="let v of resumen.actividad.ventasLibres; let i = index">#{{v.id}}: ${{v.total}}<span *ngIf="i < resumen.actividad.ventasLibres.length-1">, </span></span>
+                        <ng-container *ngFor="let v of resumen.actividad.ventasLibres; let i = index">
+                          <span *ngIf="i < 10">
+                            #{{v.id}}: ${{v.total}}<span *ngIf="i < 9 && i < resumen.actividad.ventasLibres.length-1">, </span>
+                          </span>
+                        </ng-container>
+                        <span *ngIf="resumen.actividad.ventasLibres.length > 10">
+                          &nbsp;... y {{resumen.actividad.ventasLibres.length - 10}} más
+                        </span>
                       </span>
                     </div>
+
+                    <!-- Gastos -->
                     <div class="kv kv-span" *ngIf="resumen.actividad.gastos?.length">
-                      <span class="k">Gastos</span>
+                      <span class="k">Gastos ({{resumen.actividad.gastos.length}})</span>
                       <span class="v">
-                        <span *ngFor="let g of resumen.actividad.gastos; let i = index">#{{g.id}}: ${{g.monto}}<span *ngIf="g.nombre"> ({{g.nombre}})</span><span *ngIf="i < resumen.actividad.gastos.length-1">, </span></span>
+                        <ng-container *ngFor="let g of resumen.actividad.gastos; let i = index">
+                          <span *ngIf="i < 10">
+                            #{{g.id}}: ${{g.monto}}<span *ngIf="g.nombre"> ({{g.nombre}})</span><span *ngIf="i < 9 && i < resumen.actividad.gastos.length-1">, </span>
+                          </span>
+                        </ng-container>
+                        <span *ngIf="resumen.actividad.gastos.length > 10">
+                          &nbsp;... y {{resumen.actividad.gastos.length - 10}} más
+                        </span>
                       </span>
                     </div>
                   </div>
                 </div>
+              </div>
             </div>
 
-            <div class="bloque" *ngIf="!resumen.cierreCaja && !isAdmin">
-                <button type="button" class="btn-turno" (click)="cerrarTurno()">Terminar turno</button>
-            </div>
+            <!-- Layout original para otros roles -->
+            <ng-template #layoutTurnoNormal>
+              <div class="bloque">
+                  <h4>Turno</h4>
+                  <p><strong>Inicio:</strong> {{resumen.turno.inicioTurno | date:'short'}}</p>
+                  <p><strong>Fin:</strong> {{resumen.turno.finTurno | date:'short'}}</p>
+                  <p><strong>Observaciones:</strong> {{resumen.turno.observaciones || 'Sin comentarios'}}</p>
+              </div>
+
+              <div class="bloque">
+                  <h4>Caja</h4>
+                  <ng-container *ngIf="resumen.aperturaCaja">
+                      <p><strong>Apertura:</strong> {{resumen.aperturaCaja.fecha | date:'shortTime'}} </p>
+                      <p><strong>Monto Inicial:</strong> ${{resumen.aperturaCaja.montoInicial | number:'1.0-0'}} </p>
+                  </ng-container>
+                  <ng-container *ngIf="resumen.cierreCaja; else sinCierre">
+                      <p><strong>Cierre:</strong> {{resumen.cierreCaja.fecha | date:'shortTime'}}</p>
+                      <p><strong>Monto Final:</strong> ${{resumen.cierreCaja.montoFinal | number:'1.0-0'}} </p>
+                      <p *ngIf="resumen.aperturaCaja"><strong>Diferencia:</strong> ${{(resumen.cierreCaja.montoFinal - resumen.aperturaCaja.montoInicial) | number:'1.0-0'}} </p>
+                  </ng-container>
+                  <ng-template #sinCierre>
+                      <p><em>Aún sin cierre de caja.</em></p>
+                  </ng-template>
+              </div>
+
+              <div class="bloque">
+                <h4>Actividad</h4>
+                  <p><strong>Ventas (productos):</strong> ${{resumen.actividad.totalVentas}}</p>
+                  <p><strong>Transacciones (productos):</strong> {{resumen.actividad.transacciones}}</p>
+
+                  <p><strong>Ventas libres:</strong> ${{resumen.actividad.totalVentasLibres}}</p>
+                  <p><strong>Transacciones libres:</strong> {{resumen.actividad.transaccionesLibres}}</p>
+
+                  <p><strong>Gastos:</strong> ${{resumen.actividad.totalGastos}}</p>
+                  <p><strong>Cantidad de gastos:</strong> {{resumen.actividad.cantidadGastos}}</p>
+
+                  <div *ngIf="resumen.actividad.ventas?.length || resumen.actividad.ventasLibres?.length || resumen.actividad.gastos?.length" class="subbloque">
+                    <h5>Detalle</h5>
+                    <div class="datos-grid">
+                      <div class="kv kv-span" *ngIf="resumen.actividad.ventas?.length">
+                        <span class="k">Ventas</span>
+                        <span class="v">
+                          <span *ngFor="let v of resumen.actividad.ventas; let i = index">#{{v.id}}: ${{v.total}}<span *ngIf="i < resumen.actividad.ventas.length-1">, </span></span>
+                        </span>
+                      </div>
+                      <div class="kv kv-span" *ngIf="resumen.actividad.ventasLibres?.length">
+                        <span class="k">Ventas libres</span>
+                        <span class="v">
+                          <span *ngFor="let v of resumen.actividad.ventasLibres; let i = index">#{{v.id}}: ${{v.total}}<span *ngIf="i < resumen.actividad.ventasLibres.length-1">, </span></span>
+                        </span>
+                      </div>
+                      <div class="kv kv-span" *ngIf="resumen.actividad.gastos?.length">
+                        <span class="k">Gastos</span>
+                        <span class="v">
+                          <span *ngFor="let g of resumen.actividad.gastos; let i = index">#{{g.id}}: ${{g.monto}}<span *ngIf="g.nombre"> ({{g.nombre}})</span><span *ngIf="i < resumen.actividad.gastos.length-1">, </span></span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+
+              <div class="bloque" *ngIf="!resumen.cierreCaja && !isAdmin">
+                  <button type="button" class="btn-turno" (click)="cerrarTurno()">Terminar turno</button>
+              </div>
+            </ng-template>
         </div>
 
-        <!-- Vista ADMIN: mini tablero a la izquierda y contenido a la derecha -->
+        <!-- Vista ADMIN: solo contenido; las opciones se eligen desde la navbar -->
         <div *ngIf="isAdmin" class="admin-layout">
-            <aside class="mini-tablero" role="navigation" aria-label="Opciones de vista">
-                <a class="mini-btn" routerLink="activos" routerLinkActive="active">
-                    <i class="bi bi-play-circle" aria-hidden="true"></i>
-                    <span>Turnos activos</span>
-                    <span class="badge-count">{{ countActivos }}</span>
-                </a>
-                <a class="mini-btn" routerLink="cerrados" routerLinkActive="active">
-                    <i class="bi bi-door-closed" aria-hidden="true"></i>
-                    <span>Turnos cerrados</span>
-                    <span class="badge-count">{{ countCerrados }}</span>
-                </a>
-                <a class="mini-btn" routerLink="historial" routerLinkActive="active">
-                    <i class="bi bi-journal-text" aria-hidden="true"></i>
-                    <span>Historial</span>
-                    <span class="badge-count">{{ countHistorial }}</span>
-                </a>
-                <a class="mini-btn" routerLink="notificaciones" routerLinkActive="active">
-                    <i class="bi bi-bell" aria-hidden="true"></i>
-                    <span>Notificaciones</span>
-                    <span class="badge-count">{{ countNotificaciones }}</span>
-                </a>
-            </aside>
-
             <div class="admin-contenido">
-                <router-outlet></router-outlet>
+                <app-turnos-dia *ngIf="showTurnosDia"></app-turnos-dia>
+                <router-outlet *ngIf="!showTurnosDia"></router-outlet>
             </div>
         </div>
 
     </section>
   </main>
+</div>

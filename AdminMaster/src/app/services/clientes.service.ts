@@ -9,6 +9,7 @@ export interface Clientes{
   numero:string;
   correo:string;
   estado:string;
+  documento?: string;
 }
 @Injectable({
   providedIn: 'root'
@@ -47,5 +48,10 @@ export class ClientesService {
 
   deleteCliente(id:number):Observable<void>{
     return this.http.delete<void>(`${this.apiUrl}/${id}`, this.authOptions());
+  }
+
+  verificarExistencia(correo: string, numero: string, documento: string): Observable<{ correo: boolean; numero: boolean; documento: boolean }> {
+    const params = `?correo=${encodeURIComponent(correo)}&numero=${encodeURIComponent(numero)}&documento=${encodeURIComponent(documento)}`;
+    return this.http.get<{ correo: boolean; numero: boolean; documento: boolean }>(`${this.apiUrl}/verificar${params}`, this.authOptions());
   }
 }

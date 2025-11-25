@@ -30,6 +30,10 @@
           <div class="text-muted small">Medio de Pago</div>
           <div>{{ g.forma_pago || '-' }}</div>
         </div>
+        <div class="col-sm-6" *ngIf="g.transaccionId">
+          <div class="text-muted small">ID de Transacción</div>
+          <div>{{ g.transaccionId }}</div>
+        </div>
         <div class="col-sm-6">
           <div class="text-muted small">Fecha</div>
           <div>{{ g.fecha | date:'dd/MM/yyyy' }}</div>

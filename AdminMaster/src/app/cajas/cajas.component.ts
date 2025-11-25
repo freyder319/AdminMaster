@@ -67,6 +67,23 @@ export class CajasComponent {
     });
   }
 
+  focusFirstInput(offcanvasId: string): void {
+    const offcanvas = document.getElementById(offcanvasId);
+    if (!offcanvas) return;
+
+    let input = offcanvas.querySelector('input[data-autofocus="true"]') as HTMLInputElement | null;
+    if (!input) {
+      input = offcanvas.querySelector('input') as HTMLInputElement | null;
+    }
+
+    if (input) {
+      setTimeout(() => {
+        input?.focus();
+        (input as any)?.select?.();
+      }, 50);
+    }
+  }
+
   cerrarOffcanvas() {
     const offcanvasElement = document.getElementById('offcanvasAddCaja');
     if (offcanvasElement) {
@@ -237,7 +254,7 @@ export class CajasComponent {
         Swal.fire({
           icon: 'error',
           title: 'Error...',
-          text: 'No se pudo inhabilitar la Caja.'
+          text: 'No se pudo Inhabilitar la Caja.'
         });
       }
     });
@@ -258,7 +275,7 @@ export class CajasComponent {
         Swal.fire({
           icon: 'error',
           title: 'Error...',
-          text: 'No se pudo habilitar la Caja.'
+          text: 'No se pudo Habilitar la Caja.'
         });
       }
     });

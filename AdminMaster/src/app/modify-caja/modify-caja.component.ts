@@ -28,31 +28,43 @@ export class ModifyCajaComponent {
 
   ngOnChanges() {
     if (this.caja) {
+      // Normalizar estado a los mismos valores usados en creación (Activa/Inactiva)
+      const rawEstado = (this.caja.estado || '').toString().toLowerCase();
+      let estadoNormalizado = '';
+      if (rawEstado === 'activa' || rawEstado === 'activo') {
+        estadoNormalizado = 'Activa';
+      } else if (rawEstado === 'inactiva' || rawEstado === 'inactivo') {
+        estadoNormalizado = 'Inactiva';
+      }
       this.formCaja.patchValue({
         nombre: this.caja.nombre,
         codigoCaja: this.caja.codigoCaja,
-        estado: this.caja.estado || '',
+        estado: estadoNormalizado || this.caja.estado || '',
       });
     }
   }
 
   confirmarModificacion() {
     if (this.formCaja.invalid) {
-      Swal.fire("Formulario Incompleto", "Por Favor Completa todos los Campos Requeridos.", "warning");
+      Swal.fire({
+        title: "Campos incompletos",
+        icon: "warning",
+        text: "Por favor Completa todos los Campos Requeridos.",
+      });
       return;
     }
 
     const datosActualizados = {
       ...this.caja,
       ...this.formCaja.value
-    };
+    } as any;
 
     this.cajasService.getCajas().subscribe({
       next: (cajasExistentes) => {
         const codigoYaExiste = cajasExistentes.some(
           (caja) =>
             caja.codigoCaja === datosActualizados.codigoCaja &&
-            caja.id !== datosActualizados.id 
+            caja.id !== this.caja.id 
         );
 
         if (codigoYaExiste) {
@@ -60,18 +72,37 @@ export class ModifyCajaComponent {
           return;
         }
 
-        this.cajasService.updateCaja(this.caja.id, datosActualizados).subscribe({
+        // El backend no acepta id/creadoEn/actualizadoEn en el cuerpo del PUT
+        const { id, creadoEn, actualizadoEn, ...payload } = datosActualizados;
+
+        this.cajasService.updateCaja(this.caja.id, payload).subscribe({
           next: (respuesta) => {
-            Swal.fire("Caja Modificada", `Se Actualizó <strong>${respuesta.nombre}</strong> Correctamente.`, "success");
+            Swal.fire({
+              title: "Caja Modificada!",
+              icon: "success",
+              html: `La <b>Caja</b> fue Modificada con Éxito`,
+              timer: 2000,
+              showConfirmButton: false
+            });
             this.cajaModificada.emit(respuesta);
           },
           error: (error) => {
-            if (error.status === 404) {
-              Swal.fire("No Encontrada", "La Caja NO Existe (404).", "error");
-            } else if (error.status === 500) {
-              Swal.fire("Error del servidor", "Ocurrió un Error Interno (500). Intenta más Tarde.", "error");
+            let detalle: string;
+            const backendMsg = error?.error?.message;
+            if (typeof backendMsg === 'string') {
+              detalle = backendMsg;
+            } else if (Array.isArray(backendMsg)) {
+              detalle = backendMsg.map((m: any) => String(m)).join('<br>');
             } else {
-              Swal.fire("Error", `No se Pudo Modificar la Caja. Código: ${error.status}`, "error");
+              detalle = `Ocurrió un error inesperado (código: ${error?.status ?? 'desconocido'})`;
+            }
+
+            if (error.status === 404) {
+              Swal.fire({ icon: 'error', title: 'No Encontrada', html: 'La Caja NO Existe (404).' });
+            } else if (error.status === 500) {
+              Swal.fire({ icon: 'error', title: 'Error del servidor', html: 'Ocurrió un Error Interno (500). Intenta más Tarde.' });
+            } else {
+              Swal.fire({ icon: 'error', title: 'Error', html: detalle });
             }
             console.error("Error al Modificar Caja:", error);
           }

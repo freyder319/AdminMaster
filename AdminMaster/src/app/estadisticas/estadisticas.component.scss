@@ -1,25 +1,27 @@
 @import 'bootstrap-icons/font/bootstrap-icons.css';
 
 :root {
-  --primary-color: #1a3bbd;
-  --primary-dark: #0d2a8c;
-  --primary-light: rgba(67, 97, 238, 0.1);
-  --text-primary: #2b2d42;
-  --text-secondary: #6c757d;
-  --border-color: #e9ecef;
-  --card-bg: #ffffff;
+  --primary-color: #1d4ed8; /* azul principal, alineado con tonos del navbar */
+  --primary-dark: #0f172a;  /* azul muy oscuro usado en rail activo */
+  --primary-light: rgba(37, 99, 235, 0.12);
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --border-color: rgba(148, 163, 184, 0.7);
+  --card-bg: #f9fbff;       /* mismo tono del panel interno del navbar */
+  --surface-bg: #edf2ff;    /* fondo general similar al navbar lateral */
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 main {
-  padding-top: 120px;
-  min-height: calc(100vh - 100px);
-  padding-bottom: 2rem;
-  padding-left: 0;
-  padding-right: 0;
+  margin-top: 16px;
+  padding-top: 0;
+  min-height: calc(100vh - 16px);
+  padding-bottom: 96px; /* deja espacio para la navbar fija (300px) + pequeño margen */
+
   overflow-x: hidden;
   width: 100%;
   margin: 0;
+  background: var(--surface-bg);
 }
 
 .titulo_estadisticas {
@@ -28,13 +30,73 @@ main {
 
 .stats-container {
   width: 100%;
-  max-width: 100%;
-  margin: 0;
+  max-width: 1300px;
+  margin: 0 auto;
   padding: 0;
 }
 
+/* Filtro de período (Semanal / Mensual) */
+.filtro-periodo {
+  margin-top: -1rem;
+
+  .btn-periodo {
+    padding: 0.6rem 1.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
+    background-color: #ffffff;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.15s ease, border-color 0.2s ease;
+
+    i {
+      font-size: 1.1rem;
+    }
+
+    &:hover {
+      background-color: #ffffff;
+      box-shadow: 0 4px 10px rgba(148, 163, 184, 0.35);
+      border-color: rgba(148, 163, 184, 0.9);
+      transform: translateY(-1px);
+    }
+  }
+
+  .btn-periodo-activo {
+    border: none;
+    color: #ffffff;
+    background-image: linear-gradient(135deg, #1d4ed8, #4f46e5);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.45);
+
+    &:hover {
+      box-shadow: 0 6px 16px rgba(13, 110, 253, 0.45);
+      transform: translateY(-1px);
+    }
+  }
+
+  .select-periodo {
+    border-radius: 999px;
+    padding: 0.35rem 1.35rem;
+    min-width: 8.5rem;
+    border: 1px solid var(--border-color);
+    font-size: 0.85rem;
+    color: #374151;
+    background-color: #ffffff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:focus {
+      border-color: #1d4ed8;
+      box-shadow: 0 0 0 0.15rem rgba(37, 99, 235, 0.35);
+      outline: none;
+    }
+  }
+
+  .select-periodo-semana {
+    min-width: 9.5rem;
+  }
+}
+
 h1 {
-  color: var(--text-primary);
+  color: var(--primary-dark);
   font-weight: 700;
   margin-bottom: 2.5rem;
   text-align: center;
@@ -50,14 +112,14 @@ h1 {
     transform: translateX(-50%);
     width: 80px;
     height: 4px;
-    background: var(--primary-color);
+    background: linear-gradient(90deg, var(--primary-color), #4f46e5);
     border-radius: 2px;
   }
 }
 
 .options-grid {
   display: flex;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 12px;
   overflow: hidden;
   max-width: 900px;
@@ -110,15 +172,15 @@ h1 {
     color: white;
     margin: 0 0 10px;
     padding: 1.8rem 0.8rem; /* Aumentado el padding vertical para la tarjeta activa */
-    border-radius: 8px;
+    border-radius: 12px;
     position: relative;
-    background: #5adbff;
+    background: radial-gradient(circle at 30% 20%, #38bdf8, #1d4ed8);
     transform: scale(1.05);
-    box-shadow: 0 15px 35px rgba(90, 219, 255, 0.219);
+    box-shadow: 0 15px 35px rgba(56, 189, 248, 0.35);
     min-height: 180px; /* Misma altura que las no activas */
     z-index: 3;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(90, 219, 255, 0.3);
+    border: 1px solid rgba(56, 189, 248, 0.6);
     cursor: default; /* Cambia el cursor a default cuando está activo */
     
     .icon, .custom-icon {
@@ -136,7 +198,7 @@ h1 {
       margin: 1.3rem 0 0.6rem;
       color: white; /* Texto blanco para mejor contraste */
       font-weight: 600;
-      text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+      text-shadow: 0 1px 1px rgba(15, 23, 42, 0.35);
     }
     
     p {
@@ -232,9 +294,9 @@ h1 {
 /* Contenedor principal */
 .content-container {
   background: var(--card-bg);
-  border-radius: 12px;
+  border-radius: 18px;
   padding: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.15);
   margin: 0 auto;
   max-width: 1800px;
   width: 100%;
@@ -259,16 +321,20 @@ h1 {
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+    background: linear-gradient(90deg, var(--primary-color), #38bdf8);
   }
   
   h2 {
-    color: var(--primary-color);
+    color: var(--primary-dark);
     margin-bottom: 1.5rem;
     font-size: 1.6rem;
     font-weight: 600;
     text-align: center;
     width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
   }
   
   h3 {
@@ -302,10 +368,11 @@ h1 {
   }
   
   .chart-container {
-    background: white;
-    border-radius: 10px;
+    background: #ffffff;
+    border-radius: 14px;
     padding: 1.25rem;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 14px rgba(148, 163, 184, 0.25);
+    border: 1px solid rgba(203, 213, 225, 0.9);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     min-height: 350px;
     display: flex;
@@ -313,7 +380,7 @@ h1 {
     
     &:hover {
       transform: translateY(-3px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 8px 24px rgba(148, 163, 184, 0.4);
     }
     
     @media (max-width: 768px) {
@@ -420,19 +487,18 @@ h1 {
 
 @media (max-width: 768px) {
   main {
-    padding-top: 100px; /* Ajustar para móviles */
-    padding: 1rem 0.5rem;
+    margin-top: 0; /* con navbar lateral fija, no necesitamos padding-top extra */
+    padding: 1rem 0.5rem 6rem; /* algo de padding inferior extra para barra inferior */
+    padding-left: 0; /* en móvil, la navbar se comporta como panel superpuesto */
+    padding-right: 0.75rem;
   }
   
   .options-grid {
     flex-direction: column;
     gap: 0.75rem;
     padding: 0.75rem;
-        background: rgba(238, 67, 67, 0.08);
-      }
-    
-  
-  
+    background: rgba(148, 163, 184, 0.08);
+  }
   .option-card {
     padding: 1.8rem 1.2rem;
     
@@ -471,12 +537,12 @@ h1 {
 /* Body styles */
 :host {
   display: block;
-  background-color: #ffffff;
+  background-color: var(--surface-bg);
   min-height: 100vh;
 }
 
 body {
-  background-color: #ffffff;
+  background-color: var(--surface-bg);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
 }

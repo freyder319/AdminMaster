@@ -3,7 +3,6 @@
   <div class="estado-buttons">
     <button type="button" class="btn-confirmado" [class.active]="isEstado('confirmada')" (click)="setEstado('confirmada')">Confirmada</button>
     <button type="button" class="btn-pendiente" [class.active]="isEstado('pendiente')" (click)="setEstado('pendiente')">Pendiente</button>
-    <button type="button" class="btn-anulado" [class.active]="isEstado('anulada')" (click)="setEstado('anulada')">Anulada</button>
   </div>
 </div>
 <br>
@@ -16,13 +15,13 @@
         <!-- nombre de la venta -->
         <div class="mb-3">
           <label class="form-label">Nombre de la Venta</label>
-          <input type="text" class="form-control" name="nombreVenta" [(ngModel)]="nombreVenta" placeholder="Venta mostrador, Venta rápida..." />
+          <input #nombreVentaInput data-autofocus="true" type="text" class="form-control" name="nombreVenta" [(ngModel)]="nombreVenta" placeholder="Venta mostrador, Venta rápida..." (keydown.enter)="onEnterFocus(fechaHoraInput, $event, nombreVenta)" />
         </div>
 
         <!-- fecha y hora -->
         <div class="mb-3">
           <label class="form-label">Fecha y hora</label>
-          <input type="datetime-local" class="form-control" name="fechaHora" [(ngModel)]="fechaHora" />
+          <input #fechaHoraInput type="datetime-local" class="form-control" name="fechaHora" [(ngModel)]="fechaHora" />
         </div>
 
         <!-- productos -->
@@ -89,6 +88,11 @@
               <span>Otros</span>
             </label>
           </div>
+        </div>
+
+        <div class="mb-3 span-2" *ngIf="formaPago && formaPago !== 'efectivo'">
+          <label class="form-label">ID de Transacción</label>
+          <input type="text" class="form-control" name="transaccionId" [(ngModel)]="transaccionId" placeholder="ID / referencia de la transacción" />
         </div>
         
         <!-- confirmar -->

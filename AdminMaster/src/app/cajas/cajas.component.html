@@ -1,8 +1,9 @@
-<header>
-  <app-admin-navbar></app-admin-navbar>
-</header>
+<div class="with-sidebar">
+  <header>
+    <app-admin-navbar></app-admin-navbar>
+  </header>
 
-<main>
+  <main>
   <!-- Vista principal (solo cuando NO estoy en agregar NI modificar en móvil) -->
   <div *ngIf="!mostrarAddCaja && !mostrarModificarCaja">
 
@@ -11,7 +12,10 @@
       <div class="container text-center">
         <div class="row">
           <div class="col">
-            <h1 class="tit-cajas">Cajas</h1>
+            <h1 class="tit-cajas">
+              <i class="bi bi-safe2-fill me-2"></i>
+              <span>Cajas</span>
+            </h1>
           </div>
         </div>
       </div>
@@ -193,10 +197,11 @@
       </div>
     </div>
   </div>
-</main>
+  </main>
+</div>
 
 <!-- Offcanvas (solo para pantallas grandes) Agregar -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAddCaja" aria-labelledby="offcanvasAddCajaLabel">
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAddCaja" aria-labelledby="offcanvasAddCajaLabel" (shown.bs.offcanvas)="focusFirstInput('offcanvasAddCaja')">
   <div class="offcanvas-header">
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
   </div>

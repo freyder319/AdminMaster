@@ -31,6 +31,7 @@ export class ModifyClienteComponent {
       const dto = {
         nombre: this.cliente.nombre,
         apellido: this.cliente.apellido,
+        documento: (this.cliente as any).documento,
         numero: this.cliente.numero,
         correo: this.cliente.correo,
         estado: this.cliente.estado,
@@ -40,8 +41,9 @@ export class ModifyClienteComponent {
           Swal.fire({
           title: "Cliente Modificado!",
           icon: "success",
-          html: `El cliente fue Modificado con éxito`,
-          draggable: true
+          html: `El <b>Cliente</b> fue Modificado con Éxito`,
+          timer: 2000,
+          showConfirmButton: false
           },);
           this.clienteModificado.emit();  
           },
@@ -50,7 +52,7 @@ export class ModifyClienteComponent {
           if (err.status === 400) {
             this.errorMessage = err.error.message;
           } else {
-            this.errorMessage = 'Error inesperado';
+            this.errorMessage = 'Ocurrió un error inesperado';
           }
           Swal.fire({
             title: "Error",

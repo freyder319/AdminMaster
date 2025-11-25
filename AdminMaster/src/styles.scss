@@ -21,11 +21,19 @@ html, body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+/* Utilidad para dejar espacio a la sidebar fija en escritorio (se usa por componente) */
+@media (min-width: 768px) {
+  .with-sidebar {
+    padding-left: 300px; /* ancho fijo de la navbar lateral */
+  }
+}
 
-
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+@media (max-width: 767px) {
+  body,
+  body.sidebar-expanded {
+    padding-left: 0;
+  }
+}
 
 /* Offcanvas global stacking to sit above navbar/content */
 .offcanvas-backdrop {

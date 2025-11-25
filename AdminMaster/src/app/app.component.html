@@ -1,1 +1,7 @@
-<router-outlet/>
+<div class="app-loader" *ngIf="!isAppReady">
+  <div class="app-loader__spinner"></div>
+</div>
+
+<div *ngIf="isAppReady">
+  <router-outlet></router-outlet>
+</div>

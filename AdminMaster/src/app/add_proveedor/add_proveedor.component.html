@@ -4,7 +4,10 @@
         <div class="container text-center">
             <div class="row">
                 <div class="col">
-                    <h1 class="tit-proveedores">Agregar Proveedores</h1>
+                    <h1 class="tit-proveedores">
+                      <i class="bi bi-truck-front-fill me-2"></i>
+                      <span>Agregar Proveedores</span>
+                    </h1>
                 </div>
             </div>
         </div>
@@ -43,16 +46,17 @@
             <div class="formulario">
                 <form [formGroup]="form" (ngSubmit)="onSubmit()">
                     <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre del Proveedor</label>
-                        <input type="text" class="form-control" id="nombre" formControlName="nombre">
+                        <label for="nombre" class="form-label form-control2">Nombre del Proveedor</label>
+                        <input #nombreInput data-autofocus="true" type="text" formControlName="nombre" id="nombre" class="form-control" (keydown.enter)="onEnterFocus(apellidoProv, $event, form.get('nombre')?.value)">
                     </div>
                     <div class="mb-3">
                         <label for="apellido" class="form-label">Apellido del Proveedor</label>
-                        <input type="text" class="form-control" id="apellido" formControlName="apellido">
+                        <input #apellidoProv type="text" class="form-control" id="apellido" formControlName="apellido" (keydown.enter)="onEnterFocus(telefonoProv, $event, form.value?.apellido)">
                     </div>
                     <div class="mb-3">
                         <label for="telefono" class="form-label">Telefono</label>
                         <input
+                          #telefonoProv
                           type="text"
                           class="form-control"
                           id="telefono"
@@ -61,6 +65,7 @@
                             'is-invalid': (form.get('telefono')?.invalid && form.get('telefono')?.touched) || telefonoDuplicado,
                             'is-valid': form.get('telefono')?.valid && !telefonoDuplicado && form.get('telefono')?.touched
                           }"
+                          (keydown.enter)="form.get('telefono')?.valid && !telefonoDuplicado ? onEnterFocus(correoProv, $event, form.value?.telefono) : null"
                         >
                         <div class="invalid-feedback" *ngIf="form.get('telefono')?.hasError('pattern') && form.get('telefono')?.touched">
                           Solo números y máximo 10 dígitos.
@@ -72,6 +77,7 @@
                       <div class="mb-3">
                         <label for="correo" class="form-label">Correo Electronico</label>
                         <input
+                          #correoProv
                           type="email"
                           class="form-control"
                           id="correo"
@@ -80,6 +86,7 @@
                             'is-invalid': (form.get('correo')?.invalid && form.get('correo')?.touched) || correoDuplicado,
                             'is-valid': form.get('correo')?.valid && !correoDuplicado && form.get('correo')?.touched
                           }"
+                          (keydown.enter)="form.get('correo')?.valid && !correoDuplicado ? onEnterFocus(btnConfirmarProv, $event, form.value?.correo) : null"
                         >
                         <div class="invalid-feedback" *ngIf="form.get('correo')?.hasError('email') && form.get('correo')?.touched">
                           Debes ingresar un correo válido (ejemplo&#64;dominio.com).
@@ -90,7 +97,7 @@
                       </div><br>
 
                     <div class="confirmarfinal">
-                        <button type="submit" class="btn confir" [disabled]="form.invalid || telefonoDuplicado || correoDuplicado">Confirmar</button>
+                        <button #btnConfirmarProv type="submit" class="btn confir" [disabled]="form.invalid || telefonoDuplicado || correoDuplicado">Confirmar</button>
                     </div>
                 </form>
             </div>

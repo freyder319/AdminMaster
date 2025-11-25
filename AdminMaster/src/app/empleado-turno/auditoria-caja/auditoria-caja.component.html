@@ -1,0 +1,143 @@
+<section>
+  <div class="container-fluid historial-container">
+    <div class="row">
+      <div class="col-12">
+        <div class="turno-card">
+          <h2 class="titulo">
+            <i class="bi bi-cash-coin me-2"></i>
+            <span>Auditoreda de caja</span>
+          </h2>
+          <div
+            class="filtros"
+            style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;"
+          >
+            <div
+              class="input-icon"
+              style="flex:1 1 220px;min-width:200px;"
+            >
+              <i class="bi bi-search" aria-hidden="true"></i>
+              <input
+                type="search"
+                [(ngModel)]="q"
+                placeholder="Buscar por turno..."
+                class="form-control"
+                aria-label="Buscar"
+              />
+            </div>
+            <input
+              type="date"
+              [(ngModel)]="from"
+              class="form-control"
+              aria-label="Desde"
+              placeholder="Desde (fecha)"
+              title="Desde (fecha)"
+            />
+            <input
+              type="date"
+              [(ngModel)]="to"
+              class="form-control"
+              aria-label="Hasta"
+              placeholder="Hasta (fecha)"
+              title="Hasta (fecha)"
+            />
+          </div>
+
+          <div *ngIf="cargando">Cargando...</div>
+
+          <div *ngIf="!cargando && view.length === 0">
+            <p>No hay auditoredas registradas.</p>
+          </div>
+
+          <ul class="turno-lista" *ngIf="!cargando && view.length > 0">
+            <li
+              class="turno-item"
+              *ngFor="let item of view"
+              (click)="abrirDetalle(item)"
+              role="button"
+              tabindex="0"
+            >
+              <i class="bi bi-cash-stack item-icon" aria-hidden="true"></i>
+              <div class="turno-item-info">
+                <div class="turno-item-primario">
+                  <strong>Turno #{{ item.turnoId }}</strong>
+                  <span class="badge bg-secondary ms-2">
+                    {{ nombreCaja(item.cajaId) }}
+                  </span>
+                </div>
+                <div class="turno-item-secundario text-muted">
+                  <i class="bi bi-clock inline" aria-hidden="true"></i>
+                  {{ item.fechaHoraCierre | date:'short' }} ·
+                  Saldo inicial:
+                  {{ item.saldoInicial | number:'1.0-0' }} ·
+                  Esperado:
+                  {{ item.saldoEsperado | number:'1.0-0' }} ·
+                  Dif.:
+                  {{ item.diferencia | number:'1.0-0' }}
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="modal-backdrop" [hidden]="!modalAbierto"></div>
+<div
+  class="modal-contenedor"
+  [hidden]="!modalAbierto"
+  role="dialog"
+  aria-modal="true"
+>
+  <div class="modal-header">
+    <h3 class="modal-title">
+      <i class="bi bi-cash-coin me-2"></i>
+      <span>Detalle de auditoreda</span>
+    </h3>
+    <button type="button" class="modal-cerrar" (click)="cerrarDetalle($event)">
+      ✕
+    </button>
+  </div>
+  <div class="modal-body" *ngIf="seleccionado as s">
+    <div class="datos-grid">
+      <div class="kv">
+        <span class="k">Turno</span>
+        <span class="v">{{ s.turnoId }}</span>
+      </div>
+      <div class="kv">
+        <span class="k">Caja</span>
+        <span class="v">{{ nombreCaja(s.cajaId) }}</span>
+      </div>
+      <div class="kv">
+        <span class="k">Usuario</span>
+        <span class="v">{{ nombreUsuario(s.usuarioId) }}</span>
+      </div>
+      <div class="kv">
+        <span class="k">Cierre</span>
+        <span class="v">{{ s.fechaHoraCierre | date:'short' }}</span>
+      </div>
+      <div class="kv">
+        <span class="k">Saldo inicial</span>
+        <span class="v">{{ s.saldoInicial | number:'1.0-0' }}</span>
+      </div>
+      <div class="kv">
+        <span class="k">Saldo esperado</span>
+        <span class="v">{{ s.saldoEsperado | number:'1.0-0' }}</span>
+      </div>
+      <div class="kv">
+        <span class="k">Saldo final</span>
+        <span class="v">{{ s.saldoFinal | number:'1.0-0' }}</span>
+      </div>
+      <div class="kv kv-span">
+        <span class="k">Diferencia</span>
+        <span class="v">{{ s.diferencia | number:'1.0-0' }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer" (click)="$event.stopPropagation()">
+    <button type="button" class="btn-turno" (click)="cerrarDetalle($event)">
+      Cerrar
+    </button>
+  </div>
+</div>

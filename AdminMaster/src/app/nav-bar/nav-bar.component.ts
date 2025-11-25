@@ -8,7 +8,7 @@ import { filter } from 'rxjs/operators';
   standalone: true,
   imports: [RouterModule,CommonModule,],
   templateUrl: './nav-bar.component.html',
-  styleUrl: './nav-bar.component.scss'
+  styleUrls: ['./nav-bar.component.scss']
 })
 export class NavBarComponent {
   scrolled = false; // bandera para el estado del navbar

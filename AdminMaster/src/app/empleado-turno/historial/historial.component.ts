@@ -55,16 +55,50 @@ export class HistorialComponent implements OnDestroy {
   }
 
   abrirDetalle(ev: AuditLogDto) {
-    // modal desactivado
-    return;
+    try { console.log('[Historial] abrirDetalle', ev); } catch {}
+    this.seleccionado = ev;
+    this.modalAbierto = true;
   }
 
   cerrarDetalle(ev?: Event) {
-    try { ev?.preventDefault(); (ev as any)?.stopImmediatePropagation?.(); ev?.stopPropagation(); } catch {}
-    setTimeout(() => {
-      this.modalAbierto = false;
-      this.seleccionado = null;
-    }, 0);
+    try { ev?.preventDefault(); ev?.stopPropagation(); } catch {}
+    this.modalAbierto = false;
+    this.seleccionado = null;
+  }
+
+  isProducto(ev?: AuditLogDto | null): boolean {
+    const entidad = (ev?.entity || '').toLowerCase();
+    const modulo = (ev?.module || '').toLowerCase();
+    return entidad === 'producto' || modulo === 'producto';
+  }
+
+  displayEntityId(ev?: AuditLogDto | null): string | null {
+    if (!ev) return null;
+    // Si es producto, intentar usar un posible código en details
+    if (this.isProducto(ev)) {
+      const d: any = ev.details || {};
+      const code = d?.codigo || d?.code || d?.sku || null;
+      if (code != null) return String(code);
+    }
+    return ev.entityId ?? null;
+  }
+
+  displayUsuario(ev?: AuditLogDto | null): string {
+    if (!ev) return '—';
+    const d: any = ev.details || {};
+    // Preferir nombre completo enriquecido desde el backend
+    const actorNombre: string | undefined = d.actorNombre;
+    if (actorNombre && actorNombre.trim().length > 0) return actorNombre.trim();
+
+    const actorUser: any = d.actorUser || {};
+    const nombre = actorUser.nombre;
+    const apellido = actorUser.apellido;
+    if (nombre || apellido) {
+      return `${nombre || ''} ${apellido || ''}`.trim();
+    }
+
+    if (ev.actorUserId != null) return String(ev.actorUserId);
+    return '—';
   }
 
   get view(): AuditLogDto[] {

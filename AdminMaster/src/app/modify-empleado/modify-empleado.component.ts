@@ -55,8 +55,8 @@ export class ModifyEmpleadoComponent implements OnInit {
     if (this.empleadoId && this.empleado) {
       const { contrasena, caja, ...resto } = this.empleado;
 
-      if (!this.empleado.nombre || !this.empleado.apellido || !this.empleado.correo || !this.empleado.telefono) {
-        Swal.fire({ title: 'Campos incompletos', icon: 'warning', text: 'Nombre, apellido, correo y teléfono son obligatorios.' });
+      if (!this.empleado.nombre || !this.empleado.apellido || !this.empleado.correo || !this.empleado.telefono || !this.empleado.documento) {
+        Swal.fire({ title: 'Campos incompletos', icon: 'warning', text: 'Nombre, apellido, documento, correo y teléfono son obligatorios.' });
         return;
       }
 
@@ -80,6 +80,7 @@ export class ModifyEmpleadoComponent implements OnInit {
       const empleadoFinal = {
         nombre: this.empleado.nombre,
         apellido: this.empleado.apellido,
+        documento: this.empleado.documento,
         correo: this.empleado.correo,
         telefono: this.empleado.telefono,
         contrasena: this.empleado.contrasena,
@@ -91,13 +92,14 @@ export class ModifyEmpleadoComponent implements OnInit {
           Swal.fire({
             title: "Empleado Modificado!", 
             icon: "success",
-            html: `El Empleado fue Modificado con éxito`,
-            draggable: true
+            html: `El <b>Empleado</b> fue Modificado con Éxito`,
+            timer: 2000,
+            showConfirmButton: false
           });
           this.empleadoModificado.emit();
         },
         error: (err) => {
-          const mensaje = err.status === 400 ? err.error.message : 'Error inesperado';
+          const mensaje = err.status === 400 ? err.error.message : 'Ocurrió un error inesperado';
           Swal.fire({ title: "Error", icon: "error", text: mensaje });
         }
       });
