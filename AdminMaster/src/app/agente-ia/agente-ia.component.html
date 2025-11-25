@@ -1,0 +1,51 @@
+<div class="avatar-container" *ngIf="!isChatOpen" (click)="toggleChat()">
+  <div class="glass-effect">
+    <img src="assets/img/agente/AgenteIA.png" class="agent-image" />
+    <div class="shine"></div>
+  </div>
+  <div class="agent-text">Agente IA</div>
+</div>
+
+<div class="chat-container" *ngIf="isChatOpen">
+  <div class="chat-header">
+    <div class="chat-header-title">
+      <span>Agente IA</span>
+      <span>Asistente virtual</span>
+    </div>
+    <span class="chat-header-close" (click)="$event.stopPropagation(); toggleChat()">×</span>
+  </div>
+
+  <div class="chat-body">
+    <div
+      *ngFor="let msg of messages"
+      class="message"
+      [ngClass]="msg.from === 'user' ? 'user' : 'agent'"
+    >
+      {{ msg.text }}
+    </div>
+    <div class="chat-status" *ngIf="isSending">
+      Enviando mensaje...
+    </div>
+    <div class="chat-error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+  </div>
+
+  <div class="chat-input-area" (click)="$event.stopPropagation()">
+    <input
+      type="text"
+      [(ngModel)]="newMessage"
+      placeholder="Escribe un mensaje..."
+      [disabled]="isSending"
+      (keydown.enter)="sendMessage()"
+    />
+    <button
+      class="chat-send-btn"
+      type="button"
+      (click)="sendMessage()"
+      [disabled]="isSending || !newMessage.trim()"
+    >
+      {{ isSending ? 'Enviando...' : 'Enviar' }}
+    </button>
+  </div>
+</div>
