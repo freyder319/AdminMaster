@@ -1,14 +1,20 @@
 <app-nav-bar></app-nav-bar>
-<br><b></b>
-<!-- Imagen -->
+
+<header class="pqrs-hero">
+    <div class="container text-center">
+        <h1 class="pqrs-titulo">PQRS</h1>
+        <p class="pqrs-subtitulo">Déjanos saber tus peticiones, quejas, reclamos o sugerencias</p>
+    </div>
+</header>
+
 <div class="container">
-    <div class="row">
-        <div class="col-12">
-            <img src="../../assets/img/pqrs.png" alt="" class="img-fluid d-block mx-auto pqrs-img" width="700px">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+            <img src="../../assets/img/pqrs.png" alt="PQRS" class="img-fluid d-block mx-auto pqrs-img">
         </div>
     </div>
 </div>
-<br>
+
 <!-- Comentario -->
 <div class="container">
     <div class="row">
@@ -17,6 +23,7 @@
         </div>
     </div>
 </div>
+
 <!-- Formulario -->
 <br><br>
 <form class="container" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>

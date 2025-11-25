@@ -1,13 +1,155 @@
-.pqrs-img{
-    border-radius: 20px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Quicksand:wght@500&display=swap');
+
+/* Navbar styles for PQRS component */
+app-nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  
+  /* Make all text and icons white */
+  ::ng-deep {
+    .navbar {
+      background-color: transparent !important;
+      
+      .navbar-brand, 
+      .nav-link,
+      .navbar-toggler-icon,
+      .nav-link span,
+      .navbar-brand span,
+      .navbar-toggler span {
+        color: white !important;
+        fill: white !important;
+      }
+      
+      .navbar-toggler {
+        border: none !important;
+        color: white !important;
+      }
+      
+      .navbar-toggler:focus {
+        color: white !important;
+        text-decoration: none;
+      }
+      
+      .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+      }
+      
+      /* Forzar el color del texto del menú */
+      .navbar-nav .nav-link,
+      .navbar-nav .nav-link span,
+      .navbar-brand,
+      .navbar-brand span,
+      .navbar-toggler,
+      .navbar-toggler .navbar-toggler-text,
+      .btn-pqrs,
+      .btn-pqrs span,
+      .text-brown {
+        color: white !important;
+      }
+      
+      /* Específicamente para el botón de menú en PQRS */
+      .dropdown .btn-link {
+        color: white !important;
+      }
+      
+      /* Asegurar que los iconos también sean blancos */
+      .navbar-nav .nav-link i,
+      .navbar-brand i {
+        color: white !important;
+      }
+    }
+    
+    /* Sobrescribir cualquier estilo que intente cambiar el color */
+    .navbar-light .navbar-toggler,
+    .navbar-light .navbar-toggler:focus,
+    .navbar-light .navbar-toggler:active,
+    .navbar-light .navbar-toggler-icon,
+    .navbar-light .navbar-toggler-icon:focus,
+    .navbar-light .navbar-toggler-icon:active,
+    .navbar-toggler-text,
+    .navbar-toggler-text:focus,
+    .navbar-toggler-text:active,
+    .btn-pqrs,
+    .btn-pqjs:focus,
+    .btn-pqjs:active,
+    .text-brown,
+    .toggler-pqrs,
+    .toggler-pqrs:focus,
+    .toggler-pqrs:active,
+    .navbar-toggler,
+    .navbar-toggler:focus,
+    .navbar-toggler:active {
+      color: white !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+  }
 }
+
+/* Hero section styles */
+.pqrs-hero {
+  padding: 1rem 1rem 1.5rem;
+  background: #612121;
+  margin-top: 0;
+}
+
+.pqrs-titulo {
+  font-size: 2.5rem;
+  font-family: 'Playfair Display', serif;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.pqrs-subtitulo {
+  font-size: 1.2rem;
+  color: #fff;
+  letter-spacing: 0.5px;
+  font-family: 'Quicksand', sans-serif;
+  margin: 0;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .pqrs-titulo {
+    font-size: 2rem;
+  }
+  
+  .pqrs-subtitulo {
+    font-size: 0.9rem;
+  }
+
+  .pqrs-hero {
+    padding: 0.8rem 1rem 1.2rem;
+  }
+}
+
+/* Adjust content spacing */
+.container:first-of-type {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  margin-bottom: 3rem;
+}
+
+.pqrs-img {
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  margin: 1rem auto;
+  max-width: 100%;
+  height: auto;
+}
+
 .parrafo{
     font-family: "Special Gothic", sans-serif;
 }
+
 h3{
     text-align: center;
-    color:#772929 ;
+    color:#ffffff ;
     margin: 18px 0 6px;
     line-height: 1.35;
     font-weight: 500;

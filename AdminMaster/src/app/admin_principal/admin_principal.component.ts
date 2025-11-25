@@ -20,7 +20,7 @@ import { GastoService, Gasto } from '../services/gasto.service';
 import { EmpleadosService, Empleados } from '../services/empleados.service';
 import { DescuentosComponent } from "../descuentos/descuentos.component";
 import { InfoGastosComponent } from "../info-gastos/info-gastos.component";
-
+import { AgenteIAComponent } from '../agente-ia/agente-ia.component';
 
 @Component({
   selector: 'app-administrador-principal',
@@ -40,7 +40,8 @@ import { InfoGastosComponent } from "../info-gastos/info-gastos.component";
     AddVentaLibreComponent,
     DescuentosComponent,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    AgenteIAComponent
   ],
   templateUrl: './admin_principal.component.html',
   styleUrls: ['./admin_principal.component.scss']
