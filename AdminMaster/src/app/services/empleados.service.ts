@@ -8,6 +8,7 @@ export interface Empleados {
   apellido: string;
   correo: string;
   telefono: string;
+  documento?: string;
   contrasena?: string;
   caja?: {
     id: number;
@@ -40,6 +41,11 @@ export class EmpleadosService {
     return this.http.put<Empleados>(`${this.apiUrl}/${id}`, empleado);
   }
 
+  enviarCorreoActivacion(correo: string): Observable<any> {
+    const body = { correo: correo.trim().toLowerCase() } as any;
+    return this.http.post<any>('http://localhost:3000/auth/enviar-activacion-empleado', body);
+  }
+
   deleteEmpleado(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
@@ -48,9 +54,14 @@ export class EmpleadosService {
     return this.http.get<any[]>('http://localhost:3000/caja'); 
   }
 
-  verificarExistencia(correo: string, telefono: string): Observable<{ correo: boolean, telefono: boolean }> {
-    return this.http.get<{ correo: boolean, telefono: boolean }>(
-      `${this.apiUrl}/verificar?correo=${correo}&telefono=${telefono}`
+  verificarExistencia(correo: string, telefono: string, documento?: string): Observable<{ correo: boolean, telefono: boolean, documento: boolean }> {
+    const params = new URLSearchParams();
+    if (correo) params.append('correo', correo);
+    if (telefono) params.append('telefono', telefono);
+    if (documento) params.append('documento', documento);
+
+    return this.http.get<{ correo: boolean, telefono: boolean, documento: boolean }>(
+      `${this.apiUrl}/verificar?${params.toString()}`
     );
   }
 

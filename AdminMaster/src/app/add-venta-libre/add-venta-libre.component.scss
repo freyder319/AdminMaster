@@ -1,76 +1,76 @@
 /* Estilos de inputs como en add_clientes */
 .form-control,
 .form-select {
-  border: none;
-  box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+  border-radius: 18px !important;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  box-shadow: 0 2px 8px rgba(148, 163, 184, 0.25);
   outline: none;
-  border-radius: 9999px !important;
 }
 
 .form-control:focus,
 .form-select:focus {
-  border: 1px solid #5adbff;
-  box-shadow: 0 0 6px 0.5px #5adbff;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
   outline: none;
-  border-radius: 9999px !important;
 }
 
-/* Controles de estado visual */
+/* Controles de estado visual (alineados con add_proveedor) */
 .paga-credit {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
-  .btn-paga,
-  .btn-credit,
+
   .btn-confirmado,
-  .btn-pendiente,
-  .btn-anulado {
-    padding: 8px 14px;
-    border: 0;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform .05s ease, filter .15s ease;
-  }
-  .btn-paga,
-  .btn-confirmado {
-    background: #16a34a; /* green-600 */
-    color: #fff;
-  }
-  .btn-credit,
-  .btn-anulado {
-    background: #dc2626; /* red-600 */
-    color: #fff;
-  }
   .btn-pendiente {
-    background: #2563eb; /* blue-600 */
-    color: #fff;
+    border: none;
+    min-width: 174px;
+    text-align: center;
+    border-radius: 7px;
+    color: black;
+    padding: 7px;
+    font-weight: bold;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
   }
-  .hint {
-    margin-left: auto;
-    color: #6b7280; /* gray-500 */
-    font-size: 12px;
+
+  /* Colores base similares a Activo/Inactivo */
+  .btn-confirmado {
+    background-color: #ffffff;
+  }
+
+  .btn-pendiente {
+    background-color: #ffffff;
+    margin-left: 4px;
   }
 }
 
-/* Botonera de estado arriba del formulario */
+/* Botonera de estado arriba del formulario (centrada como act-inac) */
 .estado-buttons {
   display: flex;
-  gap: 10px; /* separa los botones */
-  justify-content: center; /* centrar estados */
-  width: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  padding: 7px;
 }
 
-/* Estado seleccionado: leve énfasis */
-.estado-buttons .btn-confirmado.active { filter: brightness(0.9); }
-.estado-buttons .btn-pendiente.active  { filter: brightness(0.9); }
-.estado-buttons .btn-anulado.active    { filter: brightness(0.9); }
+/* Estado seleccionado: igual idea que .btn-act/.btn-inac.is-selected usando .active */
+.estado-buttons .btn-confirmado.active {
+  background: #4CAF50;
+  color: #fff;
+  border-color: #4CAF50;
+}
+
+.estado-buttons .btn-pendiente.active {
+  background: #fa0000;
+  color: #fff;
+  border-color: #fa0000;
+}
 
 /* Layout del formulario */
 .formulario {
   background: #ffffff;
   border: 0;
-  border-radius: 12px;
+  border-radius: 18px;
   padding: 8px; /* menos padding para mayor ancho útil */
 }
 
@@ -157,8 +157,8 @@
 
 .create-venta {
   width: 100%;
-  background-color: #5adbff;
-  box-shadow: 0 0 6px 0.5px #5adbff;
+  background: linear-gradient(135deg, #1d4ed8, #4f46e5);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.45);
   border: none;
   cursor: pointer;
   color: white;
@@ -168,7 +168,7 @@
 }
 
 .create-venta:hover {
-  filter: brightness(0.95);
+  filter: brightness(0.97);
 }
 
 /* Responsivo */

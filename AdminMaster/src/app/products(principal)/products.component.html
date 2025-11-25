@@ -37,11 +37,15 @@
   </section>
 
   <!-- Productos -->
-  <section class="container">
+  <section class="container products-section" #productsSection>
     <div class="text-center mb-4">
-      <button class="categoria-btn mx-2" [class.active]="categoriaSeleccionada === 'panaderia'" (click)="seleccionarCategoria('panaderia')">Panadería</button>
-      <button class="categoria-btn mx-2" [class.active]="categoriaSeleccionada === 'pasteleria'" (click)="seleccionarCategoria('pasteleria')">Pastelería</button>
-      <button class="categoria-btn mx-2" [class.active]="categoriaSeleccionada === 'bebidas'" (click)="seleccionarCategoria('bebidas')">Bebidas</button>
+      <button
+        class="categoria-btn mx-2"
+        *ngFor="let cat of categorias"
+        [class.active]="cat.id === categoriaSeleccionadaId"
+        (click)="seleccionarCategoria(cat)">
+        {{ cat.nombre }}
+      </button>
     </div>
 
     <!-- Buscador debajo de categorías -->
@@ -55,23 +59,42 @@
       </div>
     </div>
 
-    <div class="products-panaderia bg-light py-4">
-      <p class="cate-nom" [class.animate-categoria]="animarTitulo">{{ categoriaSeleccionada | titlecase }}</p>
+    <div class="products-panaderia bg-light py-4" [class.cards-anim-active]="animarCards">
+      <p class="cate-nom" [class.animate-categoria]="animarTitulo">{{ categoriaSeleccionadaNombre || 'Todas las categorías' }}</p>
       <p class="cate-count">Total de Productos: {{ productosFiltrados.length }}</p>
-      <div class="products-wrapper row">
-        <div class="product-card col-sm-12 col-md-6 col-lg-3" *ngFor="let producto of paginatedProductos; let i = index">
-          <div class="card-modern card-animada" [style.animationDelay]="(i * 100) + 'ms'">
-            <div class="card-image">
-              <img title="img" [src]="producto.imagen" [alt]="producto.nombre">
-            </div>
-            <div class="card-info">
-              <h3>{{ producto.nombre }}</h3>
-              <p>Stock: {{ producto.stock }} unidades</p>
-              <p class="price">$ {{ producto.precio }}</p>
+
+      <!-- Mensaje cuando no hay resultados en la búsqueda -->
+      <div *ngIf="productosFiltrados.length === 0 && searchTerm" class="no-results-msg">
+        No se encontró el Producto "<strong>{{ searchTerm }}</strong>".
+      </div>
+
+      <!-- Varios carruseles: cada uno muestra hasta 10 productos -->
+      <ng-template [ngIf]="productosFiltrados.length > 0 || !searchTerm">
+        <div
+          class="products-wrapper"
+          #productsWrapper
+          *ngFor="let group of carouselGroups"
+          (mousedown)="onCarouselPointerDown()"
+          (touchstart)="onCarouselPointerDown()"
+          (mouseup)="onCarouselPointerUp()"
+          (mouseleave)="onCarouselPointerUp()"
+          (touchend)="onCarouselPointerUp()"
+          (touchcancel)="onCarouselPointerUp()"
+        >
+          <div class="product-card" *ngFor="let producto of group; let i = index">
+            <div class="card-modern" [class.card-anim-category]="animarCardsCategoria">
+              <div class="card-image">
+                <img title="img" [src]="producto.imagen" [alt]="producto.nombre">
+              </div>
+              <div class="card-info">
+                <h3>{{ producto.nombre }}</h3>
+                <p>Stock: {{ producto.stock }} unidades</p>
+                <p class="price">$ {{ producto.precio }}</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </ng-template>
 
       <!-- Paginacion -->
       <div class="container pagination-wrapper d-flex justify-content-center mt-4">

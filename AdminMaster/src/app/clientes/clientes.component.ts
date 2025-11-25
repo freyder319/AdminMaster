@@ -22,6 +22,7 @@ export class ClientesComponent {
   mostrarModificarCliente = false;
   clientes:Clientes[] = [];
   searchTerm: string = '';
+  rol: string | null = null;
   get clientesFiltrados(): Clientes[] {
     const q = (this.searchTerm || '').trim().toLowerCase();
     const base = !q ? this.clientes : this.clientes.filter(c => {
@@ -39,22 +40,68 @@ export class ClientesComponent {
     });
   }
   private clientesEnUso = new Set<number>();
+  private comprasPorCliente = new Map<number, number>();
+  private deudasPorCliente = new Map<number, number>();
   constructor (private clientesServices: ClientesService, private ventaService: VentaService){}
+
+  focusFirstInput(offcanvasId: string): void {
+    const offcanvas = document.getElementById(offcanvasId);
+    if (!offcanvas) return;
+
+    let input = offcanvas.querySelector('input[data-autofocus="true"]') as HTMLInputElement | null;
+    if (!input) {
+      input = offcanvas.querySelector('input') as HTMLInputElement | null;
+    }
+
+    if (input) {
+      setTimeout(() => {
+        input?.focus();
+        (input as any)?.select?.();
+      }, 50);
+    }
+  }
   ngOnInit():void{
+    try {
+      const rawRol = localStorage.getItem('rol');
+      this.rol = rawRol ? rawRol.trim().toLowerCase() : null;
+    } catch {
+      this.rol = null;
+    }
     this.clientesServices.getClientes().subscribe({
     next: (data) => this.clientes = data,
-    error: (error) => console.error('Error al cargar clientes:',error)
+    error: (error) => console.error('Error al cargar Clientes:',error)
   });
-  // cargar ventas y construir set de clientes en uso
+  // cargar ventas y construir set de clientes en uso + conteo de compras por cliente y deudas (ventas pendientes)
   try {
     this.ventaService.list().subscribe({
       next: (ventas) => {
-        const ids = (ventas || [])
-          .map((v: any) => v?.clienteId)
-          .filter((v: any) => typeof v === 'number' && Number.isFinite(v));
+        const ids: number[] = [];
+        const contadorCompras = new Map<number, number>();
+        const contadorDeudas = new Map<number, number>();
+
+        (ventas || []).forEach((v: any) => {
+          const cliId = v?.clienteId;
+          if (typeof cliId === 'number' && Number.isFinite(cliId)) {
+            ids.push(cliId);
+
+            // todas las ventas (cualquier estado) cuentan como compra
+            const actualCompras = contadorCompras.get(cliId) ?? 0;
+            contadorCompras.set(cliId, actualCompras + 1);
+
+            // solo las ventas en estado pendiente cuentan como deuda
+            const estado = (v?.estado || '').toString().toLowerCase();
+            if (estado === 'pendiente') {
+              const actualDeudas = contadorDeudas.get(cliId) ?? 0;
+              contadorDeudas.set(cliId, actualDeudas + 1);
+            }
+          }
+        });
+
         this.clientesEnUso = new Set<number>(ids);
+        this.comprasPorCliente = contadorCompras;
+        this.deudasPorCliente = contadorDeudas;
       },
-      error: (err) => console.error('Error al cargar ventas para relación de clientes:', err)
+      error: (err) => console.error('Error al Cargar Ventas para relación de Clientes:', err)
     });
   } catch {}
   }
@@ -92,7 +139,7 @@ export class ClientesComponent {
           if (related && this.clienteSeleccionado && this.clienteSeleccionado.id === id) {
             Swal.fire({
               title: 'Cliente relacionado',
-              text: 'No se puede eliminar porque tiene registros relacionados. ¿Deseas inhabilitarlo?',
+              text: 'No se puede Eliminar porque tiene Registros relacionados. ¿Deseas Inhabilitarlo?',
               icon: 'info',
               showCancelButton: true,
               confirmButtonText: 'Inhabilitar',
@@ -130,7 +177,7 @@ export class ClientesComponent {
         this.clientes = [...this.clientes];
       },
       error: () => {
-        Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo inhabilitar el cliente' });
+        Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo Inhabilitar el Cliente' });
       }
     });
   }
@@ -145,7 +192,7 @@ export class ClientesComponent {
         this.clientes = [...this.clientes];
       },
       error: () => {
-        Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo habilitar el cliente' });
+        Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo Habilitar el Cliente' });
       }
     });
   }
@@ -160,5 +207,15 @@ export class ClientesComponent {
     if (!p) return 'Inactivo';
     const estado = (p.estado || '').toLowerCase();
     return estado === 'activo' ? 'Activo' : 'Inactivo';
+  }
+
+  getNumeroCompras(c: Clientes | null | undefined): number {
+    if (!c) return 0;
+    return this.comprasPorCliente.get(c.id) ?? 0;
+  }
+
+  getDeudas(c: Clientes | null | undefined): number {
+    if (!c) return 0;
+    return this.deudasPorCliente.get(c.id) ?? 0;
   }
 }

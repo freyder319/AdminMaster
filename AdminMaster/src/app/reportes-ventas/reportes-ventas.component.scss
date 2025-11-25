@@ -1,0 +1,48 @@
+.turno-card {
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+  padding: 18px;
+}
+
+.turnos-activos-container {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.filtros {
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+  align-items:center;
+}
+
+.filtros .form-control {
+  border:1px solid rgba(148, 163, 184, 0.7);
+  border-radius:18px;
+  padding:8px 10px;
+  background:#ffffff;
+  box-shadow: 0 2px 8px rgba(148, 163, 184, 0.25);
+}
+
+.titulo {
+  margin: 0 0 12px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.btn-turno {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: none;
+  background: #2563eb;
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-turno:hover { background:#1d4ed8; }

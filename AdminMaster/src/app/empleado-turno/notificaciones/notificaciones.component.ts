@@ -30,16 +30,15 @@ export class NotificacionesComponent {
   }
 
   abrirDetalle(n: any) {
-    // modal desactivado
-    return;
+    try { console.log('[Notificaciones] abrirDetalle', n); } catch {}
+    this.seleccionado = n;
+    this.modalAbierto = true;
   }
 
   cerrarDetalle(ev?: Event) {
-    try { ev?.preventDefault(); (ev as any)?.stopImmediatePropagation?.(); ev?.stopPropagation(); } catch {}
-    setTimeout(() => {
-      this.modalAbierto = false;
-      this.seleccionado = null;
-    }, 0);
+    try { ev?.preventDefault(); ev?.stopPropagation(); } catch {}
+    this.modalAbierto = false;
+    this.seleccionado = null;
   }
 
   get view(): any[] {

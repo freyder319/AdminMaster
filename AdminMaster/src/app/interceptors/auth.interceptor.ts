@@ -4,9 +4,11 @@ import { throwError } from 'rxjs';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { AuthService } from '../services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
+  const auth = inject(AuthService);
 
   const handleExpired = () => {
     try { localStorage.removeItem('token'); localStorage.removeItem('rol'); localStorage.removeItem('userId'); localStorage.removeItem('cajaId'); } catch {}
@@ -41,7 +43,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((err: HttpErrorResponse) => {
       if (err?.status === 401 || err?.status === 403) {
-        handleExpired();
+        // Solo tratamos como sesión expirada si el token ya no es válido
+        try {
+          if (!auth.isTokenValid()) {
+            handleExpired();
+          }
+        } catch {
+          handleExpired();
+        }
       }
       return throwError(() => err);
     })

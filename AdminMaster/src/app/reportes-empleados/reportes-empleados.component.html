@@ -1,0 +1,59 @@
+<div class="with-sidebar">
+  <header>
+    <app-admin-navbar></app-admin-navbar>
+  </header>
+
+  <main>
+    <section>
+      <div class="container-fluid turnos-activos-container">
+        <div class="row">
+          <div class="col-12">
+            <div class="turno-card">
+              <h2 class="titulo">
+                <i class="bi bi-graph-up-arrow me-2"></i>
+                <span>Reporte de ventas y horas por empleado</span>
+              </h2>
+
+              <div class="filtros">
+                <input type="date" [(ngModel)]="from" class="form-control" aria-label="Desde">
+                <input type="date" [(ngModel)]="to" class="form-control" aria-label="Hasta">
+                <button type="button" class="btn-turno" (click)="cargar()">Aplicar</button>
+              </div>
+
+              <div *ngIf="cargando">Cargando...</div>
+              <div *ngIf="!cargando && filas.length === 0">
+                <p>No hay datos para el rango seleccionado.</p>
+              </div>
+
+              <div *ngIf="!cargando && filas.length > 0" class="table-responsive">
+                <table class="table table-sm">
+                  <thead>
+                    <tr>
+                      <th>Empleado</th>
+                      <th class="text-end">Ventas</th>
+                      <th class="text-end">Total vendido</th>
+                      <th class="text-end">Horas trabajadas</th>
+                      <th class="text-end">Ventas / hora</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let f of filas">
+                      <td>{{ f.nombre }}</td>
+                      <td class="text-end">{{ f.cantidadVentas }}</td>
+                      <td class="text-end">{{ f.totalVentas | number:'1.2-2' }}</td>
+                      <td class="text-end">{{ f.horasTrabajadas | number:'1.1-1' }}</td>
+                      <td class="text-end">
+                        {{ f.horasTrabajadas > 0 ? (f.cantidadVentas / f.horasTrabajadas | number:'1.2-2') : '0.00' }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

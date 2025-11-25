@@ -3,7 +3,6 @@
   <div class="estado-buttons">
     <button type="button" class="btn-confirmado" [class.active]="isEstado('confirmado')" (click)="setEstado('confirmado')" title="Confirmado">Confirmado</button>
     <button type="button" class="btn-pendiente" [class.active]="isEstado('pendiente')" (click)="setEstado('pendiente')" title="Pendiente">Pendiente</button>
-    <button type="button" class="btn-anulado" [class.active]="isEstado('anulado')" (click)="setEstado('anulado')" title="Anulado">Anulado</button>
   </div>
 </div>
 <br>
@@ -16,31 +15,31 @@
         <!-- id -->
         <div class="mb-3">
           <label for="nombreGasto" class="form-label">Nombre del Gasto</label>
-          <input type="text" class="form-control" id="nombreGasto" name="nombreGasto" [(ngModel)]="nombreGasto" placeholder="Nombre del gasto" />
+          <input #nombreGastoInput data-autofocus="true" type="text" class="form-control" id="nombreGasto" name="nombreGasto" [(ngModel)]="nombreGasto" placeholder="Nombre del gasto" (keydown.enter)="onEnterFocus(fechaGastoInput, $event, nombreGasto)" />
         </div>
 
         <!-- fecha -->
         <div class="mb-3">
-          <label for="fechaGasto" class="form-label">Fecha</label>
-          <input type="date" class="form-control" id="fechaGasto" name="fechaGasto" [(ngModel)]="fechaGasto" />
+          <label for="fechaGasto" class="form-label">Fecha y Hora</label>
+          <input #fechaGastoInput type="datetime-local" class="form-control" id="fechaGasto" name="fechaGasto" [(ngModel)]="fechaGasto" (keydown.enter)="onEnterFocus(montoGastoInput, $event, fechaGasto)" />
         </div>
 
         <!-- monto -->
         <div class="mb-3">
           <label for="montoGasto" class="form-label">Monto</label>
-          <input type="number" class="form-control" id="montoGasto" name="montoGasto" [(ngModel)]="montoGasto" placeholder="0" min="0" step="0.01" />
+          <input #montoGastoInput type="number" class="form-control" id="montoGasto" name="montoGasto" [(ngModel)]="montoGasto" placeholder="0" min="0" step="0.01" (keydown.enter)="onEnterFocus(descripcionGastoInput, $event, montoGasto)" />
         </div>
 
         <!-- descripcion -->
         <div class="mb-3 span-2">
           <label for="descripcionGasto" class="form-label">Descripción</label>
-          <textarea id="descripcionGasto" name="descripcionGasto" [(ngModel)]="descripcionGasto" class="form-control" rows="2" placeholder="Compra de harina, Pago de servicios, ..."></textarea>
+          <textarea #descripcionGastoInput id="descripcionGasto" name="descripcionGasto" [(ngModel)]="descripcionGasto" class="form-control" rows="2" placeholder="Compra de harina, Pago de servicios, ..." (keydown.enter)="onEnterFocus(categoriaGastoSelect, $event, descripcionGasto)"></textarea>
         </div>
 
         <!-- categoria_id -->
         <div class="mb-3">
-          <label for="categoriaGasto" class="form-label">Categoría</label>
-          <select id="categoriaGasto" name="categoriaId" [(ngModel)]="categoriaId" class="form-select">
+          <label for="categoriaGasto" class="form-label">Categoría (opcional)</label>
+          <select #categoriaGastoSelect id="categoriaGasto" name="categoriaId" [(ngModel)]="categoriaId" class="form-select" (keydown.enter)="onEnterFocus(proveedorGastoSelect, $event, categoriaId)">
             <option selected disabled>Selecciona una categoría</option>
             <option *ngFor="let c of categorias" [ngValue]="c.idCategoria">
               {{ c.nombreCategoria }}
@@ -51,7 +50,7 @@
         <!-- proveedor_id -->
         <div class="mb-3">
           <label for="proveedorGasto" class="form-label">Proveedor (opcional)</label>
-          <select id="proveedorGasto" name="proveedorId" [(ngModel)]="proveedorId" class="form-select">
+          <select #proveedorGastoSelect id="proveedorGasto" name="proveedorId" [(ngModel)]="proveedorId" class="form-select" (keydown.enter)="onEnterFocus(formaPagoEfectivo, $event, proveedorId)">
             <option selected disabled>Selecciona un proveedor</option>
             <option *ngFor="let p of proveedores" [ngValue]="p.id">
               {{ p.nombre }}{{ p.apellido ? ' ' + p.apellido : '' }}
@@ -64,7 +63,7 @@
           <label class="form-label d-block">Forma de Pago</label>
           <div class="pago-options">
             <label class="pago-option">
-              <input type="radio" name="formaPago" [(ngModel)]="formaPago" value="efectivo" />
+              <input #formaPagoEfectivo type="radio" name="formaPago" [(ngModel)]="formaPago" value="efectivo" (keydown.enter)="onEnterFocus(btnCrearGasto, $event, formaPago)" />
               <img class="img-pago" src="../../assets/img/icons-metodo de pago/efectivo.png" alt="Efectivo" />
               <span>Efectivo</span>
             </label>
@@ -96,12 +95,17 @@
           </div>
         </div>
 
+        <div class="mb-3 span-2" *ngIf="formaPago && formaPago !== 'efectivo'">
+          <label class="form-label">ID de Transacción</label>
+          <input type="text" class="form-control" id="transaccionGasto" name="transaccionId" [(ngModel)]="transaccionId" placeholder="ID / referencia de la transacción" />
+        </div>
+
         
 
         
 
         <div class="confirmarfinal">
-          <button type="submit" class="btn create-gasto">Crear Gasto</button>
+          <button #btnCrearGasto type="submit" class="btn create-gasto">Crear Gasto</button>
         </div>
       </div>
     </form>

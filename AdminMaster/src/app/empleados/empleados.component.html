@@ -1,21 +1,25 @@
-<header>
-    <app-admin-navbar></app-admin-navbar>
-</header>
+<div class="with-sidebar">
+  <header>
+      <app-admin-navbar></app-admin-navbar>
+  </header>
 
-<main>
+  <main>
     <!-- Vista normal (solo cuando NO estoy en agregar NI modificar) -->
     <div *ngIf="!mostrarAddEmpleado && !mostrarModificarEmpleado">
 
-        <!-- Titulo -->
-        <section>
-            <div class="container text-center">
-                <div class="row">
-                    <div class="col">
-                        <h1 class="tit-empleados">Empleados</h1>
-                    </div>
-                </div>
+      <!-- Titulo -->
+      <section>
+        <div class="container text-center">
+          <div class="row">
+            <div class="col">
+              <h1 class="tit-empleados">
+                <i class="bi bi-person-badge-fill me-2"></i>
+                <span>Empleados</span>
+              </h1>
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
 
         <br>
 
@@ -61,6 +65,7 @@
                     <thead class="table-secondary">
                         <tr>
                         <th>Nombre</th>
+                        <th>Documento</th>
                         <th>Correo</th>
                         <th>Teléfono</th>
                         <th>Caja Asignada</th>
@@ -81,6 +86,8 @@
                                     </div>
                                 </div>
                             </td>
+                            <!-- Documento (solo visible en escritorio) -->
+                            <td data-label="Documento" class="d-none d-md-table-cell">{{empleado.documento}}</td>
                             <td data-label="Correo" class="align-middle">
                                 <!-- Escritorio -->
                                 <div class="perfil d-none d-md-flex align-items-center">
@@ -162,7 +169,7 @@
                         <!-- Sin resultados / Sin empleados -->
                         <tr *ngIf="list.length === 0">
                             <td colspan="5" class="text-center text-muted py-3">
-                                {{ lastSearchTerm ? ('No se encontró ningún Empleado para "' + lastSearchTerm + '".') : 'No hay Empleados registrados' }}
+                                {{ lastSearchTerm ? ('No se encontró ningún Empleado para "' + lastSearchTerm + '".') : 'No hay Empleados Registrados' }}
                             </td>
                         </tr>
                     </tbody>
@@ -210,10 +217,11 @@
         </div>
     </div>
 
-</main>
+  </main>
+</div>
 
 <!-- Offcanvas (solo para pantallas grandes) Agregar -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAddEmpleado" aria-labelledby="offcanvasAddEmpleadoLabel">
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAddEmpleado" aria-labelledby="offcanvasAddEmpleadoLabel" (shown.bs.offcanvas)="focusFirstInput('offcanvasAddEmpleado')">
     <div class="offcanvas-header">
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
     </div>

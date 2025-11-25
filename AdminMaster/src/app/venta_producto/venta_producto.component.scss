@@ -7,14 +7,19 @@ h1{
   font-family: 'poetsen one',cursive;
 }
 
+/* Título específico de Nueva Venta un poco desplazado a la derecha */
+.tit-nueva-venta {
+  margin-left: 280px;
+}
+
 main {
-    margin-top: 120px;
+  background: var(--surface-bg);
 }
 
 @media (max-width: 768px) {
-    main {
-        margin-top: 0; 
-    }
+  main {
+      margin-top: 0; 
+  }
 }
 
 .left-panel {
@@ -44,6 +49,21 @@ main {
   object-fit: contain;
 }
 
+/* Burbuja de producto agregado / sin stock */
+.added-bubble-wrapper {
+  top: 55px;              /* altura aproximada debajo del título */
+  margin-left: 380px;               /* por defecto centrada (móvil/tablet) */
+  z-index: 1080;
+}
+
+/* En escritorio, alinear la burbuja con el título Nueva Venta (margen izquierdo ~260px) */
+@media (min-width: 992px) {
+  .added-bubble-wrapper {
+    left: 260px;           /* mismo desplazamiento horizontal que .tit-nueva-venta */
+    transform: none;
+  }
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -52,14 +72,14 @@ html, body {
 }
 
 .full-height {
-  /* Resta el alto del navbar (margin-top de main) para evitar scroll global */
-  height: calc(100vh - 120px);
-  overflow: hidden;
+  /* Altura base para escritorio; overflow visible para que la canasta no se corte al subirla */
+  height: calc(100vh - 20px);
+  overflow: visible;
 }
 
 .row.h-100 {
   height: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* Scroll independiente a Canasta */
@@ -77,6 +97,18 @@ html, body {
   flex-grow: 1;
   overflow-y: auto;
   min-height: 0;
+}
+
+/* Grupo de cantidad en la canasta: más compacto (- [input] +) */
+.left-panel .btn-group[aria-label="Cantidad"] .btn {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.left-panel .btn-group[aria-label="Cantidad"] input[type="number"] {
+  width: 26px; /* más angosto todavía */
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 /* Scroll independiente a Productos */
@@ -110,6 +142,7 @@ html, body {
   border-top: 1px solid #ddd;
   padding-top: 15px;
   background-color: white;
+  margin-top: auto; /* empuja el total y el botón hacia abajo, alargando la canasta */
 }
 
 /* Total modern summary */
@@ -174,20 +207,20 @@ html, body {
 
   .input-buscador{
     height: 40px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 8px rgba(148,163,184,0.25);
+    border: 1px solid rgba(148,163,184,0.7);
     border-radius: 0 20px 20px 0;
     border-left: none;
     padding: 0 10px;
     font-size: 0.85rem;
 }
 .input-buscador:active{
-    box-shadow: 0 0 0 3px rgba(90,219,255,0.25);
-    border: 1px solid #5adbff;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.3);
+    border: 1px solid #1d4ed8;
 }
 .input-buscador:focus{
-    box-shadow: 0 0 0 3px rgba(90,219,255,0.25);
-    border: 1px solid #5adbff;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.3);
+    border: 1px solid #1d4ed8;
 }
 .boton_buscador{
     background-color: #fff;
@@ -228,8 +261,8 @@ html, body {
 }
 .busca:focus-within .boton_buscador,
 .busca:focus-within .input-buscador{
-  border-color: #5adbff;
-  box-shadow: 0 0 0 3px rgba(90,219,255,0.25);
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.3);
 }
 
 /* Responsive: tamaños ligeramente menores en móvil */
@@ -266,8 +299,49 @@ html, body {
   transition: background-color .15s ease, box-shadow .15s ease, border-color .15s ease;
 }
 .bg-white.range:hover{ background-color: #f8f9fa; }
-.bg-white.range:focus{ box-shadow: 0 0 0 3px rgba(90,219,255,0.25); border-color: #5adbff; }
+.bg-white.range:focus{ box-shadow: 0 0 0 3px rgba(37,99,235,0.3); border-color: #1d4ed8; }
 .bg-white.range:active{ background-color: #f3f4f6; }
+
+/* Estados de la venta (Confirmada/Pendiente) alineados con add_proveedor/add-venta-libre */
+.paga-credit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  .estado-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    padding: 7px;
+  }
+
+  .btn-confirmado,
+  .btn-pendiente {
+    border: none;
+    min-width: 174px;
+    text-align: center;
+    border-radius: 7px;
+    color: black;
+    padding: 7px;
+    font-weight: bold;
+    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+    background-color: #ffffff;
+  }
+}
+
+.estado-buttons .btn-confirmado.active {
+  background: #4CAF50;
+  color: #fff;
+  border-color: #4CAF50;
+}
+
+.estado-buttons .btn-pendiente.active {
+  background: #fa0000;
+  color: #fff;
+  border-color: #fa0000;
+}
 .unicion{
     display: flex;
     flex-wrap:wrap;
@@ -276,7 +350,7 @@ html, body {
 
 // boton de venta
 .blue{
-  background-color:#5adbff ;
+  background-color:#1d4ed8 ;
   box-shadow: 0px 0px 4px 1px rgba(214, 214, 214, 0.705);
   border: none;
   color: black;
@@ -284,19 +358,19 @@ html, body {
 
 /* Confirmar Venta button */
 .confirmar-venta-btn {
-  background: linear-gradient(135deg, #22c55e, #16a34a);
+  background: linear-gradient(135deg, #1d4ed8, #4f46e5);
   color: #fff;
-  border: 1px solid #16a34a;
+  border: 1px solid transparent;
   border-radius: 12px;
   padding: 12px 16px;
   font-weight: 700;
   letter-spacing: .2px;
-  box-shadow: 0 6px 14px rgba(34, 197, 94, 0.25);
+  box-shadow: 0 6px 16px rgba(37,99,235,0.45);
   transition: transform .08s ease, box-shadow .2s ease, filter .2s ease;
 }
 .confirmar-venta-btn:hover {
   filter: brightness(1.02);
-  box-shadow: 0 8px 18px rgba(34, 197, 94, 0.3);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.5);
 }
 .confirmar-venta-btn:active {
   transform: translateY(1px);
@@ -345,13 +419,34 @@ html, body {
 
 /* Canasta */
 .left-panel {
-  height: calc(100vh - 120px);
+  height: 100%;
   background-color: white;
   border-right: 1px solid #ddd;
-  padding: 20px;
+  padding: 12px 20px 20px 20px; /* un poco menos de padding arriba */
   display: flex;
   flex-direction: column;
   overflow: hidden; /* Oculta scroll general */
+}
+
+/* En escritorio, hacer la canasta un poco más angosta que la columna de productos */
+@media (min-width: 992px) {
+  .canasta-layout-row {
+    align-items: stretch;       /* que ambas columnas ocupen toda la altura */
+    justify-content: flex-start;
+  }
+
+  .left-panel {
+    flex: 0 0 400px;   /* ancho base de la columna canasta */
+    max-width: 400px;
+    padding-top: 0;    /* sin padding arriba en escritorio */
+    padding-bottom: 16px;
+    margin-top: -70px; /* subir la canasta para alinearla con el título */
+  }
+
+  .right-panel {
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
 }
 
 .canasta-lista-scroll {
@@ -379,16 +474,16 @@ html, body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center; /* Asegura que las tarjetas se centren horizontalmente */
-  gap: 16px; /* Espacio entre tarjetas */
-  padding-bottom: 24px;
+  gap: 10px; /* aún menos espacio entre tarjetas */
+  padding-bottom: 12px;
 }
 
 .card {
   width: 100%;
-  max-width: 240px;
-  border-radius: 14px;
+  max-width: 170px; /* más angostas */
+  border-radius: 10px;
   border: 1px solid #e9ecef;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
   transition: transform 0.15s ease, box-shadow 0.2s ease;
   background: #fff;
 }
@@ -400,35 +495,35 @@ html, body {
 
 .img-card {
   width: 100%;
-  height: 160px; /* altura fija para uniformidad */
+  height: 110px; /* más baja para cards más pequeñas */
   object-fit: cover;
   border-radius: 10px;
 }
 
 .card-body {
   text-align: center;
-  padding: 12px 6px 4px 6px;
+  padding: 6px 4px 4px 4px; /* aún menos padding interno */
 }
 
 .text-prec, .text-nom, .text-cant {
-  margin: 4px 0;
+  margin: 1px 0; /* incluso menos espacio entre líneas */
 }
 
 .text-prec { 
   color: #198754; /* verde éxito */
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 0.9rem;
 }
 
 .text-nom {
   color: #212529;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
 }
 
 .text-cant {
   color: #6c757d;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
 }
 
 /* Carrito flotante móvil */
@@ -453,6 +548,17 @@ html, body {
 
 .cart-float span {
   font-weight: 800;
+}
+
+/* Item de cliente seleccionado en el modal de Confirmar Venta */
+.modal-content .list-group.small .list-group-item.active {
+  background-color: #6b737a; /* gris más claro */
+  border-color: #6b737a;
+  color: #f8f9fa;
+}
+
+.modal-content .list-group.small .list-group-item.active .text-muted {
+  color: #e5e7eb !important;
 }
 
 /* Ajustes en dispositivos móviles */

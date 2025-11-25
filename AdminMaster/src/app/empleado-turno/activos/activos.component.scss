@@ -1,13 +1,25 @@
 .turno-card {
-  background: linear-gradient(180deg, #ffffff, #f9fffd);
-  border: 1px solid #e9f8f4;
-  border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.10);
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
   padding: 18px;
 }
 
+.turnos-activos-container {
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
 .filtros { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; align-items:center; }
-.filtros .form-control { border:1px solid #c3fae8; border-radius:10px; padding:8px 10px; background:#ffffff; }
+.filtros .form-control {
+  border:1px solid rgba(148, 163, 184, 0.7);
+  border-radius:18px;
+  padding:8px 10px;
+  background:#ffffff;
+  box-shadow: 0 2px 8px rgba(148, 163, 184, 0.25);
+}
 input[type="search"] { min-height: 38px; }
 input[type="date"] { min-height: 38px; }
 /* Focus state */
@@ -15,12 +27,12 @@ input[type="date"] { min-height: 38px; }
 input[type="search"]:focus,
 input[type="date"]:focus {
   outline: none;
-  border-color: #14b8a6;
-  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.18);
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
 }
 /* Search icon inside input on the right */
 .input-icon { position: relative; }
-.input-icon i { position:absolute; right:10px; top:50%; transform:translateY(-50%); color:#14b8a6; font-size: 16px; pointer-events: none; }
+.input-icon i { position:absolute; right:10px; top:50%; transform:translateY(-50%); color:#1d4ed8; font-size: 16px; pointer-events: none; }
 .input-icon input { padding-right: 40px; width: 100%; }
 .filtro-label { color:#0f766e; font-weight:600; }
 
@@ -34,7 +46,7 @@ input[type="date"]:focus {
   margin: 0 0 12px;
   font-size: 22px;
   font-weight: 700;
-  color: #0f766e;
+  color: var(--primary-dark);
 }
 
 .turno-lista {
@@ -79,10 +91,10 @@ input[type="date"]:focus {
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  /* Fully transparent backdrop (no darkening) */
+  /* Backdrop transparente, sin oscurecer el fondo */
   background: transparent;
-  z-index: 1990;
-  pointer-events: auto;
+  z-index: 900;
+  pointer-events: none;
 }
 
 .modal-contenedor {

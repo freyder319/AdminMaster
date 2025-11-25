@@ -4,7 +4,10 @@
         <div class="container text-center">
             <div class="row">
                 <div class="col">
-                <h1 class="tit-empleados">Agregar Empleados</h1>
+                <h1 class="tit-empleados">
+                  <i class="bi bi-person-badge-fill me-2"></i>
+                  <span>Agregar Empleados</span>
+                </h1>
                 </div>
             </div>
         </div>
@@ -43,25 +46,40 @@
                             [attr.aria-pressed]="activo === false"
                             (click)="activo = false">Inactivo</button>
                         </div>
-                      </div>
+                      </div><br>
                     </section>
 
                     <!-- Nombre -->
                     <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" [(ngModel)]="empleado.nombre" name="nombre" id="nombre" class="form-control" required maxlength="100">
+                        <label for="nombre" class="form-label form-control2">Nombre del Empleado</label>
+                        <input #nombreInput data-autofocus="true" type="text" [(ngModel)]="empleado.nombre" name="nombre" class="form-control" id="nombre" required maxlength="100" (keydown.enter)="onEnterFocus(apellidoEmp, $event, empleado.nombre)">
                     </div>
 
                     <!-- Apellido -->
                     <div class="mb-3">
                         <label for="apellido" class="form-label">Apellido</label>
-                        <input type="text" [(ngModel)]="empleado.apellido" name="apellido" id="apellido" class="form-control" required maxlength="100">
+                        <input #apellidoEmp type="text" [(ngModel)]="empleado.apellido" name="apellido" id="apellido" class="form-control" required maxlength="100" (keydown.enter)="onEnterFocus(correoEmp, $event, empleado.apellido)">
+                    </div>
+
+                    <!-- Documento -->
+                    <div class="mb-3">
+                        <label for="documento" class="form-label">Documento</label>
+                        <input type="text" [(ngModel)]="empleado.documento" name="documento" id="documento" class="form-control" required pattern="^[0-9]{6,15}$" (input)="validarDocumento()" [ngClass]="{ 'is-invalid': documentoExcede || documentoNoNumerico, 'valid-focus': !documentoExcede && !documentoNoNumerico && empleado.documento }" (keydown.enter)="onEnterFocus(correoEmp, $event, empleado.documento)">
+                        <div class="invalid-feedback" *ngIf="documentoExcede">
+                            El documento tiene máximo 15 números.
+                        </div>
+                        <div class="invalid-feedback" *ngIf="!documentoExcede && documentoNoNumerico">
+                            Solo se permiten números en el documento.
+                        </div>
+                        <div class="invalid-feedback" *ngIf="!documentoExcede && !documentoNoNumerico && documentoDuplicado">
+                            El documento ya existe.
+                        </div>
                     </div>
 
                     <!-- Correo -->
                     <div class="mb-3">
                         <label for="correo" class="form-label">Correo Electrónico</label>
-                        <input type="email" [(ngModel)]="empleado.correo" name="correo" id="correo" class="form-control" required (input)="validarCorreo()" [ngClass]="{ 'is-invalid': correoInvalido || correoDuplicado, 'valid-focus': !correoInvalido && !correoDuplicado && empleado.correo }">
+                        <input #correoEmp type="email" [(ngModel)]="empleado.correo" name="correo" id="correo" class="form-control" required (input)="validarCorreo()" [ngClass]="{ 'is-invalid': correoInvalido || correoDuplicado, 'valid-focus': !correoInvalido && !correoDuplicado && empleado.correo }" (keydown.enter)="onEnterFocus(telefonoEmp, $event, empleado.correo)">
                         <div class="invalid-feedback" *ngIf="correoInvalido">
                             Debes ingresar un correo válido (ejemplo&#64;dominio.com).
                         </div>
@@ -70,16 +88,10 @@
                         </div>
                     </div>
 
-                    <!-- Contraseña -->
-                    <div class="mb-3">
-                        <label for="contrasena" class="form-label">Contraseña</label>
-                        <input type="password" [(ngModel)]="empleado.contrasena" name="contrasena" id="contrasena" class="form-control" required minlength="6">
-                    </div>
-
                     <!-- Teléfono -->
                     <div class="mb-3">
                         <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="tel" [(ngModel)]="empleado.telefono" name="telefono" id="telefono" class="form-control" required pattern="^[0-9]{1,10}$" (input)="validarTelefono()" [ngClass]="{ 'is-invalid': empleadoExcede || empleadoNoNumerico || telefonoDuplicado, 'valid-focus': !empleadoExcede && !empleadoNoNumerico && !telefonoDuplicado }">
+                        <input #telefonoEmp type="tel" [(ngModel)]="empleado.telefono" name="telefono" id="telefono" class="form-control" required pattern="^[0-9]{1,10}$" (input)="validarTelefono()" [ngClass]="{ 'is-invalid': empleadoExcede || empleadoNoNumerico || telefonoDuplicado, 'valid-focus': !empleadoExcede && !empleadoNoNumerico && !telefonoDuplicado }" (keydown.enter)="onEnterFocus(cajaEmp, $event, empleado.telefono)">
                         <div class="invalid-feedback" *ngIf="empleadoExcede">
                             Un teléfono tiene máximo 10 números.
                         </div>
@@ -94,7 +106,7 @@
                     <!-- Asignar Caja -->
                     <div class="mb-3">
                         <label for="caja" class="form-label">Asignar Caja</label>
-                        <select [(ngModel)]="empleado.cajaId" name="cajaId" class="form-select" [required]="activo" [disabled]="!activo">
+                        <select #cajaEmp [(ngModel)]="empleado.cajaId" name="cajaId" class="form-select" [required]="activo" [disabled]="!activo" (keydown.enter)="onEnterFocus(btnConfirmarEmpleado, $event, empleado.cajaId)">
                             <option [ngValue]="null" disabled>Selecciona una caja</option>
                             <option *ngFor="let caja of cajas" [ngValue]="caja.id">
                                 {{ caja.nombre }} ({{ caja.codigoCaja }})
@@ -107,7 +119,7 @@
 
                     <!-- Botón -->
                     <div class="confirmarfinal">
-                        <button type="submit" class="btn confir" [disabled]="formEmpleado.invalid || correoInvalido || empleadoExcede || empleadoNoNumerico || correoDuplicado || telefonoDuplicado">Confirmar</button>
+                        <button #btnConfirmarEmpleado type="submit" class="btn confir" [disabled]="formEmpleado.invalid || correoInvalido || empleadoExcede || empleadoNoNumerico || correoDuplicado || telefonoDuplicado || documentoExcede || documentoNoNumerico || documentoDuplicado">Confirmar</button>
                     </div>
                 </form> 
             </div>

@@ -6,8 +6,8 @@
 }
 
 .form-control:focus {
-    border: 1px solid #5adbff;
-    box-shadow: 0 0 6px 0.5px #5adbff;
+    border-color: #5adbff;
+    box-shadow: 0 0 0 3px rgba(90, 219, 255, 0.35);
     outline: none; 
 }
 
@@ -17,8 +17,8 @@
 }
 
 .form-select:focus {
-    border: 1px solid #5adbff;
-    box-shadow: 0 0 6px 0.5px #5adbff;
+    border-color: #5adbff;
+    box-shadow: 0 0 0 3px rgba(90, 219, 255, 0.35);
     outline: none; 
 }
 

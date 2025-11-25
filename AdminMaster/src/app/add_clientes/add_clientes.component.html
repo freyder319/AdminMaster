@@ -4,7 +4,10 @@
         <div class="container text-center">
             <div class="row">
                 <div class="col">
-                    <h1 class="tit-clientes">Agregar Clientes</h1>
+                    <h1 class="tit-clientes">
+                      <i class="bi bi-people-fill me-2"></i>
+                      <span>Agregar Clientes</span>
+                    </h1>
                 </div>
             </div>
         </div>
@@ -34,19 +37,42 @@
                     <!-- Nombre -->
                     <div class="mb-3">
                         <label for="nombre" class="form-label form-control2">Nombre del Cliente</label>
-                        <input type="text" [(ngModel)]="cliente.nombre" name="nombre" class="form-control" id="nombre" required>
+                        <input #nombreInput data-autofocus="true" type="text" [(ngModel)]="cliente.nombre" name="nombre" class="form-control" id="nombre" required (keydown.enter)="onEnterFocus(apellidoInput, $event, cliente.nombre)">
                     </div>
 
                     <!-- Apellido -->
                     <div class="mb-3">
                         <label for="apellido" class="form-label form-control2">Apellido del Cliente</label>
-                        <input type="text" [(ngModel)]="cliente.apellido" name="apellido" class="form-control" id="apellido" required>
+                        <input #apellidoInput type="text" [(ngModel)]="cliente.apellido" name="apellido" class="form-control" id="apellido" required (keydown.enter)="onEnterFocus(telefonoInput, $event, cliente.apellido)">
+                    </div>
+
+                    <!-- Documento -->
+                    <div class="mb-3">
+                        <label for="documento" class="form-label">Documento</label>
+                        <input #documentoInput
+                               type="text"
+                               [(ngModel)]="cliente.documento"
+                               name="documento"
+                               id="documento"
+                               class="form-control"
+                               [ngClass]="{ 'is-invalid': documentoNoNumerico || documentoLongitudInvalida || documentoDuplicado }"
+                               (input)="validarDocumento()"
+                               (keydown.enter)="onEnterFocus(telefonoInput, $event, cliente.documento)">
+                        <div class="invalid-feedback" *ngIf="documentoNoNumerico">
+                            Solo se permiten números.
+                        </div>
+                        <div class="invalid-feedback" *ngIf="!documentoNoNumerico && documentoLongitudInvalida">
+                            El documento debe tener exactamente 10 dígitos.
+                        </div>
+                        <div class="invalid-feedback" *ngIf="!documentoNoNumerico && !documentoLongitudInvalida && documentoDuplicado">
+                            El documento ya existe.
+                        </div>
                     </div>
 
                     <!-- Teléfono -->
                     <div class="mb-3">
                         <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="tel" [(ngModel)]="cliente.numero" name="numero" id="telefono" class="form-control" required pattern="^[0-9]{1,10}$" [ngClass]="{ 'is-invalid': clienteExcede || clienteNoNumerico, 'valid-focus': !clienteExcede && !clienteNoNumerico }" (input)="validarcliente()">
+                        <input #telefonoInput type="tel" [(ngModel)]="cliente.numero" name="numero" id="telefono" class="form-control" required pattern="^[0-9]{1,10}$" [ngClass]="{ 'is-invalid': clienteExcede || clienteNoNumerico || telefonoDuplicado, 'valid-focus': !clienteExcede && !clienteNoNumerico && !telefonoDuplicado }" (input)="validarcliente()" (keydown.enter)="onEnterFocus(correoInput, $event, cliente.numero)">
                         <div class="invalid-feedback" *ngIf="clienteExcede">
                             Un teléfono tiene máximo 10 números.
                         </div>
@@ -58,15 +84,18 @@
                     <!-- Correo -->
                     <div class="mb-3">
                         <label for="correo" class="form-label">Correo Electrónico</label>
-                        <input type="email" [(ngModel)]="cliente.correo" name="correo" id="correo" class="form-control" required [ngClass]="{ 'is-invalid': correoInvalido, 'valid-focus': !correoInvalido && cliente.correo }"(input)="validarCorreo()">
+                        <input #correoInput type="email" [(ngModel)]="cliente.correo" name="correo" id="correo" class="form-control" required [ngClass]="{ 'is-invalid': correoInvalido || correoDuplicado, 'valid-focus': !correoInvalido && !correoDuplicado && cliente.correo }"(input)="validarCorreo()" (keydown.enter)="onEnterFocus(btnConfirmarCliente, $event, cliente.correo)">
                         <div class="invalid-feedback" *ngIf="correoInvalido">
                             Debes ingresar un correo válido (ejemplodominio.com).
+                        </div>
+                        <div class="invalid-feedback" *ngIf="!correoInvalido && correoDuplicado">
+                            El correo ya existe.
                         </div>
                     </div><br>
 
                     <!-- Botón -->
                     <div class="confirmarfinal">
-                        <button data-bs-dismiss="offcanvas" [disabled]="formCliente.invalid || correoInvalido || clienteExcede || clienteNoNumerico" type="submit" class="btn confir"> Confirmar</button>
+                        <button #btnConfirmarCliente data-bs-dismiss="offcanvas" [disabled]="formCliente.invalid || correoInvalido || clienteExcede || clienteNoNumerico || correoDuplicado || telefonoDuplicado || documentoDuplicado || documentoNoNumerico || documentoLongitudInvalida" type="submit" class="btn confir"> Confirmar</button>
                     </div>
                     </form>
 

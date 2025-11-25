@@ -1,8 +1,9 @@
-<header>
-  <app-admin-navbar></app-admin-navbar>
-</header>
+<div class="with-sidebar">
+  <header>
+    <app-admin-navbar></app-admin-navbar>
+  </header>
 
-<main>
+  <main>
   <!-- Vista normal (solo cuando NO estoy en agregar NI modificar) -->
   <div *ngIf="!mostrarAddCliente && !mostrarModificarCliente">
 
@@ -11,7 +12,10 @@
       <div class="container text-center">
         <div class="row">
           <div class="col">
-            <h1 class="tit-clientes">Clientes</h1>
+            <h1 class="tit-clientes">
+              <i class="bi bi-people-fill me-2"></i>
+              <span>Clientes</span>
+            </h1>
           </div>
         </div>
       </div>
@@ -62,6 +66,7 @@
           <thead class="table-secondary">
             <tr>
               <th>Nombre</th>
+              <th>Documento</th>
               <th>Correo</th>
               <th>Teléfono</th>
               <th>N° Deudas</th>
@@ -71,7 +76,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let cliente of clientesFiltrados">
+            <tr *ngFor="let cliente of clientesFiltrados" [ngClass]="{'cliente-inactivo-row': estadoCliente(cliente) === 'Inactivo'}">
               <td data-label="Nombre">
                 <!-- Solo visible en móviles (<768px), clickeable -->
                 <div class="perfil clickable d-md-none" (click)="mostrarInterfazReponsive(cliente.id)">
@@ -91,10 +96,11 @@
                 </div>
                 </td>
 
+              <td data-label="Documento">{{cliente.documento || '-'}}</td>
               <td data-label="Correo">{{cliente.correo}}</td>
               <td data-label="Teléfono">{{cliente.numero}}</td>
-              <td data-label="N° Deudas">0</td>
-              <td data-label="N° Compras">0</td>
+              <td data-label="N° Deudas">{{ getDeudas(cliente) }}</td>
+              <td data-label="N° Compras">{{ getNumeroCompras(cliente) }}</td>
               <td data-label="Estado de Cliente">
                 <span class="status" [ngClass]="estadoCliente(cliente).toLowerCase()">{{ estadoCliente(cliente) }}</span>
               </td>
@@ -107,7 +113,7 @@
                       <i class="bi bi-pencil-square"></i>
                       <span class="texto">Modificar</span>
                     </button>
-                    <button class="btn habilitar" (click)="habilitarCliente(cliente)">
+                    <button class="btn habilitar" *ngIf="rol !== 'punto_pos'" (click)="habilitarCliente(cliente)">
                       <i class="bi bi-check2-circle"></i>
                       Habilitar
                     </button>
@@ -117,11 +123,11 @@
                       <i class="bi bi-pencil-square"></i>
                       <span class="texto">Modificar</span>
                     </button>
-                    <button *ngIf="!isClienteEnUso(cliente)" (click)="eliminarCliente(cliente.id)" class="btn elimi">
+                    <button *ngIf="rol !== 'punto_pos' && !isClienteEnUso(cliente)" (click)="eliminarCliente(cliente.id)" class="btn elimi">
                       <i class="bi bi-trash"></i>
                       Eliminar
                     </button>
-                    <button *ngIf="isClienteEnUso(cliente)" class="btn inhabilitar" (click)="inhabilitarCliente(cliente)">
+                    <button *ngIf="rol !== 'punto_pos' && isClienteEnUso(cliente)" class="btn inhabilitar" (click)="inhabilitarCliente(cliente)">
                       <i class="bi bi-slash-circle"></i>
                       Inhabilitar
                     </button>
@@ -134,7 +140,7 @@
                     <button class="btn modificar icon-btn d-none d-md-inline-block" title="Modificar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCliente" aria-controls="offcanvasModifyCliente" (click)="guardarId(cliente.id)">
                       <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button class="btn habilitar-icon icon-btn" title="Habilitar" (click)="habilitarCliente(cliente)">
+                    <button class="btn habilitar-icon icon-btn" *ngIf="rol !== 'punto_pos'" title="Habilitar" (click)="habilitarCliente(cliente)">
                       <i class="bi bi-check2-circle"></i>
                     </button>
                   </ng-container>
@@ -142,10 +148,10 @@
                     <button class="btn modificar icon-btn d-none d-md-inline-block" title="Modificar" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasModifyCliente" aria-controls="offcanvasModifyCliente" (click)="guardarId(cliente.id)">
                       <i class="bi bi-pencil-square"></i>
                     </button>
-                    <button *ngIf="!isClienteEnUso(cliente)" class="btn eliminar-icon icon-btn" title="Eliminar" (click)="eliminarCliente(cliente.id)">
+                    <button *ngIf="rol !== 'punto_pos' && !isClienteEnUso(cliente)" class="btn eliminar-icon icon-btn" title="Eliminar" (click)="eliminarCliente(cliente.id)">
                       <i class="bi bi-trash"></i>
                     </button>
-                    <button *ngIf="isClienteEnUso(cliente)" class="btn inhabilitar-icon icon-btn" title="Inhabilitar" (click)="inhabilitarCliente(cliente)">
+                    <button *ngIf="rol !== 'punto_pos' && isClienteEnUso(cliente)" class="btn inhabilitar-icon icon-btn" title="Inhabilitar" (click)="inhabilitarCliente(cliente)">
                       <i class="bi bi-slash-circle"></i>
                     </button>
                   </ng-template>
@@ -206,10 +212,11 @@
     </div>
   </div>
 
-</main>
+  </main>
+</div>
 
 <!-- Offcanvas (solo para pantallas grandes) Agregar -->
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAddCliente" aria-labelledby="offcanvasAddClienteLabel">
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAddCliente" aria-labelledby="offcanvasAddClienteLabel" (shown.bs.offcanvas)="focusFirstInput('offcanvasAddCliente')">
   <div class="offcanvas-header">
     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
   </div>

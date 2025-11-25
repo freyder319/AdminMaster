@@ -1,21 +1,68 @@
-<header>
-  <app-admin-navbar></app-admin-navbar>
-</header>
-<main>
+<div class="with-sidebar">
+  <header>
+    <app-admin-navbar></app-admin-navbar>
+  </header>
+  <main>
+    <!-- Burbuja de confirmación de producto agregado -->
+    <div *ngIf="addedBubbleVisible"
+         class="position-fixed added-bubble-wrapper">
+      <div class="px-3 py-2 rounded-pill shadow-sm text-white added-bubble"
+           [ngStyle]="{
+             'background': addedBubbleIsError ? 'rgba(220,53,69,0.9)' : 'rgba(40,167,69,0.85)',
+             'font-size': '0.85rem'
+           }">
+        <ng-container *ngIf="!addedBubbleIsError; else noStockTpl">
+          {{ addedBubbleText }}
+        </ng-container>
+        <ng-template #noStockTpl>
+          <ng-container *ngIf="addedBubbleProductName; else genericNoStockTpl">
+            Producto "{{ addedBubbleProductName }}" <b>SIN STOCK</b>
+          </ng-container>
+          <ng-template #genericNoStockTpl>
+            Producto <b>SIN STOCK</b>
+          </ng-template>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- Título principal Nueva Venta -->
+    <section>
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <h1 class="tit-nueva-venta">
+              <i class="bi bi-cash-stack me-2" style="font-size: 2.5rem;"></i>
+              <span>Nueva Venta</span>
+            </h1>
+          </div>
+        </div>
+      </div>
+    </section>
+    <br>
+
   <div class="container-fluid full-height">
-    <div class="row h-100">
+    <div class="row h-100 canasta-layout-row">
 
       <!-- Productos -->
-      <div class="col-md-8 col-lg-9 right-panel d-flex flex-column order-md-1 order-lg-1">
-        <div class="row mb-3 nueva-venta-footer">
-          <h3><a title="new_venta" routerLink="/movimientos"><img class="me-3" width="40px" src="../../assets/img/Nueva_venta/arrow-down_icon-icons.com_72377.png" alt=""></a> <img class="me-3" width="50px" src="../../assets/img/Nueva_venta/nueva_venta.png" alt="">Nueva Venta</h3>
-        </div>
+      <div class="col-md-8 col-lg-8 right-panel d-flex flex-column order-md-1 order-lg-1">
         <div class="row align-items-center mb-3">
           <div class="col-sm-12 col-md-6 col-lg-6">
             <form class="d-flex justify-content-center text-center" role="search" (submit)="$event.preventDefault()">
               <div class="input-group busca control-width">
-                <button title="boton_buscar" class="btn btn-primary btn-sm boton_buscador" type="submit"><img width="16px" src="../../assets/img/Logos Admin/Buscador.png" alt=""></button>
-                <input class="form-control form-control-sm input-buscador" type="search" placeholder="Buscar productos o códigos" aria-label="Buscar" [(ngModel)]="searchTerm" name="q">
+                <button
+                  title="boton_buscar"
+                  class="btn btn-primary btn-sm boton_buscador"
+                  type="submit">
+                  <img width="16px" src="../../assets/img/Logos Admin/Buscador.png" alt="Buscar">
+                </button>
+                <input #searchInput
+                       class="form-control form-control-sm input-buscador"
+                       type="search"
+                       placeholder="Buscar productos o códigos"
+                       aria-label="Buscar"
+                       [(ngModel)]="searchTerm"
+                       name="q"
+                       (keydown.enter)="onSearchEnter($event)">
               </div>
             </form>
           </div>
@@ -25,6 +72,11 @@
                 Ordenar: {{ sortLabel }}
               </button>
               <div class="dropdown-menu anchor">
+                <a class="dropdown-item" href="#" (click)="$event.preventDefault(); sortOption='todos'">
+                  <div class="contenido-botones2">
+                    <h6>Todos</h6>
+                  </div>
+                </a>
                 <a class="dropdown-item" href="#" (click)="$event.preventDefault(); sortOption='masVendidos'">
                   <div class="contenido-botones2">
                     <h6>Productos Más Vendidos</h6>
@@ -66,7 +118,8 @@
           </div>
 
           <div class="products-grid">
-            <div class="card" *ngFor="let p of productosOrdenados" (click)="onProductClick($event, p)"
+            <div class="card" *ngFor="let p of (sortOption === 'todos' ? productosOrdenados : (productosOrdenados | slice:0:5))" (click)="onProductClick($event, p)"
+                 [attr.data-key]="p.id ?? p.codigoProducto"
                   [ngClass]="{ 'opacity-50': p.estado === false, 'non-selectable': p.estado === false }"
                   [attr.aria-disabled]="p.estado === false ? true : null"
                   [attr.title]="p.estado === false ? 'Inhabilitado' : null">
@@ -78,7 +131,7 @@
                     {{ p.nombreProducto }}
                     <small *ngIf="p.estado === false" class="text-muted ms-1">(Inhabilitado)</small>
                   </p>
-                  <p class="text-cant">{{ p.stockProducto | number }} Disponibles</p>
+                  <p class="text-cant">{{ getAvailableStock(p) | number }} Disponibles</p>
                 </div>
               </div>
             </div>
@@ -87,22 +140,33 @@
       </div>
 
       <!-- Canasta (solo en escritorio) -->
-      <div class="col-md-4 col-lg-3 left-panel d-none d-md-flex flex-column order-md-2 order-lg-2">
+      <div class="col-md-4 col-lg-4 left-panel d-none d-md-flex flex-column order-md-2 order-lg-2">
         <h2 class="mb-4 canasta-title"><img class="icon-canasta me-2" src="../../assets/img/Nueva_venta/carrito de compra.png" alt="Canasta"> Canasta</h2>
 
         <!-- Contenedor con scroll -->
         <div class="canasta-lista-scroll flex-grow-1 mb-3">
           <ul class="list-group" id="canasta-lista-desktop">
-            <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of cart">
+            <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let item of cart"
+                [attr.data-key]="item.producto.id ?? item.producto.codigoProducto">
               <div class="me-2 text-truncate" style="max-width: 60%;">
                 <strong>{{ item.producto.nombreProducto }}</strong>
                 <div class="small text-muted">{{ item.cantidad }} x {{ (item.producto.precioComercial || item.producto.precioUnitario) | currency:'COP':'symbol-narrow':'1.0-0' }}</div>
               </div>
               <div class="d-flex align-items-center gap-2">
                 <div class="btn-group" role="group" aria-label="Cantidad">
-                  <button class="btn btn-sm btn-outline-secondary" (click)="decrement(item)" title="Disminuir">−</button>
-                  <button class="btn btn-sm btn-light" disabled>{{ item.cantidad }}</button>
-                  <button class="btn btn-sm btn-outline-secondary" (click)="increment(item)" [disabled]="item.cantidad >= (item.producto.stockProducto || 0)" [title]="item.cantidad >= (item.producto.stockProducto || 0) ? 'Sin stock' : 'Aumentar'">+</button>
+                  <button class="btn btn-sm btn-outline-secondary" (click)="decrement(item, $event)" title="Disminuir">−</button>
+                  <input type="number"
+                         class="btn btn-sm btn"
+                         style="width: 64px; text-align: center; box-shadow: none; outline: none;"
+                         [value]="item.cantidad"
+                         min="1"
+                         [max]="item.producto.stockProducto || null"
+                         [attr.data-key]="item.producto.id ?? item.producto.codigoProducto"
+                         (input)="updateQuantity(item, $event)"
+                         (change)="updateQuantity(item, $event)"
+                         (keydown.enter)="$event.preventDefault(); updateQuantity(item, $event)"
+                         (keydown)="onQuantityKeyDown(item, $event)">
+                  <button class="btn btn-sm btn-outline-secondary" (click)="increment(item, $event)" [disabled]="item.cantidad >= (item.producto.stockProducto || 0)" [title]="item.cantidad >= (item.producto.stockProducto || 0) ? 'Sin stock' : 'Aumentar'">+</button>
                 </div>
                 <span class="ms-2 fw-semibold">{{ item.subtotal | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
                 <button class="btn btn-sm btn-outline-danger" (click)="remove(item)" title="Quitar">✕</button>
@@ -142,7 +206,15 @@
               </div>
               <div class="d-flex align-items-center gap-2">
                 <button class="btn btn-sm btn-outline-secondary" (click)="decrement(item)" title="Disminuir">−</button>
-                <span class="px-2">{{ item.cantidad }}</span>
+                <input type="number"
+                       class="form-control form-control-sm"
+                       style="width: 64px; text-align: center; box-shadow: none; outline: none;"
+                       [value]="item.cantidad"
+                       min="1"
+                       [max]="item.producto.stockProducto || null"
+                       [attr.data-key]="item.producto.id ?? item.producto.codigoProducto"
+                       (change)="updateQuantity(item, $event)"
+                       (keydown.enter)="$event.preventDefault(); updateQuantity(item, $event)">
                 <button class="btn btn-sm btn-outline-secondary" (click)="increment(item)" title="Aumentar">+</button>
                 <span class="ms-2 fw-semibold">{{ item.subtotal | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
                 <button class="btn btn-sm btn-outline-danger" (click)="remove(item)" title="Quitar">✕</button>
@@ -171,6 +243,64 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
+          <!-- Estados de la venta -->
+          <div class="container paga-credit mb-3">
+            <div class="estado-buttons">
+              <button type="button" class="btn-confirmado" [class.active]="isEstado('confirmada')" (click)="setEstado('confirmada')">Confirmada</button>
+              <button type="button" class="btn-pendiente" [class.active]="isEstado('pendiente')" (click)="setEstado('pendiente')">Pendiente</button>
+            </div>
+          </div>
+          <!-- /Estados de la venta -->
+          <!-- 1. Cliente: búsqueda y selección -->
+          <div class="mb-3">
+            <label for="cliente" class="form-label">Cliente (opcional)</label>
+            <ng-container *ngIf="clientes.length > 0; else sinClientesVenta">
+              <input id="cliente"
+                     type="search"
+                     class="form-control form-control-sm mb-2"
+                     placeholder="Buscar por nombre, documento o correo"
+                     [(ngModel)]="clienteSearchTerm"
+                     name="clienteSearchTerm"
+                     [disabled]="isSubmitting">
+
+              <div class="form-text mb-1" *ngIf="!(clienteSearchTerm || '').trim()">
+                Escribe para buscar un cliente por nombre, documento o correo.
+              </div>
+
+              <div class="list-group small" *ngIf="(clienteSearchTerm || '').trim()">
+                <button type="button"
+                        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                        *ngFor="let c of clientesFiltradosVenta"
+                        [class.active]="c.id === selectedClienteId"
+                        (click)="selectCliente(c)">
+                  <div>
+                    <div class="fw-semibold">{{ c.nombre }} {{ c.apellido }}</div>
+                    <div class="text-muted">{{ c.documento || 'Sin documento' }} · {{ c.correo }}</div>
+                  </div>
+                  <div class="ms-2 text-muted">{{ c.numero }}</div>
+                </button>
+                <div class="list-group-item text-muted text-center py-2" *ngIf="clientesFiltradosVenta.length === 0">
+                  No se encontraron clientes para "{{ clienteSearchTerm }}".
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #sinClientesVenta>
+              <div class="form-text">No hay clientes activos para asociar.</div>
+            </ng-template>
+          </div>
+
+          <!-- 2. Resumen de cliente seleccionado -->
+          <div class="mb-3">
+            <small class="text-muted">
+              Cliente seleccionado:
+              <ng-container *ngIf="selectedClienteData as cli; else sinClienteVentaResumen">
+                {{ cli.nombre }} {{ cli.apellido }} - {{ cli.numero }}
+              </ng-container>
+              <ng-template #sinClienteVentaResumen>Sin cliente</ng-template>
+            </small>
+          </div>
+
+          <!-- 3. Resumen de montos -->
           <div class="d-flex justify-content-between align-items-center mb-2">
             <span class="total-label">Subtotal</span>
             <span class="total-amount">{{ grossTotal | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
@@ -191,40 +321,29 @@
             <span class="total-label">Total a pagar</span>
             <span class="total-amount">{{ cartTotal | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
           </div>
-          <div class="mb-2">
-            <small class="text-muted">
-              Cliente:
-              <ng-container *ngIf="selectedClienteData as cli; else sinClienteVenta">
-                {{ cli.nombre }} {{ cli.apellido }} - {{ cli.numero }}
-              </ng-container>
-              <ng-template #sinClienteVenta>Sin cliente</ng-template>
-            </small>
+
+          <!-- 4. Pago: efectivo, forma de pago y cambio -->
+          <div class="row mb-3">
+            <div class="col-md-6 mb-3 mb-md-0">
+              <label for="amountReceived" class="form-label">Dinero recibido</label>
+              <input id="amountReceived" type="number" min="0" step="1" inputmode="numeric" class="form-control" [(ngModel)]="amountReceived" name="amountReceived" placeholder="Ingresa el efectivo recibido" [disabled]="isSubmitting">
+              <div class="form-text" *ngIf="(amountReceived ?? 0) < cartTotal">El dinero ingresado es menor al total.</div>
+            </div>
+            <div class="col-md-6">
+              <label for="formaPago" class="form-label">Forma de pago</label>
+              <select id="formaPago" class="form-select" [(ngModel)]="formaPago" name="formaPago" [disabled]="isSubmitting">
+                <option value="efectivo">Efectivo</option>
+                <option value="tarjeta">Tarjeta</option>
+                <option value="transferencia">Transferencia</option>
+                <option value="nequi">Nequi</option>
+                <option value="daviplata">Daviplata</option>
+                <option value="otros">Otros</option>
+              </select>
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="amountReceived" class="form-label">Dinero recibido</label>
-            <input id="amountReceived" type="number" min="0" step="1" inputmode="numeric" class="form-control" [(ngModel)]="amountReceived" name="amountReceived" placeholder="Ingresa el efectivo recibido" [disabled]="isSubmitting">
-            <div class="form-text" *ngIf="(amountReceived ?? 0) < cartTotal">El dinero ingresado es menor al total.</div>
-          </div>
-          <div class="mb-3">
-            <label for="cliente" class="form-label">Cliente (opcional)</label>
-            <select id="cliente" class="form-select" [(ngModel)]="selectedClienteId" name="cliente" [disabled]="isSubmitting || clientes.length === 0">
-              <option [ngValue]="null">Sin cliente</option>
-              <option *ngFor="let c of clientes" [ngValue]="c.id">
-                {{ c.nombre }} {{ c.apellido }} - {{ c.numero }}
-              </option>
-            </select>
-            <div class="form-text" *ngIf="clientes.length === 0">No hay clientes activos para asociar.</div>
-          </div>
-          <div class="mb-3">
-            <label for="formaPago" class="form-label">Forma de pago</label>
-            <select id="formaPago" class="form-select" [(ngModel)]="formaPago" name="formaPago" [disabled]="isSubmitting">
-              <option value="efectivo">Efectivo</option>
-              <option value="tarjeta">Tarjeta</option>
-              <option value="transferencia">Transferencia</option>
-              <option value="nequi">Nequi</option>
-              <option value="daviplata">Daviplata</option>
-              <option value="otros">Otros</option>
-            </select>
+          <div class="mb-3" *ngIf="formaPago !== 'efectivo'">
+            <label for="transaccionId" class="form-label">ID de Transacción</label>
+            <input id="transaccionId" type="text" class="form-control" [(ngModel)]="transaccionId" name="transaccionId" [disabled]="isSubmitting" placeholder="ID / referencia de la transacción" />
           </div>
           <div class="d-flex justify-content-between align-items-center">
             <span class="total-label">Cambio</span>

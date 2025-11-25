@@ -21,10 +21,10 @@
             </div>
             <div class="container act-inac">
                 <div class="activo">
-                    <button type="button" class="btn-act" [ngClass]="{ 'btn-active': formCaja.value.estado === 'Activo' }" (click)="formCaja.patchValue({ estado: 'Activo' })">Activo</button>
+                    <button type="button" class="btn-act" [ngClass]="{ 'btn-active': formCaja.value.estado === 'Activa' }" (click)="formCaja.patchValue({ estado: 'Activa' })">Activa</button>
                 </div>
                 <div class="inactivo">
-                    <button type="button" class="btn-inac" [ngClass]="{ 'btn-inactive': formCaja.value.estado === 'Inactivo' }" (click)="formCaja.patchValue({ estado: 'Inactivo' })">Inactivo</button>
+                    <button type="button" class="btn-inac" [ngClass]="{ 'btn-inactive': formCaja.value.estado === 'Inactiva' }" (click)="formCaja.patchValue({ estado: 'Inactiva' })">Inactiva</button>
                 </div>
             </div><br>
         </section>
@@ -35,11 +35,17 @@
                 <div class="formulario">
                     <div class="mb-4">
                         <label class="form-label">Nombre de Caja</label>
-                        <input type="text" class="form-control" formControlName="nombre">
+                        <input type="text"
+                               class="form-control"
+                               formControlName="nombre"
+                               [ngClass]="{ 'is-invalid': formCaja.get('nombre')?.invalid && formCaja.get('nombre')?.touched }">
                     </div>
                     <div class="mb-4">
                         <label class="form-label">Código de Caja</label>
-                        <input type="text" class="form-control" formControlName="codigoCaja">
+                        <input type="text"
+                               class="form-control"
+                               formControlName="codigoCaja"
+                               [ngClass]="{ 'is-invalid': formCaja.get('codigoCaja')?.invalid && formCaja.get('codigoCaja')?.touched }">
                     </div>
 
                     <div class="mb-4 confirmarfinal">

@@ -1,20 +1,22 @@
 import { Component, Input, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { TurnoResumen, TurnosService, TurnoActivoItem } from '../services/turnos.service';
-import { DatePipe, DecimalPipe, NgIf, NgFor, isPlatformBrowser } from '@angular/common';
+import { DatePipe, DecimalPipe, NgIf, NgFor, NgClass, isPlatformBrowser } from '@angular/common';
 import { forkJoin, of, timer } from 'rxjs';
-import { catchError, switchMap, take } from 'rxjs/operators';
+import { catchError, switchMap, take, filter } from 'rxjs/operators';
 import { AdminNavbarComponent } from "../admin_navbar/admin_navbar.component";
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { TurnoStateService } from '../services/turno-state.service';
 import { EmpleadosService } from '../services/empleados.service';
 import { PqrsService } from '../services/pqrs.service';
 import { HistoryService } from '../services/history.service';
+import { TurnosDiaComponent } from './registro-turno/turnos-dia.component';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-empleado-turno',
-  imports: [NgIf, NgFor, DatePipe, DecimalPipe, AdminNavbarComponent, RouterModule],
+  imports: [NgIf, NgFor, NgClass, DatePipe, DecimalPipe, AdminNavbarComponent, RouterModule, TurnosDiaComponent],
   templateUrl: './empleado-turno.component.html',
   styleUrls: ['./empleado-turno.component.scss']
 })
@@ -24,6 +26,8 @@ export class EmpleadoTurnoComponent implements OnInit {
   sinTurnoActivo = false;
   cargando = false;
   isAdmin = false;
+  isPuntoPos = false;
+  showTurnosDia = true;
   activos: TurnoActivoItem[] = [];
   cerrados: TurnoActivoItem[] = [];
 
@@ -41,6 +45,7 @@ export class EmpleadoTurnoComponent implements OnInit {
     private empleadosService: EmpleadosService,
     private pqrsService: PqrsService,
     private history: HistoryService,
+    private http: HttpClient,
   ) {}
 
   ngOnInit(): void {
@@ -51,12 +56,40 @@ export class EmpleadoTurnoComponent implements OnInit {
     const rol = (localStorage.getItem('rol') || '').trim().toLowerCase();
     try { this.turnoState.hydrateFromStorage(); } catch {}
     this.isAdmin = rol === 'admin';
+    this.isPuntoPos = rol === 'punto_pos';
     if (this.isAdmin) {
       // Cargar contadores para las opciones del panel admin
       this.cargarContadoresAdmin();
+      this.sincronizarVistaConRuta();
     } else {
       this.cargarEstado();
     }
+  }
+
+  private sincronizarVistaConRuta() {
+    // Definir si mostramos Turnos del Día o el router-outlet según la ruta actual
+    const actualizar = (url: string) => {
+      if (!url.includes('/turno-empleado')) {
+        return;
+      }
+      // Registros de turnos (vista principal)
+      if (url.endsWith('/turno-empleado') || url.includes('/turno-empleado/registros-turno')) {
+        this.showTurnosDia = true;
+      } else {
+        this.showTurnosDia = false;
+      }
+    };
+
+    // Inicial
+    actualizar(this.router.url);
+
+    // Escuchar cambios de navegación
+    this.router.events
+      .pipe(filter(ev => ev instanceof NavigationEnd))
+      .subscribe((ev) => {
+        const nav = ev as NavigationEnd;
+        actualizar(nav.urlAfterRedirects || nav.url);
+      });
   }
 
   private cargarContadoresAdmin() {
@@ -190,9 +223,39 @@ export class EmpleadoTurnoComponent implements OnInit {
     });
     return forkJoin(requests);
   }
+  private hoyIso(): string {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
 
-  
- 
+  private bloqueActualPorHora(): 'manana' | 'tarde' | 'noche' | null {
+    const h = new Date().getHours();
+    if (h >= 6 && h < 12) return 'manana';
+    if (h >= 12 && h < 18) return 'tarde';
+    if (h >= 18 && h <= 23) return 'noche';
+    return null;
+  }
+
+  private obtenerRegistroTurnoIdActual() {
+    const fecha = this.hoyIso();
+    const bloque = this.bloqueActualPorHora();
+    if (!bloque) {
+      return of(undefined as number | undefined);
+    }
+    const params = new HttpParams().set('fecha', fecha);
+    return this.http.get<any[]>(`http://localhost:3000/turno/registro`, { params }).pipe(
+      catchError(() => of([] as any[])),
+      // map inline usando switchMap para evitar importar map
+      switchMap((items: any[]) => {
+        const match = Array.isArray(items) ? items.find(it => it && it.bloque === bloque) : undefined;
+        return of(match ? Number(match.id) : undefined);
+      })
+    );
+  }
+
   iniciarTurno() {
     Swal.fire({
       title: 'Iniciar turno',
@@ -210,57 +273,60 @@ export class EmpleadoTurnoComponent implements OnInit {
         Swal.fire({ icon: 'warning', title: 'Monto inválido', text: 'Debes ingresar un número mayor o igual a 0.' });
         return;
       }
-      this.turnoService.iniciarTurno(monto).subscribe({
-        next: (data) => {
-          this.resumen = data;
-          this.sinTurnoActivo = false;
-          Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Turno iniciado', timer: 2000, showConfirmButton: false });
-          // persistir estado de turno activo
-          const userIdStr = typeof window !== 'undefined' ? localStorage.getItem('userId') : null;
-          const usuarioId = userIdStr ? Number(userIdStr) : NaN;
-          this.turnoState.setActivo({
-            inicioTurno: String(this.resumen?.turno?.inicioTurno || new Date().toISOString()),
-            observaciones: this.resumen?.turno?.observaciones || null,
-            usuarioId: Number.isFinite(usuarioId) ? usuarioId : 0,
-          });
-        },
-        error: (err) => {
-          console.error('No se pudo iniciar el turno', err);
-          const msg = (err?.error && (err.error.message || err.error.error)) || 'Intenta nuevamente.';
-          if (err?.status === 401) {
-            // Fallback público sin JWT usando userId guardado en login
+
+      this.obtenerRegistroTurnoIdActual().subscribe((registroTurnoId) => {
+        this.turnoService.iniciarTurno(monto, undefined, registroTurnoId).subscribe({
+          next: (data) => {
+            this.resumen = data;
+            this.sinTurnoActivo = false;
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Turno iniciado', timer: 2000, showConfirmButton: false });
+            // persistir estado de turno activo
             const userIdStr = typeof window !== 'undefined' ? localStorage.getItem('userId') : null;
-            const userId = userIdStr ? Number(userIdStr) : NaN;
-            if (!isNaN(userId) && userId > 0) {
-              this.turnoService.iniciarTurnoPorUsuario(userId, monto).subscribe({
-                next: (data2) => {
-                  this.resumen = data2;
-                  this.sinTurnoActivo = false;
-                  Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Turno iniciado', timer: 2000, showConfirmButton: false });
-                  this.turnoState.setActivo({
-                    inicioTurno: String(this.resumen?.turno?.inicioTurno || new Date().toISOString()),
-                    observaciones: this.resumen?.turno?.observaciones || null,
-                    usuarioId: Number.isFinite(userId) ? userId : 0,
-                  });
-                },
-                error: (err2) => {
-                  console.error('Fallback público falló', err2);
-                  Swal.fire({ icon: 'error', title: 'No se pudo iniciar el turno', text: (err2?.error && (err2.error.message || err2.error.error)) || msg });
-                },
-              });
+            const usuarioId = userIdStr ? Number(userIdStr) : NaN;
+            this.turnoState.setActivo({
+              inicioTurno: String(this.resumen?.turno?.inicioTurno || new Date().toISOString()),
+              observaciones: this.resumen?.turno?.observaciones || null,
+              usuarioId: Number.isFinite(usuarioId) ? usuarioId : 0,
+            });
+          },
+          error: (err) => {
+            console.error('No se pudo iniciar el turno', err);
+            const msg = (err?.error && (err.error.message || err.error.error)) || 'Intenta nuevamente.';
+            if (err?.status === 401) {
+              // Fallback público sin JWT usando userId guardado en login
+              const userIdStr = typeof window !== 'undefined' ? localStorage.getItem('userId') : null;
+              const userId = userIdStr ? Number(userIdStr) : NaN;
+              if (!isNaN(userId) && userId > 0) {
+                this.turnoService.iniciarTurnoPorUsuario(userId, monto, undefined, registroTurnoId).subscribe({
+                  next: (data2) => {
+                    this.resumen = data2;
+                    this.sinTurnoActivo = false;
+                    Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Turno iniciado', timer: 2000, showConfirmButton: false });
+                    this.turnoState.setActivo({
+                      inicioTurno: String(this.resumen?.turno?.inicioTurno || new Date().toISOString()),
+                      observaciones: this.resumen?.turno?.observaciones || null,
+                      usuarioId: Number.isFinite(userId) ? userId : 0,
+                    });
+                  },
+                  error: (err2) => {
+                    console.error('Fallback público falló', err2);
+                    Swal.fire({ icon: 'error', title: 'No se pudo iniciar el turno', text: (err2?.error && (err2.error.message || err2.error.error)) || msg });
+                  },
+                });
+                return;
+              }
+              Swal.fire({ icon: 'error', title: 'Sesión expirada', text: 'Vuelve a iniciar sesión.' });
+              try { localStorage.removeItem('token'); localStorage.removeItem('rol'); } catch {}
+              this.router.navigate(['/login']);
               return;
             }
-            Swal.fire({ icon: 'error', title: 'Sesión expirada', text: 'Vuelve a iniciar sesión.' });
-            try { localStorage.removeItem('token'); localStorage.removeItem('rol'); } catch {}
-            this.router.navigate(['/login']);
-            return;
-          }
-          if (err?.status === 400 || err?.status === 409) {
-            Swal.fire({ icon: 'warning', title: 'No se pudo iniciar el turno', text: msg });
-          } else {
-            Swal.fire({ icon: 'error', title: 'Error al iniciar turno', text: msg });
-          }
-        },
+            if (err?.status === 400 || err?.status === 409) {
+              Swal.fire({ icon: 'warning', title: 'No se pudo iniciar el turno', text: msg });
+            } else {
+              Swal.fire({ icon: 'error', title: 'Error al iniciar turno', text: msg });
+            }
+          },
+        });
       });
     });
   }

@@ -34,7 +34,7 @@ export class AddCajasComponent {
   @Output() cerrarOffcanvas = new EventEmitter<void>();
 
   caja: Cajas[] = [];
-  nuevaCaja: Cajas = {} as Cajas;
+  nuevaCaja: Cajas = { id: 0, nombre: '', codigoCaja: '', estado: 'Activa' } as Cajas;
   estadoInvalido: boolean = false;
   mostrarFormulario = true;
 
@@ -60,7 +60,7 @@ export class AddCajasComponent {
   ngOnInit():void{
     this.cajasServices.getCajas().subscribe({
     next: (data) => this.caja = data,
-    error: (error) => console.error('Error al cargar cajas:',error)
+    error: (error) => console.error('Error al Cargar Cajas:',error)
   });
   }
 
@@ -68,7 +68,11 @@ export class AddCajasComponent {
   agregarCaja(formCaja?: NgForm) {
     this.estadoInvalido = !this.nuevaCaja.estado;
     if (this.estadoInvalido) {
-      Swal.fire("Estado Requerido", "Por Favor Selecciona si la Caja está Activa o Inactiva.", "warning");
+      Swal.fire({
+        title: "Estado Requerido",
+        icon: "warning",
+        html: "Por favor selecciona si la <b>Caja</b> está Activa o Inactiva.",
+      });
       return;
     }
 
@@ -79,19 +83,25 @@ export class AddCajasComponent {
         );
 
         if (codigoYaExiste) {
-          Swal.fire("Código Duplicado", "Ya Existe una Caja con ese Código.", "warning");
+          Swal.fire("Código Duplicado", "Ya Existe una <b>Caja</b> con ese Código.", "warning");
           return;
         }
 
         this.cajasServices.createCaja(this.nuevaCaja).subscribe({
           next: (cajaCreada) => {
             this.cajaAgregada.emit(cajaCreada);
-            Swal.fire("Caja Agregada", `Se Agregó <strong>${cajaCreada.nombre}</strong> con Éxito.`, "success");
+            Swal.fire({
+              title: "Caja Registrada!",
+              icon: "success",
+              html: `La Caja <b>${cajaCreada.nombre}</b> fue Registrada con Éxito`,
+              timer: 2000,
+              showConfirmButton: false
+            });
             this.nuevaCaja = {
               id: 0,
               nombre: '',
               codigoCaja: '',
-              estado: '',
+              estado: 'Activa',
             };
             this.codigoCajaExcede = false;
             this.codigoCajaNoNumerico = false;
@@ -108,7 +118,7 @@ export class AddCajasComponent {
             } else if (error.status === 500) {
               Swal.fire("Error del Servidor", "Ocurrió un Error Interno (500). Intenta más Tarde.", "error");
             } else {
-              Swal.fire("Error", `No se Pudo Agregar la Caja. Código: ${error.status}`, "error");
+              Swal.fire("Error", error?.error?.message || `Ocurrió un error inesperado (código: ${error.status})`, "error");
             }
           }
         });
@@ -118,5 +128,27 @@ export class AddCajasComponent {
         console.error("Error al Verificar Códigos Existentes:", error);
       }
     });
+  }
+
+  onEnterFocus(next: any, event: Event, value?: any) {
+    event.preventDefault();
+
+    // Validar valor: si es string, no vacío; si es número, mayor a 0
+    if (value === undefined || value === null) {
+      return;
+    }
+    if (typeof value === 'string' && !value.trim()) {
+      return;
+    }
+    if (typeof value === 'number' && (!Number.isFinite(value) || value <= 0)) {
+      return;
+    }
+
+    if (next && typeof next.focus === 'function') {
+      next.focus();
+      if (typeof next.select === 'function') {
+        next.select();
+      }
+    }
   }
 }

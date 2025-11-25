@@ -1,81 +1,110 @@
-<header>
-  <app-admin-navbar></app-admin-navbar>
-</header>
+<div class="with-sidebar">
+  <header>
+    <app-admin-navbar></app-admin-navbar>
+  </header>
 
-<main>
-  <div class="detalle-wrap" *ngIf="turno as s; else sinDato">
-    <header class="topbar">
-      <h2>Detalle del turno cerrado</h2>
-      <button class="btn-volver" (click)="volver()">Volver</button>
-    </header>
+  <main>
+    <h2 class="tit-movimientos">
+      <i class="bi bi-person-workspace me-2"></i>
+      <span>Detalle del Turno Cerrado</span>
+    </h2>
 
-    <!-- Sección: Turno (quién/cuándo) -->
-    <h3>Turno</h3>
-    <section class="datos-grid">
-      <div class="kv"><span class="k">Empleado</span><span class="v">{{ (s?.nombre || '') + ' ' + (s?.apellido || '') }}</span></div>
-      <div class="kv"><span class="k">Inicio</span><span class="v">{{ s?.resumen?.turno?.inicioTurno | date:'short' }}</span></div>
-      <div class="kv"><span class="k">Fin</span><span class="v">{{ s?.resumen?.turno?.finTurno | date:'short' }}</span></div>
-      <div class="kv kv-span"><span class="k">Observaciones</span><span class="v">{{ s?.resumen?.turno?.observaciones || 'Sin comentarios' }}</span></div>
-    </section>
+    <div class="container-fluid detalle-container">
+      <div class="detalle-wrap" *ngIf="turno as s; else sinDato">
+        <header class="topbar">
+          <button class="btn-volver" (click)="volver()">Volver</button>
+        </header>
 
-    <!-- Sección: Caja (valores de apertura/cierre) -->
-    <h3>Caja</h3>
-    <section class="stats">
-      <div class="stat"><div class="stat-k">Monto inicial</div><div class="stat-v">${{ montoInicial | number:'1.0-0' }}</div></div>
-      <div class="stat"><div class="stat-k">Monto final</div><div class="stat-v">${{ montoFinal | number:'1.0-0' }}</div></div>
-      <div class="stat"><div class="stat-k">Diferencia</div><div class="stat-v">${{ (montoFinal - montoInicial) | number:'1.0-0' }}</div></div>
-      <div class="stat"><div class="stat-k">Duración</div><div class="stat-v">{{ duracionTurno() }}</div></div>
-      <div class="stat"><div class="stat-k">Total neto de caja</div><div class="stat-v">${{ totalNeto | number:'1.0-0' }}</div></div>
-      <div class="stat"><div class="stat-k">Transacciones</div><div class="stat-v">{{ transaccionesTotal }}</div></div>
-    </section>
+        <!-- Bloque superior: Turno y Caja en tarjetas paralelas -->
+        <section class="layout-main">
+          <div class="card card-turno">
+            <h3 class="section-title section-title-turno">Turno</h3>
+            <div class="datos-grid">
+              <div class="kv"><span class="k">Empleado</span><span class="v">{{ (s?.nombre || '') + ' ' + (s?.apellido || '') }}</span></div>
+              <div class="kv"><span class="k">Inicio</span><span class="v">{{ s?.resumen?.turno?.inicioTurno | date:'short' }}</span></div>
+              <div class="kv"><span class="k">Fin</span><span class="v">{{ s?.resumen?.turno?.finTurno | date:'short' }}</span></div>
+              <div class="kv kv-span"><span class="k">Observaciones</span><span class="v">{{ s?.resumen?.turno?.observaciones || 'Sin comentarios' }}</span></div>
+            </div>
+          </div>
 
-    <!-- Sección: Totales de actividad (compacto) -->
-    <ng-container *ngIf="s?.resumen?.actividad as a">
-      <h3>Totales de actividad</h3>
-      <section class="datos-grid">
-        <div class="kv"><span class="k">Ventas (productos)</span><span class="v">${{ (a?.totalVentas || 0) | number:'1.0-0' }} · {{ a?.transacciones || 0 }} transacciones</span></div>
-        <div class="kv"><span class="k">Ventas libres</span><span class="v">${{ (a?.totalVentasLibres || 0) | number:'1.0-0' }} · {{ a?.transaccionesLibres || 0 }} transacciones</span></div>
-        <div class="kv"><span class="k">Gastos</span><span class="v">${{ (a?.totalGastos || 0) | number:'1.0-0' }} · {{ a?.cantidadGastos || 0 }} items</span></div>
-      </section>
+          <div class="card card-caja">
+            <h3 class="section-title section-title-caja">Caja</h3>
+            <div class="stats">
+              <div class="stat"><div class="stat-k">Monto inicial</div><div class="stat-v">${{ montoInicial | number:'1.0-0' }}</div></div>
+              <div class="stat"><div class="stat-k">Monto final</div><div class="stat-v">${{ montoFinal | number:'1.0-0' }}</div></div>
+              <div class="stat"><div class="stat-k">Diferencia</div><div class="stat-v">${{ (montoFinal - montoInicial) | number:'1.0-0' }}</div></div>
+              <div class="stat"><div class="stat-k">Duración</div><div class="stat-v">{{ duracionTurno() }}</div></div>
+              <div class="stat"><div class="stat-k">Total neto de caja</div><div class="stat-v">${{ totalNeto | number:'1.0-0' }}</div></div>
+              <div class="stat"><div class="stat-k">Transacciones</div><div class="stat-v">{{ transaccionesTotal }}</div></div>
+            </div>
+          </div>
+        </section>
 
-      <!-- Detalle (opcional, en acordiones) -->
-      <section class="bloque-detalle">
-        <details class="subbloque" *ngIf="a?.ventas?.length">
-          <summary>Detalle de ventas ({{a?.ventas?.length}})</summary>
-          <ul class="lista-detalle">
-            <li *ngFor="let v of a?.ventas">#{{v?.id}} · ${{(v?.total || 0) | number:'1.0-0'}}</li>
-          </ul>
-        </details>
-        <details class="subbloque" *ngIf="a?.ventasLibres?.length">
-          <summary>Detalle de ventas libres ({{a?.ventasLibres?.length}})</summary>
-          <ul class="lista-detalle">
-            <li *ngFor="let v of a?.ventasLibres">#{{v?.id}} · ${{(v?.total || 0) | number:'1.0-0'}}</li>
-          </ul>
-        </details>
-        <details class="subbloque" *ngIf="a?.gastos?.length">
-          <summary>Detalle de gastos ({{a?.gastos?.length}})</summary>
-          <ul class="lista-detalle">
-            <li *ngFor="let g of a?.gastos">#{{g?.id}} · ${{(g?.monto || 0) | number:'1.0-0'}}<span *ngIf="g?.nombre"> ({{g?.nombre}})</span><span *ngIf="g?.forma_pago"> · {{g?.forma_pago}}</span></li>
-          </ul>
-        </details>
-        <div class="subbloque" *ngIf="resumenMetodosPago().length > 0">
-          <h4>Métodos de pago (gastos)</h4>
-          <ul class="chips">
-            <li *ngFor="let m of resumenMetodosPago()"><span class="chip-k">{{ m.forma }}</span><span class="chip-v">${{ m.total | number:'1.0-0' }} · {{ m.cantidad }}</span></li>
-          </ul>
+        <!-- Bloque inferior: Actividad y detalles -->
+        <section *ngIf="s?.resumen?.actividad as a" class="card card-actividad">
+          <h3 class="section-title section-title-actividad">Actividad del turno</h3>
+          <section class="datos-grid datos-grid-actividad">
+            <div class="kv"><span class="k">Ventas (productos)</span><span class="v">${{ (a?.totalVentas || 0) | number:'1.0-0' }} · {{ a?.transacciones || 0 }} transacciones</span></div>
+            <div class="kv"><span class="k">Ventas libres</span><span class="v">${{ (a?.totalVentasLibres || 0) | number:'1.0-0' }} · {{ a?.transaccionesLibres || 0 }} transacciones</span></div>
+            <div class="kv"><span class="k">Gastos</span><span class="v">${{ (a?.totalGastos || 0) | number:'1.0-0' }} · {{ a?.cantidadGastos || 0 }} items</span></div>
+          </section>
+
+          <!-- Detalle (opcional, en acordiones) -->
+          <section class="bloque-detalle">
+            <details class="subbloque" *ngIf="a?.ventas?.length">
+              <summary>Detalle de ventas ({{a?.ventas?.length}})</summary>
+              <ul class="lista-detalle">
+                <li *ngFor="let v of a?.ventas">
+                  <div>
+                    Venta N° {{v?.id}} · Total: ${{(v?.total || 0) | number:'1.0-0'}}
+                  </div>
+                  <ul class="lista-detalle" *ngIf="v?.productos?.length">
+                    <li *ngFor="let p of v.productos">
+                      Cantidad: {{ p?.cantidad || 0 }} · Producto: {{ p?.nombre || 'Sin nombre' }} · Subtotal: ${{ (p?.subtotal || 0) | number:'1.0-0' }}
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </details>
+            <details class="subbloque" *ngIf="a?.ventasLibres?.length">
+              <summary>Detalle de ventas libres ({{a?.ventasLibres?.length}})</summary>
+              <ul class="lista-detalle">
+                <li *ngFor="let v of a?.ventasLibres">
+                  <div>
+                    Venta libre N° {{v?.id}} · Total: ${{(v?.total || 0) | number:'1.0-0'}}
+                  </div>
+                  <ul class="lista-detalle" *ngIf="v?.productos?.length">
+                    <li *ngFor="let p of v.productos">
+                      Cantidad: {{ p?.cantidad || 0 }} · Producto: {{ p?.nombre || 'Sin nombre' }} · Subtotal: ${{ (p?.subtotal || 0) | number:'1.0-0' }}
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </details>
+            <details class="subbloque" *ngIf="a?.gastos?.length">
+              <summary>Detalle de gastos ({{a?.gastos?.length}})</summary>
+              <ul class="lista-detalle">
+                <li *ngFor="let g of a?.gastos">Gasto N° {{g?.id}} · Cantidad: {{ g?.cantidad || 1 }} · Concepto: <span *ngIf="g?.nombre">{{g?.nombre}}</span><span *ngIf="!g?.nombre">Sin detalle</span> · Total: ${{(g?.monto || 0) | number:'1.0-0'}}<span *ngIf="g?.forma_pago"> · Forma de pago: {{g?.forma_pago}}</span></li>
+              </ul>
+            </details>
+            <div class="subbloque" *ngIf="resumenMetodosPago().length > 0">
+              <h4>Métodos de pago (gastos)</h4>
+              <ul class="chips">
+                <li *ngFor="let m of resumenMetodosPago()"><span class="chip-k">{{ m.forma }}</span><span class="chip-v">${{ m.total | number:'1.0-0' }} · {{ m.cantidad }}</span></li>
+              </ul>
+            </div>
+          </section>
+        </section>
+      </div>
+
+      <ng-template #sinDato>
+        <div class="detalle-wrap">
+          <header class="topbar">
+            <button class="btn-volver" (click)="volver()">Volver</button>
+          </header>
+          <p>No se recibió información del turno. Vuelve e intenta de nuevo.</p>
         </div>
-      </section>
-    </ng-container>
-  </div>
-
-  <ng-template #sinDato>
-    <div class="detalle-wrap">
-      <header class="topbar">
-        <h2>Detalle del turno cerrado</h2>
-        <button class="btn-volver" (click)="volver()">Volver</button>
-      </header>
-      <p>No se recibió información del turno. Vuelve e intenta de nuevo.</p>
+      </ng-template>
     </div>
-  </ng-template>
-
-</main>
+  </main>
+</div>

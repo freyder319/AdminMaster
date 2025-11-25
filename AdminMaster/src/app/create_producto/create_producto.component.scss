@@ -64,35 +64,40 @@
 }
 
 .form-control{
-    border: none;
-    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
-    border-radius: 9999px !important;
+    border-radius: 18px !important;
+    border: 1px solid rgba(148, 163, 184, 0.7);
+    box-shadow: 0 2px 8px rgba(148, 163, 184, 0.25);
 }
 
 .form-control:focus {
-    border: 1px solid #5adbff;
-    box-shadow: 0 0 6px 0.5px #5adbff;
+    border-color: #1d4ed8;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
     outline: none; 
-    border-radius: 9999px !important;
+}
+
+.form-control.is-invalid,
+.form-control.is-invalid:focus {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.35) !important;
+    outline: none;
 }
 
 .form-select{
-    border: none;
-    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
-    border-radius: 9999px !important;
+    border-radius: 18px !important;
+    border: 1px solid rgba(148, 163, 184, 0.7);
+    box-shadow: 0 2px 8px rgba(148, 163, 184, 0.25);
 }
 
 .form-select:focus {
-    border: 1px solid #5adbff;
-    box-shadow: 0 0 6px 0.5px #5adbff;
+    border-color: #1d4ed8;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
     outline: none; 
-    border-radius: 9999px !important;
 }
 
 .btn.confirmar {
     width: 100%;
-    background-color: #5adbff;
-    box-shadow: 0 0 6px 0.5px #5adbff;
+    background: linear-gradient(135deg, #1d4ed8, #4f46e5);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.45);
     border: none; 
     cursor: pointer;
     border-radius: 9999px !important;
@@ -107,13 +112,13 @@
 
 .btn.confir {
     width: 100%;
-    background-color: #5adbff;
-    box-shadow: 0 0 6px 0.5px #5adbff;
+    background: linear-gradient(135deg, #1d4ed8, #4f46e5);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.45);
     border: none; 
     cursor: pointer;
     color: white;
     font-weight: bold;
-    border-radius: 18px;
+    border-radius: 9999px;
 }
 
 .confirmarfinal{

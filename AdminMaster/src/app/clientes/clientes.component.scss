@@ -1,15 +1,37 @@
 main{
-    margin-top: 140px;
+	margin-top: 16px;
+	padding-bottom: 96px;
+	min-height: calc(100vh - 16px);
+	background: var(--surface-bg);
 }
 
 @media (max-width: 768px) {
     main {
         margin-top: 0; 
+        padding-bottom: 96px;
+        min-height: 100vh;
     }
 }
 
 .tit-clientes{
-    font-family: 'poetsen one', cursive;
+	font-family: 'poetsen one', cursive;
+	color: var(--primary-dark);
+	font-weight: 700;
+	font-size: 2.1rem;
+	position: relative;
+	padding-bottom: 0.9rem;
+}
+
+.tit-clientes::after{
+	content: "";
+	position: absolute;
+	left: 50%;
+	bottom: 0;
+	transform: translateX(-50%);
+	width: 80px;
+	height: 4px;
+	border-radius: 999px;
+	background: linear-gradient(90deg, var(--primary-color), #4f46e5);
 }
 
 // Style Busqueda y Agregar
@@ -34,22 +56,23 @@ main{
 .form-control {
     width: 700px; 
     border-radius: 18px;
-    box-shadow: 0 0 6px 0.5px rgba(143, 143, 143, 0.413);
+    border: 1px solid rgba(148, 163, 184, 0.7);
+    box-shadow: 0 2px 8px rgba(148, 163, 184, 0.25);
     padding: 8px 15px; 
     margin-right: 10px; 
 }
 
 .form-control:focus {
-    border: 1px solid #5adbff;
-    box-shadow: 0 0 6px 0.5px #5adbff;
+    border-color: #1d4ed8;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
     outline: none; 
 }
 
 .btn.agregar {
-    background-color: #5adbff;
+    background: radial-gradient(circle at 30% 20%, #38bdf8, #1d4ed8);
     width: 200px;
     border-radius: 18px;
-    box-shadow: 0 0 6px 0.5px #5adbff;
+    box-shadow: 0 10px 24px rgba(56, 189, 248, 0.55);
     padding: 8px 15px; 
     border: none; 
     cursor: pointer; 
@@ -59,20 +82,12 @@ main{
 }
   
 .btn.agregar:focus {
-    border: 1px solid #5adbff;
-    box-shadow: 0 0 6px 2px #5adbff;
+    border: 1px solid #1d4ed8;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
     outline: none; 
 }
 .btn.agregar img{
     display: none;
-}
-
-.btn-volver{
-    box-shadow: 0 0 3px 1px #39c751;
-    background-color: #39c751;
-    color: white;
-    font-weight: bold;
-    margin-left: 14px;
 }
 
 @media (max-width: 768px) {
@@ -87,15 +102,14 @@ main{
     }
 
     .btn.agregar {
-        position: fixed; 
+        position: fixed;
         z-index: 10;
-        bottom: 180px; 
-        left: 80%; 
-        height: 110px;
-        transform: translateX(-50%); 
-        width: 110px; 
+        bottom: 24px;
+        right: 24px;
+        height: 88px;
+        width: 88px;
         border: 1px solid #5adbff;
-        border-radius: 50%; 
+        border-radius: 50%;
         justify-content: center;
         align-items: center;
     }
@@ -104,6 +118,9 @@ main{
     }
     .btn.agregar img{
         display: block;
+        width: 58px;
+        height: 58px;
+        object-fit: contain;
     }   
 }
 
@@ -128,6 +145,14 @@ main{
 .table tbody tr {
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Fila completa para clientes inactivos (similar a proveedores) */
+.cliente-inactivo-row,
+.cliente-inactivo-row td {
+    background-color: #ffffff !important;
+    filter: grayscale(0.3);
+
 }
 
 .td1 {
@@ -262,57 +287,60 @@ img {
 .btn.eliminar {
     width: 110px;
     text-align: center;
-    color: white;
-    background-color: #e81313;
-    box-shadow: 0 0 3px 1px #e81313;
-    border-radius: 7px;
+    color: #ffffff;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 6px 16px rgba(248, 113, 113, 0.45);
+    border-radius: 9999px;
     padding: 7px;
     font-weight: bold;
+    border: none;
 }
 
 .btn.eliminar:focus {
-    border: 1px solid #e81313;
-    box-shadow: 0 0 6px 2px #e81313;
+    border: 1px solid #ef4444;
+    box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.45);
 }
 
 .btn.elimi {
     width: 110px;
     text-align: center;
-    color: white;
-    background-color: #e81313;
-    box-shadow: 0 0 3px 1px #e81313;
+    color: #ffffff;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 6px 16px rgba(248, 113, 113, 0.45);
     border-radius: 12px;
     padding: 7px;
     font-weight: bold;
+    border: none;
 }
 
 .btn.elimi:focus {
-    border: 1px solid #e81313;
-    box-shadow: 0 0 6px 2px #e81313;
+    border: 1px solid #ef4444;
+    box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.45);
 }
 
 .btn.eliminar-icon {
     width: 90px;
     text-align: center;
-    color: white;
-    background-color: #e81313;
-    box-shadow: 0 0 3px 1px #e81313;
+    color: #ffffff;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    box-shadow: 0 6px 16px rgba(248, 113, 113, 0.45);
     border-radius: 12px;
     padding: 7px;
     font-weight: bold;
+    border: none;
 }
 
 .btn.eliminar-icon:focus {
-    border: 1px solid #e81313;
-    box-shadow: 0 0 6px 2px #e81313;
+    border: 1px solid #ef4444;
+    box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.45);
 }
 
 .btn.inhabilitar {
     width: 120px;
     text-align: center;
     color: #ffffff !important;
-    background-color: #ffc107 !important;
-    box-shadow: 0 0 3px 1px #ffc107 !important;
+    background: linear-gradient(135deg, #facc15, #f59e0b) !important;
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.45) !important;
     border-radius: 12px;
     padding: 7px;
     font-weight: bold;
@@ -326,8 +354,8 @@ img {
     width: 120px;
     text-align: center;
     color: #ffffff !important;
-    background-color: #4ade80 !important;
-    box-shadow: 0 0 3px 1px #4ade80 !important;
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    box-shadow: 0 6px 16px rgba(34, 197, 94, 0.45) !important;
     border-radius: 12px;
     padding: 7px;
     font-weight: bold;
@@ -338,21 +366,21 @@ img {
 }
 
 .btn.inhabilitar:focus {
-    border: 1px solid #ffc107 !important;
-    box-shadow: 0 0 6px 2px #ffc107 !important;
+    border: 1px solid #f59e0b !important;
+    box-shadow: 0 0 6px 2px #f59e0b !important;
 }
 
 .btn.habilitar:focus {
-    border: 1px solid #4ade80 !important;
-    box-shadow: 0 0 6px 2px #4ade80 !important;
+    border: 1px solid #16a34a !important;
+    box-shadow: 0 0 6px 2px #16a34a !important;
 }
 
 .btn.inhabilitar-icon {
     width: 40px;
     height: 40px;
     color: #ffffff !important;
-    background-color: #ffc107 !important;
-    box-shadow: 0 0 3px 1px #ffc107 !important;
+    background: linear-gradient(135deg, #facc15, #f59e0b) !important;
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.45) !important;
     border: none !important;
     border-radius: 8px;
 }
@@ -361,14 +389,15 @@ img {
     width: 40px;
     height: 40px;
     color: #ffffff !important;
-    background-color: #4ade80 !important;
-    box-shadow: 0 0 3px 1px #4ade80 !important;
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    box-shadow: 0 6px 16px rgba(34, 197, 94, 0.45) !important;
     border: none !important;
     border-radius: 8px;
 }
 
 .btn.inhabilitar-icon:focus {
-    border: 1px solid #ffc107 !important;
+    border: 1px solid #f59e0b !important;
+    box-shadow: 0 0 6px 2px #f59e0b !important;
     box-shadow: 0 0 6px 2px #ffc107 !important;
 }
 
@@ -378,8 +407,8 @@ img {
 }
 
 .btn.modificar {
-    background-color: #5adbff;
-    box-shadow: 0 0 3px 1px #5adbff;
+    background: linear-gradient(135deg, #1d4ed8, #38bdf8);
+    box-shadow: 0 4px 10px rgba(56, 189, 248, 0.45);
     border: none;
     width: 110px;
     text-align: center;

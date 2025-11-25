@@ -1,13 +1,17 @@
-<header>
-  <app-admin-navbar></app-admin-navbar>
-</header>
+<div class="with-sidebar">
+  <header>
+    <app-admin-navbar></app-admin-navbar>
+  </header>
 
-<main>
+  <main>
   <div class="stats-container">
     <br>
-    <h1 class="text-center mb-5 titulo_estadisticas">Estadísticas</h1>
-    
-    <!-- ✅ Selector de opciones -->
+    <h1 class="text-center mb-4 titulo_estadisticas">
+      <i class="bi bi-bar-chart-line-fill me-2"></i>
+      <span>Estadísticas</span>
+    </h1>
+
+    <!-- Selector de opciones -->
     <div class="options-grid">
       <div class="option-card" [class.active]="selectedOption === 'inventario'" (click)="selectOption('inventario')">
         <img src="assets/img/icon_estadisticas/gestion-de-materiales.png" class="custom-icon">
@@ -28,12 +32,67 @@
       </div>
     </div>
 
-    <!-- ✅ CONTENIDO CAMBIANTE -->
+    <!-- Filtro de período -->
+    <div class="d-flex justify-content-center mb-4 gap-2 filtro-periodo">
+      <button
+        type="button"
+        class="btn btn-periodo"
+        [ngClass]="{'btn-periodo-activo': periodoSeleccionado === 'semanal'}"
+        (click)="cambiarPeriodo('semanal')">
+        <i class="bi bi-calendar-week me-1"></i>
+        <span>Semanal</span>
+      </button>
+      <button
+        type="button"
+        class="btn btn-periodo"
+        [ngClass]="{'btn-periodo-activo': periodoSeleccionado === 'mensual'}"
+        (click)="cambiarPeriodo('mensual')">
+        <i class="bi bi-calendar-month me-1"></i>
+        <span>Mensual</span>
+      </button>
+    </div>
+
+    <!-- Detalle de filtro: mes y semana -->
+    <div class="d-flex justify-content-center mb-4 gap-2 filtro-periodo">
+      <select class="form-select form-select-sm w-auto select-periodo" (change)="onMesChange($any($event.target).value)">
+        <option value="">Mes (todos)</option>
+        <option value="1">Enero</option>
+        <option value="2">Febrero</option>
+        <option value="3">Marzo</option>
+        <option value="4">Abril</option>
+        <option value="5">Mayo</option>
+        <option value="6">Junio</option>
+        <option value="7">Julio</option>
+        <option value="8">Agosto</option>
+        <option value="9">Septiembre</option>
+        <option value="10">Octubre</option>
+        <option value="11">Noviembre</option>
+        <option value="12">Diciembre</option>
+      </select>
+
+      <select
+        *ngIf="periodoSeleccionado === 'semanal'"
+        class="form-select form-select-sm w-auto select-periodo select-periodo-semana"
+        (change)="onSemanaChange($any($event.target).value)">
+        <option value="">Semana (todas)</option>
+        <option value="1">Semana 1</option>
+        <option value="2">Semana 2</option>
+        <option value="3">Semana 3</option>
+        <option value="4">Semana 4</option>
+        <option value="5">Semana 5</option>
+      </select>
+
+    </div>
+
+    <!-- CONTENIDO CAMBIANTE -->
     <div class="content-container" [@fadeInOut]>
 
-      <!-- ✅ INVENTARIO -->
+      <!-- INVENTARIO -->
       <div *ngIf="selectedOption === 'inventario'" class="content-pane">
-        <h2>Rendimiento del Inventario</h2>
+        <h2 class="section-title">
+          <i class="bi bi-box-seam-fill section-title-icon"></i>
+          <span>Rendimiento del Inventario</span>
+        </h2>
 
         <div class="chart-grid">
 
@@ -62,7 +121,7 @@
             <canvas baseChart [data]="barChartStockCritico" [options]="barChartStockCriticoOptions" [type]="'bar'"></canvas>
           </div>
 
-          <p *ngIf="!hasStockCritico">✅ No hay productos con stock crítico.</p>
+          <p *ngIf="!hasStockCritico">No hay productos con stock crítico.</p>
 
           <div class="chart-container">
             <h3>Promedio de rotación (Stock / Ventas)</h3>
@@ -72,9 +131,12 @@
         </div>
       </div>
 
-      <!-- ✅ COMERCIAL -->
+      <!-- COMERCIAL -->
       <div *ngIf="selectedOption === 'comercial'" class="content-pane">
-        <h2>Desempeño Comercial</h2>
+        <h2 class="section-title">
+          <i class="bi bi-graph-up-arrow section-title-icon"></i>
+          <span>Desempeño Comercial</span>
+        </h2>
 
         <div class="chart-grid">
           <div class="chart-container">
@@ -110,7 +172,10 @@
 
       <!--  FINANZAS -->
       <div *ngIf="selectedOption === 'finanzas'" class="content-pane">
-        <h2>Salud Financiera</h2>
+        <h2 class="section-title">
+          <i class="bi bi-cash-coin section-title-icon"></i>
+          <span>Salud Financiera</span>
+        </h2>
         <div class="chart-grid">
 
     <!-- 1. Ingresos vs Gastos mensual -->
@@ -176,4 +241,5 @@
 
     </div> 
   </div>
-</main>
+  </main>
+</div>

@@ -23,6 +23,7 @@ export class LoginComponent {
     private router: Router,
     private auth: AuthService
   ) {
+    console.log('[LoginComponent] constructor');
     this.loginForm = this.fb.group({
       correo: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
@@ -34,6 +35,7 @@ export class LoginComponent {
   }
 
   onSubmit() {
+    console.log('[LoginComponent] onSubmit');
     if (this.loginForm.invalid) {
       Swal.fire({
         icon: 'error',
@@ -65,13 +67,25 @@ export class LoginComponent {
           }
         }).then(() => this.redirigirPorRol(rol));
       },
-      error: () => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error de Autenticación',
-          text: 'Credenciales Inválidas.',
-          confirmButtonColor: 'brown'
-        });
+      error: (err) => {
+        const backendMsg: string | undefined = err?.error?.message;
+        const esNoActivada = typeof backendMsg === 'string' && backendMsg.toLowerCase().includes('no ha sido activada');
+
+        if (esNoActivada) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Cuenta no Activada',
+            html: backendMsg,
+            confirmButtonColor: 'brown'
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error de Autenticación',
+            text: 'Credenciales Inválidas.',
+            confirmButtonColor: 'brown'
+          });
+        }
       }
     });
   }

@@ -1,119 +1,31 @@
-<header>
-  <app-admin-navbar></app-admin-navbar>
-</header>
+<div class="with-sidebar">
+  <header>
+    <app-admin-navbar></app-admin-navbar>
+  </header>
 
-<div class="main">
+  <div class="main">
   <!-- Título -->
   <section>
     <div class="container">
       <div class="row">
         <div class="col">
-          <h1 class="tit-movimientos">Movimientos</h1>
+          <h1 class="tit-movimientos">
+            <i class="bi bi-arrow-left-right me-2"></i>
+            <span>Movimientos</span>
+          </h1>
         </div>
       </div>
     </div>
   </section>
   <br>
-  <!-- Modal Reportes -->
-  <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="reportModalLabel">Generar reporte</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-2">
-            <label class="form-label d-block">Incluir en el reporte</label>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="repVentas" [(ngModel)]="repVentas" (change)="onToggleTipo()">
-              <label class="form-check-label" for="repVentas">Ventas</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="repGastos" [(ngModel)]="repGastos" (change)="onToggleTipo()">
-              <label class="form-check-label" for="repGastos">Gastos</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="repInventario" [(ngModel)]="repInventario">
-              <label class="form-check-label" for="repInventario">Inventario</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="repCajas" [(ngModel)]="repCajas">
-              <label class="form-check-label" for="repCajas">Cajas</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="repProveedores" [(ngModel)]="repProveedores">
-              <label class="form-check-label" for="repProveedores">Proveedores</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="repClientes" [(ngModel)]="repClientes">
-              <label class="form-check-label" for="repClientes">Clientes</label>
-            </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="checkbox" id="repEmpleados" [(ngModel)]="repEmpleados">
-              <label class="form-check-label" for="repEmpleados">Empleados</label>
-            </div>
-          </div>
-          <div class="row g-2 align-items-end">
-            <div class="col">
-              <label class="form-label">Desde</label>
-              <input type="date" class="form-control" [(ngModel)]="repFrom">
-            </div>
-            <div class="col">
-              <label class="form-label">Hasta</label>
-              <input type="date" class="form-control" [(ngModel)]="repTo">
-            </div>
-          </div>
-          <div class="mt-2" *ngIf="showFormaPagoOpt">
-            <label class="form-label">Forma de Pago (opcional)</label>
-            <select class="form-select" [(ngModel)]="repFormaPago">
-              <option [ngValue]="''">Todas</option>
-              <option value="efectivo">Efectivo</option>
-              <option value="transferencia">Transferencia</option>
-              <option value="tarjeta">Tarjeta</option>
-              <option value="nequi">Nequi</option>
-              <option value="daviplata">Daviplata</option>
-              <option value="otros">Otros</option>
-            </select>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" (click)="generateReport()">Generar</button>
-        </div>
-      </div>
-    </div>
-  </div>
   <!-- Botones Principales y Offcanvas -->
   <section>
     <div class="container unicion fixed-bottom">
       <div class="body1 d-flex justify-content-center">
-        <div class="dropdown">
-          <button id="button1" class="btn btn-primary dropdown-toggle nueva-venta bg-green" data-bs-toggle="dropdown" aria-expanded="false">
-            <img class="image-etiqueta me-3" src="../../assets/img/Logos Admin/venta.png" alt="">
-            Nueva Venta
-          </button>
-          <div class="dropdown-menu ancho">
-            <a class="dropdown-item flexible" [routerLink]="['/crear_venta']">
-              <div class="venta-productos justify-content-center d-flex me-3">
-                <img class="image-etiqueta" src="../../assets/img/Logos Admin/venta_productos.png" alt="">
-              </div>
-              <div class="contenido-botones">
-                <h6>Venta de Productos</h6>
-                <p>Registra una venta seleccionando los <br> productos del inventario</p>
-              </div>
-            </a>
-            <button id="button2" class="btn btn-primary flexible dropdown-item" data-bs-toggle="offcanvas" data-bs-target="#venta-libre">
-              <div class="venta-productos justify-content-center d-flex me-3">
-                <img class="image-etiqueta" src="../../assets/img/Logos Admin/peso.png" alt="">
-              </div>
-              <div class="contenido-botones">
-                <h6>Venta Libre</h6>
-                <p>Registra un ingreso sin seleccionar <br> productos de tu inventario</p>
-              </div>
-            </button>
-          </div>
-        </div>
+        <button id="button1" class="btn btn-primary nueva-venta bg-green" data-bs-toggle="offcanvas" data-bs-target="#venta-libre">
+          <img class="image-etiqueta me-3" src="../../assets/img/Logos Admin/venta.png" alt="">
+          Nueva Venta
+        </button>
       </div>
       <div class="body2 d-flex justify-content-center">
         <button id="button3" class="btn btn-primary nuevo-gasto" data-bs-toggle="offcanvas" data-bs-target="#gasto" >
@@ -162,134 +74,6 @@
     </div>
   </section>
   <br>
-  <!-- Filtros, Calendario, Rango, Buscador, Reporte -->
-  <section>
-    <div class="container d-flex justify-content-center">
-      <div class="row toolbar-equal">
-        <!-- Buscador -->
-        <div class="col-sm-12 col-md-10 col-lg-4 buscador-reportes">
-          <form class="busc" role="search" (submit)="$event.preventDefault()">
-            <div class="input-group busca">
-              <button class="btn btn-primary boton_buscador" type="button">
-                <img width="28px" src="../../assets/img/Logos Admin/Buscador.png" alt="">
-              </button>
-              <input class="form-control input-buscador" type="search" placeholder="Buscar" aria-label="Buscar" [(ngModel)]="searchTerm" name="search" (ngModelChange)="onSearchChange()">
-            </div>
-          </form>
-        </div>
-        <!-- Filtro -->
-        <div class="col-sm-12 col-md-4 col-lg-2 d-flex justify-content-center text-center ">
-          <button  id="" class="btn btn-primary filtro bg-white" data-bs-toggle="offcanvas" data-bs-target="#filtro">
-            <img width="25px" class="me-0.5" src="../../assets/img/Logos Admin/filtro.png" alt=""><span class="letrafiltro">Filtros</span>
-          </button>
-          <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="filtro" aria-labelledby="staticBackdropLabel">
-            <div class="offcanvas-header">
-              <h5 class="offcanvas-title" id="staticBackdropLabel">Filtro</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body d-flex flex-column h-100">
-              <div class="flex-grow-1 overflow-auto">
-                <app-filter></app-filter>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Calendario -->
-        <div class="col-sm-6 col-md-4 col-lg-2 d-flex justify-content-start text-start dropdown">
-          <button id="button_calendar" class="btn btn-primary calendar bg-white dropdown-toggle" data-bs-toggle="dropdown" data-bs-display="static" data-bs-offset="-24,0" (click)="prefillCustomRange()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-1" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-              <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v1H0V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5z"/>
-              <path d="M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5h16v9z"/>
-            </svg>
-            Calendario
-          </button>
-          <div class="dropdown-menu p-3 calendar-menu">
-            <div class="row g-2 align-items-end">
-              <div class="col-12">
-                <mat-form-field appearance="outline" class="w-100" [class.is-invalid]="isCustomRangeInvalid">
-                  <mat-label>Desde</mat-label>
-                  <input matInput [matDatepicker]="pickerFrom" [(ngModel)]="dateFromModel">
-                  <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
-                  <mat-datepicker #pickerFrom></mat-datepicker>
-                </mat-form-field>
-              </div>
-              <div class="col-12">
-                <mat-form-field appearance="outline" class="w-100" [class.is-invalid]="isCustomRangeInvalid">
-                  <mat-label>Hasta</mat-label>
-                  <input matInput [matDatepicker]="pickerTo" [(ngModel)]="dateToModel">
-                  <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
-                  <mat-datepicker #pickerTo></mat-datepicker>
-                </mat-form-field>
-              </div>
-            </div>
-            <div *ngIf="isCustomRangeInvalid" class="text-danger small mt-1">El rango es inválido: "Desde" no puede ser mayor que "Hasta".</div>
-            <div class="d-flex gap-2 justify-content-end mt-2">
-              <button type="button" class="btn btn-sm btn-outline-secondary" (click)="$event.preventDefault()">Cancelar</button>
-              <button type="button" class="btn btn-sm btn-primary" [disabled]="isCustomRangeInvalid || !dateFromModel || !dateToModel" (click)="applyCustomRange(); $event.preventDefault()">Aplicar</button>
-            </div>
-          </div>
-        </div>
-        <!-- Rango -->
-        <div class="col-sm-6 col-md-4 col-lg-2 d-flex justify-content-start text-start dropdown">
-          <button id="button" class="btn btn-primary dropdown-toggle bg-white range" data-bs-toggle="dropdown">
-            <img width="20" height="20" class="me-1" src="../../assets/img/Logos Admin/filtro.png" alt="">{{ rangeLabel }}
-          </button>
-          <div class="dropdown-menu">
-            <a class="dropdown-item flexible2" href="#" (click)="clearRange(); $event.preventDefault()">
-              <div class="contenido-botones2">
-                <h6>Sin Filtro</h6>
-              </div>
-            </a>
-            <a class="dropdown-item " href="#" (click)="setRange('diario'); $event.preventDefault()">
-              <div class="contenido-botones2">
-                <h6>Diario</h6>
-              </div>
-            </a>
-            <a class="dropdown-item flexible2" href="#" (click)="setRange('semanal'); $event.preventDefault()">
-              <div class="contenido-botones2">
-                <h6>Semanal</h6>
-              </div>
-            </a>
-            <a class="dropdown-item flexible2" href="#" (click)="setRange('mensual'); $event.preventDefault()">
-              <div class="contenido-botones2">
-                <h6>Mensual</h6>
-              </div>
-            </a>
-            <a class="dropdown-item flexible2" href="#" (click)="setRange('personalizado'); $event.preventDefault()">
-              <div class="contenido-botones2">
-                <h6>Rango Personalizado</h6>
-              </div>
-            </a>
-          </div>
-        </div>
-        <!-- Descuentos -->
-        <div class="col-sm-6 col-md-3 col-lg-2 d-flex justify-content-center text-center">
-          <button type="button" class="btn chip-btn d-inline-flex align-items-center" data-bs-toggle="offcanvas" data-bs-target="#descuentos" aria-label="Descuentos">
-            <img class="icon-quick" src="../../assets/img/Logos Admin/venta_productos.png" alt="">
-            <span>Descuentos</span>
-          </button>
-          <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="descuentos" aria-labelledby="descuentosLabel">
-            <div class="offcanvas-header">
-              <h5 class="offcanvas-title" id="descuentosLabel">Gestionar Descuentos</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-              <app-descuentos></app-descuentos>
-            </div>
-          </div>
-        </div>
-
-        <!-- Reportes -->
-        <div class="col-sm-6 col-md-3 col-lg-2 d-flex justify-content-center text-center">
-          <button type="button" class="btn chip-btn d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#reportModal" aria-label="Reportes">
-            <img class="icon-quick" src="../../assets/img/Logos Admin/xls.png" alt="">
-            <span>Reportes</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
-  <br>
   <section>
     <div class="container unicion ">
       <div class="row">
@@ -324,29 +108,134 @@
     </div>
   </section>
   <br>
+  <!-- Filtros, Calendario, Rango, Buscador, Reporte -->
+  <section>
+    <div class="container d-flex justify-content-center">
+      <div class="row toolbar-equal">
+        <!-- Buscador -->
+        <div class="col-sm-12 col-md-6 col-lg-3 buscador-reportes">
+          <form class="busc" role="search" (submit)="$event.preventDefault()">
+            <div class="input-group busca">
+              <button class="btn btn-primary boton_buscador" type="button">
+                <img width="28px" src="../../assets/img/Logos Admin/Buscador.png" alt="">
+              </button>
+              <input class="form-control input-buscador" type="search" placeholder="Buscar" aria-label="Buscar" [(ngModel)]="searchTerm" name="search" (ngModelChange)="onSearchChange()">
+            </div>
+          </form>
+        </div>
+        <!-- Filtro -->
+        <div class="col-sm-6 col-md-3 col-lg-2 d-flex justify-content-center text-center ">
+          <button  id="" class="btn btn-primary filtro bg-white" data-bs-toggle="modal" data-bs-target="#filtroModal">
+            <img width="25px" class="me-0.5" src="../../assets/img/Logos Admin/filtro.png" alt=""><span class="letrafiltro">Filtros</span>
+          </button>
+          <div class="modal fade" id="filtroModal" tabindex="-1" aria-labelledby="filtroModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="filtroModalLabel">Filtros avanzados</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <app-filter (filtersChange)="applyAdvancedFilters($event)"></app-filter>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Rango global Desde / Hasta -->
+        <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-items-center date-range-col">
+          <div class="w-100 d-flex gap-2 date-range-wrapper">
+            <input
+              type="date"
+              class="form-control date-range-input"
+              placeholder="Desde"
+              [(ngModel)]="dateFromInput"
+              (change)="setRange('personalizado', true)"
+            >
+            <input
+              type="date"
+              class="form-control date-range-input"
+              placeholder="Hasta"
+              [(ngModel)]="dateToInput"
+              (change)="setRange('personalizado', true)"
+            >
+          </div>
+        </div>
+        <!-- Rango -->
+        <div class="col-sm-6 col-md-3 col-lg-2 dropdown range-dropdown-col">
+          <button id="button" class="btn btn-primary dropdown-toggle bg-white range range-dropdown-btn" data-bs-toggle="dropdown">
+            <img width="20" height="20" class="me-1" src="../../assets/img/Logos Admin/filtro.png" alt="">{{ rangeLabel }}
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item flexible2" href="#" (click)="clearRange(); $event.preventDefault()">
+              <div class="contenido-botones2">
+                <h6>Sin Filtro</h6>
+              </div>
+            </a>
+            <a class="dropdown-item " href="#" (click)="setRange('diario'); $event.preventDefault()">
+              <div class="contenido-botones2">
+                <h6>Diario</h6>
+              </div>
+            </a>
+            <a class="dropdown-item flexible2" href="#" (click)="setRange('semanal'); $event.preventDefault()">
+              <div class="contenido-botones2">
+                <h6>Semanal</h6>
+              </div>
+            </a>
+            <a class="dropdown-item flexible2" href="#" (click)="setRange('mensual'); $event.preventDefault()">
+              <div class="contenido-botones2">
+                <h6>Mensual</h6>
+              </div>
+            </a>
+          </div>
+        </div>
+        
+
+      </div>
+    </div>
+  </section>
+  <br>
   <!-- Selecciones de Ventas -->
   <section>
     <div class="container unicion">
       <div class="row">
         <div class="col">
-          <div>
+          <div class="d-flex align-items-center justify-content-center">
             <button class="seleccion" (click)="selectTab('ingresos')" [class.active]="selectedTab==='ingresos'">Ingresos<span *ngIf="showRangeTag" class="text-primary small ms-1">(en rango)</span></button>
           </div>
         </div>
         <div class="col">
-          <div>
+          <div class="d-flex align-items-center justify-content-center">
             <button class="seleccion" (click)="selectTab('egresos')" [class.active]="selectedTab==='egresos'">Egresos<span *ngIf="showRangeTag" class="text-primary small ms-1">(en rango)</span></button>
           </div>
         </div>
         <div class="col">
-          <div>
+          <div class="d-flex align-items-center justify-content-center">
             <button class="seleccion" (click)="selectTab('por_cobrar')" [class.active]="selectedTab==='por_cobrar'">Por Cobrar<span *ngIf="showRangeTag" class="text-primary small ms-1">(en rango)</span></button>
           </div>
         </div>
         <div class="col">
-          <div>
+          <div class="d-flex align-items-center justify-content-center">
             <button class="seleccion" (click)="selectTab('por_pagar')" [class.active]="selectedTab==='por_pagar'">Por Pagar<span *ngIf="showRangeTag" class="text-primary small ms-1">(en rango)</span></button>
           </div>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col d-flex justify-content-end">
+          <button
+            type="button"
+            class="btn chip-btn d-inline-flex align-items-center report-export-btn"
+            (click)="exportCurrentTab()"
+            [disabled]="
+              (selectedTab==='ingresos' && ventasIngresos.length === 0) ||
+              (selectedTab==='egresos' && gastosEgresos.length === 0) ||
+              (selectedTab==='por_cobrar' && ventasPorCobrar.length === 0) ||
+              (selectedTab==='por_pagar' && gastosPorPagar.length === 0)
+            "
+          >
+            <img class="icon-quick" src="../../assets/img/Logos Admin/xls.png" alt="">
+            <span>Reporte</span>
+          </button>
         </div>
       </div>
     </div>
@@ -367,12 +256,14 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let v of filteredVentas" class="table-row-click" (click)="abrirDialogoVenta(v)">
+            <tr *ngFor="let v of ventasIngresos" class="table-row-click" (click)="abrirDialogoVenta(v)">
               <td data-label="Nombre Productos">
                 <div class="producto-resumen d-flex gap-2 align-items-center">
                   <img src="../../assets/img/Logos Admin/ventas.png" alt="" class="img-responsive" width="36" height="36">
                   <div class="info-producto d-flex flex-column">
-                    <span class="nom_produc fw-semibold text-truncate" style="max-width: 240px;">{{ 'Venta #' + (v.id || '') }}</span>
+                    <span class="nom_produc fw-semibold text-truncate" style="max-width: 240px;">
+                      {{ (v.tipo_venta || '') === 'libre' ? ('Venta Libre #' + (v.id || '')) : ('Venta #' + (v.id || '')) }}
+                    </span>
                     <small class="text-muted">Por: {{ empleadoNombreById(getUsuarioIdFromVenta(v)) }} • Turno: {{ getTurnoIdFromVenta(v) || '—' }}</small>
                     <small class="text-muted d-md-none">{{ v.forma_pago || '-' }} • {{ v.fecha_hora | date:'dd/MM/yyyy | hh:mm a' }}</small>
                   </div>
@@ -382,13 +273,17 @@
                 <span *ngIf="v.descuentoPorcentaje" class="badge text-bg-danger me-2">-{{ v.descuentoPorcentaje }}%</span>
                 <span class="valor-derecha fw-bold text-success">{{ v.total | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
               </td>
-              <td class="ocultar-en-movil" data-label="Medio de Pago">{{ v.forma_pago || '-' }}</td>
+              <td class="ocultar-en-movil" data-label="Medio de Pago">
+                <span>{{ v.forma_pago || '-' }}</span>
+                <br *ngIf="v.transaccionId">
+                <small class="text-muted" *ngIf="v.transaccionId">ID: {{ v.transaccionId }}</small>
+              </td>
               <td class="ocultar-en-movil" data-label="Fecha y Hora">{{ v.fecha_hora | date:'dd/MM/yyyy | hh:mm a' }}</td>
               <td class="ocultar-en-movil" data-label="Estado">
                 <span class="status" [class.activo]="(v.estado||'').toLowerCase()==='pagada'" [class.text-muted]="(v.estado||'').toLowerCase()!=='pagada'">{{ v.estado || 'Pagada' }}</span>
               </td>
             </tr>
-            <tr *ngIf="filteredVentas.length === 0">
+            <tr *ngIf="ventasIngresos.length === 0">
               <td colspan="5" class="text-center text-muted py-4">No hay ventas registradas.</td>
             </tr>
           </tbody>
@@ -413,7 +308,114 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let g of filteredGastos" class="table-row-click" (click)="abrirDialogoGasto(g)" style="cursor: pointer;">
+            <tr *ngFor="let g of gastosEgresos" class="table-row-click" (click)="abrirDialogoGasto(g)" style="cursor: pointer;">
+              <td data-label="Nombre">
+                <div class="producto-resumen d-flex gap-2 align-items-center">
+                  <img src="../../assets/img/Logos Admin/gastos.png" alt="" class="img-responsive" width="36" height="36">
+                  <div class="info-producto d-flex flex-column">
+                    <span class="nom_produc fw-semibold text-truncate" style="max-width: 240px;">{{ g.nombre || ('Gasto #' + g.id) }}</span>
+                    <small class="text-muted">Por: {{ empleadoNombreById(getUsuarioIdFromGasto(g)) }} • Turno: {{ getTurnoIdFromGasto(g) || '—' }}</small>
+                    <small class="text-muted d-md-none">{{ g.forma_pago || '-' }} • {{ g.fecha | date:'dd/MM/yyyy' }}</small>
+                  </div>
+                </div>
+              </td>
+              <td class="ocultar-en-movil" data-label="Descripción">
+                <span class="text-truncate" style="max-width: 260px; display: inline-block;">{{ g.descripcion || '-' }}</span>
+              </td>
+              <td class="valo text-end" data-label="Monto">
+                <span class="valor-derecha fw-bold text-danger">{{ (g.monto || 0) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+              </td>
+              <td class="ocultar-en-movil" data-label="Medio de Pago">
+                <span>{{ g.forma_pago || '-' }}</span>
+                <br *ngIf="g.transaccionId">
+                <small class="text-muted" *ngIf="g.transaccionId">ID: {{ g.transaccionId }}</small>
+              </td>
+              <td class="ocultar-en-movil" data-label="Fecha">{{ g.fecha | date:'dd/MM/yyyy' }}</td>
+              <td class="ocultar-en-movil" data-label="Estado">
+                <span
+                  class="status"
+                  [class.activo]="(g.estado||'').toLowerCase()==='confirmado'"
+                  [ngClass]="{
+                    'bg-primary-subtle text-primary': (g.estado||'').toLowerCase()==='pendiente',
+                    'bg-danger-subtle text-danger': (g.estado||'').toLowerCase()==='anulado',
+                    'text-muted': ['confirmado','pendiente','anulado'].indexOf((g.estado||'').toLowerCase()) === -1
+                  }"
+                >{{ g.estado }}</span>
+              </td>
+            </tr>
+            <tr *ngIf="gastosEgresos.length === 0">
+              <td colspan="6" class="text-center text-muted py-4">No hay gastos registrados.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tabla Por Cobrar (Ventas pendientes) -->
+  <section *ngIf="selectedTab==='por_cobrar'">
+    <div class="container">
+      <div class="row">
+        <table class="table table-hover align-middle shadow-sm rounded overflow-hidden">
+          <thead class="table-light">
+            <tr>
+              <th>Nombre Productos</th>
+              <th class="text-end">Valor</th>
+              <th class="ocultar-en-movil">Medio de Pago</th>
+              <th class="ocultar-en-movil">Fecha y Hora</th>
+              <th class="ocultar-en-movil">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let v of ventasPorCobrar" class="table-row-click" (click)="abrirDialogoVenta(v)">
+              <td data-label="Nombre Productos">
+                <div class="producto-resumen d-flex gap-2 align-items-center">
+                  <img src="../../assets/img/Logos Admin/ventas.png" alt="" class="img-responsive" width="36" height="36">
+                  <div class="info-producto d-flex flex-column">
+                    <span class="nom_produc fw-semibold text-truncate" style="max-width: 240px;">
+                      {{ (v.tipo_venta || '') === 'libre' ? ('Venta Libre #' + (v.id || '')) : ('Venta #' + (v.id || '')) }}
+                    </span>
+                    <small class="text-muted">Por: {{ empleadoNombreById(getUsuarioIdFromVenta(v)) }} • Turno: {{ getTurnoIdFromVenta(v) || '—' }}</small>
+                    <small class="text-muted d-md-none">{{ v.forma_pago || '-' }} • {{ v.fecha_hora | date:'dd/MM/yyyy | hh:mm a' }}</small>
+                  </div>
+                </div>
+              </td>
+              <td class="valo text-end" data-label="Valor">
+                <span *ngIf="v.descuentoPorcentaje" class="badge text-bg-danger me-2">-{{ v.descuentoPorcentaje }}%</span>
+                <span class="valor-derecha fw-bold text-success">{{ v.total | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+              </td>
+              <td class="ocultar-en-movil" data-label="Medio de Pago">{{ v.forma_pago || '-' }}</td>
+              <td class="ocultar-en-movil" data-label="Fecha y Hora">{{ v.fecha_hora | date:'dd/MM/yyyy | hh:mm a' }}</td>
+              <td class="ocultar-en-movil" data-label="Estado">
+                <span class="status bg-primary-subtle text-primary">{{ v.estado || 'Pendiente' }}</span>
+              </td>
+            </tr>
+            <tr *ngIf="ventasPorCobrar.length === 0">
+              <td colspan="5" class="text-center text-muted py-4">No hay ventas pendientes por cobrar.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tabla Por Pagar (Gastos pendientes) -->
+  <section *ngIf="selectedTab==='por_pagar'">
+    <div class="container">
+      <div class="row">
+        <table class="table table-hover align-middle shadow-sm rounded overflow-hidden">
+          <thead class="table-light">
+            <tr>
+              <th>Nombre</th>
+              <th class="ocultar-en-movil">Descripción</th>
+              <th class="text-end">Monto</th>
+              <th class="ocultar-en-movil">Medio de Pago</th>
+              <th class="ocultar-en-movil">Fecha</th>
+              <th class="ocultar-en-movil">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let g of gastosPorPagar" class="table-row-click" (click)="abrirDialogoGasto(g)" style="cursor: pointer;">
               <td data-label="Nombre">
                 <div class="producto-resumen d-flex gap-2 align-items-center">
                   <img src="../../assets/img/Logos Admin/gastos.png" alt="" class="img-responsive" width="36" height="36">
@@ -433,19 +435,11 @@
               <td class="ocultar-en-movil" data-label="Medio de Pago">{{ g.forma_pago || '-' }}</td>
               <td class="ocultar-en-movil" data-label="Fecha">{{ g.fecha | date:'dd/MM/yyyy' }}</td>
               <td class="ocultar-en-movil" data-label="Estado">
-                <span
-                  class="status"
-                  [class.activo]="(g.estado||'').toLowerCase()==='confirmado'"
-                  [ngClass]="{
-                    'bg-primary-subtle text-primary': (g.estado||'').toLowerCase()==='pendiente',
-                    'bg-danger-subtle text-danger': (g.estado||'').toLowerCase()==='anulado',
-                    'text-muted': ['confirmado','pendiente','anulado'].indexOf((g.estado||'').toLowerCase()) === -1
-                  }"
-                >{{ g.estado }}</span>
+                <span class="status bg-primary-subtle text-primary">{{ g.estado || 'Pendiente' }}</span>
               </td>
             </tr>
-            <tr *ngIf="filteredGastos.length === 0">
-              <td colspan="6" class="text-center text-muted py-4">No hay gastos registrados.</td>
+            <tr *ngIf="gastosPorPagar.length === 0">
+              <td colspan="6" class="text-center text-muted py-4">No hay gastos pendientes por pagar.</td>
             </tr>
           </tbody>
         </table>

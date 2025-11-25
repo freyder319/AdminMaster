@@ -16,9 +16,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AddGastoComponent } from "../add-gasto/add-gasto.component";
 import { AddVentaLibreComponent } from "../add-venta-libre/add-venta-libre.component";
 import { VentaService } from '../services/venta.service';
+import { VentaLibreService } from '../services/venta-libre.service';
 import { GastoService, Gasto } from '../services/gasto.service';
 import { EmpleadosService, Empleados } from '../services/empleados.service';
-import { DescuentosComponent } from "../descuentos/descuentos.component";
 import { InfoGastosComponent } from "../info-gastos/info-gastos.component";
 
 
@@ -38,7 +38,6 @@ import { InfoGastosComponent } from "../info-gastos/info-gastos.component";
     MatNativeDateModule,
     AddGastoComponent,
     AddVentaLibreComponent,
-    DescuentosComponent,
     HttpClientModule,
     FormsModule
   ],
@@ -63,24 +62,27 @@ export class AdministradorPrincipalComponent implements OnInit {
   dateToModel?: Date;
   // Mostrar indicador '(en rango)' solo cuando el usuario aplica un rango
   hasRangeApplied: boolean = false;
+  // Filtros de fecha por tabla
+  ingresosFrom: string = '';
+  ingresosTo: string = '';
+  egresosFrom: string = '';
+  egresosTo: string = '';
+  porCobrarFrom: string = '';
+  porCobrarTo: string = '';
+  porPagarFrom: string = '';
+  porPagarTo: string = '';
 
-  // Report modal state
-  repVentas: boolean = true;
-  repGastos: boolean = false;
-  repInventario: boolean = false;
-  repCajas: boolean = false;
-  repProveedores: boolean = false;
-  repClientes: boolean = false;
-  repEmpleados: boolean = false;
-  repFrom: string = '';
-  repTo: string = '';
-  repFormaPago: '' | 'efectivo' | 'transferencia' | 'tarjeta' | 'nequi' | 'daviplata' | 'otros' = '';
+  // Filtros avanzados (panel de filtros)
+  filtroFormaPago: string = '';
+  filtroClienteId: number | '' = '';
+  filtroProveedorId: number | '' = '';
 
   constructor(
     private dialog: MatDialog,
     public route: ActivatedRoute,
     private router: Router,
     private ventaSrv: VentaService,
+    private ventaLibreSrv: VentaLibreService,
     private gastoSrv: GastoService,
     private empleadosSrv: EmpleadosService,
     private http: HttpClient,
@@ -99,6 +101,18 @@ export class AdministradorPrincipalComponent implements OnInit {
     if (!this.dateFrom || !this.dateTo) this.setRange(this.selectedRange || 'semanal', false);
     // Forzar inicio en 'Sin Filtro' al entrar a la ruta
     this.clearRange();
+
+    // Refrescar tablas cuando se registren nuevos gastos o ventas libres
+    try {
+      this.gastoSrv.refresh$.subscribe(() => {
+        this.loadGastos();
+      });
+    } catch {}
+    try {
+      this.ventaLibreSrv.refresh$.subscribe(() => {
+        this.loadVentas();
+      });
+    } catch {}
   }
 
   verGasto(g: any) {
@@ -124,17 +138,7 @@ export class AdministradorPrincipalComponent implements OnInit {
 
   private loadTabData(): void {
     if (this.selectedTab === 'ingresos') {
-      this.ventaSrv.list({ limit: 100 }).subscribe({
-        next: (rows) => {
-          const arr = Array.isArray(rows) ? rows : (Array.isArray((rows as any)?.data) ? (rows as any).data : []);
-          this.ventas = arr || [];
-          console.log('Ventas cargadas:', this.ventas.length);
-        },
-        error: (err) => {
-          console.error('Error cargando ventas', err);
-          this.ventas = [];
-        }
-      });
+      this.loadVentas();
     } else if (this.selectedTab === 'egresos') {
       this.gastoSrv.fetchAll().subscribe({
         next: (rows) => {
@@ -153,10 +157,59 @@ export class AdministradorPrincipalComponent implements OnInit {
   private loadVentas(): void {
     this.ventaSrv.list({ limit: 100 }).subscribe({
       next: (rows) => {
-        const arr = Array.isArray(rows) ? rows : (Array.isArray((rows as any)?.data) ? (rows as any).data : []);
-        this.ventas = arr || [];
+        const normales = Array.isArray(rows)
+          ? rows
+          : (Array.isArray((rows as any)?.data) ? (rows as any).data : []);
+
+        this.ventaLibreSrv.list().subscribe({
+          next: (libres) => {
+            const listaLibres = Array.isArray(libres) ? libres : [];
+
+            const normalesNorm = (normales || []).map((v: any) => ({
+              ...v,
+              tipo_venta: v?.tipo_venta || 'inventario'
+            }));
+
+            const libresNorm = listaLibres.map((v: any) => ({
+              id: v.id,
+              total: v.total,
+              forma_pago: v.forma_pago,
+              transaccionId: v.transaccionId,
+              fecha_hora: v.fecha_hora,
+              created_at: v.created_at,
+              estado: v.estado,
+              resumen: v.nombre,
+              descripcion: v.observaciones,
+              usuario_id: v.usuario_id,
+              turno_id: v.turno_id,
+              tipo_venta: v.tipo_venta || 'libre',
+              items: Array.isArray(v.productos)
+                ? v.productos.map((p: any) => ({
+                    producto: { nombreProducto: p.nombre },
+                    cantidad: p.cantidad,
+                    precio: p.precio,
+                    subtotal: p.subtotal,
+                  }))
+                : [],
+            }));
+
+            this.ventas = [...normalesNorm, ...libresNorm];
+            try {
+              console.log('Ventas (normales + libres) cargadas:', this.ventas.length);
+            } catch {}
+          },
+          error: (errLib) => {
+            console.error('Error cargando ventas libres', errLib);
+            const normalesNorm = (normales || []).map((v: any) => ({
+              ...v,
+              tipo_venta: v?.tipo_venta || 'inventario'
+            }));
+            this.ventas = normalesNorm;
+          }
+        });
       },
-      error: () => {
+      error: (err) => {
+        console.error('Error cargando ventas', err);
         this.ventas = [];
       }
     });
@@ -352,6 +405,7 @@ export class AdministradorPrincipalComponent implements OnInit {
       empleadoNombre: this.displayEmpleadoVenta(v),
       turnoId: this.getTurnoIdFromVenta(v) || null,
       clienteNombre: this.displayClienteVenta(v),
+      transaccionId: (v as any)?.transaccionId ?? null,
     } as any;
     this.dialog.open(InfoDialogComponent, {
       data: detalle,
@@ -439,6 +493,23 @@ export class AdministradorPrincipalComponent implements OnInit {
     return time >= from && time <= to;
   }
 
+  private withinLocalRange(dateStr: string | Date | undefined, from?: string, to?: string): boolean {
+    if (!dateStr) return true;
+    const d = typeof dateStr === 'string' ? new Date(dateStr) : dateStr;
+    let fromTime = -Infinity;
+    let toTime = Infinity;
+    if (from) {
+      const f = new Date(from + 'T00:00:00');
+      fromTime = f.getTime();
+    }
+    if (to) {
+      const t = new Date(to + 'T23:59:59');
+      toTime = t.getTime();
+    }
+    const time = d.getTime();
+    return time >= fromTime && time <= toTime;
+  }
+
   get filteredVentas(): any[] {
     const term = (this.searchTerm || '').toLowerCase();
     return (this.ventas || [])
@@ -451,6 +522,20 @@ export class AdministradorPrincipalComponent implements OnInit {
         const items = Array.isArray(v?.items) ? v.items : [];
         const nombres = items.map((i: any) => (i?.producto?.nombreProducto || '')).join(' ').toLowerCase();
         return idStr.includes(term) || forma.includes(term) || resumen.includes(term) || nombres.includes(term);
+      })
+      .filter(v => {
+        if (this.filtroFormaPago && (v?.forma_pago || '').toString().toLowerCase() !== this.filtroFormaPago.toLowerCase()) {
+          return false;
+        }
+        if (this.filtroClienteId) {
+          const cid = this.getClienteIdFromVenta(v);
+          if (!cid || Number(cid) !== Number(this.filtroClienteId)) return false;
+        }
+        if (this.filtroProveedorId) {
+          const pid = v?.proveedorId ?? v?.proveedor_id ?? v?.proveedor?.id;
+          if (!pid || Number(pid) !== Number(this.filtroProveedorId)) return false;
+        }
+        return true;
       });
   }
 
@@ -464,7 +549,43 @@ export class AdministradorPrincipalComponent implements OnInit {
         const desc = (g?.descripcion || '').toLowerCase();
         const forma = (g?.forma_pago || '').toLowerCase();
         return nombre.includes(term) || desc.includes(term) || forma.includes(term);
+      })
+      .filter(g => {
+        if (this.filtroFormaPago && (g?.forma_pago || '').toString().toLowerCase() !== this.filtroFormaPago.toLowerCase()) {
+          return false;
+        }
+        if (this.filtroProveedorId) {
+          const pid = (g as any)?.proveedorId ?? (g as any)?.proveedor_id ?? (g as any)?.proveedor?.id;
+          if (!pid || Number(pid) !== Number(this.filtroProveedorId)) return false;
+        }
+        return true;
       });
+  }
+
+  // Listas para pestañas principales (excluyen pendientes)
+  get ventasIngresos(): any[] {
+    return this.filteredVentas
+      .filter(v => (v?.estado || '').toString().toLowerCase() !== 'pendiente')
+      .filter(v => this.withinLocalRange(v?.fecha_hora || v?.created_at, this.ingresosFrom, this.ingresosTo));
+  }
+
+  get gastosEgresos(): Gasto[] {
+    return this.filteredGastos
+      .filter(g => (g?.estado || '').toString().toLowerCase() !== 'pendiente')
+      .filter(g => this.withinLocalRange(g?.fecha, this.egresosFrom, this.egresosTo));
+  }
+
+  // Listas derivadas para pestañas Por Cobrar / Por Pagar
+  get ventasPorCobrar(): any[] {
+    return this.filteredVentas
+      .filter(v => (v?.estado || '').toString().toLowerCase() === 'pendiente')
+      .filter(v => this.withinLocalRange(v?.fecha_hora || v?.created_at, this.porCobrarFrom, this.porCobrarTo));
+  }
+
+  get gastosPorPagar(): Gasto[] {
+    return this.filteredGastos
+      .filter(g => (g?.estado || '').toString().toLowerCase() === 'pendiente')
+      .filter(g => this.withinLocalRange(g?.fecha, this.porPagarFrom, this.porPagarTo));
   }
 
   // Prefill current dates into inputs when opening calendar dropdown
@@ -538,73 +659,107 @@ export class AdministradorPrincipalComponent implements OnInit {
     return !!this.hasRangeApplied;
   }
 
-  // Mostrar la opción de Forma de Pago solo si se incluye Ventas o Gastos
-  get showFormaPagoOpt(): boolean {
-    return !!(this.repVentas || this.repGastos);
+  private downloadCsv(filename: string, rows: string[][]): void {
+    if (!rows.length) return;
+    const csvContent = rows
+      .map(r => r.map(v => {
+        const val = (v ?? '').toString();
+        if (val.includes('"') || val.includes(',') || val.includes('\n')) {
+          return '"' + val.replace(/"/g, '""') + '"';
+        }
+        return val;
+      }).join(','))
+      .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   }
 
-  onToggleTipo() {
-    if (!this.showFormaPagoOpt) {
-      this.repFormaPago = '';
+  exportIngresosExcel(): void {
+    const header = ['ID', 'Nombre Productos', 'Valor', 'Medio de Pago', 'ID Transacción', 'Promoción', '% Promo', 'Fecha y Hora', 'Estado'];
+    const rows = this.ventasIngresos.map(v => [
+      String(v?.id ?? ''),
+      this.ventaResumen(v),
+      String(Number(v?.total) || 0),
+      String(v?.forma_pago || ''),
+      String((v as any)?.transaccionId || ''),
+      String((v as any)?.descuentoNombre || ''),
+      String((v as any)?.descuentoPorcentaje ?? ''),
+      String(v?.fecha_hora || v?.created_at || ''),
+      String(v?.estado || 'Pagada'),
+    ]);
+    this.downloadCsv('ingresos.csv', [header, ...rows]);
+  }
+
+  exportEgresosExcel(): void {
+    const header = ['ID', 'Nombre', 'Descripción', 'Monto', 'Medio de Pago', 'ID Transacción', 'Fecha', 'Estado'];
+    const rows = this.gastosEgresos.map(g => [
+      String((g as any)?.id ?? ''),
+      String((g as any)?.nombre ?? ''),
+      String(g?.descripcion ?? ''),
+      String(Number(g?.monto) || 0),
+      String(g?.forma_pago || ''),
+      String((g as any)?.transaccionId || ''),
+      String(g?.fecha || ''),
+      String(g?.estado || ''),
+    ]);
+    this.downloadCsv('egresos.csv', [header, ...rows]);
+  }
+
+  exportPorCobrarExcel(): void {
+    const header = ['ID', 'Nombre Productos', 'Valor', 'Medio de Pago', 'ID Transacción', 'Promoción', '% Promo', 'Fecha y Hora', 'Estado'];
+    const rows = this.ventasPorCobrar.map(v => [
+      String(v?.id ?? ''),
+      this.ventaResumen(v),
+      String(Number(v?.total) || 0),
+      String(v?.forma_pago || ''),
+      String((v as any)?.transaccionId || ''),
+      String((v as any)?.descuentoNombre || ''),
+      String((v as any)?.descuentoPorcentaje ?? ''),
+      String(v?.fecha_hora || v?.created_at || ''),
+      String(v?.estado || 'Pendiente'),
+    ]);
+    this.downloadCsv('por_cobrar.csv', [header, ...rows]);
+  }
+
+  exportPorPagarExcel(): void {
+    const header = ['ID', 'Nombre', 'Descripción', 'Monto', 'Medio de Pago', 'ID Transacción', 'Fecha', 'Estado'];
+    const rows = this.gastosPorPagar.map(g => [
+      String((g as any)?.id ?? ''),
+      String((g as any)?.nombre ?? ''),
+      String(g?.descripcion ?? ''),
+      String(Number(g?.monto) || 0),
+      String(g?.forma_pago || ''),
+      String((g as any)?.transaccionId || ''),
+      String(g?.fecha || ''),
+      String(g?.estado || 'Pendiente'),
+    ]);
+    this.downloadCsv('por_pagar.csv', [header, ...rows]);
+  }
+
+  applyAdvancedFilters(filters: { forma_pago: string; clienteId: number | ''; proveedorId: number | ''; }): void {
+    this.filtroFormaPago = filters.forma_pago || '';
+    this.filtroClienteId = filters.clienteId;
+    this.filtroProveedorId = filters.proveedorId;
+  }
+
+  exportCurrentTab(): void {
+    if (this.selectedTab === 'ingresos') {
+      this.exportIngresosExcel();
+    } else if (this.selectedTab === 'egresos') {
+      this.exportEgresosExcel();
+    } else if (this.selectedTab === 'por_cobrar') {
+      this.exportPorCobrarExcel();
+    } else if (this.selectedTab === 'por_pagar') {
+      this.exportPorPagarExcel();
     }
-  }
-
-  generateReport() {
-    const tipos: string[] = [];
-    if (this.repVentas) tipos.push('ventas');
-    if (this.repGastos) tipos.push('gastos');
-    if (this.repInventario) tipos.push('inventario');
-    if (this.repCajas) tipos.push('cajas');
-    if (this.repProveedores) tipos.push('proveedores');
-    if (this.repClientes) tipos.push('clientes');
-    if (this.repEmpleados) tipos.push('empleados');
-    if (tipos.length === 0) tipos.push('ventas');
-
-    const params = new URLSearchParams();
-    params.set('tipos', tipos.join(','));
-    if (this.repFrom) params.set('from', `${this.repFrom}T00:00:00`);
-    if (this.repTo) params.set('to', `${this.repTo}T23:59:59`);
-    if (this.showFormaPagoOpt && this.repFormaPago) params.set('forma_pago', String(this.repFormaPago));
-
-    const url = `http://localhost:3000/report/general?${params.toString()}`;
-    try { console.log('[Report] URL:', url); } catch {}
-
-    const headers: any = {};
-    try {
-      const token = localStorage.getItem('token') || localStorage.getItem('auth_token') || '';
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-    } catch {}
-
-    this.http.get(url, { responseType: 'blob', withCredentials: true, headers, observe: 'response' }).subscribe({
-      next: (resp) => {
-        const blob = resp.body as Blob;
-        try {
-          const file = new Blob([blob], { type: 'application/octet-stream' });
-          const link = document.createElement('a');
-          const urlObj = window.URL.createObjectURL(file);
-          link.href = urlObj;
-          const cd = resp.headers.get('content-disposition') || '';
-          const match = /filename="?([^";]+)"?/i.exec(cd);
-          const suggested = match?.[1] || 'reporte_general.xlsx';
-          link.download = suggested;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          window.URL.revokeObjectURL(urlObj);
-        } catch (e) { console.error('[Report] Error al descargar blob', e); }
-
-        // Cerrar modal si está abierto
-        try {
-          const el = document.getElementById('reportModal');
-          const modal = (window as any).bootstrap?.Modal?.getInstance?.(el) || (el ? new (window as any).bootstrap.Modal(el) : null);
-          modal?.hide?.();
-        } catch {}
-      },
-      error: (err) => {
-        console.error('[Report] Error HTTP', err);
-        alert('No se pudo generar el reporte. Verifica tu sesión (401) o intenta de nuevo.');
-      }
-    });
   }
 
 }

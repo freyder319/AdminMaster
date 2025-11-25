@@ -52,6 +52,11 @@
         <div>{{ data.pago }}</div>
       </div>
 
+      <div class="col-sm-6" *ngIf="data.transaccionId">
+        <div class="text-muted small">ID de Transacción</div>
+        <div>{{ data.transaccionId }}</div>
+      </div>
+
       <div class="col-sm-6">
         <div class="text-muted small">Fecha</div>
         <div>{{ data.fecha | date:'dd/MM/yyyy' }}</div>

@@ -17,7 +17,7 @@ import { VentaLibreService } from '../services/venta-libre.service';
 export class AddVentaLibreComponent implements OnInit {
   // Estado del formulario
   nombreVenta: string = '';
-  estadoVenta: 'confirmada' | 'pendiente' | 'anulada' = 'pendiente';
+  estadoVenta: 'confirmada' | 'pendiente' = 'confirmada';
   fechaHora: string = '';
   formaPago?: 'efectivo' | 'tarjeta' | 'transferencia' | 'nequi' | 'daviplata' | 'otros';
   observaciones: string = '';
@@ -29,6 +29,7 @@ export class AddVentaLibreComponent implements OnInit {
   ];
   total: number = 0;
   submitting = false;
+  transaccionId: string = '';
 
   private toPesos(n: any): number {
     const num = Number(n);
@@ -53,12 +54,31 @@ export class AddVentaLibreComponent implements OnInit {
     } else {
       this.turno_id = null;
     }
+
+    const el = document.getElementById('venta-libre');
+    if (el && typeof (window as any)?.bootstrap !== 'undefined') {
+      el.addEventListener('shown.bs.offcanvas', () => {
+        // siempre dejar "confirmada" seleccionada al abrir
+        this.estadoVenta = 'confirmada';
+
+        let input = el.querySelector('input[data-autofocus="true"]') as HTMLInputElement | null;
+        if (!input) {
+          input = el.querySelector('input') as HTMLInputElement | null;
+        }
+        if (input) {
+          setTimeout(() => {
+            input.focus();
+            (input as any)?.select?.();
+          }, 50);
+        }
+      });
+    }
   }
 
-  setEstado(tipo: 'confirmada' | 'pendiente' | 'anulada') {
+  setEstado(tipo: 'confirmada' | 'pendiente') {
     this.estadoVenta = tipo;
   }
-  isEstado(tipo: 'confirmada' | 'pendiente' | 'anulada') {
+  isEstado(tipo: 'confirmada' | 'pendiente') {
     return this.estadoVenta === tipo;
   }
 
@@ -91,7 +111,7 @@ export class AddVentaLibreComponent implements OnInit {
     if (issues.length) {
       Swal.fire({
         icon: 'warning',
-        title: 'Completa el formulario',
+        title: 'Completa el Formulario',
         html: `<ul style="text-align:left;margin:0;padding-left:18px;">${issues.map(i => `<li>${i}</li>`).join('')}</ul>`
       });
       return;
@@ -111,19 +131,26 @@ export class AddVentaLibreComponent implements OnInit {
       observaciones: this.observaciones || undefined,
       tipo_venta: this.tipo_venta,
       turno_id: this.isPuntoPos ? (this.turno_id ?? undefined) : undefined,
+      transaccionId: this.formaPago && this.formaPago !== 'efectivo' ? (this.transaccionId || undefined) : undefined,
     };
 
     this.ventaLibreSrv.create(payload).subscribe({
       next: (res) => {
         this.submitting = false;
         this.closeOffcanvas();
-        Swal.fire({ icon: 'success', title: 'Venta creada', text: res?.id ? `ID: ${res.id}` : 'Creada con éxito', timer: 2000, showConfirmButton: false });
+        Swal.fire({
+          icon: 'success',
+          title: 'Venta Registrada!',
+          html: 'La <b>Venta Libre</b> fue Registrada con Éxito',
+          timer: 2000,
+          showConfirmButton: false
+        });
       },
       error: (err) => {
         this.submitting = false;
         const beMsg = Array.isArray(err?.error?.message)
           ? `<ul style="text-align:left;margin:0;padding-left:18px;">${err.error.message.map((m: string) => `<li>${m}</li>`).join('')}</ul>`
-          : (typeof err?.error?.message === 'string' ? err.error.message : 'No se pudo crear la venta libre');
+          : (typeof err?.error?.message === 'string' ? err.error.message : 'Ocurrió un error inesperado');
         Swal.fire({ icon: 'error', title: 'Error', html: beMsg });
       }
     });
@@ -151,6 +178,27 @@ export class AddVentaLibreComponent implements OnInit {
     } catch {
       const btn = el.querySelector('.btn-close') as HTMLElement | null;
       btn?.click();
+    }
+  }
+
+  onEnterFocus(next: any, event: Event, value?: any) {
+    event.preventDefault();
+
+    if (value === undefined || value === null) {
+      return;
+    }
+    if (typeof value === 'string' && !value.trim()) {
+      return;
+    }
+    if (typeof value === 'number' && (!Number.isFinite(value) || value <= 0)) {
+      return;
+    }
+
+    if (next && typeof next.focus === 'function') {
+      next.focus();
+      if (typeof next.select === 'function') {
+        next.select();
+      }
     }
   }
 }

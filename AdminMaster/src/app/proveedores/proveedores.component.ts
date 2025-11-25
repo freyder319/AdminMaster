@@ -27,6 +27,7 @@ export class ProveedoresComponent {
   lastSearchTerm = '';
 
   private proveedoresEnUso = new Set<number>();
+  private deudasPendientesPorProveedor = new Map<number, number>();
 
   constructor(private proveedorService: ProveedorService, private gastoService: GastoService) {
     this.proveedores$ = this.proveedorService.proveedores$;
@@ -47,12 +48,25 @@ export class ProveedoresComponent {
       })
     );
 
-    // construir set de proveedores en uso desde gastos
+    // construir set de proveedores en uso y conteo de deudas pendientes desde gastos
     this.gastoService.gastos$.subscribe((gastos) => {
-      const ids = (gastos || [])
-        .map(g => g.proveedorId)
-        .filter((v): v is number => typeof v === 'number' && Number.isFinite(v));
+      const ids: number[] = [];
+      const contador = new Map<number, number>();
+
+      (gastos || []).forEach((g) => {
+        const provId = g.proveedorId;
+        if (typeof provId === 'number' && Number.isFinite(provId)) {
+          ids.push(provId);
+
+          if (g.estado === 'pendiente') {
+            const actual = contador.get(provId) ?? 0;
+            contador.set(provId, actual + 1);
+          }
+        }
+      });
+
       this.proveedoresEnUso = new Set(ids);
+      this.deudasPendientesPorProveedor = contador;
     });
 
     // cargar gastos al iniciar si no hay snapshot
@@ -61,6 +75,23 @@ export class ProveedoresComponent {
         this.gastoService.fetchAll().subscribe();
       }
     } catch {}
+  }
+
+  focusFirstInput(offcanvasId: string): void {
+    const offcanvas = document.getElementById(offcanvasId);
+    if (!offcanvas) return;
+
+    let input = offcanvas.querySelector('input[data-autofocus="true"]') as HTMLInputElement | null;
+    if (!input) {
+      input = offcanvas.querySelector('input') as HTMLInputElement | null;
+    }
+
+    if (input) {
+      setTimeout(() => {
+        input?.focus();
+        (input as any)?.select?.();
+      }, 50);
+    }
   }
 
   onSearch(value: string): void {
@@ -101,10 +132,17 @@ export class ProveedoresComponent {
         this.mostrarAddProveedor = false;
         // cerrar offcanvas de escritorio si está abierto
         this.closeOffcanvas('offcanvasAddProveedor');
-        Swal.fire({ title: 'Creado', text: 'Proveedor creado correctamente', icon: 'success', confirmButtonText: 'Aceptar' });
+        const nombreCompleto = `${payload.nombre} ${payload.apellido ?? ''}`.trim();
+        Swal.fire({
+          title: 'Proveedor Registrado!',
+          icon: 'success',
+          html: `El Proveedor <b>${nombreCompleto}</b> fue Registrado con Éxito`,
+          timer: 2000,
+          showConfirmButton: false
+        });
       },
       error: (err) => {
-        const msg = err?.error?.message || err?.message || 'No se pudo crear el proveedor';
+        const msg = err?.error?.message || err?.message || 'Ocurrió un error inesperado';
         Swal.fire({ title: 'Error', text: msg, icon: 'error', confirmButtonText: 'Aceptar' });
         console.error('Error crear proveedor:', err);
       }
@@ -124,16 +162,18 @@ export class ProveedoresComponent {
         // cerrar offcanvas de escritorio si está abierto
         this.closeOffcanvas('offcanvasModifyProveedor');
         Swal.fire({
-          title: 'Actualizado',
-          text: 'Proveedor actualizado correctamente',
+          title: 'Proveedor Modificado!',
           icon: 'success',
-          confirmButtonText: 'Aceptar'
+          html: 'El <b>Proveedor</b> fue Modificado con Éxito',
+          timer: 2000,
+          showConfirmButton: false
         });
       },
       error: (err) => {
+        const msg = err?.error?.message || 'Ocurrió un error inesperado';
         Swal.fire({
           title: 'Error',
-          text: 'No se pudo actualizar el proveedor',
+          text: msg,
           icon: 'error',
           confirmButtonText: 'Aceptar'
         });
@@ -162,7 +202,7 @@ export class ProveedoresComponent {
             this.closeOffcanvas('offcanvasModifyProveedor');
             Swal.fire({
               title: 'Eliminado',
-              text: 'Proveedor eliminado correctamente',
+              html: 'El <b>Proveedor</b> fue Eliminado Correctamente',
               icon: 'success',
               confirmButtonText: 'Aceptar'
             });
@@ -231,5 +271,10 @@ export class ProveedoresComponent {
     if (idOrP == null) return false;
     const id = typeof idOrP === 'number' ? idOrP : idOrP.id;
     return this.proveedoresEnUso.has(id);
+  }
+
+  getDeudasPendientes(p: Proveedor | null | undefined): number {
+    if (!p) return 0;
+    return this.deudasPendientesPorProveedor.get(p.id) ?? 0;
   }
 }

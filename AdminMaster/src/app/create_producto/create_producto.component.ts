@@ -29,6 +29,12 @@ export class CreateProductoComponent implements OnInit {
   constructor(private categoriaService:CategoriaService, private productoService: ProductoService){}
   @ViewChild('imagenInput') imagenInput!: ElementRef<HTMLInputElement>;
   @ViewChild('formulario') formRef!: NgForm;
+  @ViewChild('nombreInput') nombreInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('codigoInput') codigoInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('stockInput') stockInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('precioUnitarioInput') precioUnitarioInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('precioComercialInput') precioComercialInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('categoriaSelect') categoriaSelect?: ElementRef<HTMLSelectElement>;
   previewUrl: string | ArrayBuffer | null = null;
   imagenSeleccionada: File | null = null;
   categorias:Categorias[]=[];
@@ -84,6 +90,15 @@ export class CreateProductoComponent implements OnInit {
           return !mismoId && String(p.codigoProducto || '').trim().toLowerCase() === codigo.toLowerCase();
         });
         this.codigoExistente = !!existe;
+        // Si el código no existe y es válido, avanzar automáticamente al siguiente campo (stock)
+        if (!this.codigoExistente && codigo) {
+          setTimeout(() => {
+            if (this.stockInput?.nativeElement) {
+              this.stockInput.nativeElement.focus();
+              this.stockInput.nativeElement.select();
+            }
+          }, 0);
+        }
       },
       error: () => this.codigoExistente = false
     });
@@ -92,6 +107,52 @@ export class CreateProductoComponent implements OnInit {
     const limpio = String(value || '').replace(/[^A-Za-z0-9]/g, '');
     this.producto.codigoProducto = limpio;
     this.codigoExistente = false;
+  }
+  // Navegación con tecla Enter entre campos
+  onEnterNombre(event: Event) {
+    event.preventDefault();
+    if (this.codigoInput?.nativeElement) {
+      this.codigoInput.nativeElement.focus();
+      this.codigoInput.nativeElement.select();
+    }
+  }
+
+  onEnterCodigo(event: Event) {
+    event.preventDefault();
+    if (this.stockInput?.nativeElement) {
+      this.stockInput.nativeElement.focus();
+      this.stockInput.nativeElement.select();
+    }
+  }
+
+  onEnterStock(event: Event) {
+    event.preventDefault();
+    if (this.precioUnitarioInput?.nativeElement) {
+      this.precioUnitarioInput.nativeElement.focus();
+      this.precioUnitarioInput.nativeElement.select();
+    }
+  }
+
+  onEnterPrecioUnitario(event: Event) {
+    event.preventDefault();
+    if (this.precioComercialInput?.nativeElement) {
+      this.precioComercialInput.nativeElement.focus();
+      this.precioComercialInput.nativeElement.select();
+    }
+  }
+
+  onEnterPrecioComercial(event: Event) {
+    event.preventDefault();
+    if (this.categoriaSelect?.nativeElement) {
+      this.categoriaSelect.nativeElement.focus();
+    }
+  }
+
+  onEnterCategoria(event: Event, form: NgForm) {
+    event.preventDefault();
+    if (!form.invalid && !this.codigoExistente) {
+      this.onSubmit();
+    }
   }
   onSubmit() {
     // Sanitizar valores no negativos
@@ -119,7 +180,7 @@ export class CreateProductoComponent implements OnInit {
     if (this.editMode && this.productoInicial?.id) {
       this.productoService.update(this.productoInicial.id, payload).subscribe({
         next: () => {
-          Swal.fire('Producto Modificado', 'Se actualizó correctamente.', 'success');
+          Swal.fire('Producto Modificado', 'Se Actualizó Correctamente.', 'success');
           this.guardado.emit();
           // Reset de estados visuales
           this.codigoExistente = false;
@@ -130,19 +191,19 @@ export class CreateProductoComponent implements OnInit {
           this.previewUrl = null;
         },
         error: (err) => {
-          Swal.fire('Error', err?.error?.message || 'No se pudo actualizar el producto', 'error');
+          Swal.fire('Error', err?.error?.message || 'No se pudo Actualizar el Producto', 'error');
         }
       });
     } else {
       this.productoService.create(payload).subscribe({
         next: () => {
-          Swal.fire('Producto Creado', 'Se registró correctamente.', 'success');
+          Swal.fire('Producto Creado', 'Se Registró Correctamente.', 'success');
           this.closeOffcanvas();
           this.resetForm();
           this.guardado.emit();
         },
         error: (err) => {
-          Swal.fire('Error', err?.error?.message || 'No se pudo crear el producto', 'error');
+          Swal.fire('Error', err?.error?.message || 'No se pudo Crear el Producto', 'error');
         }
       });
     }
@@ -161,8 +222,27 @@ export class CreateProductoComponent implements OnInit {
   abrirSelectorImagen() {
     this.imagenInput.nativeElement.click();
   }
-  ngOnInit():void{
+  ngOnInit(): void {
     this.cargarTotal();
+
+    // Enfocar automáticamente el nombre del producto al abrir el offcanvas de agregar producto
+    setTimeout(() => {
+      try {
+        const offcanvasEl = document.getElementById('offcanvasAgregarProducto');
+        if (!offcanvasEl) return;
+        offcanvasEl.addEventListener('shown.bs.offcanvas', () => {
+          setTimeout(() => {
+            try {
+              const el = this.nombreInput?.nativeElement;
+              if (el) {
+                el.focus();
+                el.select();
+              }
+            } catch {}
+          }, 0);
+        });
+      } catch {}
+    }, 0);
   }
   cargarTotal():void{
     this.categoriaService.getCategories().subscribe({

@@ -1,5 +1,6 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
 
@@ -11,6 +12,21 @@ export class AuthService {
 
   private isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
+  }
+
+  isTokenValid(): boolean {
+    if (!this.isBrowser()) return false;
+    const token = this.getToken();
+    if (!token) return false;
+    try {
+      const payloadRaw = token.split('.')[1] || '';
+      const payload = JSON.parse(atob(payloadRaw));
+      const expMs = Number(payload?.exp) * 1000;
+      if (!Number.isFinite(expMs)) return false;
+      return Date.now() < expMs;
+    } catch {
+      return false;
+    }
   }
 
   login(correo: string, contrasena: string) {
@@ -75,8 +91,12 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/verificar-correo`, { correo, codigo });
   }
 
-  restablecerContrasena(correo: string, nueva: string) {
+  restablecerContrasena(correo: string, nueva: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/restablecer-con-correo`, { correo, nueva });
+  }
+
+  activarEmpleado(correo: string, codigo: string, nueva: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/empleado/activar`, { correo, codigo, nueva });
   }
 
   getCorreoEnvio() {

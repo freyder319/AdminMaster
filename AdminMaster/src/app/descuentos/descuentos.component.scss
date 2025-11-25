@@ -28,3 +28,25 @@
   opacity: .6;
   cursor: not-allowed;
 }
+
+.btn.elimi {
+  width: 110px;
+  text-align: center;
+  color: white;
+  background-color: #e81313;
+  box-shadow: 0 0 3px 1px #e81313;
+  border-radius: 12px;
+  padding: 7px;
+  font-weight: bold;
+}
+
+.btn.elimi:focus {
+  border: 1px solid #e81313;
+  box-shadow: 0 0 6px 2px #e81313;
+}
+
+// Borde y halo azul clarito al enfocar los inputs del formulario
+.form-control:focus {
+  border-color: #5adbff;
+  box-shadow: 0 0 0 3px rgba(90, 219, 255, 0.35);
+}

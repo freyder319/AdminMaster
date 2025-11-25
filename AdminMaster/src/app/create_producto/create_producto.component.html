@@ -37,6 +37,8 @@
           maxlength="80"
           [(ngModel)]="producto.nombreProducto"
           #nombreProducto="ngModel"
+          #nombreInput
+          (keydown.enter)="onEnterNombre($event)"
         />
         <div class="invalid-feedback d-block" *ngIf="nombreProducto.invalid && (nombreProducto.dirty || nombreProducto.touched)">
           El nombre es obligatorio.
@@ -60,6 +62,8 @@
           (ngModelChange)="onCodigoInput($event)"
           (blur)="validarCodigo()"
           #codigoProducto="ngModel"
+          #codigoInput
+          (keydown.enter)="onEnterCodigo($event)"
           [ngClass]="{ 'is-invalid': (codigoProducto.invalid && (codigoProducto.dirty || codigoProducto.touched)) || codigoExistente }"
         />
         <div class="invalid-feedback d-block" *ngIf="codigoProducto.invalid && (codigoProducto.dirty || codigoProducto.touched)">
@@ -75,17 +79,24 @@
         <input
           type="number"
           class="form-control"
+          [ngClass]="{ 'is-invalid': stockProducto.invalid && (stockProducto.dirty || stockProducto.touched) }"
           id="stock"
           name="stockProducto"
           required
           min="0"
+          max="500"
           placeholder="0"
           [ngModel]="producto.stockProducto || null"
           (ngModelChange)="producto.stockProducto = $event"
           #stockProducto="ngModel"
+          #stockInput
+          (keydown.enter)="onEnterStock($event)"
         />
         <div class="invalid-feedback d-block" *ngIf="stockProducto.invalid && (stockProducto.dirty || stockProducto.touched)">
           El stock es obligatorio y no puede ser negativo.
+        </div>
+        <div class="invalid-feedback d-block" *ngIf="stockProducto.errors?.['max']">
+          El stock máximo permitido es de 500 unidades.
         </div>
       </div>
 
@@ -100,6 +111,8 @@
           min="0"
           [(ngModel)]="producto.precioUnitario"
           #precioUnitario="ngModel"
+          #precioUnitarioInput
+          (keydown.enter)="onEnterPrecioUnitario($event)"
         />
         <div class="invalid-feedback d-block" *ngIf="precioUnitario.invalid && (precioUnitario.dirty || precioUnitario.touched)">
           El precio unitario es obligatorio y no puede ser negativo.
@@ -117,6 +130,8 @@
           min="0"
           [(ngModel)]="producto.precioComercial"
           #precioComercial="ngModel"
+          #precioComercialInput
+          (keydown.enter)="onEnterPrecioComercial($event)"
         />
         <div class="invalid-feedback d-block" *ngIf="precioComercial.invalid && (precioComercial.dirty || precioComercial.touched)">
           El precio comercial es obligatorio y no puede ser negativo.
@@ -132,6 +147,8 @@
           required
           [(ngModel)]="producto.categoria"
           #categoriaCtrl="ngModel"
+          #categoriaSelect
+          (keydown.enter)="onEnterCategoria($event, formulario)"
         >
           <option disabled [selected]="!producto.categoria">Selecciona una Categoría</option>
           <option *ngFor="let c of categorias" [value]="c.idCategoria">{{ c.nombreCategoria }}</option>

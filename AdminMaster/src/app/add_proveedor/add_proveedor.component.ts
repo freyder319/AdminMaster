@@ -45,4 +45,25 @@ export class AddProveedorComponent {
     this.telefonoDuplicado = false;
     this.correoDuplicado = false;
   }
+
+  onEnterFocus(next: any, event: Event, value?: any) {
+    event.preventDefault();
+
+    if (value === undefined || value === null) {
+      return;
+    }
+    if (typeof value === 'string' && !value.trim()) {
+      return;
+    }
+    if (typeof value === 'number' && (!Number.isFinite(value) || value <= 0)) {
+      return;
+    }
+
+    if (next && typeof next.focus === 'function') {
+      next.focus();
+      if (typeof next.select === 'function') {
+        next.select();
+      }
+    }
+  }
 }
