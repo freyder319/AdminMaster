@@ -4,6 +4,10 @@
   transform: none;
 }
 
+.navbar-brand:hover i {
+  color: #000000 !important;
+}
+
 .sidebar-shell {
   height: 100%;
   display: flex;
@@ -21,6 +25,7 @@
   border-radius: 0 18px 18px 0; /* solo redondeo hacia dentro */
   background: #e5f0ff;
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.25);
+  overflow: visible;
 }
 
 .rail-item {
@@ -31,7 +36,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
   color: #1f2933;
   cursor: pointer;
   transition: background-color 0.18s ease, color 0.18s ease, transform 0.16s ease;
@@ -54,6 +58,10 @@
 .rail-item:hover {
   background: rgba(148, 163, 184, 0.25);
   transform: none;
+}
+
+.rail-item:hover i {
+  color: #000000 !important;
 }
 
 .active-rail {
@@ -475,5 +483,583 @@
 @media screen and (min-width: 768px) {
   .mobile-nav-toggle {
     display: none;
+  }
+}
+
+/* Estilos para el botón de Inteligencia Artificial */
+.rail-item-ia {
+  position: relative;
+  background: #1d4ed8 !important;
+  color: #fff !important;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.rail-item-ia::before,
+.rail-item-ia::after {
+  content: none;
+}
+
+.rail-item-ia i {
+  position: static;
+  z-index: auto;
+  font-size: 18px;
+}
+/* Destellos alrededor del botón (mantener chispas, sin halo grande) */
+.sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #ffffff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+}
+
+.sparkle-1 {
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: sparkle-out-up 2.3s ease-out infinite;
+}
+
+.sparkle-2 {
+  top: 50%;
+  right: 0px;
+  transform: translateY(-50%);
+  animation: sparkle-out-right 2.3s ease-out infinite 0.2s;
+}
+
+.sparkle-3 {
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: sparkle-out-down 2.3s ease-out infinite 0.4s;
+}
+
+.sparkle-4 {
+  top: 50%;
+  left: 0px;
+  transform: translateY(-50%);
+  animation: sparkle-out-left 2.3s ease-out infinite 0.6s;
+}
+
+.sparkle-5 {
+  top: 25%;
+  right: 25%;
+  animation: sparkle-out-diagonal-1 2.3s ease-out infinite 0.8s;
+}
+
+.sparkle-6 {
+  bottom: 25%;
+  right: 25%;
+  animation: sparkle-out-diagonal-2 2.3s ease-out infinite 1s;
+}
+
+.sparkle-7 {
+  bottom: 25%;
+  left: 25%;
+  animation: sparkle-out-diagonal-3 2.3s ease-out infinite 1.2s;
+}
+
+.sparkle-8 {
+  top: 25%;
+  left: 25%;
+  animation: sparkle-out-diagonal-4 2.3s ease-out infinite 1.4s;
+}
+
+/* Velocidades dinámicas para el botón IA */
+.rail-item-ia:hover .sparkle-1 {
+  animation: sparkle-out-up_hover 1s ease-out infinite;
+}
+
+.rail-item-ia:hover .sparkle-2 {
+  animation: sparkle-out-right_hover 1s ease-out infinite 0.1s;
+}
+
+.rail-item-ia:hover .sparkle-3 {
+  animation: sparkle-out-down_hover 1s ease-out infinite 0.2s;
+}
+
+.rail-item-ia:hover .sparkle-4 {
+  animation: sparkle-out-left_hover 1s ease-out infinite 0.3s;
+}
+
+.rail-item-ia:hover .sparkle-5 {
+  animation: sparkle-out-diagonal-1_hover 1s ease-out infinite 0.4s;
+}
+
+.rail-item-ia:hover .sparkle-6 {
+  animation: sparkle-out-diagonal-2_hover 1s ease-out infinite 0.5s;
+}
+
+.rail-item-ia:hover .sparkle-7 {
+  animation: sparkle-out-diagonal-3_hover 1s ease-out infinite 0.6s;
+}
+
+.rail-item-ia:hover .sparkle-8 {
+  animation: sparkle-out-diagonal-4_hover 1s ease-out infinite 0.7s;
+}
+
+.rail-item-ia.active-rail .sparkle-1 {
+  animation: sparkle-out-up_active 0.9s ease-out infinite;
+}
+
+.rail-item-ia.active-rail .sparkle-2 {
+  animation: sparkle-out-right_active 0.9s ease-out infinite 0.1s;
+}
+
+.rail-item-ia.active-rail .sparkle-3 {
+  animation: sparkle-out-down_active 0.9s ease-out infinite 0.2s;
+}
+
+.rail-item-ia.active-rail .sparkle-4 {
+  animation: sparkle-out-left_active 0.9s ease-out infinite 0.3s;
+}
+
+.rail-item-ia.active-rail .sparkle-5 {
+  animation: sparkle-out-diagonal-1_active 0.9s ease-out infinite 0.4s;
+}
+
+.rail-item-ia.active-rail .sparkle-6 {
+  animation: sparkle-out-diagonal-2_active 0.9s ease-out infinite 0.5s;
+}
+
+.rail-item-ia.active-rail .sparkle-7 {
+  animation: sparkle-out-diagonal-3_active 0.9s ease-out infinite 0.6s;
+}
+
+.rail-item-ia.active-rail .sparkle-8 {
+  animation: sparkle-out-diagonal-4_active 0.9s ease-out infinite 0.7s;
+}
+
+/* Animaciones */
+@keyframes shimmer {
+  0%, 100% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  50% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+@keyframes shimmer_hover {
+  0%, 100% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  50% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+@keyframes shimmer_active {
+  0%, 100% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  50% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+@keyframes pulse-glow {
+  0% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes pulse-glow_hover {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes pulse-glow_active {
+  0% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes sparkle-out-up {
+  0% {
+    opacity: 0;
+    transform: translateY(0px) translateX(-50%) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-5px) translateX(-50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px) translateX(-50%) scale(0.3);
+  }
+}
+
+@keyframes sparkle-out-right {
+  0% {
+    opacity: 0;
+    transform: translateX(0px) translateY(-50%) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: translateX(5px) translateY(-50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(20px) translateY(-50%) scale(0.3);
+  }
+}
+
+@keyframes sparkle-out-down {
+  0% {
+    opacity: 0;
+    transform: translateY(0px) translateX(-50%) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(5px) translateX(-50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(20px) translateX(-50%) scale(0.3);
+  }
+}
+
+@keyframes sparkle-out-left {
+  0% {
+    opacity: 0;
+    transform: translateX(0px) translateY(-50%) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: translateX(-5px) translateY(-50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-20px) translateY(-50%) scale(0.3);
+  }
+}
+
+@keyframes sparkle-out-diagonal-1 {
+  0% {
+    opacity: 0;
+    transform: translate(0px, 0px) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(3px, -3px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(15px, -15px) scale(0.3);
+  }
+}
+
+@keyframes sparkle-out-diagonal-2 {
+  0% {
+    opacity: 0;
+    transform: translate(0px, 0px) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(3px, 3px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(15px, 15px) scale(0.3);
+  }
+}
+
+@keyframes sparkle-out-diagonal-3 {
+  0% {
+    opacity: 0;
+    transform: translate(0px, 0px) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-3px, 3px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-15px, 15px) scale(0.3);
+  }
+}
+
+@keyframes sparkle-out-diagonal-4 {
+  0% {
+    opacity: 0;
+    transform: translate(0px, 0px) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-3px, -3px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-15px, -15px) scale(0.3);
+  }
+}
+
+@keyframes sparkle-out-up_hover {
+  0% {
+    opacity: 0;
+    transform: translateY(0px) translateX(-50%) scale(0.3);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(-8px) translateX(-50%) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-30px) translateX(-50%) scale(0.2);
+  }
+}
+
+@keyframes sparkle-out-right_hover {
+  0% {
+    opacity: 0;
+    transform: translateX(0px) translateY(-50%) scale(0.3);
+  }
+  15% {
+    opacity: 1;
+    transform: translateX(8px) translateY(-50%) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(30px) translateY(-50%) scale(0.2);
+  }
+}
+
+@keyframes sparkle-out-down_hover {
+  0% {
+    opacity: 0;
+    transform: translateY(0px) translateX(-50%) scale(0.3);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(8px) translateX(-50%) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(30px) translateX(-50%) scale(0.2);
+  }
+}
+
+@keyframes sparkle-out-left_hover {
+  0% {
+    opacity: 0;
+    transform: translateX(0px) translateY(-50%) scale(0.3);
+  }
+  15% {
+    opacity: 1;
+    transform: translateX(-8px) translateY(-50%) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-30px) translateY(-50%) scale(0.2);
+  }
+}
+
+@keyframes sparkle-out-diagonal-1_hover {
+  0% {
+    opacity: 0;
+    transform: translate(0px, 0px) scale(0.3);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(6px, -6px) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(25px, -25px) scale(0.2);
+  }
+}
+
+@keyframes sparkle-out-diagonal-2_hover {
+  0% {
+    opacity: 0;
+    transform: translate(0px, 0px) scale(0.3);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(6px, 6px) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(25px, 25px) scale(0.2);
+  }
+}
+
+@keyframes sparkle-out-diagonal-3_hover {
+  0% {
+    opacity: 0;
+    transform: translate(0px, 0px) scale(0.3);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-6px, 6px) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-25px, 25px) scale(0.2);
+  }
+}
+
+@keyframes sparkle-out-diagonal-4_hover {
+  0% {
+    opacity: 0;
+    transform: translate(0px, 0px) scale(0.3);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-6px, -6px) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-25px, -25px) scale(0.2);
+  }
+}
+
+@keyframes sparkle-out-up_active {
+  0% {
+    opacity: 0;
+    transform: translateY(0px) translateX(-50%) scale(0.2);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(-10px) translateX(-50%) scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-35px) translateX(-50%) scale(0.1);
+  }
+}
+
+@keyframes sparkle-out-right_active {
+  0% {
+    opacity: 0;
+    transform: translateX(0px) translateY(-50%) scale(0.2);
+  }
+  10% {
+    opacity: 1;
+    transform: translateX(10px) translateY(-50%) scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(35px) translateY(-50%) scale(0.1);
+  }
+}
+
+@keyframes sparkle-out-down_active {
+  0% {
+    opacity: 0;
+    transform: translateY(0px) translateX(-50%) scale(0.2);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(10px) translateX(-50%) scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(35px) translateX(-50%) scale(0.1);
+  }
+}
+
+@keyframes sparkle-out-left_active {
+  0% {
+    opacity: 0;
+    transform: translateX(0px) translateY(-50%) scale(0.2);
+  }
+  10% {
+    opacity: 1;
+    transform: translateX(-10px) translateY(-50%) scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-35px) translateY(-50%) scale(0.1);
+  }
+}
+
+@keyframes sparkle-out-diagonal-1_active {
+  0% {
+    opacity: 0;
+    transform: translate(0px, 0px) scale(0.2);
+  }
+  10% {
+    opacity: 1;
+    transform: translate(8px, -8px) scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(30px, -30px) scale(0.1);
+  }
+}
+
+@keyframes sparkle-out-diagonal-2_active {
+  0% {
+    opacity: 0;
+    transform: translate(0px, 0px) scale(0.2);
+  }
+  10% {
+    opacity: 1;
+    transform: translate(8px, 8px) scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(30px, 30px) scale(0.1);
+  }
+}
+
+@keyframes sparkle-out-diagonal-3_active {
+  0% {
+    opacity: 0;
+    transform: translate(0px, 0px) scale(0.2);
+  }
+  10% {
+    opacity: 1;
+    transform: translate(-8px, 8px) scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-30px, 30px) scale(0.1);
+  }
+}
+
+@keyframes sparkle-out-diagonal-4_active {
+  0% {
+    opacity: 0;
+    transform: translate(0px, 0px) scale(0.2);
+  }
+  10% {
+    opacity: 1;
+    transform: translate(-8px, -8px) scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-30px, -30px) scale(0.1);
   }
 }

@@ -42,6 +42,7 @@
   width: 200%;
   height: 200%;
   animation: none;
+  display: none;
 }
 
 .agent-text {
@@ -74,7 +75,7 @@
   border-radius: 18px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   overflow: hidden;
-  backdrop-filter: blur(12px);
+
   border: 1px solid rgba(56, 189, 248, 0.7);
   z-index: 999;
 }
@@ -102,6 +103,27 @@
 .chat-header-title span:last-child {
   font-size: 11px;
   opacity: 0.8;
+}
+
+.chat-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chat-header-clear {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+  padding: 2px;
+}
+
+.chat-header-clear:hover {
+  opacity: 1;
 }
 
 .chat-header-close {

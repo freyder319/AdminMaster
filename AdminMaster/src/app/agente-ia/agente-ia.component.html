@@ -12,7 +12,12 @@
       <span>Agente IA</span>
       <span>Asistente virtual</span>
     </div>
-    <span class="chat-header-close" (click)="$event.stopPropagation(); toggleChat()">×</span>
+    <div class="chat-header-actions">
+      <button class="chat-header-clear" (click)="$event.stopPropagation(); clearHistory()" title="Limpiar historial">
+        🗑️
+      </button>
+      <span class="chat-header-close" (click)="$event.stopPropagation(); toggleChat()">×</span>
+    </div>
   </div>
 
   <div class="chat-body">
