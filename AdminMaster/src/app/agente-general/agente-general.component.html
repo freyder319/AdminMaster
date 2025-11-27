@@ -1,0 +1,134 @@
+<div class="with-sidebar">
+  <header>
+    <app-admin-navbar></app-admin-navbar>
+  </header>
+
+  <div class="main">
+    <div class="chat-layout">
+      <!-- Panel izquierdo: historial de chats -->
+      <aside class="chat-history-panel">
+        <div class="chat-history-header">
+          <h2>Historial</h2>
+          <div class="chat-history-actions">
+            <button 
+              type="button" 
+              class="clear-history-btn" 
+              [class.active]="isDeleteMode"
+              (click)="toggleDeleteMode()" 
+              [title]="isDeleteMode ? 'Cancelar eliminación' : 'Eliminar chats individuales'"
+            >
+              <i class="bi" [class.bi-trash3]="!isDeleteMode" [class.bi-x-lg]="isDeleteMode"></i>
+            </button>
+            <button type="button" class="new-chat-btn" (click)="onNewChatClick()">
+              <i class="bi bi-plus-lg"></i>
+              <span>Nuevo chat</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="chat-history-list">
+          <!-- Mensaje de modo eliminación -->
+          <div class="delete-mode-message" *ngIf="isDeleteMode">
+            <i class="bi bi-info-circle"></i>
+            <span>Selecciona los chats que deseas eliminar</span>
+          </div>
+          
+          <button
+            type="button"
+            class="history-item"
+            [class.delete-mode]="isDeleteMode"
+            [class.active]="session.id === activeSessionId && !isDeleteMode"
+            *ngFor="let session of sessions"
+            (click)="isDeleteMode ? deleteSession(session.id) : onSelectSession(session.id)"
+            [title]="isDeleteMode ? 'Eliminar este chat' : 'Abrir chat'"
+          >
+            <div class="history-item-content">
+              <div class="history-item-title">{{ session.title }}</div>
+              <div class="history-item-subtitle">
+                {{ session.createdAt | date: 'short' }}
+              </div>
+            </div>
+            <button 
+              type="button" 
+              class="history-item-delete" 
+              *ngIf="isDeleteMode"
+              (click)="$event.stopPropagation(); deleteSession(session.id)"
+              title="Eliminar chat"
+            >
+              <i class="bi bi-trash3"></i>
+            </button>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Panel derecho: chat actual -->
+      <div class="chat-container">
+      <div class="chat-header">
+        <div class="chat-header-title">
+          <span>Agente IA</span>
+          <span>Asistente virtual</span>
+        </div>
+      </div>
+
+      <div class="chat-body" #chatBody>
+        <div
+          *ngFor="let msg of messages"
+          class="message"
+          [ngClass]="msg.from === 'user' ? 'user' : 'agent'"
+        >
+          <!-- Mostrar texto si existe -->
+          <div *ngIf="msg.text" class="message-text" [innerHTML]="formatMessage(msg.text)"></div>
+          
+          <!-- Mostrar pasos si existen -->
+          <div *ngIf="msg.steps && msg.steps.length > 0" class="steps-list">
+            <div class="steps-header">
+              <i class="bi bi-list-ol"></i>
+              <span>Pasos a seguir</span>
+            </div>
+            <div class="step-item" *ngFor="let step of msg.steps; let i = index">
+              <div class="step-number">{{ i + 1 }}</div>
+              <div class="step-content">
+                <div class="step-text">{{ step }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="chat-status" *ngIf="isSending">
+          <div class="loading-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          Enviando mensaje...
+        </div>
+        
+        <div class="chat-error" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+      </div>
+
+      <div class="chat-input-area">
+        <div class="input-wrapper">
+          <input
+            type="text"
+            [(ngModel)]="newMessage"
+            placeholder="Escribe un mensaje..."
+            [disabled]="isSending"
+            (keydown.enter)="sendMessage()"
+            class="chat-input"
+          />
+          <button
+            class="chat-send-btn"
+            type="button"
+            (click)="sendMessage()"
+            [disabled]="isSending || !newMessage.trim()"
+          >
+            <i class="bi bi-send-fill"></i>
+          </button>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
