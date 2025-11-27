@@ -1,0 +1,467 @@
+<div class="with-sidebar">
+  <header>
+    <app-admin-navbar></app-admin-navbar>
+  </header>
+
+  <div class="main">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="page-header">
+            <h1>Formularios Dinámicos</h1>
+            <p class="text-muted">Asistente IA para creación de formularios inteligentes</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selección de tipo de formulario -->
+      <div class="row" *ngIf="!selectedFormType">
+        <div class="col-12">
+          <div class="card selection-card">
+            <div class="card-header">
+              <h5 class="card-title mb-0">
+                <i class="bi bi-magic me-2"></i>
+                ¿Qué deseas agregar hoy?
+              </h5>
+            </div>
+            <div class="card-body">
+              <div class="form-type-grid">
+                <div class="form-type-card" (click)="selectFormType('producto')">
+                  <div class="form-type-icon">
+                    <i class="bi bi-box"></i>
+                  </div>
+                  <h6>Producto</h6>
+                  <p class="text-muted small">Agregar nuevo producto al inventario</p>
+                </div>
+                <div class="form-type-card" (click)="selectFormType('proveedor')">
+                  <div class="form-type-icon">
+                    <i class="bi bi-truck"></i>
+                  </div>
+                  <h6>Proveedor</h6>
+                  <p class="text-muted small">Registrar nuevo proveedor</p>
+                </div>
+                <div class="form-type-card" (click)="selectFormType('cliente')">
+                  <div class="form-type-icon">
+                    <i class="bi bi-person"></i>
+                  </div>
+                  <h6>Cliente</h6>
+                  <p class="text-muted small">Agregar nuevo cliente</p>
+                </div>
+                <div class="form-type-card" (click)="selectFormType('empleado')">
+                  <div class="form-type-icon">
+                    <i class="bi bi-person-badge"></i>
+                  </div>
+                  <h6>Empleado</h6>
+                  <p class="text-muted small">Registrar nuevo empleado</p>
+                </div>
+                <div class="form-type-card" (click)="selectFormType('categoria')">
+                  <div class="form-type-icon">
+                    <i class="bi bi-tags"></i>
+                  </div>
+                  <h6>Categoría</h6>
+                  <p class="text-muted small">Crear nueva categoría</p>
+                </div>
+                <div class="form-type-card" (click)="selectFormType('promocion')">
+                  <div class="form-type-icon">
+                    <i class="bi bi-percent"></i>
+                  </div>
+                  <h6>Promoción</h6>
+                  <p class="text-muted small">Configurar nueva promoción</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interfaz con formulario y asistente IA -->
+      <div class="row" *ngIf="selectedFormType">
+        <div class="col-lg-7">
+          <div class="card form-card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5 class="card-title mb-0">
+                <i class="bi bi-pencil-square me-2"></i>
+                Formulario: {{ getFormTypeTitle() }}
+              </h5>
+              <button class="btn btn-sm btn-outline-secondary" (click)="resetForm()">
+                <i class="bi bi-arrow-left me-1"></i>
+                Cambiar tipo
+              </button>
+            </div>
+            <div class="card-body">
+              <!-- Aquí se cargará el formulario dinámico -->
+              <div class="dynamic-form-container">
+                <!-- Formulario de Producto con guía paso a paso -->
+                <div *ngIf="selectedFormType === 'producto'" class="product-step-form">
+                  <!-- Paso 1: Imagen -->
+                  <div class="form-step" [class.active]="currentStep === 1" [class.completed]="currentStep > 1">
+                    <div class="step-header">
+                      <div class="step-number">
+                        <span class="step-icon" *ngIf="currentStep <= 1">📸</span>
+                        <span class="step-check" *ngIf="currentStep > 1">✓</span>
+                      </div>
+                      <div class="step-info">
+                        <h5 class="step-title">Paso 1: Imagen del Producto</h5>
+                        <p class="step-description">Sube una imagen clara y atractiva de tu producto</p>
+                      </div>
+                    </div>
+                    
+                    <div class="step-content" *ngIf="currentStep === 1">
+                      <div class="image-upload-area" 
+                           [class.has-image]="productForm.imagen"
+                           (click)="triggerImageUpload()"
+                           (dragover)="onDragOver($event)"
+                           (dragleave)="onDragLeave($event)"
+                           (drop)="onDrop($event)">
+                        
+                        <div *ngIf="!productForm.imagen" class="upload-placeholder">
+                          <i class="bi bi-cloud-upload display-4 text-muted mb-3"></i>
+                          <h6>Arrastra una imagen aquí o haz clic para seleccionar</h6>
+                          <p class="text-muted small">Formatos: JPG, PNG (Máx. 5MB)</p>
+                        </div>
+                        
+                        <div *ngIf="productForm.imagen" class="image-preview">
+                          <img [src]="productForm.imagen" alt="Preview del producto">
+                          <div class="image-overlay">
+                            <button class="btn btn-sm btn-light" (click)="removeImage($event)">
+                              <i class="bi bi-trash"></i> Cambiar
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <input type="file" 
+                             #imageInput 
+                             (change)="onImageSelected($event)"
+                             accept="image/*"
+                             style="display: none;">
+                      
+                      <div class="step-actions">
+                        <button class="btn btn-primary" 
+                                (click)="nextStep()"
+                                [disabled]="!productForm.imagen">
+                          Siguiente <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Paso 2: Nombre del Producto -->
+                  <div class="form-step" [class.active]="currentStep === 2" [class.completed]="currentStep > 2">
+                    <div class="step-header">
+                      <div class="step-number">
+                        <span class="step-icon" *ngIf="currentStep <= 2">📝</span>
+                        <span class="step-check" *ngIf="currentStep > 2">✓</span>
+                      </div>
+                      <div class="step-info">
+                        <h5 class="step-title">Paso 2: Nombre del Producto</h5>
+                        <p class="step-description">Un nombre claro y descriptivo para tu producto</p>
+                      </div>
+                    </div>
+                    
+                    <div class="step-content" *ngIf="currentStep === 2">
+                      <div class="form-group">
+                        <label for="productName" class="form-label">Nombre del Producto</label>
+                        <input type="text" 
+                               id="productName"
+                               class="form-control form-control-lg"
+                               [(ngModel)]="productForm.nombre"
+                               placeholder="Ej: Laptop Dell Inspiron 15 Core i5"
+                               (input)="onNameChange($event)">
+                        
+                        <div class="ai-suggestion" *ngIf="aiSuggestion.nombre">
+                          <div class="suggestion-header">
+                            <i class="bi bi-lightbulb text-warning"></i>
+                            <span>Sugerencia de la IA</span>
+                          </div>
+                          <div class="suggestion-content">
+                            <p>{{ aiSuggestion.nombre }}</p>
+                            <button class="btn btn-sm btn-outline-primary" (click)="applySuggestion('nombre')">
+                              Aplicar sugerencia
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="step-actions">
+                        <button class="btn btn-outline-secondary me-2" (click)="previousStep()">
+                          <i class="bi bi-arrow-left me-1"></i> Anterior
+                        </button>
+                        <button class="btn btn-primary" 
+                                (click)="nextStep()"
+                                [disabled]="!productForm.nombre">
+                          Siguiente <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Paso 3: Código -->
+                  <div class="form-step" [class.active]="currentStep === 3" [class.completed]="currentStep > 3">
+                    <div class="step-header">
+                      <div class="step-number">
+                        <span class="step-icon" *ngIf="currentStep <= 3">🏷️</span>
+                        <span class="step-check" *ngIf="currentStep > 3">✓</span>
+                      </div>
+                      <div class="step-info">
+                        <h5 class="step-title">Paso 3: Código del Producto</h5>
+                        <p class="step-description">Código único para identificar tu producto</p>
+                      </div>
+                    </div>
+                    
+                    <div class="step-content" *ngIf="currentStep === 3">
+                      <div class="form-group">
+                        <label for="productCode" class="form-label">Código</label>
+                        <input type="text" 
+                               id="productCode"
+                               class="form-control form-control-lg"
+                               [(ngModel)]="productForm.codigo"
+                               placeholder="Ej: LAP-DELL-001"
+                               (input)="onCodeChange($event)">
+                        
+                        <div class="ai-suggestion" *ngIf="aiSuggestion.codigo">
+                          <div class="suggestion-header">
+                            <i class="bi bi-lightbulb text-warning"></i>
+                            <span>Sugerencia de la IA</span>
+                          </div>
+                          <div class="suggestion-content">
+                            <p>{{ aiSuggestion.codigo }}</p>
+                            <button class="btn btn-sm btn-outline-primary" (click)="applySuggestion('codigo')">
+                              Aplicar sugerencia
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="step-actions">
+                        <button class="btn btn-outline-secondary me-2" (click)="previousStep()">
+                          <i class="bi bi-arrow-left me-1"></i> Anterior
+                        </button>
+                        <button class="btn btn-primary" 
+                                (click)="nextStep()"
+                                [disabled]="!productForm.codigo">
+                          Siguiente <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Paso 4: Precios -->
+                  <div class="form-step" [class.active]="currentStep === 4" [class.completed]="currentStep > 4">
+                    <div class="step-header">
+                      <div class="step-number">
+                        <span class="step-icon" *ngIf="currentStep <= 4">💰</span>
+                        <span class="step-check" *ngIf="currentStep > 4">✓</span>
+                      </div>
+                      <div class="step-info">
+                        <h5 class="step-title">Paso 4: Precios</h5>
+                        <p class="step-description">Define los costos y precio de venta</p>
+                      </div>
+                    </div>
+                    
+                    <div class="step-content" *ngIf="currentStep === 4">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="costPrice" class="form-label">Precio Unitario (Costo)</label>
+                            <div class="input-group">
+                              <span class="input-group-text">$</span>
+                              <input type="number" 
+                                     id="costPrice"
+                                     class="form-control"
+                                     [(ngModel)]="productForm.precioUnitario"
+                                     placeholder="0.00"
+                                     (input)="onPriceChange($event)">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="sellPrice" class="form-label">Precio Comercial (Venta)</label>
+                            <div class="input-group">
+                              <span class="input-group-text">$</span>
+                              <input type="number" 
+                                     id="sellPrice"
+                                     class="form-control"
+                                     [(ngModel)]="productForm.precioComercial"
+                                     placeholder="0.00"
+                                     (input)="onPriceChange($event)">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="price-analysis" *ngIf="productForm.precioUnitario && productForm.precioComercial">
+                        <div class="analysis-card">
+                          <h6><i class="bi bi-graph-up me-2"></i>Análisis de Precios</h6>
+                          <div class="profit-margin">
+                            <span class="margin-label">Margen de Ganancia:</span>
+                            <span class="margin-value" [class.good]="profitMargin >= 30" [class.warning]="profitMargin >= 15 && profitMargin < 30" [class.bad]="profitMargin < 15">
+                              {{ profitMargin.toFixed(1) }}%
+                            </span>
+                          </div>
+                          <div class="ai-suggestion" *ngIf="aiSuggestion.precios">
+                            <div class="suggestion-header">
+                              <i class="bi bi-lightbulb text-warning"></i>
+                              <span>Recomendación de la IA</span>
+                            </div>
+                            <div class="suggestion-content">
+                              <p>{{ aiSuggestion.precios }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="step-actions">
+                        <button class="btn btn-outline-secondary me-2" (click)="previousStep()">
+                          <i class="bi bi-arrow-left me-1"></i> Anterior
+                        </button>
+                        <button class="btn btn-primary" 
+                                (click)="nextStep()"
+                                [disabled]="!productForm.precioUnitario || !productForm.precioComercial">
+                          Siguiente <i class="bi bi-arrow-right ms-1"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Paso 5: Stock -->
+                  <div class="form-step" [class.active]="currentStep === 5" [class.completed]="currentStep > 5">
+                    <div class="step-header">
+                      <div class="step-number">
+                        <span class="step-icon" *ngIf="currentStep <= 5">📊</span>
+                        <span class="step-check" *ngIf="currentStep > 5">✓</span>
+                      </div>
+                      <div class="step-info">
+                        <h5 class="step-title">Paso 5: Stock Inicial</h5>
+                        <p class="step-description">Cantidad inicial disponible en inventario</p>
+                      </div>
+                    </div>
+                    
+                    <div class="step-content" *ngIf="currentStep === 5">
+                      <div class="form-group">
+                        <label for="productStock" class="form-label">Stock Inicial</label>
+                        <input type="number" 
+                               id="productStock"
+                               class="form-control form-control-lg"
+                               [(ngModel)]="productForm.stock"
+                               placeholder="0"
+                               (input)="onStockChange($event)">
+                        
+                        <div class="ai-suggestion" *ngIf="aiSuggestion.stock">
+                          <div class="suggestion-header">
+                            <i class="bi bi-lightbulb text-warning"></i>
+                            <span>Sugerencia de la IA</span>
+                          </div>
+                          <div class="suggestion-content">
+                            <p>{{ aiSuggestion.stock }}</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div class="step-actions">
+                        <button class="btn btn-outline-secondary me-2" (click)="previousStep()">
+                          <i class="bi bi-arrow-left me-1"></i> Anterior
+                        </button>
+                        <button class="btn btn-success" 
+                                (click)="submitProduct()"
+                                [disabled]="!productForm.stock">
+                          <i class="bi bi-check-circle me-1"></i> Guardar Producto
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Placeholders para otros formularios -->
+                <div *ngIf="selectedFormType === 'proveedor'" class="provider-form-placeholder">
+                  <div class="text-center py-5">
+                    <i class="bi bi-truck display-1 text-primary mb-3"></i>
+                    <h4>Formulario de Proveedor</h4>
+                    <p class="text-muted">El formulario de proveedores estará disponible próximamente.</p>
+                    <p class="text-muted">Mientras tanto, puedes usar el asistente IA para obtener ayuda sobre cómo agregar proveedores.</p>
+                  </div>
+                </div>
+                
+                <div *ngIf="selectedFormType === 'cliente'" class="client-form-placeholder">
+                  <div class="text-center py-5">
+                    <i class="bi bi-person display-1 text-primary mb-3"></i>
+                    <h4>Formulario de Cliente</h4>
+                    <p class="text-muted">El formulario de clientes estará disponible próximamente.</p>
+                    <p class="text-muted">Mientras tanto, puedes usar el asistente IA para obtener ayuda sobre cómo agregar clientes.</p>
+                  </div>
+                </div>
+                
+                <div *ngIf="selectedFormType === 'empleado'" class="employee-form-placeholder">
+                  <div class="text-center py-5">
+                    <i class="bi bi-person-badge display-1 text-primary mb-3"></i>
+                    <h4>Formulario de Empleado</h4>
+                    <p class="text-muted">El formulario de empleados estará disponible próximamente.</p>
+                    <p class="text-muted">Mientras tanto, puedes usar el asistente IA para obtener ayuda sobre cómo agregar empleados.</p>
+                  </div>
+                </div>
+                
+                <div *ngIf="selectedFormType === 'categoria'" class="category-form-placeholder">
+                  <div class="text-center py-5">
+                    <i class="bi bi-tags display-1 text-primary mb-3"></i>
+                    <h4>Formulario de Categoría</h4>
+                    <p class="text-muted">El formulario de categorías estará disponible próximamente.</p>
+                    <p class="text-muted">Mientras tanto, puedes usar el asistente IA para obtener ayuda sobre cómo agregar categorías.</p>
+                  </div>
+                </div>
+                
+                <div *ngIf="selectedFormType === 'promocion'" class="promotion-form-placeholder">
+                  <div class="text-center py-5">
+                    <i class="bi bi-percent display-1 text-primary mb-3"></i>
+                    <h4>Formulario de Promoción</h4>
+                    <p class="text-muted">El formulario de promociones estará disponible próximamente.</p>
+                    <p class="text-muted">Mientras tanto, puedes usar el asistente IA para obtener ayuda sobre cómo agregar promociones.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-5">
+          <div class="card ai-assistant-card">
+            <div class="card-header ai-header">
+              <h5 class="card-title mb-0">
+                <i class="bi bi-robot me-2"></i>
+                Asistente IA
+              </h5>
+            </div>
+            <div class="card-body ai-body">
+              <div class="ai-messages" #aiMessagesContainer>
+                <div class="ai-message" *ngFor="let message of aiMessages">
+                  <div class="message-avatar">
+                    <i class="bi bi-robot"></i>
+                  </div>
+                  <div class="message-content">
+                    <div class="message-text" [innerHTML]="message.text"></div>
+                    <div class="message-time">{{ message.time | date: 'short' }}</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="ai-input-area">
+                <div class="input-group">
+                  <input 
+                    type="text" 
+                    class="form-control" 
+                    placeholder="Pide ayuda al asistente..."
+                    [(ngModel)]="newAiMessage"
+                    (keyup.enter)="sendAiMessage()"
+                  >
+                  <button class="btn btn-primary" (click)="sendAiMessage()" :disabled="!newAiMessage.trim()">
+                    <i class="bi bi-send"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

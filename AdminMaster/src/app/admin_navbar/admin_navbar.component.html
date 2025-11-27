@@ -36,6 +36,17 @@
         <button *ngIf="rol === 'admin'" type="button" class="rail-item" (click)="onRailGroupClick('relaciones')" [class.active-rail]="selectedGroup === 'relaciones'" title="Relaciones">
           <i class="bi bi-people"></i>
         </button>
+        <button *ngIf="rol === 'admin'" type="button" class="rail-item rail-item-ia" (click)="onRailGroupClick('ia')" [class.active-rail]="selectedGroup === 'ia'" title="Inteligencia Artificial">
+          <span class="sparkle sparkle-1"></span>
+          <span class="sparkle sparkle-2"></span>
+          <span class="sparkle sparkle-3"></span>
+          <span class="sparkle sparkle-4"></span>
+          <span class="sparkle sparkle-5"></span>
+          <span class="sparkle sparkle-6"></span>
+          <span class="sparkle sparkle-7"></span>
+          <span class="sparkle sparkle-8"></span>
+          <i class="bi bi-robot"></i>
+        </button>
       </div>
 
       <!-- Panel derecho con contenido del grupo seleccionado -->
@@ -230,6 +241,22 @@
                   <span class="nav-text">Empleados</span>
                 </a>
               </ng-container>
+
+              <button
+                type="button"
+                class="sidebar-section-label sidebar-section-toggle"
+                (click)="toggleMobileGroup('ia')">
+                <span>Inteligencia Artificial</span>
+                <span class="toggle-icon">{{ mobileGroupsExpanded.ia ? '▾' : '▸' }}</span>
+              </button>
+
+              <ng-container *ngIf="mobileGroupsExpanded.ia">
+                <!-- Inteligencia Artificial -->
+                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/agente-ia']" routerLinkActive="active" title="Agente IA">
+                  <i class="bi bi-robot" style="font-size: 20px; color: #1d4ed8;"></i>
+                  <span class="nav-text">Agente IA</span>
+                </a>
+              </ng-container>
             </ng-container>
 
             <!-- Menú agrupado para desktop -->
@@ -360,6 +387,20 @@
               <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/empleados']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Empleados">
                 <img src="../../assets/img/icons-navbar/Empleados.png" alt="" width="30" height="30">
                 <span class="nav-text">Empleados</span>
+              </a>
+            </ng-container>
+
+            <!-- Grupo: Inteligencia Artificial -->
+            <ng-container *ngIf="selectedGroup === 'ia'">
+              <div class="sidebar-section-label">Inteligencia Artificial</div>
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/agente-ia']" routerLinkActive="active" title="Agente IA">
+                <i class="bi bi-robot" style="font-size: 20px; color: #1d4ed8;"></i>
+                <span class="nav-text">Chat Agente IA</span>
+              </a>
+              <!-- Formularios Dinámicos - Deshabilitado por no estar desarrollado -->
+              <a *ngIf="rol === 'admin'" class="navbar-brand disabled" style="opacity: 0.5; cursor: not-allowed; pointer-events: none;" title="Formularios Dinámicos (No disponible)">
+                <i class="bi bi-ui-checks-grid" style="font-size: 20px; color: #6b7280;"></i>
+                <span class="nav-text">Formularios Dinámicos</span>
               </a>
             </ng-container>
 

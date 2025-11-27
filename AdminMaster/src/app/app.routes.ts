@@ -34,12 +34,16 @@ import { PromocionesComponent } from './promociones/promociones.component';
 import { ReportesEmpleadosComponent } from './reportes-empleados/reportes-empleados.component';
 import { ReportesVentasComponent } from './reportes-ventas/reportes-ventas.component';
 import { ActividadEmpleadoComponent } from './actividad-empleado/actividad-empleado.component';
+import { AgenteGeneralComponent } from './agente-general/agente-general.component';
+import { FormularioDinamicoComponent } from './formulario-dinamico/formulario-dinamico.component';
 
 export const routes: Routes = [
     // Rutas para administrador
     { path: "movimientos", component: AdministradorPrincipalComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
     { path: "promociones", component: PromocionesComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
-
+    { path: "reportes-ventas", component: ReportesVentasComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
+    { path: "agente-ia", component: AgenteGeneralComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
+    { path: "formulario-dinamico", component: FormularioDinamicoComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
     { path: "perfil_administrador", component: PerfilAdministradorComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
     { path: "reportes-empleados", component: ReportesEmpleadosComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
     { path: "reportes-ventas", component: ReportesVentasComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },

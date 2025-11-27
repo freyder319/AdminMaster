@@ -19,7 +19,7 @@ export class AdminNavbarComponent {
   rol: string | null = null;
   turno$!: Observable<TurnoActivoState | null>;
   showTurnMenu = false;
-  selectedGroup: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones' | 'cajas' = 'operaciones';
+  selectedGroup: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones' | 'cajas' = 'operaciones'| 'ia' = 'operaciones';
   isMobilePanelOpen = false;
   isMobileView = false;
   mobileGroupsExpanded = {
@@ -29,6 +29,7 @@ export class AdminNavbarComponent {
     reportes: false,
     relaciones: false,
     cajas: false,
+    ia: false,
   } as const;
   searchPreviewLabel: string | null = null;
   searchFeedbackTerm: string | null = null;
@@ -87,7 +88,7 @@ export class AdminNavbarComponent {
     });
   }
 
-  toggleMobileGroup(group: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones' | 'cajas') {
+  toggleMobileGroup(group: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones' | 'cajas'| 'ia') {
     // Solo aplica en vista móvil; en escritorio las secciones siempre están abiertas
     if (!this.isMobileView && (this.rol || '').toLowerCase() === 'admin') {
       return;
@@ -237,6 +238,12 @@ export class AdminNavbarComponent {
       u.includes('/cajas')
     ) {
       this.selectedGroup = 'cajas';
+    // Rutas de Inteligencia Artificial
+    if (
+      u.includes('/agente-ia') ||
+      u.includes('/formulario-dinamico')
+    ) {
+      this.selectedGroup = 'ia';
       return;
     }
   }
@@ -257,7 +264,7 @@ export class AdminNavbarComponent {
     this.showTurnMenu = !this.showTurnMenu;
   }
 
-  selectGroup(group: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones' | 'cajas') {
+  selectGroup(group: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones' | 'cajas'| 'ia') {
     this.selectedGroup = group;
     if (group !== 'cuenta') {
       this.showTurnMenu = false;
@@ -295,7 +302,7 @@ export class AdminNavbarComponent {
     this.isMobilePanelOpen = !this.isMobilePanelOpen;
   }
 
-  onRailGroupClick(group: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones' | 'cajas'): void {
+  onRailGroupClick(group: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones' | 'cajas'| 'ia'): void {
     this.selectGroup(group);
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
       this.isMobilePanelOpen = true;
