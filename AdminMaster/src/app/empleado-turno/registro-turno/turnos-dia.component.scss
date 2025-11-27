@@ -13,12 +13,6 @@
   padding: 18px;
 }
 
-section {
-  padding-top: 16px;
-  padding-bottom: 32px;
-  background: var(--surface-bg);
-}
-
 .titulo {
   margin: 0 0 12px;
   font-size: 22px;
@@ -61,7 +55,8 @@ section {
 
 .campo-boton .btn:hover,
 .campo-boton .btn:focus {
-  background: var(--primary);
+  /* Mantener un gradiente azul en hover/focus para que no se vea blanco */
+  background: linear-gradient(135deg, #1e40af, #4338ca);
   border-color: transparent;
   box-shadow: 0 8px 20px rgba(37, 99, 235, 0.5);
 }
@@ -87,8 +82,35 @@ section {
   border: 1px solid #e0e7ff;
 }
 
+/* Separar un poco visualmente cada registro de turno */
+.lista .list-group-item + .list-group-item {
+  margin-top: 6px;
+}
+
 .lista strong {
   color: #4338ca;
+}
+
+/* Bloque de filtro de fecha para ver registros, distinto visualmente a los items */
+.filtro-fecha-turnos {
+  border-radius: 14px;
+  border: 1px dashed #c7d2fe;
+  background: #eef2ff;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.filtro-fecha-turnos label {
+  margin: 0;
+  font-weight: 600;
+  color: #4338ca;
+  white-space: nowrap;
+}
+
+.filtro-fecha-turnos .form-control {
+  margin: 0;
 }
 
 .lista .btn-eliminar-turno {

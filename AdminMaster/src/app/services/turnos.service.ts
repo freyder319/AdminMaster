@@ -9,6 +9,11 @@ export interface TurnoResumen {
     finTurno: Date;
     observaciones?: string;
   };
+  caja?: {
+    id: number | null;
+    nombre: string | null;
+    codigoCaja: string | null;
+  } | null;
   aperturaCaja: {
     fecha: Date;
     montoInicial: number;
@@ -24,9 +29,34 @@ export interface TurnoResumen {
     transaccionesLibres: number;
     totalGastos: number;
     cantidadGastos: number;
-    ventas: Array<{ id: number; total: number; nombre?: string | null; cantidad?: number | null }>;
-    ventasLibres: Array<{ id: number; total: number; nombre?: string | null; cantidad?: number | null }>;
-    gastos: Array<{ id: number; monto: number; nombre?: string | null; forma_pago?: string | null }>;
+    ventas: Array<{ 
+      id: number; 
+      total: number; 
+      nombre?: string | null; 
+      cantidad?: number | null; 
+      productos?: Array<{ 
+        nombre: string | null; 
+        cantidad: number | null; 
+        subtotal: number 
+      }> 
+    }>;
+    ventasLibres: Array<{ 
+      id: number; 
+      total: number; 
+      nombre?: string | null; 
+      cantidad?: number | null; 
+      productos?: Array<{ 
+        nombre: string | null; 
+        cantidad: number | null; 
+        subtotal: number 
+      }> 
+    }>;
+    gastos: Array<{ 
+      id: number; 
+      monto: number; 
+      nombre?: string | null; 
+      forma_pago?: string | null 
+    }>;
   };
 }
 

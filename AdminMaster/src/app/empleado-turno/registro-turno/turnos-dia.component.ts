@@ -12,6 +12,8 @@ export interface TurnoDiaItem {
   horaDesde?: string;
   horaHasta?: string;
   createdAt?: string | Date;
+  estado?: 'por_cumplir' | 'pendiente' | 'cumplido' | 'incumplido';
+  observacionEstado?: string;
 }
 
 @Component({
@@ -26,6 +28,7 @@ export class TurnosDiaComponent implements OnInit {
 
   fechaSeleccionada: string = '';
   minFecha: string = '';
+  fechaConsulta: string = '';
   bloque: 'manana' | 'tarde' | 'noche' = 'manana';
   notas: string = '';
   horaDesde: string = '';
@@ -51,7 +54,7 @@ export class TurnosDiaComponent implements OnInit {
   }
 
   private cargarDesdeBackend(): void {
-    const fecha = (this.fechaSeleccionada || '').trim();
+    const fecha = (this.fechaConsulta || this.fechaSeleccionada || '').trim();
     if (!fecha) {
       this.turnos = [];
       return;
@@ -68,6 +71,11 @@ export class TurnosDiaComponent implements OnInit {
   }
 
   onFechaChange(): void {
+    this.cargarDesdeBackend();
+  }
+
+  onFechaConsultaChange(): void {
+    // Cuando cambie la fecha de consulta volvemos a cargar desde backend
     this.cargarDesdeBackend();
   }
 
@@ -154,8 +162,98 @@ export class TurnosDiaComponent implements OnInit {
     });
   }
 
+  /**
+   * Devuelve el estado "calculado" en base a la fecha/hora actual.
+   * Si el turno ya pasó y no está cumplido, lo consideramos incumplido.
+   */
+  getEstadoCalculado(t: TurnoDiaItem): TurnoDiaItem['estado'] {
+    const estadoBase = t.estado;
+    if (!estadoBase) {
+      return undefined;
+    }
+
+    // Si ya está marcado como cumplido o incumplido, respetamos ese estado
+    if (estadoBase === 'cumplido' || estadoBase === 'incumplido') {
+      return estadoBase;
+    }
+
+    // Construimos la fecha/hora final del turno
+    const fecha = (t.fecha || '').trim();
+    if (!fecha) {
+      return estadoBase;
+    }
+
+    const [year, month, day] = fecha.split('-').map(Number);
+    if (!year || !month || !day) {
+      return estadoBase;
+    }
+
+    // Usamos horaHasta si existe, si no, asumimos fin de día 23:59
+    let hora = 23;
+    let minuto = 59;
+    if (t.horaHasta) {
+      const parts = t.horaHasta.split(':').map(Number);
+      if (parts.length >= 2 && !Number.isNaN(parts[0]) && !Number.isNaN(parts[1])) {
+        hora = parts[0];
+        minuto = parts[1];
+      }
+    }
+
+    const finTurno = new Date(year, month - 1, day, hora, minuto, 0, 0);
+    const ahora = new Date();
+
+    // Normalizamos solo la fecha (sin hora) para comparar días
+    const hoySoloFecha = new Date(ahora.getFullYear(), ahora.getMonth(), ahora.getDate());
+    const fechaTurnoSoloFecha = new Date(year, month - 1, day);
+
+    // Si ya pasó la fecha/hora final y no está cumplido, lo mostramos como incumplido
+    if (ahora.getTime() > finTurno.getTime()) {
+      return 'incumplido';
+    }
+
+    // Si la fecha del turno es futura y no está cumplido/incumplido, lo mostramos como "por_cumplir"
+    if (fechaTurnoSoloFecha.getTime() > hoySoloFecha.getTime()) {
+      return 'por_cumplir';
+    }
+
+    // Si la fecha del turno es hoy y venía como "por_cumplir", lo mostramos como "pendiente"
+    if (fechaTurnoSoloFecha.getTime() === hoySoloFecha.getTime() && estadoBase === 'por_cumplir') {
+      return 'pendiente';
+    }
+
+    // En cualquier otro caso, mostramos el estado que viene del backend
+    return estadoBase;
+  }
+
+  /**
+   * Devuelve una observación para mostrar según el estado calculado del turno.
+   * Si ya viene observacionEstado desde el backend, se respeta.
+   */
+  getObservacionCalculada(t: TurnoDiaItem): string | undefined {
+    const estCalculado = this.getEstadoCalculado(t);
+    const obsBase = (t.observacionEstado || '').trim();
+
+    // Si viene observación desde backend y el estado base coincide con el calculado, la respetamos
+    if (obsBase && t.estado && t.estado === estCalculado) {
+      return obsBase;
+    }
+
+    switch (estCalculado) {
+      case 'incumplido':
+        return 'El Turno fue Incumplido.';
+      case 'cumplido':
+        return 'El Turno fue Cumplido.';
+      case 'pendiente':
+        return 'El Turno está Pendiente.';
+      case 'por_cumplir':
+        return 'Turno programado para una fecha futura.';
+      default:
+        return undefined;
+    }
+  }
+
   turnosDeFechaActual(): TurnoDiaItem[] {
-    const f = (this.fechaSeleccionada || '').trim();
+    const f = (this.fechaConsulta || this.fechaSeleccionada || '').trim();
     return this.turnos.filter(t => t.fecha === f);
   }
 }

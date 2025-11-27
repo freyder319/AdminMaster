@@ -1,0 +1,169 @@
+
+<div class="with-sidebar">
+  <header>
+    <app-admin-navbar></app-admin-navbar>
+  </header>
+
+  <main>
+    <section>
+      <div class="container-fluid turnos-activos-container">
+        <div class="row">
+          <div class="col-12">
+            <div class="turno-card">
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+                <div>
+                  <h2 class="titulo mb-1">
+                    <i class="bi bi-activity me-2"></i>
+                    <span>Actividad Detallada del Turno</span>
+                  </h2>
+                  <div class="text-muted small">Visualiza de forma clara todo lo que has vendido durante este Turno.</div>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <span *ngIf="resumen as r" class="badge bg-light text-muted d-none d-sm-inline">
+                    <i class="bi bi-cash-coin me-1"></i>
+                    Ventas: {{ r.actividad.totalVentas | number:'1.0-0' }}
+                  </span>
+                  <button type="button" class="btn-turno" (click)="cargarActividad()">
+                    <i class="bi bi-arrow-repeat me-1"></i>
+                    <span>Actualizar</span>
+                  </button>
+                </div>
+              </div>
+
+              <div *ngIf="cargando">Cargando actividad...</div>
+              <div *ngIf="!cargando && error" class="alert alert-warning">{{ error }}</div>
+
+              <ng-container *ngIf="!cargando && !error && resumen as r">
+                <div class="row gy-2 mb-3">
+                  <div class="col-md-6">
+                    <div class="card kpi-card">
+                      <div class="card-body">
+                        <div class="kpi-label text-muted">
+                          <i class="bi bi-clock-history me-1"></i>
+                          Inicio de turno
+                        </div>
+                        <div class="kpi-value">{{ r.turno.inicioTurno | date:'short' }}</div>
+                        <div class="kpi-sub" *ngIf="r.turno.finTurno; else turnoEnCurso">
+                          Fin: {{ r.turno.finTurno | date:'short' }}
+                        </div>
+                        <ng-template #turnoEnCurso>
+                          <div class="kpi-sub">Turno en Curso</div>
+                        </ng-template>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="card kpi-card">
+                      <div class="card-body">
+                        <div class="kpi-label text-muted d-flex justify-content-between align-items-center">
+                          <span>
+                            <i class="bi bi-cart-check me-1"></i>
+                            Total ventas del Turno
+                          </span>
+                          <span class="badge bg-primary-subtle text-primary small">
+                            {{ r.actividad.transacciones }} ventas
+                          </span>
+                        </div>
+                        <div class="kpi-value">{{ r.actividad.totalVentas | number:'1.0-0' }}</div>
+                        <div class="kpi-sub">Promedio aprox. por venta: 
+                          <span *ngIf="r.actividad.transacciones > 0; else sinPromedio">
+                            {{ (r.actividad.totalVentas / r.actividad.transacciones) | number:'1.0-0' }}
+                          </span>
+                          <ng-template #sinPromedio>—</ng-template>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-3">
+                  <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap gap-2">
+                    <h5 class="mb-0">Ventas del turno</h5>
+                    <div class="small text-muted" *ngIf="r.actividad.transacciones > 0">
+                      {{ r.actividad.transacciones }} Ventas registradas en este Turno
+                    </div>
+                  </div>
+                  <div class="table-responsive" style="max-height: 260px; overflow-y: auto;">
+                    <table class="table table-sm table-striped table-hover align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th scope="col" style="width: 70px;">ID</th>
+                          <th scope="col">Producto principal</th>
+                          <th scope="col" class="text-end" style="width: 110px;">Cantidad</th>
+                          <th scope="col" class="text-end" style="width: 140px;">Total</th>
+                          <th scope="col" class="text-end" style="width: 120px;">Detalle</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngFor="let v of r.actividad.ventas">
+                          <tr>
+                            <td class="text-muted small">#{{ v.id }}</td>
+                            <td>
+                              <div class="fw-semibold">{{ v.nombre || '—' }}</div>
+                            </td>
+                            <td class="text-end">
+                              <span class="badge bg-light text-muted px-2">{{ v.cantidad || 0 }}</span>
+                            </td>
+                            <td class="text-end">
+                              <span class="badge bg-success-subtle text-success fw-semibold px-3">
+                                {{ v.total | number:'1.0-0' }}
+                              </span>
+                            </td>
+                            <td class="text-end">
+                              <button
+                                type="button"
+                                class="btn btn-link btn-sm px-0 text-decoration-none"
+                                (click)="toggleVentaDetalle(v.id)">
+                                <span *ngIf="expandedVentaId !== v.id">
+                                  <i class="bi bi-eye me-1"></i>
+                                  Ver productos
+                                </span>
+                                <span *ngIf="expandedVentaId === v.id">
+                                  <i class="bi bi-eye-slash me-1"></i>
+                                  Ocultar productos
+                                </span>
+                              </button>
+                            </td>
+                          </tr>
+                          <tr *ngIf="expandedVentaId === v.id" class="bg-light">
+                            <td colspan="5">
+                              <div *ngIf="v.productos?.length; else sinProductos">
+                                <div class="small text-muted mb-2">Productos en esta venta:</div>
+                                <div class="small">
+                                  <div class="d-flex justify-content-between text-muted mb-1">
+                                    <span>Producto</span>
+                                    <span class="text-end" style="min-width: 140px;">Cant. · Subtotal</span>
+                                  </div>
+                                  <div *ngFor="let p of v.productos" class="d-flex justify-content-between align-items-center py-1 border-top border-0 border-bottom">
+                                    <span class="me-2">{{ p.nombre }}</span>
+                                    <span class="text-end" style="min-width: 140px;">
+                                      <span class="badge bg-light text-muted me-1">×{{ p.cantidad }}</span>
+                                      <span class="badge bg-secondary-subtle text-secondary">
+                                        {{ p.subtotal | number:'1.0-0' }}
+                                      </span>
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              <ng-template #sinProductos>
+                                <div class="small text-muted">Sin Detalle de Productos.</div>
+                              </ng-template>
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </ng-container>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+

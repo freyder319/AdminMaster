@@ -55,24 +55,7 @@
       </div>
     </div>
   </section>
-  <br>
-  <!-- Transacciones y Cierre de Caja -->
-  <section>
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <div class="transacciones-cierrecaja">
-            <div class="transacciones me-2">
-              <h5>Transacciones</h5>
-            </div>
-            <div class="cierrescaja">
-              <h5>Cierre de Caja</h5>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+
   <br>
   <section>
     <div class="container unicion ">
@@ -145,20 +128,26 @@
         <!-- Rango global Desde / Hasta -->
         <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-items-center date-range-col">
           <div class="w-100 d-flex gap-2 date-range-wrapper">
-            <input
-              type="date"
-              class="form-control date-range-input"
-              placeholder="Desde"
-              [(ngModel)]="dateFromInput"
-              (change)="setRange('personalizado', true)"
-            >
-            <input
-              type="date"
-              class="form-control date-range-input"
-              placeholder="Hasta"
-              [(ngModel)]="dateToInput"
-              (change)="setRange('personalizado', true)"
-            >
+            <div class="flex-grow-1" (click)="dateFromPicker.showPicker()">
+              <input
+                #dateFromPicker
+                type="date"
+                class="form-control date-range-input w-100"
+                placeholder="Desde"
+                [(ngModel)]="dateFromInput"
+                (change)="setRange('personalizado', true)"
+              >
+            </div>
+            <div class="flex-grow-1" (click)="dateToPicker.showPicker()">
+              <input
+                #dateToPicker
+                type="date"
+                class="form-control date-range-input w-100"
+                placeholder="Hasta"
+                [(ngModel)]="dateToInput"
+                (change)="setRange('personalizado', true)"
+              >
+            </div>
           </div>
         </div>
         <!-- Rango -->

@@ -70,4 +70,9 @@ export class ProductoService {
   actualizarStock(id: number, nuevaCantidad: number): Observable<Producto> {
     return this.http.put<Producto>(`${this.apiUrl}/${id}/stock`, { stock: nuevaCantidad });
   }
+
+  // Subir imagen de producto en base64 para que el backend quite el fondo
+  uploadImagen(imageBase64: string): Observable<{ imgProducto: string }> {
+    return this.http.post<{ imgProducto: string }>(`${this.apiUrl}/imagen`, { imageBase64 });
+  }
 }

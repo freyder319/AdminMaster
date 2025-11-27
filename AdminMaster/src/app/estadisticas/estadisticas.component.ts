@@ -76,6 +76,10 @@ export class EstadisticasComponent {
   pieGastos: ChartData<'pie'> = { labels: [], datasets: [] };
   barTicketPromedio: ChartData<'bar'> = { labels: [], datasets: [] };
   barProductosGanancia: ChartData<'bar'> = { labels: [], datasets: [] };
+  hayDatosInventario: boolean = true;
+  hayDatosComercial: boolean = true;
+  hayDatosFinanzas: boolean = true;
+
   get hasStockCritico(): boolean {
     return (
       this.barChartStockCritico &&
@@ -151,11 +155,38 @@ export class EstadisticasComponent {
     this.estadisticasService
       .getInventario(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada)
       .subscribe((data) => {
+    if (!data || !data.labels || data.labels.length === 0) {
+      this.hayDatosInventario = false;
+      this.pieChartCategorias = { labels: [], datasets: [] };
+      this.barChartDataPrecios = { labels: [], datasets: [] };
+      this.barChartValor = { labels: [], datasets: [] };
+      this.barChartRotacion = { labels: [], datasets: [] };
+      this.barChartStockCritico = { labels: [], datasets: [] };
+      this.bubbleChartRotacion = { labels: [], datasets: [] };
+      return;
+    }
 
     // Si backend no envía vendidos, crear array de ceros (evita errores)
     if (!data.vendidos) {
       data.vendidos = data.stock.map(() => 0);
     }
+
+    // Si todo el stock y vendidos son 0, consideramos que no hay datos reales
+    const tieneStockPositivo = Array.isArray(data.stock) && data.stock.some((n: number) => Number(n) > 0);
+    const tieneVendidosPositivos = Array.isArray(data.vendidos) && data.vendidos.some((n: number) => Number(n) > 0);
+
+    if (!tieneStockPositivo && !tieneVendidosPositivos) {
+      this.hayDatosInventario = false;
+      this.pieChartCategorias = { labels: [], datasets: [] };
+      this.barChartDataPrecios = { labels: [], datasets: [] };
+      this.barChartValor = { labels: [], datasets: [] };
+      this.barChartRotacion = { labels: [], datasets: [] };
+      this.barChartStockCritico = { labels: [], datasets: [] };
+      this.bubbleChartRotacion = { labels: [], datasets: [] };
+      return;
+    }
+
+    this.hayDatosInventario = true;
 
     // A) Distribución por categoría (Pie)
     const categoriasMap: any = {};
@@ -309,6 +340,19 @@ export class EstadisticasComponent {
       .subscribe((data) => {
       this.productosMasVendidos = data;
 
+      if (!data || data.length === 0 || !data.some((p: any) => Number(p.vendidos) > 0)) {
+        this.hayDatosComercial = false;
+        this.barChartData = { labels: [], datasets: [] };
+        this.lineChartVentas = { labels: [], datasets: [] };
+        this.pieChartMetodosPago = { labels: [], datasets: [] };
+        this.pieChartCategoriasVenta = { labels: [], datasets: [] };
+        this.barChartVentasMes = { labels: [], datasets: [] };
+        this.barChartProductosRentables = { labels: [], datasets: [] };
+        return;
+      }
+
+      this.hayDatosComercial = true;
+
       this.barChartData = {
         labels: data.map(p => p.nombre),
         datasets: [
@@ -327,6 +371,12 @@ export class EstadisticasComponent {
       .subscribe((data) => {
 
       console.log("📌 Datos para la línea:", data);
+
+    if (!data || !data.labels || data.labels.length === 0 || !data.data || data.data.every((v: number) => Number(v) === 0)) {
+      this.hayDatosComercial = false;
+      this.lineChartVentas = { labels: [], datasets: [] };
+      return;
+    }
 
     this.lineChartVentas = {
       labels: data.labels,
@@ -425,8 +475,32 @@ export class EstadisticasComponent {
 
         if (!data) {
           console.error("❌ No llegaron datos de finanzas");
+          this.hayDatosFinanzas = false;
+          this.lineIngresosGastos = { labels: [], datasets: [] };
+          this.barMargenBeneficio = { labels: [], datasets: [] };
+          this.lineGananciasMensuales = { labels: [], datasets: [] };
+          this.pieGastos = { labels: [], datasets: [] };
+          this.barTicketPromedio = { labels: [], datasets: [] };
+          this.barProductosGanancia = { labels: [], datasets: [] };
           return;
         }
+
+        const sinIngresos = !data.ingresosGastos || !data.ingresosGastos.ingresos || data.ingresosGastos.ingresos.every((v: number) => Number(v) === 0);
+        const sinGastos = !data.ingresosGastos || !data.ingresosGastos.gastos || data.ingresosGastos.gastos.every((v: number) => Number(v) === 0);
+        const sinGanancias = !data.gananciasMensuales || !data.gananciasMensuales.values || data.gananciasMensuales.values.every((v: number) => Number(v) === 0);
+
+        if (sinIngresos && sinGastos && sinGanancias) {
+          this.hayDatosFinanzas = false;
+          this.lineIngresosGastos = { labels: [], datasets: [] };
+          this.barMargenBeneficio = { labels: [], datasets: [] };
+          this.lineGananciasMensuales = { labels: [], datasets: [] };
+          this.pieGastos = { labels: [], datasets: [] };
+          this.barTicketPromedio = { labels: [], datasets: [] };
+          this.barProductosGanancia = { labels: [], datasets: [] };
+          return;
+        }
+
+        this.hayDatosFinanzas = true;
 
         // Ingresos vs Gastos
         if (data.ingresosGastos) {

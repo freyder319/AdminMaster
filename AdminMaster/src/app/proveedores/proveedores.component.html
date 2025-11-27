@@ -64,22 +64,25 @@
         <table class="table table-bordered">
           <thead class="table-secondary">
             <tr>
-              <th>Nombre</th>
-              <th>Correo</th>
-              <th>Telefono</th>
-              <th>N° Deudas pendientes</th>
+              <th>Nombre Empresa</th>
+              <th>NIT / Documento</th>
+              <th>Persona de Contacto</th>
+              <th>Correo de Empresa</th>
+              <th>Teléfono</th>
               <th>Estado</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody *ngIf="(filteredProveedores$ | async) as list">
             <tr *ngFor="let p of list" [ngClass]="{'fila-inactiva': !p.activo}">
-              <td data-label="Nombre">
+              <td data-label="Nombre Empresa">
                 <!-- Solo visible en móviles (<768px), clickeable -->
                 <div class="perfil clickable d-md-none" (click)="seleccionar(p); mostrarModificarProveedor = true">
                   <img src="../../assets/img/icons-navbar/Proovedores.png" alt="Proveedor">
                   <div class="info">
-                    <p class="nombre"><strong>{{ p.nombre }} {{ p.apellido }}</strong></p>
+                    <p class="nombre">
+                      <strong>{{ p.nombreEmpresa || '-' }}</strong>
+                    </p>
                     <p class="correo">{{ p.correo }}</p>
                   </div>
                 </div>
@@ -88,15 +91,22 @@
                 <div class="perfil d-none d-md-flex">
                   <img src="../../assets/img/icons-navbar/Proovedores.png" alt="Proveedor" width="50px" height="50px" style="margin-top: -10px;">
                   <div class="info">
-                    <p class="nombre" style="margin-left: 10px;"><strong>{{ p.nombre }} {{ p.apellido }}</strong></p>
+                    <p class="nombre" style="margin-left: 10px;">
+                      <strong>{{ p.nombreEmpresa || '-' }}</strong>
+                    </p>
                   </div>
                 </div>
               </td>
 
+              <td data-label="NIT / Documento">{{ p.nit || '-' }}</td>
+
+              <td data-label="Persona de contacto">
+                {{ p.contactoNombre || '-' }}
+              </td>
+
               <td data-label="Correo">{{ p.correo }}</td>
               <td data-label="Teléfono">{{ p.telefono }}</td>
-              <td data-label="N° Deudas pendientes">{{ getDeudasPendientes(p) }}</td>
-              <td data-label="Estado de Proveedor">
+              <td data-label="Estado">
                 <span class="status" [ngClass]="p.activo ? 'activo' : 'inactivo'">{{ p.activo ? 'Activo' : 'Inactivo' }}</span>
               </td>
               <td data-label="Acciones" class="acciones">
@@ -154,7 +164,7 @@
               </td>
             </tr>
             <tr *ngIf="list.length === 0">
-              <td colspan="6" class="text-center text-muted py-3">
+              <td colspan="7" class="text-center text-muted py-3">
                 {{ lastSearchTerm ? ('No se encontró ningún proveedor para "' + lastSearchTerm + '".') : 'No hay Proveedores registrados' }}
               </td>
             </tr>

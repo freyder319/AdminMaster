@@ -21,6 +21,7 @@ import { GastoService, Gasto } from '../services/gasto.service';
 import { EmpleadosService, Empleados } from '../services/empleados.service';
 import { InfoGastosComponent } from "../info-gastos/info-gastos.component";
 import { AgenteIAComponent } from '../agente-ia/agente-ia.component';
+import * as ExcelJS from 'exceljs';
 
 @Component({
   selector: 'app-administrador-principal',
@@ -659,20 +660,67 @@ export class AdministradorPrincipalComponent implements OnInit {
   get showRangeTag(): boolean {
     return !!this.hasRangeApplied;
   }
-
-  private downloadCsv(filename: string, rows: string[][]): void {
+  private async exportExcel(filename: string, sheetName: string, header: string[], rows: (string | number)[][]): Promise<void> {
     if (!rows.length) return;
-    const csvContent = rows
-      .map(r => r.map(v => {
-        const val = (v ?? '').toString();
-        if (val.includes('"') || val.includes(',') || val.includes('\n')) {
-          return '"' + val.replace(/"/g, '""') + '"';
-        }
-        return val;
-      }).join(','))
-      .join('\n');
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const wb = new ExcelJS.Workbook();
+    const ws = wb.addWorksheet(sheetName);
+
+    ws.addRow(header);
+    rows.forEach(r => ws.addRow(r));
+
+    // Estilos de encabezado similares al backend
+    const headerRow = ws.getRow(1);
+    headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } } as any;
+    headerRow.alignment = { vertical: 'middle', horizontal: 'center' } as any;
+    headerRow.height = 20;
+    headerRow.eachCell((cell) => {
+      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0D6EFD' } } as any;
+      cell.border = {
+        top: { style: 'thin', color: { argb: 'FFBFD1E5' } },
+        left: { style: 'thin', color: { argb: 'FFBFD1E5' } },
+        bottom: { style: 'thin', color: { argb: 'FF5B9BD5' } },
+        right: { style: 'thin', color: { argb: 'FFBFD1E5' } },
+      } as any;
+    });
+
+    // Zebra y bordes suaves para el resto de filas
+    const totalRows = ws.rowCount;
+    for (let r = 2; r <= totalRows; r++) {
+      const row = ws.getRow(r);
+      row.alignment = { vertical: 'middle' } as any;
+      const zebra = r % 2 === 0;
+      row.eachCell((cell) => {
+        if (zebra) {
+          cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF7FBFF' } } as any;
+        }
+        cell.border = {
+          top: { style: 'thin', color: { argb: 'FFE9EEF5' } },
+          left: { style: 'thin', color: { argb: 'FFE9EEF5' } },
+          bottom: { style: 'thin', color: { argb: 'FFE9EEF5' } },
+          right: { style: 'thin', color: { argb: 'FFE9EEF5' } },
+        } as any;
+      });
+    }
+
+    // Congelar encabezado y autoajustar ancho
+    ws.views = [{ state: 'frozen', ySplit: 1 }];
+    ws.columns?.forEach((col: any) => {
+      if (!col) return;
+      let max = (typeof col.width === 'number' ? col.width : 10) as number;
+      if (typeof col.eachCell === 'function') {
+        col.eachCell({ includeEmpty: true }, (cell: any) => {
+          const val = cell?.value as any;
+          const text = val instanceof Date ? val.toISOString() : (val != null ? String(val) : '');
+          const len = text.length;
+          if (len > max) max = len;
+        });
+      }
+      col.width = Math.min(Math.max(max + 2, 10), 44);
+    });
+
+    const buf = await wb.xlsx.writeBuffer();
+    const blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -683,66 +731,66 @@ export class AdministradorPrincipalComponent implements OnInit {
     window.URL.revokeObjectURL(url);
   }
 
-  exportIngresosExcel(): void {
+  async exportIngresosExcel(): Promise<void> {
     const header = ['ID', 'Nombre Productos', 'Valor', 'Medio de Pago', 'ID Transacción', 'Promoción', '% Promo', 'Fecha y Hora', 'Estado'];
     const rows = this.ventasIngresos.map(v => [
       String(v?.id ?? ''),
       this.ventaResumen(v),
-      String(Number(v?.total) || 0),
+      Number(v?.total) || 0,
       String(v?.forma_pago || ''),
       String((v as any)?.transaccionId || ''),
       String((v as any)?.descuentoNombre || ''),
       String((v as any)?.descuentoPorcentaje ?? ''),
       String(v?.fecha_hora || v?.created_at || ''),
       String(v?.estado || 'Pagada'),
-    ]);
-    this.downloadCsv('ingresos.csv', [header, ...rows]);
+    ] as (string | number)[]);
+    await this.exportExcel('ingresos.xlsx', 'Ingresos', header, rows);
   }
 
-  exportEgresosExcel(): void {
+  async exportEgresosExcel(): Promise<void> {
     const header = ['ID', 'Nombre', 'Descripción', 'Monto', 'Medio de Pago', 'ID Transacción', 'Fecha', 'Estado'];
     const rows = this.gastosEgresos.map(g => [
       String((g as any)?.id ?? ''),
       String((g as any)?.nombre ?? ''),
       String(g?.descripcion ?? ''),
-      String(Number(g?.monto) || 0),
+      Number(g?.monto) || 0,
       String(g?.forma_pago || ''),
       String((g as any)?.transaccionId || ''),
       String(g?.fecha || ''),
       String(g?.estado || ''),
-    ]);
-    this.downloadCsv('egresos.csv', [header, ...rows]);
+    ] as (string | number)[]);
+    await this.exportExcel('egresos.xlsx', 'Egresos', header, rows);
   }
 
-  exportPorCobrarExcel(): void {
+  async exportPorCobrarExcel(): Promise<void> {
     const header = ['ID', 'Nombre Productos', 'Valor', 'Medio de Pago', 'ID Transacción', 'Promoción', '% Promo', 'Fecha y Hora', 'Estado'];
     const rows = this.ventasPorCobrar.map(v => [
       String(v?.id ?? ''),
       this.ventaResumen(v),
-      String(Number(v?.total) || 0),
+      Number(v?.total) || 0,
       String(v?.forma_pago || ''),
       String((v as any)?.transaccionId || ''),
       String((v as any)?.descuentoNombre || ''),
       String((v as any)?.descuentoPorcentaje ?? ''),
       String(v?.fecha_hora || v?.created_at || ''),
       String(v?.estado || 'Pendiente'),
-    ]);
-    this.downloadCsv('por_cobrar.csv', [header, ...rows]);
+    ] as (string | number)[]);
+    await this.exportExcel('por_cobrar.xlsx', 'Por cobrar', header, rows);
   }
 
-  exportPorPagarExcel(): void {
+  async exportPorPagarExcel(): Promise<void> {
     const header = ['ID', 'Nombre', 'Descripción', 'Monto', 'Medio de Pago', 'ID Transacción', 'Fecha', 'Estado'];
     const rows = this.gastosPorPagar.map(g => [
       String((g as any)?.id ?? ''),
       String((g as any)?.nombre ?? ''),
       String(g?.descripcion ?? ''),
-      String(Number(g?.monto) || 0),
+      Number(g?.monto) || 0,
       String(g?.forma_pago || ''),
       String((g as any)?.transaccionId || ''),
       String(g?.fecha || ''),
       String(g?.estado || 'Pendiente'),
-    ]);
-    this.downloadCsv('por_pagar.csv', [header, ...rows]);
+    ] as (string | number)[]);
+    await this.exportExcel('por_pagar.xlsx', 'Por pagar', header, rows);
   }
 
   applyAdvancedFilters(filters: { forma_pago: string; clienteId: number | ''; proveedorId: number | ''; }): void {

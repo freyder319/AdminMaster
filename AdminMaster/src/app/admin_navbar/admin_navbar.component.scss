@@ -28,6 +28,38 @@
   overflow: visible;
 }
 
+/* Tooltips personalizados para los iconos del rail (usa el atributo title) */
+.sidebar-rail .rail-item[title] {
+  position: relative;
+}
+
+.sidebar-rail .rail-item[title]::after {
+  content: attr(title);
+  position: absolute;
+  left: 130%;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.94);
+  color: #f9fafb;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.35);
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
+}
+
+.sidebar-rail .rail-item[title]:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-50%) translateX(2px);
+}
+
 .rail-item {
   width: 34px;
   height: 34px;
@@ -43,6 +75,11 @@
 
 .brand-rail {
   margin-bottom: 6px;
+  cursor: default; /* quitar mano solo en el logo */
+}
+
+.brand-rail:hover {
+  background: transparent; /* sin efecto hover para el logo */
 }
 
 .rail-logo {

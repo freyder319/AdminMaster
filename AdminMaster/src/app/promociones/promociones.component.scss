@@ -167,12 +167,13 @@ form {
 
 // Botón principal
 .add-btn {
-  background: linear-gradient(135deg, #1d4ed8, #4f46e5);
+  background: radial-gradient(circle at 30% 20%, #38bdf8, #1d4ed8);
   border-color: transparent;
   font-weight: 600;
   border-radius: 999px;
   padding-inline: 1rem;
   box-shadow: 0 6px 16px rgba(37, 99, 235, 0.45);
+  color: white;
 }
 
 .add-btn:hover {

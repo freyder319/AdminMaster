@@ -5,7 +5,26 @@
     height: 100vh;
 }
 
+.back-login-btn {
+    position: absolute;
+    top: 24px;
+    left: 12px;
+    border: none;
+    background: transparent;
+    color: brown;
+    font-size: 1.8rem;
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-login-btn:hover {
+    color: rgb(163, 57, 57);
+}
+
 .login {
+    position: relative;
     max-width: 900px;
     width: 100%;
     border-radius: 2rem;
@@ -93,5 +112,9 @@
     .btn-secundario,
     .form-control {
         width: 100%;
+    }
+
+    .back-login-btn {
+        left: -220px;
     }
 }

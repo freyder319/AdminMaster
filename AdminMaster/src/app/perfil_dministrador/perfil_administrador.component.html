@@ -22,11 +22,12 @@
                                         <div class="avatar-wrapper">
                                             <div class="avatar">
                                                 <!-- perfil -->
-                                                <img src="../../assets/img/Logo-removebg-preview.png" alt="Logo" />
+                                                <img [src]="form.logoUrl || '../../assets/img/Logo-removebg-preview.png'" alt="Logo" />
                                             </div>
                                             <!-- Ícono lápiz -->
-                                            <div class="edit-icon">
+                                            <div class="edit-icon" (click)="logoFileInput.click()">
                                                 <img width="30px" src="../../assets/img/icons_configurar/pen_8220355.png" alt="">
+                                                <input #logoFileInput type="file" accept="image/*" hidden (change)="onLogoFileSelected($event)">
                                             </div>
                                         </div>
                                     </div>

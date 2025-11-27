@@ -15,7 +15,7 @@
       <!-- Rail de grupos (logo + íconos) -->
       <div class="sidebar-rail">
         <button type="button" class="rail-item brand-rail" title="AdminMaster" (click)="onRailClick()">
-          <img class="rail-logo" src="../../assets/img/Logo-removebg-preview.png" alt="Logo">
+          <img class="rail-logo" [src]="logoUrl || '../../assets/img/Logo-removebg-preview.png'" alt="Logo">
         </button>
         <!-- Botones de grupos solo para admin; para punto_pos no se muestran grupos -->
         <button *ngIf="rol === 'admin'" type="button" class="rail-item" (click)="onRailGroupClick('cuenta')" [class.active-rail]="selectedGroup === 'cuenta'" title="Cuenta">
@@ -26,6 +26,9 @@
         </button>
         <button *ngIf="rol === 'admin'" type="button" class="rail-item" (click)="onRailGroupClick('operaciones')" [class.active-rail]="selectedGroup === 'operaciones'" title="Operaciones">
           <i class="bi bi-speedometer2"></i>
+        </button>
+        <button *ngIf="rol === 'admin'" type="button" class="rail-item" (click)="onRailGroupClick('cajas')" [class.active-rail]="selectedGroup === 'cajas'" title="Cajas">
+          <i class="bi bi-cash-stack"></i>
         </button>
         <button *ngIf="rol === 'admin'" type="button" class="rail-item" (click)="onRailGroupClick('reportes')" [class.active-rail]="selectedGroup === 'reportes'" title="Reportes">
           <i class="bi bi-bar-chart"></i>
@@ -60,14 +63,30 @@
             <div class="search-icon">
               <i class="bi bi-search"></i>
             </div>
-            <input class="search-input" type="text" placeholder="Buscar..." />
+            <input
+              #searchInput
+              class="search-input"
+              type="text"
+              placeholder="Buscar..."
+              style="width: 100%; color: black;"
+              (input)="onSearchChange(searchInput.value)"
+              (keydown.enter)="onSearch(searchInput.value)" />
+          </div>
+
+          <div class="search-preview" *ngIf="searchPreviewLabel || searchFeedbackTerm" style="font-size: 0.75rem; color: #6c757d; margin-top: 2px; padding-left: 32px;">
+            <span *ngIf="searchPreviewLabel">Ir a: {{ searchPreviewLabel }}</span>
+            <span *ngIf="!searchPreviewLabel && searchFeedbackTerm">
+              No se encontró ninguna opción para "{{ searchFeedbackTerm }}".
+            </span>
           </div>
 
           <!-- Menú principal: muestra distinto contenido según grupo (desktop) o plano (móvil) -->
           <div class="sidebar-menu">
 
-            <!-- Menú plano para móvil o para roles distintos de admin (punto_pos): sin grupos -->
-            <ng-container *ngIf="isMobileView || rol !== 'admin'; else desktopMenu">
+            <ng-container *ngIf="rol === 'admin'; else nonAdminMenu">
+
+            <!-- Menú plano solo para vista móvil; en escritorio se usa siempre el menú agrupado (desktopMenu) -->
+            <ng-container *ngIf="isMobileView; else desktopMenu">
               <button
                 type="button"
                 class="sidebar-section-label sidebar-section-toggle"
@@ -116,12 +135,7 @@
 
                 <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','notificaciones']" routerLinkActive="active" title="Notificaciones de turnos">
                   <img src="../../assets/img/icons-navbar/Notificacion.png" alt="Notificaciones" width="30" height="30">
-                  <span class="nav-text">Notificaciones</span>
-                </a>
-
-                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','auditoria-caja']" routerLinkActive="active" title="Auditoría de caja">
-                  <img src="../../assets/img/icons-navbar/Cajas.png" alt="Auditoría de caja" width="30" height="30">
-                  <span class="nav-text">Auditoría de caja</span>
+                  <span class="nav-text">PQRS</span>
                 </a>
 
                 <!-- Turno empleado para otros roles -->
@@ -146,7 +160,7 @@
                   <span class="nav-text">Movimientos</span>
                 </a>
 
-                <a *ngIf="rol === 'punto_pos'" class="navbar-brand" [routerLink]="['/crear_venta']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Ventas">
+                <a *ngIf="isPuntoPos()" class="navbar-brand" [routerLink]="['/crear_venta']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Ventas">
                   <img src="../../assets/img/icons-navbar/Movimientos.png" alt="" width="30" height="30">
                   <span class="nav-text">Ventas</span>
                 </a>
@@ -179,6 +193,21 @@
                 <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/reportes-ventas']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Reportes ventas">
                   <img src="../../assets/img/icons-navbar/Estadisticas.png" alt="Reportes ventas" width="30" height="30">
                   <span class="nav-text">Reportes ventas</span>
+                </a>
+              </ng-container>
+
+              <button
+                type="button"
+                class="sidebar-section-label sidebar-section-toggle"
+                (click)="toggleMobileGroup('cajas')">
+                <span>Cajas</span>
+                <span class="toggle-icon">{{ mobileGroupsExpanded.cajas ? '▾' : '▸' }}</span>
+              </button>
+
+              <ng-container *ngIf="mobileGroupsExpanded.cajas">
+                <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','auditoria-caja']" routerLinkActive="active" title="Auditoría de caja">
+                  <img src="../../assets/img/icons-navbar/Cajas.png" alt="Auditoría de caja" width="30" height="30">
+                  <span class="nav-text">Auditoría de caja</span>
                 </a>
 
                 <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/cajas']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Cajas">
@@ -259,7 +288,7 @@
                 <span class="nav-text">Movimientos</span>
               </a>
 
-              <a *ngIf="rol === 'punto_pos'" class="navbar-brand" [routerLink]="['/crear_venta']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Ventas">
+              <a *ngIf="isPuntoPos()" class="navbar-brand" [routerLink]="['/crear_venta']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Ventas">
                 <img src="../../assets/img/icons-navbar/Movimientos.png" alt="" width="30" height="30">
                 <span class="nav-text">Ventas</span>
               </a>
@@ -302,18 +331,9 @@
 
               <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','notificaciones']" routerLinkActive="active" title="Notificaciones de turnos">
                 <img src="../../assets/img/icons-navbar/Notificacion.png" alt="Notificaciones" width="30" height="30">
-                <span class="nav-text">Notificaciones</span>
+                <span class="nav-text">PQRS</span>
               </a>
-
-              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','auditoria-caja']" routerLinkActive="active" title="Auditoría de caja">
-                <img src="../../assets/img/icons-navbar/Cajas.png" alt="Auditoría de caja" width="30" height="30">
-                <span class="nav-text">Auditoría de caja</span>
-              </a>
-
-              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/cajas']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Cajas">
-                <img src="../../assets/img/icons-navbar/Cajas.png" alt="" width="30" height="30">
-                <span class="nav-text">Cajas</span>
-              </a>
+              
             </ng-container>
 
             <!-- Grupo: Reportes -->
@@ -333,6 +353,21 @@
               <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/reportes-ventas']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Reportes ventas">
                 <img src="../../assets/img/icons-navbar/Estadisticas.png" alt="Reportes ventas" width="30" height="30">
                 <span class="nav-text">Reportes ventas</span>
+              </a>
+            </ng-container>
+
+            <!-- Grupo: Cajas -->
+            <ng-container *ngIf="selectedGroup === 'cajas'">
+              <div class="sidebar-section-label">Cajas</div>
+
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/turno-empleado','auditoria-caja']" routerLinkActive="active" title="Auditoría de caja">
+                <img src="../../assets/img/icons-navbar/Cajas.png" alt="Auditoría de caja" width="30" height="30">
+                <span class="nav-text">Auditoría de caja</span>
+              </a>
+
+              <a *ngIf="rol === 'admin'" class="navbar-brand" [routerLink]="['/cajas']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Cajas">
+                <img src="../../assets/img/icons-navbar/Cajas.png" alt="" width="30" height="30">
+                <span class="nav-text">Cajas</span>
               </a>
             </ng-container>
 
@@ -369,6 +404,30 @@
               </a>
             </ng-container>
 
+            </ng-template>
+
+            </ng-container>
+
+            <ng-template #nonAdminMenu>
+              <a class="navbar-brand" [routerLink]="['/turno-empleado']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Turno empleado" *ngIf="rol !== 'admin'">
+                <img src="../../assets/img/icons-navbar/PuntoPOS.png" alt="Turno" width="30" height="30">
+                <span class="nav-text">Turno empleado</span>
+              </a>
+
+              <a class="navbar-brand" [routerLink]="['/crear_venta']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Ventas" *ngIf="isPuntoPos()">
+                <img src="../../assets/img/icons-navbar/Movimientos.png" alt="" width="30" height="30">
+                <span class="nav-text">Ventas</span>
+              </a>
+
+              <a class="navbar-brand" [routerLink]="['/actividad-empleado']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Actividad del turno" *ngIf="isPuntoPos()">
+                <img src="../../assets/img/icons-navbar/Historial.png" alt="Actividad" width="30" height="30">
+                <span class="nav-text">Actividad turno</span>
+              </a>
+
+              <a class="navbar-brand" [routerLink]="['/clientes']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Clientes">
+                <img src="../../assets/img/icons-navbar/Clientes.png" alt="" width="30" height="30">
+                <span class="nav-text">Clientes</span>
+              </a>
             </ng-template>
 
           </div>

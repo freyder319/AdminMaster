@@ -4,7 +4,7 @@
 
       <!-- Logo centrado -->
       <a class="navbar-brand me-auto" href="#" title="logo">
-        <img src="../../assets/img/Logo-removebg-preview.png" alt="Logo" width="125" height="90">
+        <img [src]="logoUrl || '../../assets/img/Logo-removebg-preview.png'" alt="Logo" width="125" height="90">
       </a>
 
       <!-- Botón de menú (derecha) con dropdown compacto -->
@@ -17,7 +17,7 @@
 
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="menuDropdownButton">
           <li>
-            <a class="dropdown-item" href="#" (click)="navigateAndReload('/'); $event.preventDefault()" [ngClass]="{ 'active': isActive('/') }">
+            <a class="dropdown-item" href="#" (click)="navigateAndReload('/products'); $event.preventDefault()" [ngClass]="{ 'active': isActive('/products') }">
               <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M3 7l9-4 9 4v10a2 2 0 0 1-2 2h-4v-6H9v6H5a2 2 0 0 1-2-2V7z"/>
               </svg>

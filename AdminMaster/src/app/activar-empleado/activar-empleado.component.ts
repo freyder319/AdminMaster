@@ -17,6 +17,7 @@ export class ActivarEmpleadoComponent {
   correo = '';
   codigo = '';
   mostrarPassword = false;
+  submitted = false;
 
   constructor(
     private fb: FormBuilder,
@@ -39,11 +40,21 @@ export class ActivarEmpleadoComponent {
     });
   }
 
+  get passwordMismatch(): boolean {
+    const password = this.form.get('password')?.value;
+    const confirm = this.form.get('confirmPassword')?.value;
+    if (!password || !confirm) {
+      return false;
+    }
+    return password !== confirm;
+  }
+
   toggleMostrarPassword() {
     this.mostrarPassword = !this.mostrarPassword;
   }
 
   onSubmit() {
+    this.submitted = true;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;

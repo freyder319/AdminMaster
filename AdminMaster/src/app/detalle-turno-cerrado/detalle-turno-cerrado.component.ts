@@ -28,6 +28,10 @@ export class DetalleTurnoCerradoComponent {
   get totalNeto(): number { return this.montoInicial + this.totalVentas + this.totalVentasLibres - this.totalGastos; }
   get transaccionesTotal(): number { return Number(this.turno?.resumen?.actividad?.transacciones || 0) + Number(this.turno?.resumen?.actividad?.transaccionesLibres || 0); }
 
+  get cajaNombre(): string {
+    return (this.turno?.resumen as any)?.caja?.nombre || 'Sin caja asignada';
+  }
+
   duracionTurno(): string {
     try {
       const iniRaw = this.turno?.resumen?.turno?.inicioTurno;

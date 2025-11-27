@@ -16,13 +16,16 @@
             [type]="mostrarPassword ? 'text' : 'password'"
             formControlName="password"
             class="form-control pe-5"
-            [ngClass]="{ 'is-invalid': form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty) }"
+            [ngClass]="{
+              'is-invalid': (form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty || submitted)) || passwordMismatch,
+              'is-valid': form.get('password')?.valid && !passwordMismatch && (form.get('password')?.touched || form.get('password')?.dirty) && !submitted
+            }"
           >
           <button type="button" class="btn-icon-password" (click)="toggleMostrarPassword()">
             <i class="bi" [ngClass]="mostrarPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
           </button>
         </div>
-        <div class="invalid-feedback" *ngIf="form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty)">
+        <div class="invalid-feedback" *ngIf="form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty || submitted)">
           <span *ngIf="form.get('password')?.errors?.['required']">La contraseña es obligatoria.</span>
           <span *ngIf="form.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 10 caracteres.</span>
           <span *ngIf="!form.get('password')?.errors?.['minlength'] && form.get('password')?.errors?.['pattern']">
@@ -37,14 +40,18 @@
           type="password"
           formControlName="confirmPassword"
           class="form-control"
-          [ngClass]="{ 'is-invalid': form.get('confirmPassword')?.invalid && (form.get('confirmPassword')?.touched || form.get('confirmPassword')?.dirty) }"
+          [ngClass]="{
+            'is-invalid': (form.get('confirmPassword')?.invalid && (form.get('confirmPassword')?.touched || form.get('confirmPassword')?.dirty || submitted)) || passwordMismatch,
+            'is-valid': form.get('confirmPassword')?.valid && !passwordMismatch && (form.get('confirmPassword')?.touched || form.get('confirmPassword')?.dirty) && !submitted
+          }"
         >
-        <div class="invalid-feedback" *ngIf="form.get('confirmPassword')?.invalid && (form.get('confirmPassword')?.touched || form.get('confirmPassword')?.dirty)">
-          La confirmación es obligatoria.
+        <div class="invalid-feedback" *ngIf="(form.get('confirmPassword')?.invalid && (form.get('confirmPassword')?.touched || form.get('confirmPassword')?.dirty || submitted)) || passwordMismatch">
+          <span *ngIf="form.get('confirmPassword')?.errors?.['required']">La confirmación es obligatoria.</span>
+          <span *ngIf="!form.get('confirmPassword')?.errors?.['required'] && passwordMismatch">Las contraseñas no coinciden.</span>
         </div>
       </div>
 
-      <button type="submit" class="btn btn-primary w-100 mt-2" [disabled]="form.invalid">Activar Cuenta</button>
+      <button type="submit" class="btn btn-primary w-100 mt-2" [disabled]="form.invalid || passwordMismatch">Activar Cuenta</button>
     </form>
   </section>
 </main>

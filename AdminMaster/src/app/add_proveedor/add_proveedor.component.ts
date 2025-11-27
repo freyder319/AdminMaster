@@ -12,16 +12,18 @@ import { ProveedorService } from '../services/proveedor.service';
   styleUrls: ['./add_proveedor.component.scss']
 })
 export class AddProveedorComponent {
-  @Output() crear = new EventEmitter<{ nombre: string; apellido: string; telefono: string; correo: string; activo: boolean }>();
+  @Output() crear = new EventEmitter<{ nombreEmpresa?: string; nit?: string; contactoNombre?: string; telefono: string; correo: string; activo: boolean }>();
 
   form: FormGroup;
   telefonoDuplicado = false;
   correoDuplicado = false;
+  nitDuplicado = false;
 
   constructor(private fb: FormBuilder, private proveedorService: ProveedorService) {
     this.form = this.fb.group({
-      nombre: ['', [Validators.required, Validators.maxLength(100)]],
-      apellido: ['', [Validators.maxLength(100)]],
+      nombreEmpresa: ['', [Validators.maxLength(150)]],
+      nit: ['', [Validators.maxLength(30)]],
+      contactoNombre: ['', [Validators.maxLength(150)]],
       telefono: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(/^[0-9]{1,10}$/)]],
       correo: ['', [Validators.required, Validators.email]],
       activo: [true]
@@ -30,6 +32,11 @@ export class AddProveedorComponent {
     this.form.get('telefono')!.valueChanges.subscribe((tel: string) => {
       const v = (tel || '').trim();
       this.telefonoDuplicado = !!v && this.proveedorService.snapshot.some(p => p.telefono === v);
+    });
+
+    this.form.get('nit')!.valueChanges.subscribe((doc: string) => {
+      const v = (doc || '').trim();
+      this.nitDuplicado = !!v && this.proveedorService.snapshot.some(p => (p.nit || '') === v);
     });
 
     this.form.get('correo')!.valueChanges.subscribe((mail: string) => {
