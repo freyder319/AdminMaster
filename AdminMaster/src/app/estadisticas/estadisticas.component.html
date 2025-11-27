@@ -94,7 +94,7 @@
           <span>Rendimiento del Inventario</span>
         </h2>
 
-        <div class="chart-grid">
+        <div *ngIf="hayDatosInventario; else sinDatosInventario" class="chart-grid">
 
           <div class="chart-container">
             <h3>Distribución del inventario por categoría</h3>
@@ -129,6 +129,9 @@
           </div>
 
         </div>
+        <ng-template #sinDatosInventario>
+          <p class="text-center mt-3">No hay Datos para este Período.</p>
+        </ng-template>
       </div>
 
       <!-- COMERCIAL -->
@@ -138,7 +141,7 @@
           <span>Desempeño Comercial</span>
         </h2>
 
-        <div class="chart-grid">
+        <div *ngIf="hayDatosComercial; else sinDatosComercial" class="chart-grid">
           <div class="chart-container">
             <h3>Productos más vendidos</h3>
             <canvas baseChart [data]="barChartData" [options]="barChartOptions" [type]="barChartType"></canvas>
@@ -168,6 +171,9 @@
             <canvas baseChart [data]="barChartProductosRentables" [type]="'bar'" [options]="{ indexAxis: 'y' }"></canvas>
           </div>
         </div>
+        <ng-template #sinDatosComercial>
+          <p class="text-center mt-3">No hay Datos para este Período.</p>
+        </ng-template>
       </div>
 
       <!--  FINANZAS -->
@@ -176,7 +182,7 @@
           <i class="bi bi-cash-coin section-title-icon"></i>
           <span>Salud Financiera</span>
         </h2>
-        <div class="chart-grid">
+        <div *ngIf="hayDatosFinanzas; else sinDatosFinanzas" class="chart-grid">
 
     <!-- 1. Ingresos vs Gastos mensual -->
     <div class="chart-container">
@@ -237,6 +243,9 @@
       </canvas>
     </div>
         </div>
+        <ng-template #sinDatosFinanzas>
+          <p class="text-center mt-3">No hay Datos para este Período.</p>
+        </ng-template>
       </div>
 
     </div> 

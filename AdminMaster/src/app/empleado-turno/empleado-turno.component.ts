@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { TurnoResumen, TurnosService, TurnoActivoItem } from '../services/turnos.service';
-import { DatePipe, DecimalPipe, NgIf, NgFor, NgClass, isPlatformBrowser } from '@angular/common';
+import { DatePipe, DecimalPipe, NgIf, NgClass, isPlatformBrowser } from '@angular/common';
 import { forkJoin, of, timer } from 'rxjs';
 import { catchError, switchMap, take, filter } from 'rxjs/operators';
 import { AdminNavbarComponent } from "../admin_navbar/admin_navbar.component";
@@ -16,7 +16,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-empleado-turno',
-  imports: [NgIf, NgFor, NgClass, DatePipe, DecimalPipe, AdminNavbarComponent, RouterModule, TurnosDiaComponent],
+  imports: [NgIf, NgClass, DatePipe, DecimalPipe, AdminNavbarComponent, RouterModule, TurnosDiaComponent],
   templateUrl: './empleado-turno.component.html',
   styleUrls: ['./empleado-turno.component.scss']
 })
@@ -250,8 +250,54 @@ export class EmpleadoTurnoComponent implements OnInit {
       catchError(() => of([] as any[])),
       // map inline usando switchMap para evitar importar map
       switchMap((items: any[]) => {
-        const match = Array.isArray(items) ? items.find(it => it && it.bloque === bloque) : undefined;
-        return of(match ? Number(match.id) : undefined);
+        if (!Array.isArray(items) || items.length === 0) {
+          return of(undefined as number | undefined);
+        }
+
+        // Solo consideramos turnos en estado "por_cumplir" o "pendiente"
+        const candidatos = items.filter(it =>
+          it &&
+          (it.estado === 'por_cumplir' || it.estado === 'pendiente')
+        );
+
+        if (candidatos.length === 0) {
+          return of(undefined as number | undefined);
+        }
+
+        const ahora = new Date();
+        const actualMin = ahora.getHours() * 60 + ahora.getMinutes();
+
+        const match = candidatos.find(it => {
+          if (!it || it.bloque !== bloque) {
+            return false;
+          }
+
+          let desdeMin = 0;
+          let hastaMin = 23 * 60 + 59;
+
+          if (typeof it.horaDesde === 'string' && /^\d{2}:\d{2}$/.test(it.horaDesde)) {
+            const [h, m] = it.horaDesde.split(':').map((v: string) => Number(v));
+            if (Number.isFinite(h) && Number.isFinite(m)) {
+              desdeMin = h * 60 + m;
+            }
+          }
+
+          if (typeof it.horaHasta === 'string' && /^\d{2}:\d{2}$/.test(it.horaHasta)) {
+            const [h, m] = it.horaHasta.split(':').map((v: string) => Number(v));
+            if (Number.isFinite(h) && Number.isFinite(m)) {
+              hastaMin = h * 60 + m;
+            }
+          }
+
+          // Tolerancia de 5 minutos antes y después
+          const tolerancia = 5;
+          const desdeConTol = Math.max(0, desdeMin - tolerancia);
+          const hastaConTol = Math.min(23 * 60 + 59, hastaMin + tolerancia);
+
+          return actualMin >= desdeConTol && actualMin <= hastaConTol;
+        });
+
+        return of(match && match.id ? Number(match.id) : undefined);
       })
     );
   }
@@ -259,27 +305,48 @@ export class EmpleadoTurnoComponent implements OnInit {
   iniciarTurno() {
     Swal.fire({
       title: 'Iniciar turno',
-      text: 'Ingresa el monto inicial de caja',
+      text: 'Ingresa el Monto Inicial de Caja',
       input: 'number',
-      inputAttributes: { min: '0', step: '0.01' },
-      inputValue: 0,
+      inputAttributes: { min: '1', step: '0.01' },
+      inputValue: 1,
       showCancelButton: true,
       confirmButtonText: 'Iniciar',
       cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#1d4ed8',
+      cancelButtonColor: '#6b7280',
+      customClass: {
+        popup: 'swal2-rounded',
+        confirmButton: 'swal2-confirm-primary',
+        cancelButton: 'swal2-cancel-muted',
+      },
     }).then((result) => {
       if (!result.isConfirmed) return;
       const monto = Number(result.value ?? 0);
-      if (isNaN(monto) || monto < 0) {
-        Swal.fire({ icon: 'warning', title: 'Monto inválido', text: 'Debes ingresar un número mayor o igual a 0.' });
+      if (isNaN(monto) || monto <= 0) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Monto inicial inválido',
+          html: 'La <b>Caja</b> no puede Iniciar en $0. Ingresa un <b>Monto Inicial</b> mayor que 0.',
+          confirmButtonText: 'Corregir monto',
+          confirmButtonColor: '#1d4ed8',
+        });
         return;
       }
 
       this.obtenerRegistroTurnoIdActual().subscribe((registroTurnoId) => {
+        if (typeof registroTurnoId !== 'number' || isNaN(registroTurnoId)) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'No puedes Iniciar el Turno',
+            html: 'No Existe un <b>Turno Registrado</b> para la <b>Fecha</b> y el <b>Horario Actual</b>. Verifica con el <b>Administrador</b>.',
+          });
+          return;
+        }
         this.turnoService.iniciarTurno(monto, undefined, registroTurnoId).subscribe({
           next: (data) => {
             this.resumen = data;
             this.sinTurnoActivo = false;
-            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Turno iniciado', timer: 2000, showConfirmButton: false });
+            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Turno Iniciado', timer: 2000, showConfirmButton: false });
             // persistir estado de turno activo
             const userIdStr = typeof window !== 'undefined' ? localStorage.getItem('userId') : null;
             const usuarioId = userIdStr ? Number(userIdStr) : NaN;
@@ -301,7 +368,7 @@ export class EmpleadoTurnoComponent implements OnInit {
                   next: (data2) => {
                     this.resumen = data2;
                     this.sinTurnoActivo = false;
-                    Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Turno iniciado', timer: 2000, showConfirmButton: false });
+                    Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Turno Iniciado', timer: 2000, showConfirmButton: false });
                     this.turnoState.setActivo({
                       inicioTurno: String(this.resumen?.turno?.inicioTurno || new Date().toISOString()),
                       observaciones: this.resumen?.turno?.observaciones || null,
@@ -334,18 +401,31 @@ export class EmpleadoTurnoComponent implements OnInit {
   cerrarTurno() {
     Swal.fire({
       title: 'Terminar turno',
-      text: 'Ingresa el monto final de caja',
+      text: 'Ingresa el Monto final de Caja',
       input: 'number',
       inputAttributes: { min: '0', step: '1' },
       inputValue: 0,
       showCancelButton: true,
       confirmButtonText: 'Terminar',
       cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#1d4ed8',
+      cancelButtonColor: '#6b7280',
+      customClass: {
+        popup: 'swal2-rounded',
+        confirmButton: 'swal2-confirm-primary',
+        cancelButton: 'swal2-cancel-muted',
+      },
     }).then((result) => {
       if (!result.isConfirmed) return;
       const monto = Number(result.value ?? 0);
-      if (!Number.isFinite(monto) || monto < 0) {
-        Swal.fire({ icon: 'warning', title: 'Monto inválido', text: 'Debes ingresar un número mayor o igual a 0.' });
+      if (!Number.isFinite(monto) || monto <= 0) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Monto final inválido',
+          html: 'La <b>Caja</b> no puede terminar en $0. Ingresa el <b>Monto Final</b> real de Efectivo al cerrar el Turno (mayor que 0).',
+          confirmButtonText: 'Corregir monto',
+          confirmButtonColor: '#1d4ed8',
+        });
         return;
       }
       this.turnoService.cerrarTurno(monto).subscribe({

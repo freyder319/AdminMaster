@@ -78,10 +78,14 @@ h1 {
     height: 100%;
 }
 
-/* En pantallas pequeñas (teléfono) */
+/* En pantallas pequeñas (teléfono) ajustamos hero y el contenedor del video */
 @media (max-width: 768px) {
+    .hero {
+        height: 60vh; /* altura más adecuada en móvil */
+    }
+
     .hero-bg {
-    height: 50vh; /* solo la mitad de la pantalla */
+        height: 60vh; /* misma altura que el hero para evitar espacios vacíos */
     }
 }
 

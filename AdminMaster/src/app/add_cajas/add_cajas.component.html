@@ -29,12 +29,6 @@
                     <div class="mb-3">
                         <label for="validationCustom01" class="form-label">Nombre de Caja</label>
                         <input #nombreInput data-autofocus="true" type="text" class="form-control" id="validationCustom01" name="nombre" required [(ngModel)]="nuevaCaja.nombre" #nombreCaja="ngModel" [ngClass]="{ 'is-valid': nombreCaja.valid && nombreCaja.touched, 'is-invalid': nombreCaja.invalid && nombreCaja.touched}" (keydown.enter)="onEnterFocus(codigoCajaInput, $event, nuevaCaja.nombre)"/>
-
-                        <!-- Mensaje de éxito -->
-                        <div class="valid-feedback" *ngIf="nombreCaja.valid && nombreCaja.touched" @fadeIn>
-                        ¡Se ve Bien!
-                        </div>
-
                         <!-- Mensaje de error -->
                         <div class="invalid-feedback" *ngIf="nombreCaja.invalid && nombreCaja.touched" @shake>
                         El Nombre de la Caja es Obligatorio.
@@ -42,12 +36,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Código de Caja</label>
-                        <input #codigoCajaInput type="text" class="form-control" [(ngModel)]="nuevaCaja.codigoCaja" [ngClass]="{ 'is-invalid': codigoCajaExcede || codigoCajaNoNumerico, 'is-valid': !codigoCajaExcede && !codigoCajaNoNumerico }" name="codigoCaja" required maxlength="20" pattern="^[0-9]*$" #codigoCajaRef="ngModel" (input)="validarCodigoCaja()" (keydown.enter)="onEnterFocus(btnConfirmarCaja, $event, nuevaCaja.codigoCaja)"/>
-
-                        <!-- Mensaje de éxito -->
-                        <div class="valid-feedback" *ngIf="codigoCajaRef.valid && codigoCajaRef.touched && nuevaCaja.codigoCaja" @fadeIn>
-                            ¡Se ve Bien!
-                        </div>
+                        <input #codigoCajaInput type="text" class="form-control" [(ngModel)]="nuevaCaja.codigoCaja" [ngClass]="{ 'is-invalid': codigoCajaExcede || codigoCajaNoNumerico || codigoCajaDuplicado, 'is-valid': !codigoCajaExcede && !codigoCajaNoNumerico && !codigoCajaDuplicado && nuevaCaja.codigoCaja }" name="codigoCaja" required maxlength="20" pattern="^[0-9]*$" #codigoCajaRef="ngModel" (input)="validarCodigoCaja()" (keydown.enter)="onEnterFocus(btnConfirmarCaja, $event, nuevaCaja.codigoCaja)"/>
 
                         <!-- Mensaje si excede los 20 caracteres -->
                         <div class="invalid-feedback" *ngIf="codigoCajaExcede" @shake>
@@ -58,10 +47,15 @@
                         <div class="invalid-feedback" *ngIf="codigoCajaNoNumerico" @shake>
                             Solo se Permiten Números.
                         </div>
+
+                        <!-- Mensaje si el código ya existe -->
+                        <div class="invalid-feedback" *ngIf="!codigoCajaExcede && !codigoCajaNoNumerico && codigoCajaDuplicado" @shake>
+                            Ya existe una Caja con ese Código.
+                        </div>
                     </div>
 
                     <div class="confirmarfinal text-center">
-                        <button #btnConfirmarCaja type="submit" class="btn confir" [disabled]="formCaja.invalid">Confirmar</button>
+                        <button #btnConfirmarCaja type="submit" class="btn confir" [disabled]="formCaja.invalid || codigoCajaDuplicado">Confirmar</button>
                     </div>
                 </div>
             </div>

@@ -23,6 +23,7 @@
               <div class="kv"><span class="k">Empleado</span><span class="v">{{ (s?.nombre || '') + ' ' + (s?.apellido || '') }}</span></div>
               <div class="kv"><span class="k">Inicio</span><span class="v">{{ s?.resumen?.turno?.inicioTurno | date:'short' }}</span></div>
               <div class="kv"><span class="k">Fin</span><span class="v">{{ s?.resumen?.turno?.finTurno | date:'short' }}</span></div>
+              <div class="kv"><span class="k">Duración</span><span class="v">{{ duracionTurno() }}</span></div>
               <div class="kv kv-span"><span class="k">Observaciones</span><span class="v">{{ s?.resumen?.turno?.observaciones || 'Sin comentarios' }}</span></div>
             </div>
           </div>
@@ -30,23 +31,21 @@
           <div class="card card-caja">
             <h3 class="section-title section-title-caja">Caja</h3>
             <div class="stats">
+              <div class="stat"><div class="stat-k">Caja utilizada</div><div class="stat-v">{{ cajaNombre }}</div></div>
               <div class="stat"><div class="stat-k">Monto inicial</div><div class="stat-v">${{ montoInicial | number:'1.0-0' }}</div></div>
               <div class="stat"><div class="stat-k">Monto final</div><div class="stat-v">${{ montoFinal | number:'1.0-0' }}</div></div>
               <div class="stat"><div class="stat-k">Diferencia</div><div class="stat-v">${{ (montoFinal - montoInicial) | number:'1.0-0' }}</div></div>
-              <div class="stat"><div class="stat-k">Duración</div><div class="stat-v">{{ duracionTurno() }}</div></div>
               <div class="stat"><div class="stat-k">Total neto de caja</div><div class="stat-v">${{ totalNeto | number:'1.0-0' }}</div></div>
               <div class="stat"><div class="stat-k">Transacciones</div><div class="stat-v">{{ transaccionesTotal }}</div></div>
             </div>
           </div>
         </section>
 
-        <!-- Bloque inferior: Actividad y detalles -->
+        <!-- Bloque inferior: Actividad (solo ventas de productos) -->
         <section *ngIf="s?.resumen?.actividad as a" class="card card-actividad">
           <h3 class="section-title section-title-actividad">Actividad del turno</h3>
           <section class="datos-grid datos-grid-actividad">
             <div class="kv"><span class="k">Ventas (productos)</span><span class="v">${{ (a?.totalVentas || 0) | number:'1.0-0' }} · {{ a?.transacciones || 0 }} transacciones</span></div>
-            <div class="kv"><span class="k">Ventas libres</span><span class="v">${{ (a?.totalVentasLibres || 0) | number:'1.0-0' }} · {{ a?.transaccionesLibres || 0 }} transacciones</span></div>
-            <div class="kv"><span class="k">Gastos</span><span class="v">${{ (a?.totalGastos || 0) | number:'1.0-0' }} · {{ a?.cantidadGastos || 0 }} items</span></div>
           </section>
 
           <!-- Detalle (opcional, en acordiones) -->
@@ -66,33 +65,6 @@
                 </li>
               </ul>
             </details>
-            <details class="subbloque" *ngIf="a?.ventasLibres?.length">
-              <summary>Detalle de ventas libres ({{a?.ventasLibres?.length}})</summary>
-              <ul class="lista-detalle">
-                <li *ngFor="let v of a?.ventasLibres">
-                  <div>
-                    Venta libre N° {{v?.id}} · Total: ${{(v?.total || 0) | number:'1.0-0'}}
-                  </div>
-                  <ul class="lista-detalle" *ngIf="v?.productos?.length">
-                    <li *ngFor="let p of v.productos">
-                      Cantidad: {{ p?.cantidad || 0 }} · Producto: {{ p?.nombre || 'Sin nombre' }} · Subtotal: ${{ (p?.subtotal || 0) | number:'1.0-0' }}
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </details>
-            <details class="subbloque" *ngIf="a?.gastos?.length">
-              <summary>Detalle de gastos ({{a?.gastos?.length}})</summary>
-              <ul class="lista-detalle">
-                <li *ngFor="let g of a?.gastos">Gasto N° {{g?.id}} · Cantidad: {{ g?.cantidad || 1 }} · Concepto: <span *ngIf="g?.nombre">{{g?.nombre}}</span><span *ngIf="!g?.nombre">Sin detalle</span> · Total: ${{(g?.monto || 0) | number:'1.0-0'}}<span *ngIf="g?.forma_pago"> · Forma de pago: {{g?.forma_pago}}</span></li>
-              </ul>
-            </details>
-            <div class="subbloque" *ngIf="resumenMetodosPago().length > 0">
-              <h4>Métodos de pago (gastos)</h4>
-              <ul class="chips">
-                <li *ngFor="let m of resumenMetodosPago()"><span class="chip-k">{{ m.forma }}</span><span class="chip-v">${{ m.total | number:'1.0-0' }} · {{ m.cantidad }}</span></li>
-              </ul>
-            </div>
           </section>
         </section>
       </div>

@@ -621,7 +621,7 @@ body{
 .date-range-wrapper {
   display: flex;
   width: 100%;
-  column-gap: 8px;
+  column-gap: 14px;
 }
 
 .date-range-input {
@@ -633,8 +633,8 @@ body{
 
 .date-range-input:focus {
   outline: none;
-  border-color: #1d4ed8;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+  border-color: #1d4ed8 !important;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.25);
 }
 
 .range-dropdown-col {
@@ -644,12 +644,11 @@ body{
 }
 
 .range-dropdown-btn {
-  margin-left: 50px;
+  margin-left: 120px;
 }
 
 .report-export-btn {
-  margin-top: 4px;
-  margin-right: 24px;
+  margin-top: -5px;
 }
 
 /* Bordered controls for Filtro, Calendario, Rango */

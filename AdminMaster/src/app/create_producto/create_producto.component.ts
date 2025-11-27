@@ -69,6 +69,9 @@ export class CreateProductoComponent implements OnInit {
           canvas.height = Math.floor(height * scale);
           const ctx = canvas.getContext('2d');
           if (!ctx) return reject('No 2D context');
+          // Rellenar fondo para evitar que la transparencia se vea negra en JPEG
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
           // Export as JPEG for wide compatibility
           const dataUrl = canvas.toDataURL('image/jpeg', quality);
@@ -155,7 +158,30 @@ export class CreateProductoComponent implements OnInit {
     }
   }
   onSubmit() {
-    // Sanitizar valores no negativos
+    if (this.codigoExistente) { return; }
+    const hasPreviewString = typeof this.previewUrl === 'string';
+    const isDataUrl = hasPreviewString && (this.previewUrl as string).startsWith('data:image');
+    if (isDataUrl) {
+      this.productoService.uploadImagen(this.previewUrl as string).subscribe({
+        next: (res) => {
+          this.finalizarSubmit(res.imgProducto || null);
+        },
+        error: (err) => {
+          console.error('Error procesando imagen de producto:', err);
+          this.finalizarSubmit(this.previewUrl as string);
+        }
+      });
+    } else {
+      const fallback = hasPreviewString
+        ? (this.previewUrl as string)
+        : (this.editMode
+            ? this.productoInicial?.imgProducto || null
+            : 'default.jpg');
+      this.finalizarSubmit(fallback);
+    }
+  }
+
+  private finalizarSubmit(imgUrl: string | null) {
     const stock = Math.max(0, Number(this.producto.stockProducto) || 0);
     const pu = Math.max(0, Number(this.producto.precioUnitario) || 0);
     const pc = Math.max(0, Number(this.producto.precioComercial) || 0);
@@ -165,14 +191,10 @@ export class CreateProductoComponent implements OnInit {
       stockProducto: stock,
       precioUnitario: pu,
       precioComercial: pc,
-      // Si no hay imagen seleccionada en creación, usar imagen por defecto
-      imgProducto: typeof this.previewUrl === 'string'
-        ? this.previewUrl
-        : (this.editMode
-            ? this.productoInicial?.imgProducto
-            : 'default.jpg'),
+      imgProducto: imgUrl ?? (this.editMode
+        ? this.productoInicial?.imgProducto
+        : 'default.jpg'),
     };
-    if (this.codigoExistente) { return; }
     if (this.producto.categoria) {
       payload.idCategoria = Number(this.producto.categoria);
     }
@@ -180,9 +202,8 @@ export class CreateProductoComponent implements OnInit {
     if (this.editMode && this.productoInicial?.id) {
       this.productoService.update(this.productoInicial.id, payload).subscribe({
         next: () => {
-          Swal.fire('Producto Modificado', 'Se Actualizó Correctamente.', 'success');
+          Swal.fire('Producto Modificado', 'El <b>Producto</b> se <b>Actualizó</b> Correctamente.', 'success');
           this.guardado.emit();
-          // Reset de estados visuales
           this.codigoExistente = false;
           this.formRef?.resetForm({
             nombreProducto: '', codigoProducto: '', stockProducto: 0,
@@ -197,7 +218,7 @@ export class CreateProductoComponent implements OnInit {
     } else {
       this.productoService.create(payload).subscribe({
         next: () => {
-          Swal.fire('Producto Creado', 'Se Registró Correctamente.', 'success');
+          Swal.fire('Producto Creado', 'El <b>Producto</b> se <b>Registró</b> Correctamente.', 'success');
           this.closeOffcanvas();
           this.resetForm();
           this.guardado.emit();

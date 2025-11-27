@@ -23,6 +23,10 @@ export class SendEmailComponent {
     });
   }
 
+  goToLogin(): void {
+    this.router.navigate(['/login']);
+  }
+
   enviarCodigo() {
     const correo = this.emailForm.value.correo;
     console.log('Correo a enviar:', correo);

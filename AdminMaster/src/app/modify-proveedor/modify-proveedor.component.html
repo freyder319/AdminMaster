@@ -46,23 +46,31 @@
             <div class="formulario">
                 <form [formGroup]="form" (ngSubmit)="onSubmit()">
                     <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre del Proveedor</label>
+                        <label for="nombreEmpresa" class="form-label">Nombre de la Empresa</label>
                         <input type="text"
                                class="form-control"
-                               id="nombre"
-                               formControlName="nombre"
-                               [ngClass]="{ 'is-invalid': form.get('nombre')?.invalid && form.get('nombre')?.touched }">
+                               id="nombreEmpresa"
+                               formControlName="nombreEmpresa"
+                               [ngClass]="{ 'is-invalid': form.get('nombreEmpresa')?.invalid && form.get('nombreEmpresa')?.touched }">
                     </div>
                     <div class="mb-3">
-                        <label for="apellido" class="form-label">Apellido del Proveedor</label>
+                        <label for="nit" class="form-label">NIT / Documento</label>
                         <input type="text"
                                class="form-control"
-                               id="apellido"
-                               formControlName="apellido"
-                               [ngClass]="{ 'is-invalid': form.get('apellido')?.invalid && form.get('apellido')?.touched }">
+                               id="nit"
+                               formControlName="nit"
+                               [ngClass]="{ 'is-invalid': form.get('nit')?.invalid && form.get('nit')?.touched }">
                     </div>
                     <div class="mb-3">
-                        <label for="telefono" class="form-label">Telefono</label>
+                        <label for="contactoNombre" class="form-label">Persona de Contacto</label>
+                        <input type="text"
+                               class="form-control"
+                               id="contactoNombre"
+                               formControlName="contactoNombre"
+                               [ngClass]="{ 'is-invalid': form.get('contactoNombre')?.invalid && form.get('contactoNombre')?.touched }">
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Teléfono</label>
                         <input type="text"
                                class="form-control"
                                id="telefono"

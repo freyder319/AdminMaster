@@ -9,6 +9,10 @@ export interface Proveedor {
   telefono: string;
   correo: string;
   activo: boolean;
+
+  nombreEmpresa?: string;
+  nit?: string;
+  contactoNombre?: string;
 }
 
 @Injectable({ providedIn: 'root' })

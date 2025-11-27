@@ -46,15 +46,42 @@
             <div class="formulario">
                 <form [formGroup]="form" (ngSubmit)="onSubmit()">
                     <div class="mb-3">
-                        <label for="nombre" class="form-label form-control2">Nombre del Proveedor</label>
-                        <input #nombreInput data-autofocus="true" type="text" formControlName="nombre" id="nombre" class="form-control" (keydown.enter)="onEnterFocus(apellidoProv, $event, form.get('nombre')?.value)">
+                        <label for="nombreEmpresa" class="form-label form-control2">Nombre de la Empresa</label>
+                        <input #nombreEmpresaInput data-autofocus="true" type="text" formControlName="nombreEmpresa" id="nombreEmpresa" class="form-control" (keydown.enter)="onEnterFocus(nitInput, $event, form.get('nombreEmpresa')?.value)">
                     </div>
                     <div class="mb-3">
-                        <label for="apellido" class="form-label">Apellido del Proveedor</label>
-                        <input #apellidoProv type="text" class="form-control" id="apellido" formControlName="apellido" (keydown.enter)="onEnterFocus(telefonoProv, $event, form.value?.apellido)">
+                        <label for="nit" class="form-label">NIT / Documento</label>
+                        <input
+                          #nitInput
+                          type="text"
+                          class="form-control"
+                          id="nit"
+                          formControlName="nit"
+                          [ngClass]="{
+                            'is-invalid': (form.get('nit')?.invalid && form.get('nit')?.touched) || nitDuplicado,
+                            'is-valid': form.get('nit')?.valid && !nitDuplicado && form.get('nit')?.touched
+                          }"
+                          (keydown.enter)="form.get('nit')?.valid && !nitDuplicado ? onEnterFocus(contactoProv, $event, form.value?.nit) : null"
+                        >
+                        <div class="invalid-feedback" *ngIf="form.get('nit')?.invalid && form.get('nit')?.touched && !nitDuplicado">
+                          Documento demasiado largo.
+                        </div>
+                        <div class="invalid-feedback" *ngIf="nitDuplicado">
+                          El NIT / documento ya existe.
+                        </div>
                     </div>
                     <div class="mb-3">
-                        <label for="telefono" class="form-label">Telefono</label>
+                        <label for="contactoNombre" class="form-label">Persona de Contacto</label>
+                        <input
+                          #contactoProv
+                          type="text"
+                          class="form-control"
+                          id="contactoNombre"
+                          formControlName="contactoNombre"
+                          (keydown.enter)="onEnterFocus(telefonoProv, $event, form.value?.contactoNombre)">
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Teléfono</label>
                         <input
                           #telefonoProv
                           type="text"
@@ -97,7 +124,7 @@
                       </div><br>
 
                     <div class="confirmarfinal">
-                        <button #btnConfirmarProv type="submit" class="btn confir" [disabled]="form.invalid || telefonoDuplicado || correoDuplicado">Confirmar</button>
+                        <button #btnConfirmarProv type="submit" class="btn confir" [disabled]="form.invalid || telefonoDuplicado || correoDuplicado || nitDuplicado">Confirmar</button>
                     </div>
                 </form>
             </div>

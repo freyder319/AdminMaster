@@ -33,6 +33,7 @@ import { ActivarEmpleadoComponent } from './activar-empleado/activar-empleado.co
 import { PromocionesComponent } from './promociones/promociones.component';
 import { ReportesEmpleadosComponent } from './reportes-empleados/reportes-empleados.component';
 import { ReportesVentasComponent } from './reportes-ventas/reportes-ventas.component';
+import { ActividadEmpleadoComponent } from './actividad-empleado/actividad-empleado.component';
 
 export const routes: Routes = [
     // Rutas para administrador
@@ -44,6 +45,7 @@ export const routes: Routes = [
     { path: "reportes-ventas", component: ReportesVentasComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
 
     { path: "crear_venta", component: VentaProductoComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
+    { path: "actividad-empleado", component: ActividadEmpleadoComponent, canActivate: [RoleGuard], data: { roles: ['punto_pos'] } },
     { path: "inventario", component: InventoryComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
     { path: "estadisticas", component: EstadisticasComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
     { path: "cajas", component: CajasComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },

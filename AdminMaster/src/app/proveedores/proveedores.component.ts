@@ -38,8 +38,8 @@ export class ProveedoresComponent {
       map(([list, term]) => {
         const t = term.trim().toLowerCase();
         const base = !t ? list : list.filter(p =>
-          (p.nombre?.toLowerCase().includes(t)) ||
-          (p.apellido?.toLowerCase().includes(t)) ||
+          (p.nombreEmpresa?.toLowerCase().includes(t)) ||
+          (p.contactoNombre?.toLowerCase().includes(t)) ||
           (p.correo?.toLowerCase().includes(t)) ||
           (p.telefono?.toLowerCase().includes(t))
         );
@@ -118,10 +118,11 @@ export class ProveedoresComponent {
     }
   }
 
-  onCrear(data: { nombre: string; apellido: string; telefono: string; correo: string; activo: boolean }): void {
+  onCrear(data: { nombreEmpresa?: string; nit?: string; contactoNombre?: string; telefono: string; correo: string; activo: boolean }): void {
     const payload = {
-      nombre: (data.nombre || '').trim(),
-      apellido: (data.apellido || '').trim() || undefined,
+      nombreEmpresa: (data.nombreEmpresa || '').trim() || undefined,
+      nit: (data.nit || '').trim() || undefined,
+      contactoNombre: (data.contactoNombre || '').trim() || undefined,
       telefono: (data.telefono || '').trim(),
       correo: (data.correo || '').trim().toLowerCase(),
       activo: typeof data.activo === 'boolean' ? data.activo : true,
@@ -132,11 +133,10 @@ export class ProveedoresComponent {
         this.mostrarAddProveedor = false;
         // cerrar offcanvas de escritorio si está abierto
         this.closeOffcanvas('offcanvasAddProveedor');
-        const nombreCompleto = `${payload.nombre} ${payload.apellido ?? ''}`.trim();
         Swal.fire({
           title: 'Proveedor Registrado!',
           icon: 'success',
-          html: `El Proveedor <b>${nombreCompleto}</b> fue Registrado con Éxito`,
+          html: `El Proveedor <b>${payload.nombreEmpresa || payload.contactoNombre || payload.correo}</b> fue Registrado con Éxito`,
           timer: 2000,
           showConfirmButton: false
         });

@@ -19,8 +19,9 @@ export class ModifyProveedorComponent implements OnChanges {
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      nombre: ['', [Validators.required, Validators.maxLength(100)]],
-      apellido: ['', [Validators.maxLength(100)]],
+      nombreEmpresa: ['', [Validators.maxLength(150)]],
+      nit: ['', [Validators.maxLength(30)]],
+      contactoNombre: ['', [Validators.maxLength(150)]],
       telefono: ['', [Validators.required, Validators.maxLength(20)]],
       correo: ['', [Validators.required, Validators.email]],
       activo: [true]
@@ -30,8 +31,8 @@ export class ModifyProveedorComponent implements OnChanges {
   ngChangesPatched = false;
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['proveedor'] && this.proveedor) {
-      const { nombre, apellido, telefono, correo, activo } = this.proveedor;
-      this.form.patchValue({ nombre, apellido, telefono, correo, activo });
+      const { nombreEmpresa, nit, contactoNombre, telefono, correo, activo } = this.proveedor;
+      this.form.patchValue({ nombreEmpresa, nit, contactoNombre, telefono, correo, activo });
       this.ngChangesPatched = true;
     }
   }

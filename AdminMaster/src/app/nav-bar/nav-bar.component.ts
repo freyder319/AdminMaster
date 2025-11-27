@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
 import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { ConfiguracionService, ConfiguracionNegocio } from '../services/configuracion.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -14,16 +15,28 @@ export class NavBarComponent {
   scrolled = false; // bandera para el estado del navbar
   isPqrs = false;
   isLogin = false;
-  constructor(private router: Router) {
+  logoUrl: string | null = null;
+
+  constructor(private router: Router, private cfgSvc: ConfiguracionService) {
     this.isPqrs = this.router.url.includes('/pqrs');
-    this.isLogin = this.router.url.includes('/login');
+    this.isLogin = this.router.url.includes('/login') || this.router.url.includes('/verificar-email');
     this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe(e => {
         const url = e.urlAfterRedirects;
         this.isPqrs = url.includes('/pqrs');
-        this.isLogin = url.includes('/login');
+        this.isLogin = url.includes('/login') || url.includes('/verificar-email');
       });
+
+    // Cargar logo de configuración
+    this.cfgSvc.get().subscribe({
+      next: (cfg: ConfiguracionNegocio | null) => {
+        this.logoUrl = cfg?.logoUrl ?? null;
+      },
+      error: () => {
+        this.logoUrl = null;
+      }
+    });
   }
 
   @HostListener('window:scroll', [])

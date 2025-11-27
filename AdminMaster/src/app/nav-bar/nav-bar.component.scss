@@ -136,7 +136,6 @@ a{
     li{
         justify-content: center;
         text-align: center;
-        border: 1px solid #772929;
     }
     .separador {
         margin-top: 10px; 
@@ -146,6 +145,12 @@ a{
         display: none;
     }
     
+}
+
+@media (max-width: 768px) {
+  .navbar-brand img {
+    margin-left: -35px; /* mover un poco a la izquierda solo en móvil */
+  }
 }
 a{
     font-family: "Funnel Sans", sans-serif;

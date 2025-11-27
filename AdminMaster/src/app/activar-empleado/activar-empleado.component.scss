@@ -31,6 +31,7 @@
 
 .form-control.is-invalid {
   border: 1px solid #dc3545 !important;
+  background-image: none !important; // quitar icono de error de Bootstrap
 }
 
 .form-control.is-invalid:focus {

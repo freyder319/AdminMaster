@@ -64,7 +64,7 @@
                     <!-- Documento -->
                     <div class="mb-3">
                         <label for="documento" class="form-label">Documento</label>
-                        <input type="text" [(ngModel)]="empleado.documento" name="documento" id="documento" class="form-control" required pattern="^[0-9]{6,15}$" (input)="validarDocumento()" [ngClass]="{ 'is-invalid': documentoExcede || documentoNoNumerico, 'valid-focus': !documentoExcede && !documentoNoNumerico && empleado.documento }" (keydown.enter)="onEnterFocus(correoEmp, $event, empleado.documento)">
+                        <input type="text" [(ngModel)]="empleado.documento" name="documento" id="documento" class="form-control" required pattern="^[0-9]{6,15}$" (input)="validarDocumento()" [ngClass]="{ 'is-invalid': documentoExcede || documentoNoNumerico || documentoDuplicado, 'valid-focus': !documentoExcede && !documentoNoNumerico && !documentoDuplicado && empleado.documento }" (keydown.enter)="onEnterFocus(correoEmp, $event, empleado.documento)">
                         <div class="invalid-feedback" *ngIf="documentoExcede">
                             El documento tiene máximo 15 números.
                         </div>

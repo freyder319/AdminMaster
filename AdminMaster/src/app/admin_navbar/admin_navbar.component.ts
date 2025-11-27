@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { TurnosService } from '../services/turnos.service';
 import { TurnoStateService, TurnoActivoState } from '../services/turno-state.service';
 import { Observable } from 'rxjs';
+import { ConfiguracionService, ConfiguracionNegocio } from '../services/configuracion.service';
 
 @Component({
   selector: 'app-admin-navbar',
@@ -18,7 +19,7 @@ export class AdminNavbarComponent {
   rol: string | null = null;
   turno$!: Observable<TurnoActivoState | null>;
   showTurnMenu = false;
-  selectedGroup: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones' = 'operaciones';
+  selectedGroup: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones' | 'cajas' = 'operaciones';
   isMobilePanelOpen = false;
   isMobileView = false;
   mobileGroupsExpanded = {
@@ -27,9 +28,18 @@ export class AdminNavbarComponent {
     operaciones: false,
     reportes: false,
     relaciones: false,
+    cajas: false,
   } as const;
+  searchPreviewLabel: string | null = null;
+  searchFeedbackTerm: string | null = null;
+  logoUrl: string | null = null;
 
-  constructor(private router: Router, private turnosService: TurnosService, private turnoState: TurnoStateService) {}
+  constructor(
+    private router: Router,
+    private turnosService: TurnosService,
+    private turnoState: TurnoStateService,
+    private cfgSvc: ConfiguracionService,
+  ) {}
 
   cerrarSesion(): void {
     const turnoActivo = this.turnoState.snapshot;
@@ -77,7 +87,7 @@ export class AdminNavbarComponent {
     });
   }
 
-  toggleMobileGroup(group: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones') {
+  toggleMobileGroup(group: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones' | 'cajas') {
     // Solo aplica en vista móvil; en escritorio las secciones siempre están abiertas
     if (!this.isMobileView && (this.rol || '').toLowerCase() === 'admin') {
       return;
@@ -99,6 +109,16 @@ export class AdminNavbarComponent {
     try { this.turnoState.hydrateFromStorage(); } catch {}
     this.turno$ = this.turnoState.turnoActivo$;
 
+    // Cargar logo de configuración
+    this.cfgSvc.get().subscribe({
+      next: (cfg: ConfiguracionNegocio | null) => {
+        this.logoUrl = cfg?.logoUrl ?? null;
+      },
+      error: () => {
+        this.logoUrl = null;
+      }
+    });
+
     // Sincronizar el grupo de la navbar con la ruta actual
     this.syncGroupWithUrl(this.router.url || '');
 
@@ -113,17 +133,60 @@ export class AdminNavbarComponent {
     });
   }
 
+  private findSearchCommands(q: string): { label: string; commands: any[] } | null {
+    const entries: { keywords: string[]; commands: any[]; label: string }[] = [
+      { keywords: ['movimiento', 'movimientos', 'inicio', 'dashboard'], commands: ['/movimientos'], label: 'Movimientos' },
+      { keywords: ['estadistica', 'estadísticas', 'estadisticas', 'graficos', 'gráficos'], commands: ['/estadisticas'], label: 'Estadísticas' },
+      { keywords: ['reporte empleado', 'reportes empleados', 'empleados reporte'], commands: ['/reportes-empleados'], label: 'Reportes empleados' },
+      { keywords: ['reporte venta', 'reportes ventas', 'ventas reporte'], commands: ['/reportes-ventas'], label: 'Reportes ventas' },
+      { keywords: ['caja', 'cajas'], commands: ['/cajas'], label: 'Cajas' },
+      { keywords: ['auditoria', 'auditoría', 'auditoria caja', 'auditoría caja'], commands: ['/turno-empleado', 'auditoria-caja'], label: 'Auditoría de caja' },
+      { keywords: ['turno', 'turnos'], commands: ['/turno-empleado', 'registros-turno'], label: 'Turnos (registro)' },
+      { keywords: ['historial'], commands: ['/turno-empleado', 'historial'], label: 'Historial de turnos' },
+      { keywords: ['pqrs', 'notificacion', 'notificaciones'], commands: ['/turno-empleado', 'notificaciones'], label: 'PQRS / Notificaciones' },
+      { keywords: ['inventario', 'stock', 'productos'], commands: ['/inventario'], label: 'Inventario' },
+      { keywords: ['venta', 'ventas', 'crear venta'], commands: ['/crear_venta'], label: 'Crear venta' },
+      { keywords: ['promocion', 'promoción', 'promociones', 'ofertas'], commands: ['/promociones'], label: 'Promociones' },
+      { keywords: ['perfil', 'cuenta', 'configuracion', 'configuración'], commands: ['/perfil_administrador'], label: 'Perfil administrador' },
+      { keywords: ['clientes', 'cliente'], commands: ['/clientes'], label: 'Clientes' },
+      { keywords: ['proveedor', 'proveedores'], commands: ['/proveedor'], label: 'Proveedores' },
+      { keywords: ['empleado', 'empleados'], commands: ['/empleados'], label: 'Empleados' },
+    ];
+
+    for (const entry of entries) {
+      if (entry.keywords.some(k => q.includes(k))) {
+        return { label: entry.label, commands: entry.commands };
+      }
+    }
+    return null;
+  }
+
+  onSearchChange(term: string): void {
+    const q = (term || '').trim().toLowerCase();
+    if (!q) {
+      this.searchPreviewLabel = null;
+      this.searchFeedbackTerm = null;
+      return;
+    }
+    const result = this.findSearchCommands(q);
+    if (result) {
+      this.searchPreviewLabel = result.label;
+      this.searchFeedbackTerm = null;
+    } else {
+      this.searchPreviewLabel = null;
+      this.searchFeedbackTerm = term;
+    }
+  }
+
   private syncGroupWithUrl(url: string) {
     const u = (url || '').toLowerCase();
-    // Rutas de Turnos y caja (siempre antes que Cuenta para no pisar)
+    // Rutas de Turnos (siempre antes que Cuenta para no pisar)
     if (
       u.includes('/turno-empleado/registros-turno') ||
       u.includes('/turno-empleado/activos') ||
       u.includes('/turno-empleado/cerrados') ||
       u.includes('/turno-empleado/historial') ||
-      u.includes('/turno-empleado/notificaciones') ||
-      u.includes('/turno-empleado/auditoria-caja') ||
-      u.includes('/cajas')
+      u.includes('/turno-empleado/notificaciones')
     ) {
       this.selectedGroup = 'turnos';
       return;
@@ -167,6 +230,15 @@ export class AdminNavbarComponent {
       this.selectedGroup = 'relaciones';
       return;
     }
+
+    // Rutas de Cajas
+    if (
+      u.includes('/turno-empleado/auditoria-caja') ||
+      u.includes('/cajas')
+    ) {
+      this.selectedGroup = 'cajas';
+      return;
+    }
   }
 
   onPerfilClick() {
@@ -185,11 +257,15 @@ export class AdminNavbarComponent {
     this.showTurnMenu = !this.showTurnMenu;
   }
 
-  selectGroup(group: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones') {
+  selectGroup(group: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones' | 'cajas') {
     this.selectedGroup = group;
     if (group !== 'cuenta') {
       this.showTurnMenu = false;
     }
+  }
+
+  isPuntoPos(): boolean {
+    return (this.rol || '').toLowerCase() === 'punto_pos';
   }
 
   irAOpcionTurno(segmento: string | null) {
@@ -201,11 +277,25 @@ export class AdminNavbarComponent {
     this.showTurnMenu = false;
   }
 
+  onSearch(term: string): void {
+    const q = (term || '').trim().toLowerCase();
+    if (!q) return;
+    const result = this.findSearchCommands(q);
+    if (result) {
+      this.router.navigate(result.commands as any[]);
+      this.searchPreviewLabel = result.label;
+      this.searchFeedbackTerm = null;
+    } else {
+      this.searchPreviewLabel = null;
+      this.searchFeedbackTerm = term;
+    }
+  }
+
   onRailClick(): void {
     this.isMobilePanelOpen = !this.isMobilePanelOpen;
   }
 
-  onRailGroupClick(group: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones'): void {
+  onRailGroupClick(group: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones' | 'cajas'): void {
     this.selectGroup(group);
     if (typeof window !== 'undefined' && window.innerWidth < 768) {
       this.isMobilePanelOpen = true;

@@ -27,4 +27,7 @@ export class ConfiguracionService {
   update(id: number, data: Partial<ConfiguracionNegocio>): Observable<ConfiguracionNegocio> {
     return this.http.put<ConfiguracionNegocio>(`${this.apiUrl}/${id}`, data);
   }
+  uploadLogo(payload: { imageBase64: string }): Observable<ConfiguracionNegocio> {
+    return this.http.post<ConfiguracionNegocio>(`${this.apiUrl}/logo`, payload);
+  }
 }

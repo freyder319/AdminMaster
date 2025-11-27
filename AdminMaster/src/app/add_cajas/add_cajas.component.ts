@@ -43,12 +43,21 @@ export class AddCajasComponent {
   // Validar el Codigo de Caja
   codigoCajaExcede: boolean = false;
   codigoCajaNoNumerico: boolean = false;
+  codigoCajaDuplicado: boolean = false;
 
   validarCodigoCaja() {
     const valor = this.nuevaCaja.codigoCaja ?? '';
 
     this.codigoCajaExcede = valor.length > 20;
     this.codigoCajaNoNumerico = !/^\d*$/.test(valor);
+
+    // Reset flag if formato inválido o vacío
+    if (this.codigoCajaExcede || this.codigoCajaNoNumerico || !valor) {
+      this.codigoCajaDuplicado = false;
+    } else {
+      // verificar contra las cajas ya cargadas
+      this.codigoCajaDuplicado = this.caja.some(c => (c.codigoCaja || '') === valor);
+    }
 
     if (this.codigoCajaExcede) {
       this.nuevaCaja.codigoCaja = valor.slice(0, 20);
