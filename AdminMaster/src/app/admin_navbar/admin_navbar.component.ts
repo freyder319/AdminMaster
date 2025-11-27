@@ -19,7 +19,7 @@ export class AdminNavbarComponent {
   rol: string | null = null;
   turno$!: Observable<TurnoActivoState | null>;
   showTurnMenu = false;
-  selectedGroup: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones' | 'cajas' = 'operaciones'| 'ia' = 'operaciones';
+  selectedGroup: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones' | 'cajas' | 'ia' = 'operaciones';
   isMobilePanelOpen = false;
   isMobileView = false;
   mobileGroupsExpanded = {
@@ -238,6 +238,9 @@ export class AdminNavbarComponent {
       u.includes('/cajas')
     ) {
       this.selectedGroup = 'cajas';
+      return;
+    }
+
     // Rutas de Inteligencia Artificial
     if (
       u.includes('/agente-ia') ||
