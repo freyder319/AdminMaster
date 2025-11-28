@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../config/environment';
 
 export interface Empleados {
   id: number;
@@ -22,7 +23,7 @@ export interface Empleados {
   providedIn: 'root'
 })
 export class EmpleadosService {
-  private apiUrl = 'http://localhost:3000/empleado';
+  private apiUrl = `${environment.apiUrl}/empleado`;
   constructor(private http: HttpClient) { }
 
   getEmpleados(): Observable<Empleados[]> {
@@ -43,7 +44,7 @@ export class EmpleadosService {
 
   enviarCorreoActivacion(correo: string): Observable<any> {
     const body = { correo: correo.trim().toLowerCase() } as any;
-    return this.http.post<any>('http://localhost:3000/auth/enviar-activacion-empleado', body);
+    return this.http.post<any>(`${environment.apiUrl}/auth/enviar-activacion-empleado`, body);
   }
 
   deleteEmpleado(id: number): Observable<void> {
@@ -51,7 +52,7 @@ export class EmpleadosService {
   }
 
   getCajas(): Observable<any[]> {
-    return this.http.get<any[]>('http://localhost:3000/caja'); 
+    return this.http.get<any[]>(`${environment.apiUrl}/caja`); 
   }
 
   verificarExistencia(correo: string, telefono: string, documento?: string): Observable<{ correo: boolean, telefono: boolean, documento: boolean }> {

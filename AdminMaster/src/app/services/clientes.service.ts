@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../config/environment';
 
 export interface Clientes{
   id:number;
@@ -15,7 +16,7 @@ export interface Clientes{
   providedIn: 'root'
 })
 export class ClientesService {
-  private apiUrl = 'http://localhost:3000/cliente';
+  private apiUrl = `${environment.apiUrl}/cliente`;
   constructor(private http: HttpClient) { }
 
   private authOptions() {

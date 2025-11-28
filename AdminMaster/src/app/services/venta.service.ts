@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../config/environment';
 
 export interface VentaItemDTO {
   productoId: number;
@@ -25,7 +26,7 @@ export interface CreateVentaPayload {
 
 @Injectable({ providedIn: 'root' })
 export class VentaService {
-  private apiUrl = 'http://localhost:3000/venta';
+  private apiUrl = `${environment.apiUrl}/venta`;
 
   constructor(private http: HttpClient) {}
 

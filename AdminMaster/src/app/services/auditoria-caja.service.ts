@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../config/environment';
 
 export interface AuditoriaCaja {
   id: number;
@@ -16,7 +17,7 @@ export interface AuditoriaCaja {
 
 @Injectable({ providedIn: 'root' })
 export class AuditoriaCajaService {
-  private apiUrl = 'http://localhost:3000/turno/auditoria';
+  private apiUrl = `${environment.apiUrl}/turno/auditoria`;
 
   constructor(private http: HttpClient) {}
 

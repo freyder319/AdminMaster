@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, timer, of, OperatorFunction } from 'rxjs';
 import { mergeMap, tap, retryWhen, scan, catchError, shareReplay, finalize } from 'rxjs/operators';
+import { environment } from '../config/environment';
 
 export interface TurnoResumen {
   turno: {
@@ -79,7 +80,7 @@ export interface TurnoActivoItem {
   providedIn: 'root'
 })
 export class TurnosService {
-  private apiUrl = 'http://localhost:3000/turno'; 
+  private apiUrl = `${environment.apiUrl}/turno`; 
 
   constructor(private http: HttpClient) {}
 

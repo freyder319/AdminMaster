@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../config/environment';
 
 export interface Categorias{
   idCategoria:number;
@@ -10,7 +11,7 @@ export interface Categorias{
   providedIn: 'root'
 })
 export class CategoriaService {
-  apiUrl='http://localhost:3000/categoria';
+  apiUrl = `${environment.apiUrl}/categoria`;
   constructor(private http:HttpClient) { }
   getCategories():Observable<Categorias[]>{
     return this.http.get<Categorias[]>(this.apiUrl);

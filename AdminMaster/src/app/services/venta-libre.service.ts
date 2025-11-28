@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, tap } from 'rxjs';
+import { environment } from '../config/environment';
 
 export interface VentaLibreProducto {
   nombre: string;
@@ -25,7 +26,7 @@ export interface CreateVentaLibrePayload {
 
 @Injectable({ providedIn: 'root' })
 export class VentaLibreService {
-  private apiUrl = 'http://localhost:3000/venta-libre';
+  private apiUrl = `${environment.apiUrl}/venta-libre`;
 
   constructor(private http: HttpClient) {}
   private readonly _refresh$ = new Subject<void>();
