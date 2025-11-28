@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { TurnosService, TurnoActivoItem } from '../../services/turnos.service';
 import { catchError } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
+import { AgenteIAComponent } from "../../agente-ia/agente-ia.component";
 
 @Component({
   selector: 'app-turnos-activos',
   standalone: true,
-  imports: [CommonModule, DatePipe, FormsModule],
+  imports: [CommonModule, DatePipe, FormsModule, AgenteIAComponent],
   templateUrl: './activos.component.html',
   styleUrls: ['./activos.component.scss']
 })

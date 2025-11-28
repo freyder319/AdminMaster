@@ -32,8 +32,8 @@
       </div>
     </div>
 
-    <!-- Filtro de período -->
-    <div class="d-flex justify-content-center mb-4 gap-2 filtro-periodo">
+    <!-- Filtro de período (solo comercial y finanzas) -->
+    <div class="d-flex justify-content-center mb-4 gap-2 filtro-periodo" *ngIf="selectedOption !== 'inventario'">
       <button
         type="button"
         class="btn btn-periodo"
@@ -52,9 +52,9 @@
       </button>
     </div>
 
-    <!-- Detalle de filtro: mes y semana -->
-    <div class="d-flex justify-content-center mb-4 gap-2 filtro-periodo">
-      <select class="form-select form-select-sm w-auto select-periodo" (change)="onMesChange($any($event.target).value)">
+    <!-- Detalle de filtro: mes y semana (solo comercial y finanzas) -->
+    <div class="d-flex justify-content-center mb-4 gap-2 filtro-periodo" *ngIf="selectedOption !== 'inventario'">
+      <select class="form-select form-select-sm w-auto select-periodo" (change)="$event && onMesChange($any($event.target).value)">
         <option value="">Mes (todos)</option>
         <option value="1">Enero</option>
         <option value="2">Febrero</option>
@@ -252,3 +252,4 @@
   </div>
   </main>
 </div>
+<app-agente-ia></app-agente-ia>

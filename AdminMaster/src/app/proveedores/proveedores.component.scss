@@ -22,6 +22,13 @@ main{
 	padding-bottom: 0.9rem;
 }
 
+@media (max-width: 768px) {
+	.tit-proveedores {
+		margin-top: 16px;
+		margin-bottom: 0;
+	}
+}
+
 .tit-proveedores::after{
 	content: "";
 	position: absolute;
@@ -87,11 +94,14 @@ main{
 }
 
 .btn-volver{
-    box-shadow: 0 0 3px 1px #39c751;
-    background-color: #39c751;
-    color: white;
-    font-weight: bold;
-    margin-left: 14px;
+	background: linear-gradient(135deg, #22c55e, #16a34a);
+	box-shadow: 0 6px 16px rgba(34, 197, 94, 0.45);
+	color: #ffffff;
+	font-weight: bold;
+	border-radius: 9999px;
+	border: none;
+	padding: 7px 16px;
+	margin-left: 14px;
 }
 
 @media (max-width: 768px) {
@@ -251,11 +261,12 @@ img {
         margin: 4px 0 0 20px; 
     }
 
-    /* Ocultar columnas innecesarias */
+    /* Ocultar columnas innecesarias en vista móvil */
+    .table tr td[data-label="NIT / Documento"],
+    .table tr td[data-label="Persona de contacto"],
     .table tr td[data-label="Correo"],
     .table tr td[data-label="Teléfono"],
-    .table tr td[data-label="N° Deudas pendientes"],
-    .table tr td[data-label="Estado de Proveedor"],
+    .table tr td[data-label="Estado"],
     .table tr td[data-label="Acciones"],
     .table td::before {
         display: none;

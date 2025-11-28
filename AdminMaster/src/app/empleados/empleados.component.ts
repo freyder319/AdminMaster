@@ -9,12 +9,13 @@ import { ModifyEmpleadoComponent } from '../modify-empleado/modify-empleado.comp
 import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
 import { TurnosService, TurnoActivoItem } from '../services/turnos.service';
 import { Cajas, CajasService } from '../services/cajas.service';
+import { AgenteIAComponent } from "../agente-ia/agente-ia.component";
 
 @Component({
   selector: 'app-empleados',
-  imports: [AdminNavbarComponent, AddEmpleadosComponent, ModifyEmpleadoComponent, CommonModule, RouterModule, NgFor ],
+  imports: [AdminNavbarComponent, AddEmpleadosComponent, ModifyEmpleadoComponent, CommonModule, RouterModule, NgFor, AgenteIAComponent],
   templateUrl: './empleados.component.html',
-  styleUrl: './empleados.component.scss'
+  styleUrls: ['./empleados.component.scss']
 })
 export class EmpleadosComponent {
   empleadoSeleccionado: Empleados  | null=null;
@@ -22,7 +23,24 @@ export class EmpleadosComponent {
   mostrarModificarEmpleado = false;
   empleados:Empleados[] = [];
   private search$ = new BehaviorSubject<string>('');
-  filteredEmpleados$!: Observable<Empleados[]>;
+  filteredEmpleados$: Observable<Empleados[]> = combineLatest([
+    this.search$,
+  ]).pipe(
+    map(([term]) => {
+      const t = (term || '').trim().toLowerCase();
+      const base = !t ? this.empleados : this.empleados.filter(e =>
+        (e.correo?.toLowerCase().includes(t)) ||
+        (e.telefono?.toLowerCase().includes(t)) ||
+        (e.caja?.nombre?.toLowerCase().includes(t))
+      );
+      // ordenar: activos primero, inactivos al final
+      return [...base].sort((a, b) => {
+        const aIna = this.estadoEmpleado(a) === 'Inactivo' ? 1 : 0;
+        const bIna = this.estadoEmpleado(b) === 'Inactivo' ? 1 : 0;
+        return aIna - bIna;
+      });
+    })
+  );
   lastSearchTerm = '';
   private correosEnTurno = new Set<string>();
   private cajasDisponibles: Cajas[] = [];
@@ -53,26 +71,9 @@ export class EmpleadosComponent {
   ngOnInit(): void {
     this.empleadosServices.getEmpleados().subscribe({
       next: (data) => {
-        this.empleados = data;
-        // recompute filtered stream when base data changes
-        this.filteredEmpleados$ = combineLatest([
-          this.search$,
-        ]).pipe(
-          map(([term]) => {
-            const t = (term || '').trim().toLowerCase();
-            const base = !t ? this.empleados : this.empleados.filter(e =>
-              (e.correo?.toLowerCase().includes(t)) ||
-              (e.telefono?.toLowerCase().includes(t)) ||
-              (e.caja?.nombre?.toLowerCase().includes(t))
-            );
-            // ordenar: activos primero, inactivos al final
-            return [...base].sort((a, b) => {
-              const aIna = this.estadoEmpleado(a) === 'Inactivo' ? 1 : 0;
-              const bIna = this.estadoEmpleado(b) === 'Inactivo' ? 1 : 0;
-              return aIna - bIna;
-            });
-          })
-        );
+        this.empleados = data || [];
+        // forzar recálculo de la lista filtrada con el término actual (o vacío)
+        this.search$.next(this.lastSearchTerm || '');
         // cargar relación de turnos (activos y cerrados, por correo)
         try {
           this.turnosService.getTurnosActivosPublic().subscribe({
@@ -210,6 +211,15 @@ export class EmpleadosComponent {
           this.empleados[idx] = copia as Empleados;
           this.empleados = [...this.empleados];
         }
+
+        // si está abierto en la vista móvil, reflejar cambio inmediatamente
+        if (this.empleadoSeleccionado && this.empleadoSeleccionado.id === e.id) {
+          const sel: any = { ...this.empleadoSeleccionado };
+          sel.cajaId = null;
+          if (sel.caja) sel.caja = undefined;
+          this.empleadoSeleccionado = sel as Empleados;
+        }
+
         // forzar recalculo de la lista filtrada para reflejar fila gris y estado
         this.search$.next(this.lastSearchTerm || '');
       },

@@ -8,11 +8,12 @@ import { Clientes, ClientesService } from '../services/clientes.service';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { VentaService } from '../services/venta.service';
+import { AgenteIAComponent } from "../agente-ia/agente-ia.component";
 
 @Component({
   selector: 'app-clientes',
   standalone: true,
-  imports: [AdminNavbarComponent, AddClientesComponent, ModifyClienteComponent, CommonModule, RouterModule, NgFor, FormsModule],
+  imports: [AdminNavbarComponent, AddClientesComponent, ModifyClienteComponent, CommonModule, RouterModule, NgFor, FormsModule, AgenteIAComponent],
   templateUrl: './clientes.component.html',
   styleUrl: './clientes.component.scss'
 })
@@ -173,8 +174,18 @@ export class ClientesComponent {
       next: (updated) => {
         // actualizar lista local
         const idx = this.clientes.findIndex(x => x.id === c.id);
-        if (idx >= 0) this.clientes[idx] = { ...this.clientes[idx], estado: 'inactivo' } as Clientes;
+        if (idx >= 0) {
+          this.clientes[idx] = { ...this.clientes[idx], estado: 'inactivo' } as Clientes;
+        }
         this.clientes = [...this.clientes];
+
+        // si está abierto en la vista móvil, reflejar el cambio inmediatamente
+        if (this.clienteSeleccionado && this.clienteSeleccionado.id === c.id) {
+          this.clienteSeleccionado = {
+            ...this.clienteSeleccionado,
+            estado: 'inactivo'
+          } as Clientes;
+        }
       },
       error: () => {
         Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo Inhabilitar el Cliente' });
@@ -188,8 +199,18 @@ export class ClientesComponent {
     this.clientesServices.updateCliente(c.id, { estado: 'activo' }).subscribe({
       next: (updated) => {
         const idx = this.clientes.findIndex(x => x.id === c.id);
-        if (idx >= 0) this.clientes[idx] = { ...this.clientes[idx], estado: 'activo' } as Clientes;
+        if (idx >= 0) {
+          this.clientes[idx] = { ...this.clientes[idx], estado: 'activo' } as Clientes;
+        }
         this.clientes = [...this.clientes];
+
+        // si está abierto en la vista móvil, reflejar el cambio inmediatamente
+        if (this.clienteSeleccionado && this.clienteSeleccionado.id === c.id) {
+          this.clienteSeleccionado = {
+            ...this.clienteSeleccionado,
+            estado: 'activo'
+          } as Clientes;
+        }
       },
       error: () => {
         Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo Habilitar el Cliente' });

@@ -76,13 +76,21 @@
                     <tbody *ngIf="(filteredEmpleados$ | async) as list">
                         <tr *ngFor="let empleado of list" class="align-middle" [ngClass]="{'fila-inactiva': estadoEmpleado(empleado) === 'Inactivo'}">
                             <td data-label="Nombre">
-                                <!-- Escritorio y móvil: mostrar nombre y apellido (clickable en móvil) -->
-                                <div class="perfil clickable d-flex align-items-center gap-2" (click)="mostrarInterfazReponsive(empleado.id)">
+                                <!-- Escritorio: sin click -->
+                                <div class="perfil d-none d-md-flex align-items-center gap-2">
+                                    <img src="../../assets/img/icons-navbar/Empleados.png" alt="Empleado" width="40" height="40">
+                                    <div class="info">
+                                        <p class="mb-0 fw-bold">{{empleado.nombre}} {{empleado.apellido}}</p>
+                                    </div>
+                                </div>
+
+                                <!-- Móvil: clickable para abrir la interfaz responsive -->
+                                <div class="perfil clickable d-flex d-md-none align-items-center gap-2" (click)="mostrarInterfazReponsive(empleado.id)">
                                     <img src="../../assets/img/icons-navbar/Empleados.png" alt="Empleado" width="40" height="40">
                                     <div class="info">
                                         <p class="mb-0 fw-bold">{{empleado.nombre}} {{empleado.apellido}}</p>
                                         <!-- Mostrar caja asociada solo en móvil para evitar duplicados -->
-                                        <p class="caja d-md-none m-0">{{empleado.caja?.nombre || 'Sin asignar'}}</p>
+                                        <p class="caja m-0">{{empleado.caja?.nombre || 'Sin asignar'}}</p>
                                     </div>
                                 </div>
                             </td>
@@ -219,6 +227,7 @@
 
   </main>
 </div>
+<app-agente-ia></app-agente-ia>
 
 <!-- Offcanvas (solo para pantallas grandes) Agregar -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAddEmpleado" aria-labelledby="offcanvasAddEmpleadoLabel" (shown.bs.offcanvas)="focusFirstInput('offcanvasAddEmpleado')">

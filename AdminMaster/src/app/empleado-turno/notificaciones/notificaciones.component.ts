@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PqrsService } from '../../services/pqrs.service';
+import { AgenteIAComponent } from "../../agente-ia/agente-ia.component";
 
 @Component({
   selector: 'app-notificaciones',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AgenteIAComponent],
   templateUrl: './notificaciones.component.html',
   styleUrls: ['./notificaciones.component.scss']
 })

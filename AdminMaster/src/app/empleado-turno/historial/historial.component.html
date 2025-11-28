@@ -17,7 +17,7 @@
           </div>
           <div *ngIf="cargando">Cargando...</div>
           <div *ngIf="!cargando && view.length === 0">
-            <p>Sin eventos por ahora.</p>
+            <p>Sin Eventos por Ahora.</p>
           </div>
           <ul class="turno-lista" *ngIf="!cargando && view.length > 0">
             <li class="turno-item" *ngFor="let ev of view" (click)="abrirDetalle(ev)" role="button" tabindex="0">
@@ -68,3 +68,4 @@
     <button type="button" class="btn-turno" (click)="cerrarDetalle($event)">Cerrar</button>
   </div>
 </div>
+<app-agente-ia></app-agente-ia>

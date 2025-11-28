@@ -8,6 +8,7 @@ import { Producto, ProductoService } from '../services/producto.service';
 import { Categorias, CategoriaService } from '../services/categoria.service';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { AgenteIAComponent } from "../agente-ia/agente-ia.component";
 
 declare var bootstrap: any; // Declaración para acceder a Bootstrap
 
@@ -15,7 +16,7 @@ declare var bootstrap: any; // Declaración para acceder a Bootstrap
 
   selector: 'app-inventory',
   standalone: true,
-  imports: [AdminNavbarComponent,CreateProductoComponent,FormsModule,MatPaginatorModule,CommonModule,],
+  imports: [AdminNavbarComponent, CreateProductoComponent, FormsModule, MatPaginatorModule, CommonModule, AgenteIAComponent],
   templateUrl: './inventory.component.html',
   styleUrls: ['./inventory.component.scss']
 })

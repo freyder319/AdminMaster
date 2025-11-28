@@ -9,12 +9,13 @@ import { Empleados, EmpleadosService } from '../services/empleados.service';
 import Swal from 'sweetalert2';
 import { FormsModule } from '@angular/forms';
 import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
+import { AgenteIAComponent } from "../agente-ia/agente-ia.component";
 declare var bootstrap: any;
 
 @Component({
   selector: 'app-cajas',
   standalone: true,
-  imports: [AdminNavbarComponent, AddCajasComponent, ModifyCajaComponent, CommonModule, RouterModule, NgFor, FormsModule],
+  imports: [AdminNavbarComponent, AddCajasComponent, ModifyCajaComponent, CommonModule, RouterModule, NgFor, FormsModule, AgenteIAComponent],
   templateUrl: './cajas.component.html',
   styleUrl: './cajas.component.scss'
 })
@@ -30,7 +31,25 @@ export class CajasComponent {
   // streams reactivos
   private search$ = new BehaviorSubject<string>('');
   private cajas$ = new BehaviorSubject<Cajas[]>([]);
-  filteredCajas$!: Observable<Cajas[]>;
+  filteredCajas$: Observable<Cajas[]> = combineLatest([
+    this.cajas$,
+    this.search$,
+  ]).pipe(
+    map(([cajas, term]) => {
+      const t = (term || '').trim().toLowerCase();
+      const base = !t ? cajas : cajas.filter(caja =>
+        caja.nombre?.toLowerCase().includes(t) ||
+        caja.codigoCaja?.toLowerCase().includes(t) ||
+        caja.estado?.toLowerCase().includes(t)
+      );
+      // ordenar: activas primero, inactivas al final
+      return [...base].sort((a, b) => {
+        const aIna = (a.estado || '').toLowerCase() === 'inactiva' ? 1 : 0;
+        const bIna = (b.estado || '').toLowerCase() === 'inactiva' ? 1 : 0;
+        return aIna - bIna;
+      });
+    })
+  );
   lastSearchTerm = '';
   constructor (private cajasServices: CajasService, private empleadosService: EmpleadosService){}
 
@@ -40,26 +59,6 @@ export class CajasComponent {
         this.cajasFiltrar = data;
         this.cajas = data;
         this.cajas$.next(this.cajas);
-        // construir stream filtrado basado en término de búsqueda y lista
-        this.filteredCajas$ = combineLatest([
-          this.cajas$,
-          this.search$,
-        ]).pipe(
-          map(([cajas, term]) => {
-            const t = (term || '').trim().toLowerCase();
-            const base = !t ? cajas : cajas.filter(caja =>
-              caja.nombre?.toLowerCase().includes(t) ||
-              caja.codigoCaja?.toLowerCase().includes(t) ||
-              caja.estado?.toLowerCase().includes(t)
-            );
-            // ordenar: activas primero, inactivas al final
-            return [...base].sort((a, b) => {
-              const aIna = (a.estado || '').toLowerCase() === 'inactiva' ? 1 : 0;
-              const bIna = (b.estado || '').toLowerCase() === 'inactiva' ? 1 : 0;
-              return aIna - bIna;
-            });
-          })
-        );
         // cargar empleados para detectar relaciones de caja
         this.cargarEmpleados();
       },
@@ -248,6 +247,15 @@ export class CajasComponent {
           this.cajas = [...this.cajas];
           this.cajas$.next(this.cajas);
         }
+
+        // si está abierta la vista móvil, actualizar cajaSeleccionada
+        if (this.cajaSeleccionada && this.cajaSeleccionada.id === caja.id) {
+          this.cajaSeleccionada = {
+            ...this.cajaSeleccionada,
+            estado: updated.estado || 'Inactiva'
+          } as Cajas;
+        }
+
         this.obtenerCajas();
       },
       error: () => {
@@ -269,6 +277,15 @@ export class CajasComponent {
           this.cajas = [...this.cajas];
           this.cajas$.next(this.cajas);
         }
+
+        // si está abierta la vista móvil, actualizar cajaSeleccionada
+        if (this.cajaSeleccionada && this.cajaSeleccionada.id === caja.id) {
+          this.cajaSeleccionada = {
+            ...this.cajaSeleccionada,
+            estado: updated.estado || 'Activa'
+          } as Cajas;
+        }
+
         this.obtenerCajas();
       },
       error: () => {

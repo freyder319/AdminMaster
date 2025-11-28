@@ -5,10 +5,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConfiguracionNegocio, ConfiguracionService } from '../services/configuracion.service';
 import Swal from 'sweetalert2';
+import { AgenteIAComponent } from "../agente-ia/agente-ia.component";
 
 @Component({
   selector: 'app-perfil-administrador',
-  imports: [AdminNavbarComponent, RouterModule, CommonModule, FormsModule],
+  imports: [AdminNavbarComponent, RouterModule, CommonModule, FormsModule, AgenteIAComponent],
   templateUrl: './perfil_administrador.component.html',
   styleUrl: './perfil_administrador.component.scss'
 })

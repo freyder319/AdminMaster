@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import Swal from 'sweetalert2';
+import { AgenteIAComponent } from "../../agente-ia/agente-ia.component";
 
 export interface TurnoDiaItem {
   id: number;
@@ -19,7 +20,7 @@ export interface TurnoDiaItem {
 @Component({
   selector: 'app-turnos-dia',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AgenteIAComponent],
   templateUrl: './turnos-dia.component.html',
   styleUrls: ['./turnos-dia.component.scss']
 })

@@ -17,7 +17,7 @@
           </div>
           <div *ngIf="cargando">Cargando...</div>
           <div *ngIf="!cargando && view.length === 0">
-            <p>No hay turnos cerrados.</p>
+            <p>No hay Turnos Cerrados.</p>
           </div>
           <ul class="turno-lista" *ngIf="!cargando && view.length > 0">
             <li class="turno-item" *ngFor="let item of view" (click)="abrirDetalle(item)" role="button" tabindex="0">
@@ -43,26 +43,28 @@
 
 <div class="modal-backdrop" [hidden]="!modalAbierto"></div>
 <div class="modal-contenedor" [hidden]="!modalAbierto" role="dialog" aria-modal="true">
-    <div class="modal-header">
-      <h3 class="modal-title">
-        <i class="bi bi-person-workspace me-2"></i>
-        <span>Detalle del turno</span>
-      </h3>
-      <button type="button" class="modal-cerrar" (click)="cerrarDetalle($event)">✕</button>
+  <div class="modal-header">
+    <h3 class="modal-title">
+      <i class="bi bi-person-workspace me-2"></i>
+      <span>Detalle del turno</span>
+    </h3>
+    <button type="button" class="modal-cerrar" (click)="cerrarDetalle($event)">✕</button>
+  </div>
+  <div class="modal-body" *ngIf="seleccionado as s">
+    <div class="datos-grid">
+      <div class="kv"><span class="k">Empleado</span><span class="v">{{ (s?.nombre || '') + ' ' + (s?.apellido || '') }}</span></div>
+      <div class="kv"><span class="k">Inicio</span><span class="v">{{ s?.resumen?.turno?.inicioTurno | date:'short' }}</span></div>
+      <div class="kv"><span class="k">Fin</span><span class="v">{{ s?.resumen?.turno?.finTurno | date:'short' }}</span></div>
+      <div class="kv kv-span"><span class="k">Observaciones</span><span class="v">{{ s?.resumen?.turno?.observaciones || 'Sin comentarios' }}</span></div>
     </div>
-    <div class="modal-body" *ngIf="seleccionado as s">
-      <div class="datos-grid">
-        <div class="kv"><span class="k">Empleado</span><span class="v">{{ (s?.nombre || '') + ' ' + (s?.apellido || '') }}</span></div>
-        <div class="kv"><span class="k">Inicio</span><span class="v">{{ s?.resumen?.turno?.inicioTurno | date:'short' }}</span></div>
-        <div class="kv"><span class="k">Fin</span><span class="v">{{ s?.resumen?.turno?.finTurno | date:'short' }}</span></div>
-        <div class="kv kv-span"><span class="k">Observaciones</span><span class="v">{{ s?.resumen?.turno?.observaciones || 'Sin comentarios' }}</span></div>
-      </div>
 
-      <div class="resumen-compacto">
-        <div><strong>Duración:</strong> {{ duracionTurno(s) }}</div>
-      </div>
+    <div class="resumen-compacto">
+      <div><strong>Duración:</strong> {{ duracionTurno(s) }}</div>
     </div>
-    <div class="modal-footer" (click)="$event.stopPropagation()">
-      <button type="button" class="btn-sec" (click)="cerrarDetalle($event)">Cerrar</button>
-      <button type="button" class="btn-turno" (click)="verMasDetalle($event)">Ver más</button>
-    </div>
+  </div>
+  <div class="modal-footer" (click)="$event.stopPropagation()">
+    <button type="button" class="btn-sec" (click)="cerrarDetalle($event)">Cerrar</button>
+    <button type="button" class="btn-turno" (click)="verMasDetalle($event)">Ver más</button>
+  </div>
+</div>
+<app-agente-ia></app-agente-ia>

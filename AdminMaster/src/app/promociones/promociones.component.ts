@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { DescuentoService, Descuento, CreateDescuento } from '../services/descuento.service';
 import Swal from 'sweetalert2';
 import { AdminNavbarComponent } from "../admin_navbar/admin_navbar.component";
+import { AgenteIAComponent } from "../agente-ia/agente-ia.component";
 
 @Component({
   selector: 'app-promociones',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, AdminNavbarComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, AdminNavbarComponent, AgenteIAComponent],
   templateUrl: './promociones.component.html',
   styleUrls: ['./promociones.component.scss']
 })
