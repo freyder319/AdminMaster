@@ -7,10 +7,11 @@ import { NgChartsModule } from 'ng2-charts';
 import { ChartData, ChartOptions, ChartType } from 'chart.js';
 import { HttpClientModule } from '@angular/common/http';
 import { EstadisticasService } from '../services/estadisticas.service';
+import { AgenteIAComponent } from "../agente-ia/agente-ia.component";
 @Component({
   selector: 'app-estadisticas',
   standalone: true,
-  imports: [CommonModule, RouterModule, AdminNavbarComponent,NgChartsModule,HttpClientModule],
+  imports: [CommonModule, RouterModule, AdminNavbarComponent, NgChartsModule, HttpClientModule, AgenteIAComponent],
   templateUrl: './estadisticas.component.html',
   styleUrls: ['./estadisticas.component.scss'],
   animations: [

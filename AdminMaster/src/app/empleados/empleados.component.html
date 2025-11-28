@@ -82,7 +82,7 @@
                                     <div class="info">
                                         <p class="mb-0 fw-bold">{{empleado.nombre}} {{empleado.apellido}}</p>
                                         <!-- Mostrar caja asociada solo en móvil para evitar duplicados -->
-                                        <p class="caja d-md-none m-0">{{empleado.caja?.nombre || 'Sin asignar'}}</p>
+                                        <p class="caja m-0">{{empleado.caja?.nombre || 'Sin asignar'}}</p>
                                     </div>
                                 </div>
                             </td>
@@ -219,6 +219,7 @@
 
   </main>
 </div>
+<app-agente-ia></app-agente-ia>
 
 <!-- Offcanvas (solo para pantallas grandes) Agregar -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAddEmpleado" aria-labelledby="offcanvasAddEmpleadoLabel" (shown.bs.offcanvas)="focusFirstInput('offcanvasAddEmpleado')">

@@ -152,7 +152,7 @@
             </tr>
             <tr *ngIf="list.length === 0">
               <td colspan="7" class="text-center text-muted py-3">
-                {{ lastSearchTerm ? ('No se encontró ninguna caja para "' + lastSearchTerm + '".') : 'No hay Cajas registradas' }}
+                {{ lastSearchTerm ? ('No se encontró ninguna caja para "' + lastSearchTerm + '".') : 'No hay Cajas Registradas' }}
               </td>
             </tr>
           </tbody>
@@ -199,6 +199,7 @@
   </div>
   </main>
 </div>
+<app-agente-ia></app-agente-ia>
 
 <!-- Offcanvas (solo para pantallas grandes) Agregar -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasAddCaja" aria-labelledby="offcanvasAddCajaLabel" (shown.bs.offcanvas)="focusFirstInput('offcanvasAddCaja')">

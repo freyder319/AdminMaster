@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminNavbarComponent } from '../admin_navbar/admin_navbar.component';
 import { ReportesService } from '../services/reportes.service';
+import { AgenteIAComponent } from "../agente-ia/agente-ia.component";
 
 @Component({
   selector: 'app-reportes-ventas',
   standalone: true,
-  imports: [CommonModule, FormsModule, AdminNavbarComponent],
+  imports: [CommonModule, FormsModule, AdminNavbarComponent, AgenteIAComponent],
   templateUrl: './reportes-ventas.component.html',
   styleUrls: ['./reportes-ventas.component.scss']
 })

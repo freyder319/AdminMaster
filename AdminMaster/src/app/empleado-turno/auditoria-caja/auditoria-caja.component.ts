@@ -6,11 +6,12 @@ import { CajasService, Cajas } from '../../services/cajas.service';
 import { EmpleadosService, Empleados } from '../../services/empleados.service';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { AgenteIAComponent } from "../../agente-ia/agente-ia.component";
 
 @Component({
   selector: 'app-auditoria-caja',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AgenteIAComponent],
   templateUrl: './auditoria-caja.component.html',
   styleUrls: ['./auditoria-caja.component.scss']
 })
