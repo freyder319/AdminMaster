@@ -42,13 +42,13 @@
               <!-- Escritorio (≥768px) → abre offcanvas -->
               <button class="btn agregar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddCaja" aria-controls="offcanvasAddCaja">
                 <span class="texto">Agregar Caja</span>
-                <img width="80px" src="../../assets/img/icono_cajas/Proveedores__5_-removebg-preview (1).png" alt="">
+                <img width="80px" src="/assets/img/icono_cajas/Proveedores__5_-removebg-preview (1).png" alt="">
               </button>
 
               <!-- Móvil (<768px) → cambia de interfaz -->
               <button class="btn agregar d-md-none" type="button" (click)="mostrarAddCaja = true">
                 <span class="texto">Agregar Caja</span>
-                <img width="80px" src="../../assets/img/icono_cajas/Proveedores__5_-removebg-preview (1).png" alt="">
+                <img width="80px" src="/assets/img/icono_cajas/Proveedores__5_-removebg-preview (1).png" alt="">
               </button>
 
             </div>
@@ -75,7 +75,7 @@
               <td data-label="Nombre">
                 <!-- Móvil (<768px) → perfil clickeable -->
                 <div class="perfil clickable d-md-none" (click)="mostrarInterfazReponsive(caja.id)">
-                  <img src="../../assets/img/icons-navbar/Cajas.png" alt="Caja 1">
+                  <img src="/assets/img/icons-navbar/Cajas.png" alt="Caja 1">
                   <div class="info">
                     <p class="nombre"><strong>{{ caja.nombre }}</strong></p>
                     <p class="codigo">{{ caja.codigoCaja }}</p>
@@ -84,7 +84,7 @@
 
                 <!-- Escritorio (≥768px) -->
                 <div class="perfil d-none d-md-flex">
-                  <img src="../../assets/img/icons-navbar/Cajas.png" alt="Caja 1" width="50px" height="50px" style="margin-top: -10px;">
+                  <img src="/assets/img/icons-navbar/Cajas.png" alt="Caja 1" width="50px" height="50px" style="margin-top: -10px;">
                   <div class="info">
                     <p class="nombre" style="margin-left: 10px;"><strong>{{ caja.nombre }}</strong></p>
                   </div>
