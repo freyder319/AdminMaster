@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../config/environment';
 
 export interface Producto {
   id?: number;
@@ -19,7 +20,7 @@ export interface Producto {
   providedIn: 'root'
 })
 export class ProductoService {
-  private apiUrl='http://localhost:3000/producto'
+  private apiUrl = `${environment.apiUrl}/producto`;
   constructor(private http: HttpClient) { }
   getCount():Observable<{total:number}>{
     return this.http.get<{total:number}>(`${this.apiUrl}/count`);

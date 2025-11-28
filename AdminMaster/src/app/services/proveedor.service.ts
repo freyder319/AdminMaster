@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../config/environment';
 
 export interface Proveedor {
   id: number;
@@ -17,7 +18,7 @@ export interface Proveedor {
 
 @Injectable({ providedIn: 'root' })
 export class ProveedorService {
-  private readonly apiUrl = 'http://localhost:3000/proveedor';
+  private readonly apiUrl = `${environment.apiUrl}/proveedor`;
   private readonly _proveedores$ = new BehaviorSubject<Proveedor[]>([]);
 
   readonly proveedores$ = this._proveedores$.asObservable();

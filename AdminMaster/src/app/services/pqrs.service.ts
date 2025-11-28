@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, timer, OperatorFunction } from 'rxjs';
 import { retryWhen, scan, mergeMap, tap, catchError, shareReplay, finalize } from 'rxjs/operators';
+import { environment } from '../config/environment';
 
 export interface CreatePqrs {
   nombre: string;
@@ -14,7 +15,7 @@ export interface CreatePqrs {
 
 @Injectable({ providedIn: 'root' })
 export class PqrsService {
-  private apiUrl = 'http://localhost:3000/pqrs';
+  private apiUrl = `${environment.apiUrl}/pqrs`;
   constructor(private http: HttpClient) {}
 
   private cacheAll: { data: any[]; ts: number } | null = null;

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
+import { environment } from '../config/environment';
 
 export type FormaPago = 'efectivo' | 'transferencia' | 'tarjeta' | 'nequi' | 'daviplata' | 'otros';
 export type EstadoGasto = 'confirmado' | 'pendiente' | 'anulado';
@@ -24,7 +25,7 @@ export type CreateGasto = Omit<Gasto, 'id'>;
 
 @Injectable({ providedIn: 'root' })
 export class GastoService {
-  private readonly apiUrl = 'http://localhost:3000/gasto';
+  private readonly apiUrl = `${environment.apiUrl}/gasto`;
   private readonly _gastos$ = new BehaviorSubject<Gasto[]>([]);
   readonly gastos$ = this._gastos$.asObservable();
   private readonly _refresh$ = new Subject<void>();

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../config/environment';
 
 export interface ConfiguracionNegocio {
   id?: number;
@@ -15,7 +16,7 @@ export interface ConfiguracionNegocio {
 
 @Injectable({ providedIn: 'root' })
 export class ConfiguracionService {
-  private apiUrl = '/configuracion';
+  private apiUrl = `${environment.apiUrl}/configuracion`;
   constructor(private http: HttpClient) {}
 
   get(): Observable<ConfiguracionNegocio | null> {

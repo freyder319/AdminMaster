@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../config/environment';
 
 export interface Cajas{
   id:number;
@@ -12,7 +13,7 @@ export interface Cajas{
   providedIn: 'root'
 })
 export class CajasService {
-  private apiUrl = 'http://localhost:3000/caja';
+  private apiUrl = `${environment.apiUrl}/caja`;
   constructor(private http: HttpClient) { }
 
   getCajas(): Observable<Cajas[]> {

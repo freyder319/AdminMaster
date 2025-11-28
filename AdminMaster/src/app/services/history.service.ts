@@ -2,6 +2,7 @@ import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, interval, switchMap, map, startWith, distinctUntilChanged, shareReplay, fromEvent, filter, combineLatest } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
+import { environment } from '../config/environment';
 
 export interface AuditLogDto {
   id: number;
@@ -26,7 +27,7 @@ export interface PagedAudit {
 
 @Injectable({ providedIn: 'root' })
 export class HistoryService {
-  private api = 'http://localhost:3000/audit';
+  private api = `${environment.apiUrl}/audit`;
   private pollingMs = 10000;
   private lastTopId$ = new BehaviorSubject<number | null>(null);
   private sse$?: Observable<AuditLogDto>;
