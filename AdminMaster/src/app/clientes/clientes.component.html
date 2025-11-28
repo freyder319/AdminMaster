@@ -44,13 +44,13 @@
               <!-- Para pantallas grandes (≥768px) → abre offcanvas -->
               <button class="btn agregar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddCliente" aria-controls="offcanvasAddCliente">
                 <span class="texto">Agregar Cliente</span>
-                <img width="80px" src="../../assets/img/icons_clientes/agregarCliente.png" alt="">
+                <img width="80px" src="/assets/img/icons_clientes/agregarCliente.png" alt="">
               </button>
 
               <!-- Para pantallas pequeñas (<768px) → cambia de interfaz -->
               <button class="btn agregar d-md-none" type="button" (click)="mostrarAddCliente = true">
                 <span class="texto">Agregar Cliente</span>
-                <img width="80px" src="../../assets/img/icons_clientes/agregarCliente.png" alt="">
+                <img width="80px" src="/assets/img/icons_clientes/agregarCliente.png" alt="">
               </button>
 
             </div>
@@ -80,7 +80,7 @@
               <td data-label="Nombre">
                 <!-- Solo visible en móviles (<768px), clickeable -->
                 <div class="perfil clickable d-md-none" (click)="mostrarInterfazReponsive(cliente.id)">
-                  <img src="../../assets/img/icons-navbar/Clientes.png" alt="cliente">
+                  <img src="/assets/img/icons-navbar/Clientes.png" alt="cliente">
                   <div class="info">
                     <p class="nombre"><strong>{{cliente.nombre}} {{cliente.apellido}}</strong></p>
                     <p class="correo">{{cliente.correo}}</p>
@@ -89,7 +89,7 @@
 
                 <!-- Solo visible en escritorio (≥768px), NO clickeable -->
                 <div class="perfil d-none d-md-flex">
-                  <img src="../../assets/img/icons-navbar/Clientes.png" alt="Camión Coca-Cola" width="50px" height="50px" style="margin-top: -10px;">
+                  <img src="/assets/img/icons-navbar/Clientes.png" alt="Camión Coca-Cola" width="50px" height="50px" style="margin-top: -10px;">
                   <div class="info">
                     <p class="nombre" style="margin-left: 10px;"><strong>{{cliente.nombre}} {{cliente.apellido}}</strong></p>
                   </div>

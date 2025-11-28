@@ -4,6 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { AgenteIAService, ChatMessage } from './agente-ia.service';
 
+interface ChatSession {
+  id: string;
+  title: string;
+  createdAt: Date;
+  messages: ChatMessage[];
+}
+
 @Component({
   selector: 'app-agente-ia',
   imports: [CommonModule, FormsModule],
@@ -14,7 +21,10 @@ export class AgenteIAComponent implements OnInit {
   constructor(private readonly agenteIAService: AgenteIAService) {}
 
   ngOnInit(): void {
-    this.loadChatHistory();
+    this.loadSessionsFromStorage();
+    if (this.sessions.length === 0) {
+      this.createNewSession();
+    }
     this.loadChatState();
   }
 
@@ -22,11 +32,18 @@ export class AgenteIAComponent implements OnInit {
   isSending = false;
   errorMessage: string | null = null;
 
+  /** Lista de sesiones de chat en el historial */
+  sessions: ChatSession[] = [];
+  /** Id de la sesión actualmente activa */
+  activeSessionId: string | null = null;
+
+  /** Mensajes de la sesión activa (se referencia al array de la sesión activa) */
   messages: ChatMessage[] = [];
 
   newMessage = '';
 
-  private readonly STORAGE_KEY = 'agente-ia-messages';
+  private readonly STORAGE_KEY = 'agente-ia-sessions';
+  private readonly STORAGE_KEY_ACTIVE_SESSION = 'agente-ia-active-session';
   private readonly STORAGE_KEY_CHAT_STATE = 'agente-ia-chat-state';
 
   toggleChat(): void {
@@ -40,26 +57,35 @@ export class AgenteIAComponent implements OnInit {
       return;
     }
 
+    // Agregar mensaje del usuario
     this.messages.push({ from: 'user', text });
     const historySnapshot = [...this.messages];
     this.newMessage = '';
     this.errorMessage = null;
     this.isSending = true;
-    this.saveChatHistory();
+    this.saveSessionsToStorage();
 
     try {
-      const response = await firstValueFrom(this.agenteIAService.sendMessage(text, historySnapshot));
+      const response = await firstValueFrom(
+        this.agenteIAService.sendMessage(
+          text,
+          historySnapshot,
+          this.activeSessionId || undefined
+        )
+      );
       this.messages.push({
         from: 'agent',
         text: this.extractReply(response)
       });
-      this.saveChatHistory();
+      this.saveSessionsToStorage();
+      this.updateSessionTitle();
     } catch {
       const fallbackText =
         'Lo siento, no pude conectar con el asistente. Inténtalo nuevamente en unos segundos.';
       this.errorMessage = fallbackText;
       this.messages.push({ from: 'agent', text: fallbackText });
-      this.saveChatHistory();
+      this.saveSessionsToStorage();
+      this.updateSessionTitle();
     } finally {
       this.isSending = false;
     }
@@ -105,35 +131,149 @@ export class AgenteIAComponent implements OnInit {
     return innerCandidates[0] ?? null;
   }
 
-  private saveChatHistory(): void {
-    try {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.messages));
-    } catch (error) {
-      console.warn('No se pudo guardar el historial del chat:', error);
+  private createNewSession(): void {
+    const id = this.generateSessionId();
+    const welcomeMessage: ChatMessage = {
+      from: 'agent',
+      text: '¡Hola! Soy tu agente IA. ¿En qué puedo ayudarte hoy?'
+    };
+
+    const newSession: ChatSession = {
+      id,
+      title: 'Nuevo Chat',
+      createdAt: new Date(),
+      messages: [welcomeMessage]
+    };
+
+    this.sessions.unshift(newSession);
+    this.activeSessionId = id;
+    this.messages = newSession.messages;
+    this.saveSessionsToStorage();
+    this.saveActiveSession();
+  }
+
+  private generateSessionId(): string {
+    return `${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
+  }
+
+  private generateChatTitle(messages: ChatMessage[]): string {
+    if (messages.length === 0) return 'Nuevo Chat';
+    
+    // Buscar el primer mensaje del usuario para generar el título
+    const firstUserMessage = messages.find(msg => msg.from === 'user' && msg.text);
+    
+    if (!firstUserMessage) return 'Nuevo Chat';
+    
+    const text = firstUserMessage.text.toLowerCase();
+    
+    // Palabras clave y sus títulos correspondientes
+    const keywordTitles = [
+      { keywords: ['producto', 'inventario', 'stock', 'almacen', 'mercancia'], title: 'Gestión de Productos' },
+      { keywords: ['venta', 'vender', 'cobrar', 'factura', 'ticket', 'caja'], title: 'Ventas y Cobros' },
+      { keywords: ['cliente', 'cliente', 'consumidor', 'comprador'], title: 'Gestión de Clientes' },
+      { keywords: ['proveedor', 'proveedores', 'compra', 'adquisicion'], title: 'Gestión de Proveedores' },
+      { keywords: ['empleado', 'trabajador', 'personal', 'staff'], title: 'Gestión de Personal' },
+      { keywords: ['reporte', 'report', 'estadistica', 'dato', 'analisis'], title: 'Reportes y Análisis' },
+      { keywords: ['turno', 'horario', 'agenda', 'calendario'], title: 'Gestión de Turnos' },
+      { keywords: ['categoria', 'clasificacion', 'tipo', 'grupo'], title: 'Categorización' },
+      { keywords: ['precio', 'costo', 'tarifa', 'valor'], title: 'Gestión de Precios' },
+      { keywords: ['pedido', 'orden', 'solicitud', 'encargo'], title: 'Gestión de Pedidos' },
+      { keywords: ['problema', 'error', 'falla', 'incidente', 'ayuda'], title: 'Soporte y Ayuda' },
+      { keywords: ['configuracion', 'config', 'ajuste', 'setting'], title: 'Configuración' },
+      { keywords: ['cuenta', 'perfil', 'usuario', 'acceso'], title: 'Cuenta de Usuario' }
+    ];
+    
+    // Buscar coincidencias con palabras clave
+    for (const { keywords, title } of keywordTitles) {
+      if (keywords.some(keyword => text.includes(keyword))) {
+        return title;
+      }
+    }
+    
+    // Si no hay coincidencias, usar las primeras palabras del mensaje
+    const words = firstUserMessage.text.split(' ').slice(0, 4).join(' ');
+    return words.length > 25 ? words.substring(0, 25) + '...' : words;
+  }
+
+  private updateSessionTitle(): void {
+    const activeSession = this.sessions.find(s => s.id === this.activeSessionId);
+    if (activeSession && activeSession.title === 'Nuevo Chat') {
+      const newTitle = this.generateChatTitle(this.messages);
+      if (newTitle !== 'Nuevo Chat') {
+        activeSession.title = newTitle;
+        this.saveSessionsToStorage();
+      }
     }
   }
 
-  private loadChatHistory(): void {
+  private saveSessionsToStorage(): void {
+    try {
+      const sessionsData = this.sessions.map(session => ({
+        id: session.id,
+        title: session.title,
+        createdAt: session.createdAt.toISOString(),
+        messages: session.messages
+      }));
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(sessionsData));
+    } catch (error) {
+      console.warn('No se pudo guardar las sesiones:', error);
+    }
+  }
+
+  private loadSessionsFromStorage(): void {
     try {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       if (stored) {
-        const parsed = JSON.parse(stored) as ChatMessage[];
-        this.messages = parsed.length > 0 ? parsed : [{
-          from: 'agent',
-          text: '¡Hola! Soy tu agente IA. ¿En qué puedo ayudarte hoy?'
-        }];
-      } else {
-        this.messages = [{
-          from: 'agent',
-          text: '¡Hola! Soy tu agente IA. ¿En qué puedo ayudarte hoy?'
-        }];
+        const parsed = JSON.parse(stored);
+        this.sessions = parsed.map((s: any) => ({
+          id: s.id,
+          title: s.title,
+          createdAt: new Date(s.createdAt),
+          messages: s.messages || []
+        }));
+        
+        // Cargar la sesión activa
+        this.loadActiveSession();
+        
+        // Si no hay sesión activa o no existe, seleccionar la primera
+        if (!this.activeSessionId || !this.sessions.find(s => s.id === this.activeSessionId)) {
+          if (this.sessions.length > 0) {
+            this.activeSessionId = this.sessions[0].id;
+            this.messages = this.sessions[0].messages;
+          } else {
+            this.createNewSession();
+          }
+        } else {
+          const activeSession = this.sessions.find(s => s.id === this.activeSessionId);
+          if (activeSession) {
+            this.messages = activeSession.messages;
+          }
+        }
       }
     } catch (error) {
-      console.warn('No se pudo cargar el historial del chat:', error);
-      this.messages = [{
-        from: 'agent',
-        text: '¡Hola! Soy tu agente IA. ¿En qué puedo ayudarte hoy?'
-      }];
+      console.warn('No se pudo cargar las sesiones:', error);
+    }
+  }
+
+  private saveActiveSession(): void {
+    try {
+      localStorage.setItem(this.STORAGE_KEY_ACTIVE_SESSION, JSON.stringify({
+        activeSessionId: this.activeSessionId
+      }));
+    } catch (error) {
+      console.warn('No se pudo guardar la sesión activa:', error);
+    }
+  }
+
+  private loadActiveSession(): void {
+    try {
+      const stored = localStorage.getItem(this.STORAGE_KEY_ACTIVE_SESSION);
+      if (stored) {
+        const state = JSON.parse(stored);
+        this.activeSessionId = state.activeSessionId || null;
+      }
+    } catch (error) {
+      console.warn('No se pudo cargar la sesión activa:', error);
     }
   }
 
@@ -160,10 +300,6 @@ export class AgenteIAComponent implements OnInit {
   }
 
   clearHistory(): void {
-    this.messages = [{
-      from: 'agent',
-      text: '¡Hola! Soy tu agente IA. ¿En qué puedo ayudarte hoy?'
-    }];
-    this.saveChatHistory();
+    this.createNewSession();
   }
 }
