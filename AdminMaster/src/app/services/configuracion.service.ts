@@ -15,7 +15,7 @@ export interface ConfiguracionNegocio {
 
 @Injectable({ providedIn: 'root' })
 export class ConfiguracionService {
-  private apiUrl = 'http://localhost:3000/configuracion';
+  private apiUrl = '/configuracion';
   constructor(private http: HttpClient) {}
 
   get(): Observable<ConfiguracionNegocio | null> {
