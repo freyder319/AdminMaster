@@ -8,11 +8,12 @@ import { ProveedorService, Proveedor } from '../services/proveedor.service';
 import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
 import Swal from 'sweetalert2';
 import { GastoService, Gasto } from '../services/gasto.service';
+import { AgenteIAComponent } from "../agente-ia/agente-ia.component";
 
 @Component({
   selector: 'app_proveedores',
   standalone: true,
-  imports: [AdminNavbarComponent, AddProveedorComponent, CommonModule,RouterModule, ModifyProveedorComponent],
+  imports: [AdminNavbarComponent, AddProveedorComponent, CommonModule, RouterModule, ModifyProveedorComponent, AgenteIAComponent],
   templateUrl: './proveedores.component.html',
   styleUrls: ['./proveedores.component.scss']
 })

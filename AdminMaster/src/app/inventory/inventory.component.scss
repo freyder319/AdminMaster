@@ -24,6 +24,13 @@ main{
     padding-bottom: 0.9rem;
 }
 
+@media (max-width: 768px) {
+    .tit-inventario {
+        margin-top: 16px;
+        margin-bottom: 0;
+    }
+}
+
 .tit-inventario::after{
     content: "";
     position: absolute;

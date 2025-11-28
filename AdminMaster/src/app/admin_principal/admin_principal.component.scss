@@ -101,6 +101,13 @@
     padding-bottom: 0.9rem;
 }
 
+@media (max-width: 768px) {
+    .tit-movimientos {
+        margin-top: 16px;
+        margin-bottom: 0;
+    }
+}
+
 .tit-movimientos::after{
     content: "";
     position: absolute;

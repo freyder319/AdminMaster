@@ -3,11 +3,12 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HistoryService, AuditLogDto } from '../../services/history.service';
 import { Subscription } from 'rxjs';
+import { AgenteIAComponent } from "../../agente-ia/agente-ia.component";
 
 @Component({
   selector: 'app-historial',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, AgenteIAComponent],
   templateUrl: './historial.component.html',
   styleUrls: ['./historial.component.scss']
 })

@@ -6,11 +6,12 @@ import { ReportesService } from '../services/reportes.service';
 import { EmpleadosService, Empleados } from '../services/empleados.service';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { AgenteIAComponent } from "../agente-ia/agente-ia.component";
 
 @Component({
   selector: 'app-reportes-empleados',
   standalone: true,
-  imports: [CommonModule, FormsModule, AdminNavbarComponent],
+  imports: [CommonModule, FormsModule, AdminNavbarComponent, AgenteIAComponent],
   templateUrl: './reportes-empleados.component.html',
   styleUrls: ['./reportes-empleados.component.scss']
 })

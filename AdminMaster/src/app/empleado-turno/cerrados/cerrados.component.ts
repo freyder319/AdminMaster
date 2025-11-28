@@ -5,11 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { TurnosService, TurnoActivoItem } from '../../services/turnos.service';
 import { catchError } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
+import { AgenteIAComponent } from "../../agente-ia/agente-ia.component";
 
 @Component({
   selector: 'app-turnos-cerrados',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, AgenteIAComponent],
   templateUrl: './cerrados.component.html',
   styleUrls: ['./cerrados.component.scss']
 })
