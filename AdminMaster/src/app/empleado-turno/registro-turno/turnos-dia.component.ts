@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { AgenteIAComponent } from "../../agente-ia/agente-ia.component";
+import { environment } from '../../config/environment';
 
 export interface TurnoDiaItem {
   id: number;
@@ -25,7 +26,7 @@ export interface TurnoDiaItem {
   styleUrls: ['./turnos-dia.component.scss']
 })
 export class TurnosDiaComponent implements OnInit {
-  private apiUrl = 'http://localhost:3000/turno/registro';
+  private apiUrl = `${environment.apiUrl}/turno/registro`;
 
   fechaSeleccionada: string = '';
   minFecha: string = '';

@@ -9,6 +9,7 @@ import { Categorias, CategoriaService } from '../services/categoria.service';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
 import { AgenteIAComponent } from "../agente-ia/agente-ia.component";
+import { environment } from '../config/environment';
 
 declare var bootstrap: any; // Declaración para acceder a Bootstrap
 
@@ -133,7 +134,7 @@ export class InventoryComponent implements AfterViewInit {
   productos: Producto[] = [];
   productoSeleccionado: Producto | null = null;
   tituloOffcanvas = 'Crear Producto';
-  private baseImageUrl = 'http://localhost:3000/storage/';
+  private baseImageUrl = `${environment.apiUrl}/storage/`;
   // Buscador
   searchTerm: string = '';
   // Filtro por categoría (idCategoria o nombre)
