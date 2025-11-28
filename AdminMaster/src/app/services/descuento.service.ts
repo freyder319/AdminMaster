@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, map, tap } from 'rxjs';
+import { environment } from '../config/environment';
 
 export interface DescuentoDto {
   id: number;
@@ -28,7 +29,7 @@ export type CreateDescuento = Omit<Descuento, 'id'>;
 
 @Injectable({ providedIn: 'root' })
 export class DescuentoService {
-  private readonly apiUrl = 'http://localhost:3000/descuento';
+  private readonly apiUrl = `${environment.apiUrl}/descuento`;
   private readonly _items$ = new BehaviorSubject<Descuento[]>([]);
   readonly items$ = this._items$.asObservable();
 

@@ -21,6 +21,7 @@ import { GastoService, Gasto } from '../services/gasto.service';
 import { EmpleadosService, Empleados } from '../services/empleados.service';
 import { InfoGastosComponent } from "../info-gastos/info-gastos.component";
 import { AgenteIAComponent } from '../agente-ia/agente-ia.component';
+import { environment } from '../config/environment';
 import * as ExcelJS from 'exceljs';
 
 @Component({
@@ -249,7 +250,7 @@ export class AdministradorPrincipalComponent implements OnInit {
 
   private loadUsuariosMap(): void {
     // Carga admins de la tabla usuarios (si el endpoint existe)
-    const url = 'http://localhost:3000/usuario';
+    const url = `${environment.apiUrl}/usuario`;
     this.http.get<any[]>(url).subscribe({
       next: (list) => {
         (list || []).forEach((u: any) => {

@@ -13,6 +13,7 @@ import { PqrsService } from '../services/pqrs.service';
 import { HistoryService } from '../services/history.service';
 import { TurnosDiaComponent } from './registro-turno/turnos-dia.component';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { environment } from '../config/environment';
 
 @Component({
   selector: 'app-empleado-turno',
@@ -246,7 +247,7 @@ export class EmpleadoTurnoComponent implements OnInit {
       return of(undefined as number | undefined);
     }
     const params = new HttpParams().set('fecha', fecha);
-    return this.http.get<any[]>(`http://localhost:3000/turno/registro`, { params }).pipe(
+    return this.http.get<any[]>(`${environment.apiUrl}/turno/registro`, { params }).pipe(
       catchError(() => of([] as any[])),
       // map inline usando switchMap para evitar importar map
       switchMap((items: any[]) => {

@@ -7,7 +7,7 @@ import { environment } from '../config/environment';
   providedIn: 'root'
 })
 export class EstadisticasService {
-  private apiUrl = `${environment.apiUrl}/api/estadisticas`; // cambia por tu backend real
+  private apiUrl = `${environment.apiUrl}/estadisticas`; // cambia por tu backend real
 
   constructor(private http: HttpClient) {}
 

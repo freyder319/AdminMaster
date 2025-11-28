@@ -7,6 +7,7 @@ import { Clientes, ClientesService } from '../services/clientes.service';
 import { DescuentoService, Descuento } from '../services/descuento.service';
 import Swal from 'sweetalert2';
 import { AdminNavbarComponent } from "../admin_navbar/admin_navbar.component";
+import { environment } from '../config/environment';
 declare const bootstrap: any;
 
 @Component({
@@ -18,7 +19,7 @@ declare const bootstrap: any;
 })
 export class VentaProductoComponent implements AfterViewInit {
   productos: Producto[] = [];
-  private baseImageUrl = 'http://localhost:3000/storage/';
+  private baseImageUrl = `${environment.apiUrl}/storage/`;
   private storageKey = 'venta_cart';
   searchTerm: string = '';
   sortOption: 'todos' | 'masVendidos' | 'alfabetico' | 'masRentables' | 'ultimasUnidades' = 'todos';

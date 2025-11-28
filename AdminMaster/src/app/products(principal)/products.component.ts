@@ -5,6 +5,7 @@ import { isPlatformBrowser, NgFor, NgIf } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { ProductoService, Producto as BackendProducto } from '../services/producto.service';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../config/environment';
 
 interface ProductoCard {
   nombre: string;
@@ -54,7 +55,7 @@ ngOnInit(): void {
   categorias: CategoriaUI[] = [];
   categoriaSeleccionadaId: number | null = null;
   categoriaSeleccionadaNombre: string = '';
-  private baseImageUrl = 'http://localhost:3000/storage/';
+  private baseImageUrl = `${environment.apiUrl}/storage/`;
 
   productos: ProductoCard[] = [];
 
