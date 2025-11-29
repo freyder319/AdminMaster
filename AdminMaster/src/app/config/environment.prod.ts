@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://adminmaster.site/api'
+  apiUrl: 'https://antojitosdoima.site/api'
 };
