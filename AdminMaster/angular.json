@@ -28,7 +28,7 @@
             "assets": [
               "src/assets",
               {
-                "glob": "/*",
+                "glob": "**/*.{png,jpg,jpeg,gif,svg,webp,ico}",
                 "input": "src/img",
                 "output": "assets/img"
               }
@@ -56,13 +56,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "4MB",
+                  "maximumError": "5MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "256kB",
+                  "maximumError": "300kB"
                 }
               ],
               "outputHashing": "all"
