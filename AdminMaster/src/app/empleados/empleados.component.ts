@@ -21,6 +21,7 @@ export class EmpleadosComponent {
   empleadoSeleccionado: Empleados  | null=null;
   mostrarAddEmpleado = false; 
   mostrarModificarEmpleado = false;
+  cargando = false;
   empleados:Empleados[] = [];
   private search$ = new BehaviorSubject<string>('');
   filteredEmpleados$: Observable<Empleados[]> = combineLatest([
@@ -69,6 +70,7 @@ export class EmpleadosComponent {
   }
 
   ngOnInit(): void {
+    this.cargando = true;
     this.empleadosServices.getEmpleados().subscribe({
       next: (data) => {
         this.empleados = data || [];
@@ -88,6 +90,9 @@ export class EmpleadosComponent {
       },
       error: (err) => {
         console.error('Error al cargar empleados:', err);
+      },
+      complete: () => {
+        this.cargando = false;
       }
     });
     // cargar cajas disponibles para habilitar (asignar caja)

@@ -283,7 +283,11 @@
               </td>
             </tr>
             <tr *ngIf="ventasIngresos.length === 0">
-              <td colspan="5" class="text-center text-muted py-4">No hay Ventas Registradas</td>
+              <td colspan="5" class="text-center text-muted py-4">
+                {{ (searchTerm || '').trim()
+                    ? ('No se encontró ninguna Venta para "' + (searchTerm || '').trim() + '".')
+                    : 'No hay Ventas Registradas' }}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -345,7 +349,11 @@
               </td>
             </tr>
             <tr *ngIf="gastosEgresos.length === 0">
-              <td colspan="6" class="text-center text-muted py-4">No hay Gastos Registrados</td>
+              <td colspan="6" class="text-center text-muted py-4">
+                {{ (searchTerm || '').trim()
+                    ? ('No se encontró ningún Gasto para "' + (searchTerm || '').trim() + '".')
+                    : 'No hay Gastos Registrados' }}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -402,7 +410,11 @@
               </td>
             </tr>
             <tr *ngIf="ventasPorCobrar.length === 0">
-              <td colspan="5" class="text-center text-muted py-4">No hay Ventas Pendientes por Cobrar</td>
+              <td colspan="5" class="text-center text-muted py-4">
+                {{ (searchTerm || '').trim()
+                    ? ('No se encontraron Ventas Pendientes por Cobrar para "' + (searchTerm || '').trim() + '".')
+                    : 'No hay Ventas Pendientes por Cobrar' }}
+              </td>
             </tr>
           </tbody>
         </table>
@@ -460,7 +472,11 @@
               </td>
             </tr>
             <tr *ngIf="gastosPorPagar.length === 0">
-              <td colspan="6" class="text-center text-muted py-4">No hay Gastos Pendientes por Pagar</td>
+              <td colspan="6" class="text-center text-muted py-4">
+                {{ (searchTerm || '').trim()
+                    ? ('No se encontraron Gastos Pendientes por Pagar para "' + (searchTerm || '').trim() + '".')
+                    : 'No hay Gastos Pendientes por Pagar' }}
+              </td>
             </tr>
           </tbody>
         </table>

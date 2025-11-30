@@ -74,7 +74,7 @@
 
                                     <div class="col-md-6">
                                         <label class="form-label text-start d-block labeldefec">Documento</label>
-                                        <input class="form-control" [(ngModel)]="form.documento" name="documento" #documento="ngModel" required pattern="^[A-Za-z0-9.-]{5,20}$" placeholder="Ej: 123456789">
+                                        <input class="form-control" [(ngModel)]="form.documento" name="documento" #documento="ngModel" required pattern="^[A-Za-z0-9.\-]{5,20}$" placeholder="Ej: 123456789">
                                         <small class="text-danger" *ngIf="documento.invalid && (documento.dirty || documento.touched)">
                                             Documento requerido (5 a 20 caracteres, letras/números).
                                         </small>

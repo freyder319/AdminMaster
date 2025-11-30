@@ -313,13 +313,24 @@
                         </tr>
                       </thead>
                       <tbody>
+                        <!-- Fila de estado: carga o sin resultados / sin productos -->
                         <tr *ngIf="productosFiltrados.length === 0">
                           <td colspan="9" class="text-center text-muted py-4">
-                            No hay productos de la categoría <b>{{ selectedCategoryName | titlecase }}</b>
-                            <ng-container *ngIf="searchTerm"> con el término "{{ searchTerm }}"</ng-container>.
+                            <ng-container *ngIf="cargandoInventario && !(searchTerm || '').trim(); else sinProductosMsg">
+                              <div class="d-flex justify-content-center align-items-center gap-2">
+                                <div class="spinner-border text-primary" role="status" style="width: 1.75rem; height: 1.75rem;">
+                                  <span class="visually-hidden">Cargando...</span>
+                                </div>
+                                <span class="text-muted">Cargando productos...</span>
+                              </div>
+                            </ng-container>
+                            <ng-template #sinProductosMsg>
+                              No hay productos de la categoría <b>{{ selectedCategoryName | titlecase }}</b>
+                              <ng-container *ngIf="(searchTerm || '').trim()"> con el término "{{ (searchTerm || '').trim() }}"</ng-container>.
+                            </ng-template>
                           </td>
                         </tr>
-                        <tr *ngFor="let producto of paginatedProductos; let i = index" [ngClass]="{ 'opacity-50': (producto.estado === false) || (producto.stockProducto === 0) }">
+                        <tr *ngFor="let producto of paginatedProductos; let i = index" class="fade-in" [ngClass]="{ 'opacity-50': (producto.estado === false) || (producto.stockProducto === 0) }">
                           <td>{{ i + 1 + (pageIndex * pageSize) }}</td>
                           <td>
                             <img [src]="toImageUrl(producto.imgProducto)" alt="Producto" class="rounded" width="60">

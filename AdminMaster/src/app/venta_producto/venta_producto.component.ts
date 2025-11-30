@@ -869,10 +869,30 @@ export class VentaProductoComponent implements AfterViewInit {
     if (!img) return this.baseImageUrl + 'default.jpg';
     const s = String(img).trim();
     if (s === '') return this.baseImageUrl + 'default.jpg';
+    // Normalizar nombres antiguos de default
     if (s.toLowerCase().startsWith('default') && s.toLowerCase() !== 'default.jpg') {
       return this.baseImageUrl + 'default.jpg';
     }
+    // URLs absolutas a localhost → reescribir a environment.apiUrl
+    if (s.startsWith('http://localhost') || s.startsWith('https://localhost')) {
+      try {
+        const url = new URL(s);
+        const path = url.pathname.replace(/^\/+/, '');
+        const baseApi = environment.apiUrl.replace(/\/+$/, '');
+        return `${baseApi}/${path}`;
+      } catch {
+        // fallback a lógica normal
+      }
+    }
+    // Otras URLs absolutas o data URI
     if (s.startsWith('http') || s.startsWith('data:')) return s;
+    // Rutas tipo '/storage/archivo.jpg' o 'storage/archivo.jpg'
+    if (s.startsWith('/storage/') || s.startsWith('storage/')) {
+      const clean = s.replace(/^\/+/, '');
+      const baseApi = environment.apiUrl.replace(/\/+$/, '');
+      return `${baseApi}/${clean}`;
+    }
+    // Caso general: nombre de archivo relativo en storage
     return this.baseImageUrl + s.replace(/^\/+/, '');
   }
 }

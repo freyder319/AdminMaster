@@ -154,6 +154,21 @@ main{
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
 
+@keyframes clienteFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cliente-row {
+    animation: clienteFadeIn 260ms ease-out;
+}
+
 /* Fila completa para clientes inactivos (similar a proveedores) */
 .cliente-inactivo-row,
 .cliente-inactivo-row td {

@@ -74,15 +74,23 @@
                         </tr>
                     </thead>
                     <tbody *ngIf="(filteredEmpleados$ | async) as list">
-                        <tr *ngFor="let empleado of list" class="align-middle" [ngClass]="{'fila-inactiva': estadoEmpleado(empleado) === 'Inactivo'}">
+                        <!-- Filas de empleados -->
+                        <tr *ngFor="let empleado of list" class="align-middle empleado-row animate__animated animate__fadeIn" [ngClass]="{'fila-inactiva': estadoEmpleado(empleado) === 'Inactivo'}">
                             <td data-label="Nombre">
-                                <!-- Escritorio y móvil: mostrar nombre y apellido (clickable en móvil) -->
-                                <div class="perfil clickable d-flex align-items-center gap-2" (click)="mostrarInterfazReponsive(empleado.id)">
+                                <!-- Móvil: nombre + caja, clickable para abrir interfaz responsive -->
+                                <div class="perfil clickable d-flex align-items-center gap-2 d-md-none" (click)="mostrarInterfazReponsive(empleado.id)">
                                     <img src="assets/img/icons-navbar/Empleados.png" alt="Empleado" width="40" height="40">
                                     <div class="info">
                                         <p class="mb-0 fw-bold">{{empleado.nombre}} {{empleado.apellido}}</p>
-                                        <!-- Mostrar caja asociada solo en móvil para evitar duplicados -->
                                         <p class="caja m-0">{{empleado.caja?.nombre || 'Sin asignar'}}</p>
+                                    </div>
+                                </div>
+
+                                <!-- Escritorio: solo nombre, sin caja ni click -->
+                                <div class="perfil d-none d-md-flex align-items-center gap-2">
+                                    <img src="assets/img/icons-navbar/Empleados.png" alt="Empleado" width="40" height="40">
+                                    <div class="info">
+                                        <p class="mb-0 fw-bold">{{empleado.nombre}} {{empleado.apellido}}</p>
                                     </div>
                                 </div>
                             </td>
@@ -158,7 +166,7 @@
                                         <button *ngIf="!isEmpleadoEnUso(empleado)" (click)="eliminarEmpleado(empleado.id)" class="btn eliminar-icon icon-btn" title="Eliminar">
                                             <i class="bi bi-trash"></i>
                                         </button>
-                                        <button *ngIf="isEmpleadoEnUso(empleado)" class="btn inhabilitar-icon icon-btn" title="Inhabilitar" (click)="inhabilitarEmpleado(empleado)">
+                                        <button *ngIf="isEmpleadoEnUso(empleado)" (click)="inhabilitarEmpleado(empleado)" class="btn inhabilitar-icon icon-btn" title="Inhabilitar">
                                             <i class="bi bi-slash-circle"></i>
                                         </button>
                                     </ng-template>
@@ -166,10 +174,21 @@
                             </td>
                         </tr>
 
-                        <!-- Sin resultados / Sin empleados -->
+                        <!-- Fila de estado: carga o sin resultados / sin empleados -->
                         <tr *ngIf="list.length === 0">
-                            <td colspan="5" class="text-center text-muted py-3">
+                            <td colspan="7" class="text-center text-muted py-4">
+                              <ng-container *ngIf="cargando && !(lastSearchTerm || '').trim(); else sinEmpleadosMsg">
+
+                                <div class="d-flex justify-content-center align-items-center gap-2">
+                                  <div class="spinner-border text-primary" role="status" style="width: 1.75rem; height: 1.75rem;">
+                                    <span class="visually-hidden">Cargando...</span>
+                                  </div>
+                                  <span class="text-muted">Cargando empleados...</span>
+                                </div>
+                              </ng-container>
+                              <ng-template #sinEmpleadosMsg>
                                 {{ lastSearchTerm ? ('No se encontró ningún Empleado para "' + lastSearchTerm + '".') : 'No hay Empleados Registrados' }}
+                              </ng-template>
                             </td>
                         </tr>
                     </tbody>

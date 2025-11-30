@@ -137,6 +137,7 @@ export class InventoryComponent implements AfterViewInit {
   private baseImageUrl = `${environment.apiUrl}/storage/`;
   // Buscador
   searchTerm: string = '';
+  cargandoInventario: boolean = false;
   // Filtro por categoría (idCategoria o nombre)
   selectedCategoryId: number | '' = '';
   get selectedCategoryName(): string {
@@ -447,9 +448,11 @@ export class InventoryComponent implements AfterViewInit {
   }
   cargarProductos(): void {
     // Inventario debe ver todos (incluye inhabilitados)
+    this.cargandoInventario = true;
     this.productoService.getAll(true).subscribe({
       next: (data) => {
         this.productos = data || [];
+
         // Prefetch de flags canDelete para cada producto
         for (const prod of this.productos) {
           if (!prod?.id) continue;
@@ -463,7 +466,8 @@ export class InventoryComponent implements AfterViewInit {
           this.pageIndex = 0;
         }
       },
-      error: (err) => console.error('Error al Listar Productos', err)
+      error: (err) => console.error('Error al Listar Productos', err),
+      complete: () => { this.cargandoInventario = false; }
     });
   }
   abrirCrear() {
