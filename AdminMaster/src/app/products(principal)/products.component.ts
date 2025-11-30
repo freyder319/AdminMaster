@@ -244,7 +244,18 @@ ngOnInit(): void {
       if (!img) return 'assets/img/placeholder.jpg'; // Imagen por defecto
       const s = String(img).trim();
       if (s === '') return 'assets/img/placeholder.jpg';
-      // URLs absolutas o data URI
+      // URLs absolutas a localhost: reescribir hacia environment.apiUrl
+      if (s.startsWith('http://localhost') || s.startsWith('https://localhost')) {
+        try {
+          const url = new URL(s);
+          const path = url.pathname.replace(/^\/+/, '');
+          const baseApi = environment.apiUrl.replace(/\/+$/, '');
+          return `${baseApi}/${path}`;
+        } catch {
+          // Si falla, seguir flujo normal
+        }
+      }
+      // Otras URLs absolutas o data URI
       if (s.startsWith('http') || s.startsWith('data:')) return s;
       // Rutas tipo '/storage/archivo.jpg' o 'storage/archivo.jpg'
       if (s.startsWith('/storage/') || s.startsWith('storage/')) {
