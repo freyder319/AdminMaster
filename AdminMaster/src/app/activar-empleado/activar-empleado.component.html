@@ -1,5 +1,5 @@
 <main class="activar-wrapper">
-  <section class="activar-card">
+  <section class="activar-card" style="max-width: 520px;">
     <h1 class="titulo">
       <i class="bi bi-person-badge-fill me-2"></i>
       <span>Activar Cuenta de Empleado</span>
@@ -16,21 +16,24 @@
             [type]="mostrarPassword ? 'text' : 'password'"
             formControlName="password"
             class="form-control pe-5"
-            [ngClass]="{
-              'is-invalid': (form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty || submitted)) || passwordMismatch,
-              'is-valid': form.get('password')?.valid && !passwordMismatch && (form.get('password')?.touched || form.get('password')?.dirty) && !submitted
-            }"
           >
           <button type="button" class="btn-icon-password" (click)="toggleMostrarPassword()">
             <i class="bi" [ngClass]="mostrarPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
           </button>
         </div>
-        <div class="invalid-feedback" *ngIf="form.get('password')?.invalid && (form.get('password')?.touched || form.get('password')?.dirty || submitted)">
-          <span *ngIf="form.get('password')?.errors?.['required']">La contraseña es obligatoria.</span>
-          <span *ngIf="form.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 10 caracteres.</span>
-          <span *ngIf="!form.get('password')?.errors?.['minlength'] && form.get('password')?.errors?.['pattern']">
-            La contraseña debe tener mínimo 6 letras y 4 números. Se permiten letras, números y signos (sin espacios).
-          </span>
+        <div class="mt-2 small">
+          <p [ngClass]="passHasMinLength ? 'text-success' : 'text-danger'">
+            • Mínimo 10 caracteres.
+          </p>
+          <p [ngClass]="passHasMinLetters ? 'text-success' : 'text-danger'">
+            • Al menos 6 letras.
+          </p>
+          <p [ngClass]="passHasMinDigits ? 'text-success' : 'text-danger'">
+            • Al menos 4 números.
+          </p>
+          <p [ngClass]="passHasNoSpaces ? 'text-success' : 'text-danger'">
+            • Sin espacios (se permiten letras, números y signos).
+          </p>
         </div>
       </div>
 
@@ -40,14 +43,14 @@
           type="password"
           formControlName="confirmPassword"
           class="form-control"
-          [ngClass]="{
-            'is-invalid': (form.get('confirmPassword')?.invalid && (form.get('confirmPassword')?.touched || form.get('confirmPassword')?.dirty || submitted)) || passwordMismatch,
-            'is-valid': form.get('confirmPassword')?.valid && !passwordMismatch && (form.get('confirmPassword')?.touched || form.get('confirmPassword')?.dirty) && !submitted
-          }"
         >
-        <div class="invalid-feedback" *ngIf="(form.get('confirmPassword')?.invalid && (form.get('confirmPassword')?.touched || form.get('confirmPassword')?.dirty || submitted)) || passwordMismatch">
-          <span *ngIf="form.get('confirmPassword')?.errors?.['required']">La confirmación es obligatoria.</span>
-          <span *ngIf="!form.get('confirmPassword')?.errors?.['required'] && passwordMismatch">Las contraseñas no coinciden.</span>
+        <div class="mt-2 small">
+          <p [ngClass]="confirmValue ? 'text-success' : 'text-danger'">
+            • La confirmación es obligatoria.
+          </p>
+          <p [ngClass]="!passwordMismatch && confirmValue ? 'text-success' : 'text-danger'">
+            • Las contraseñas deben coincidir.
+          </p>
         </div>
       </div>
 

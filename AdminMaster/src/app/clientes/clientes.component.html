@@ -76,7 +76,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let cliente of clientesFiltrados" [ngClass]="{'cliente-inactivo-row': estadoCliente(cliente) === 'Inactivo'}">
+            <tr *ngFor="let cliente of clientesFiltrados" class="cliente-row" [ngClass]="{'cliente-inactivo-row': estadoCliente(cliente) === 'Inactivo'}">
               <td data-label="Nombre">
                 <!-- Solo visible en móviles (<768px), clickeable -->
                 <div class="perfil clickable d-md-none" (click)="mostrarInterfazReponsive(cliente.id)">
@@ -94,7 +94,7 @@
                     <p class="nombre" style="margin-left: 10px;"><strong>{{cliente.nombre}} {{cliente.apellido}}</strong></p>
                   </div>
                 </div>
-                </td>
+              </td>
 
               <td data-label="Documento">{{cliente.documento || '-'}}</td>
               <td data-label="Correo">{{cliente.correo}}</td>
@@ -158,14 +158,20 @@
                 </div>
               </td>
             </tr>
-            <!-- Sin clientes en la base -->
-            <tr *ngIf="clientes.length === 0 && !searchTerm">
-              <td colspan="7" class="text-center text-muted py-3">No hay Clientes registrados</td>
-            </tr>
-            <!-- Sin coincidencias con la búsqueda -->
-            <tr *ngIf="clientes.length > 0 && clientesFiltrados.length === 0 && searchTerm">
-              <td colspan="7" class="text-center text-muted py-3">
-                No se encontraron Clientes para "{{ searchTerm }}".
+            <!-- Fila de estado: carga o sin resultados / sin clientes -->
+            <tr *ngIf="clientesFiltrados.length === 0">
+              <td colspan="8" class="text-center text-muted py-4">
+                <ng-container *ngIf="cargando && !((searchTerm || '').trim()); else sinClientesMsg">
+                  <div class="d-flex justify-content-center align-items-center gap-2">
+                    <div class="spinner-border text-primary" role="status" style="width: 1.75rem; height: 1.75rem;">
+                      <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <span class="text-muted">Cargando clientes...</span>
+                  </div>
+                </ng-container>
+                <ng-template #sinClientesMsg>
+                  {{ (searchTerm || '').trim() ? ('No se encontró ningún Cliente para "' + (searchTerm || '').trim() + '".') : 'No hay Clientes Registrados' }}
+                </ng-template>
               </td>
             </tr>
           </tbody>

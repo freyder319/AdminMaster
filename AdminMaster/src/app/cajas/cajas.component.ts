@@ -31,6 +31,7 @@ export class CajasComponent {
   // streams reactivos
   private search$ = new BehaviorSubject<string>('');
   private cajas$ = new BehaviorSubject<Cajas[]>([]);
+  cargando = false;
   filteredCajas$: Observable<Cajas[]> = combineLatest([
     this.cajas$,
     this.search$,
@@ -54,6 +55,7 @@ export class CajasComponent {
   constructor (private cajasServices: CajasService, private empleadosService: EmpleadosService){}
 
   ngOnInit(): void {
+    this.cargando = true;
     this.cajasServices.getCajas().subscribe({
       next: (data) => {
         this.cajasFiltrar = data;
@@ -62,7 +64,8 @@ export class CajasComponent {
         // cargar empleados para detectar relaciones de caja
         this.cargarEmpleados();
       },
-      error: (error) => console.error('Error al Cargar Cajas:', error)
+      error: (error) => console.error('Error al Cargar Cajas:', error),
+      complete: () => { this.cargando = false; }
     });
   }
 
@@ -92,6 +95,7 @@ export class CajasComponent {
   }
 
   obtenerCajas() {
+    this.cargando = true;
     this.cajasServices.getCajas().subscribe({
       next: (data) => {
         this.cajasFiltrar = data;
@@ -100,7 +104,8 @@ export class CajasComponent {
         // actualizar relaciones tras recargar cajas
         this.cargarEmpleados();
       },
-      error: (error) => console.error('Error al Cargar Cajas:', error)
+      error: (error) => console.error('Error al Cargar Cajas:', error),
+      complete: () => { this.cargando = false; }
     });
   }
 

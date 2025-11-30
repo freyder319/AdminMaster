@@ -49,6 +49,33 @@ export class ActivarEmpleadoComponent {
     return password !== confirm;
   }
 
+  // Helpers para mostrar el estado de cada regla de la contraseña en la UI
+  get passwordValue(): string {
+    return (this.form.get('password')?.value || '') as string;
+  }
+
+  get passHasMinLength(): boolean {
+    return this.passwordValue.length >= 10;
+  }
+
+  get passHasMinLetters(): boolean {
+    const letters = this.passwordValue.replace(/[^A-Za-z]/g, '');
+    return letters.length >= 6;
+  }
+
+  get passHasMinDigits(): boolean {
+    const digits = this.passwordValue.replace(/[^0-9]/g, '');
+    return digits.length >= 4;
+  }
+
+  get passHasNoSpaces(): boolean {
+    return !/\s/.test(this.passwordValue);
+  }
+
+  get confirmValue(): string {
+    return (this.form.get('confirmPassword')?.value || '') as string;
+  }
+
   toggleMostrarPassword() {
     this.mostrarPassword = !this.mostrarPassword;
   }

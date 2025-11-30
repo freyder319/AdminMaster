@@ -20,7 +20,7 @@ import { AgenteIAComponent } from "../agente-ia/agente-ia.component";
 export class ProveedoresComponent {
   mostrarAddProveedor = false; 
   mostrarModificarProveedor = false;
-
+  cargando = true;
   proveedores$: Observable<Proveedor[]>;
   private search$ = new BehaviorSubject<string>('');
   filteredProveedores$: Observable<Proveedor[]>;
@@ -32,6 +32,11 @@ export class ProveedoresComponent {
 
   constructor(private proveedorService: ProveedorService, private gastoService: GastoService) {
     this.proveedores$ = this.proveedorService.proveedores$;
+    // controlar bandera de carga según flujo del observable
+    this.proveedores$.subscribe({
+      next: () => { this.cargando = false; },
+      error: () => { this.cargando = false; }
+    });
     this.filteredProveedores$ = combineLatest([
       this.proveedores$,
       this.search$,

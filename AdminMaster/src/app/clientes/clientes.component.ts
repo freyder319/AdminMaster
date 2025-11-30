@@ -23,6 +23,7 @@ export class ClientesComponent {
   mostrarModificarCliente = false;
   clientes:Clientes[] = [];
   searchTerm: string = '';
+  cargando = false;
   rol: string | null = null;
   get clientesFiltrados(): Clientes[] {
     const q = (this.searchTerm || '').trim().toLowerCase();
@@ -68,10 +69,12 @@ export class ClientesComponent {
     } catch {
       this.rol = null;
     }
+    this.cargando = true;
     this.clientesServices.getClientes().subscribe({
-    next: (data) => this.clientes = data,
-    error: (error) => console.error('Error al cargar Clientes:',error)
-  });
+      next: (data) => this.clientes = data || [],
+      error: (error) => console.error('Error al cargar Clientes:',error),
+      complete: () => { this.cargando = false; }
+    });
   // cargar ventas y construir set de clientes en uso + conteo de compras por cliente y deudas (ventas pendientes)
   try {
     this.ventaService.list().subscribe({

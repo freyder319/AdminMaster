@@ -74,7 +74,7 @@
             </tr>
           </thead>
           <tbody *ngIf="(filteredProveedores$ | async) as list">
-            <tr *ngFor="let p of list" [ngClass]="{'fila-inactiva': !p.activo}">
+            <tr *ngFor="let p of list" class="proveedor-row" [ngClass]="{'fila-inactiva': !p.activo}">
               <td data-label="Nombre Empresa">
                 <!-- Solo visible en móviles (<768px), clickeable -->
                 <div class="perfil clickable d-md-none" (click)="seleccionar(p); mostrarModificarProveedor = true">
@@ -163,9 +163,21 @@
                 </div>
               </td>
             </tr>
+
+            <!-- Fila de estado: carga o sin resultados / sin proveedores -->
             <tr *ngIf="list.length === 0">
-              <td colspan="7" class="text-center text-muted py-3">
-                {{ lastSearchTerm ? ('No se encontró ningún proveedor para "' + lastSearchTerm + '".') : 'No hay Proveedores registrados' }}
+              <td colspan="7" class="text-center text-muted py-4">
+                <ng-container *ngIf="cargando && !(lastSearchTerm || '').trim(); else sinProveedoresMsg">
+                  <div class="d-flex justify-content-center align-items-center gap-2">
+                    <div class="spinner-border text-primary" role="status" style="width: 1.75rem; height: 1.75rem;">
+                      <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <span class="text-muted">Cargando proveedores...</span>
+                  </div>
+                </ng-container>
+                <ng-template #sinProveedoresMsg>
+                  {{ lastSearchTerm ? ('No se encontró ningún Proveedor para "' + lastSearchTerm + '".') : 'No hay Proveedores Registrados' }}
+                </ng-template>
               </td>
             </tr>
           </tbody>

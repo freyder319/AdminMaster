@@ -71,7 +71,7 @@
           </thead>
           <tbody *ngIf="(filteredCajas$ | async) as list">
             <!-- Cajas -->
-            <tr *ngFor="let caja of list" [ngClass]="{'fila-inactiva': (caja.estado || '').toLowerCase() === 'inactiva'}">
+            <tr *ngFor="let caja of list" class="caja-row" [ngClass]="{'fila-inactiva': (caja.estado || '').toLowerCase() === 'inactiva'}">
               <td data-label="Nombre">
                 <!-- Móvil (<768px) → perfil clickeable -->
                 <div class="perfil clickable d-md-none" (click)="mostrarInterfazReponsive(caja.id)">
@@ -150,9 +150,20 @@
                 </div>
               </td>
             </tr>
+            <!-- Fila de estado: carga o sin resultados / sin cajas -->
             <tr *ngIf="list.length === 0">
-              <td colspan="7" class="text-center text-muted py-3">
-                {{ lastSearchTerm ? ('No se encontró ninguna caja para "' + lastSearchTerm + '".') : 'No hay Cajas Registradas' }}
+              <td colspan="7" class="text-center text-muted py-4">
+                <ng-container *ngIf="cargando && !(lastSearchTerm || '').trim(); else sinCajasMsg">
+                  <div class="d-flex justify-content-center align-items-center gap-2">
+                    <div class="spinner-border text-primary" role="status" style="width: 1.75rem; height: 1.75rem;">
+                      <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <span class="text-muted">Cargando cajas...</span>
+                  </div>
+                </ng-container>
+                <ng-template #sinCajasMsg>
+                  {{ (lastSearchTerm || '').trim() ? ('No se encontró ninguna caja para "' + (lastSearchTerm || '').trim() + '".') : 'No hay Cajas Registradas' }}
+                </ng-template>
               </td>
             </tr>
           </tbody>
