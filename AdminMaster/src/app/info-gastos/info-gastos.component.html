@@ -8,11 +8,6 @@
     <div class="card-header">
       <div class="d-flex justify-content-between align-items-center">
         <h5 class="m-0">Detalle del Gasto</h5>
-        <div class="text-muted" *ngIf="empleadoNombre || g.usuarioId === 1 || g.turnoId">
-          <span *ngIf="empleadoNombre || g.usuarioId === 1" class="text-dark fw-semibold" style="font-size: 1.05rem;">{{ empleadoNombre || 'Admin' }}</span>
-          <span *ngIf="empleadoNombre && g.turnoId" class="mx-1">•</span>
-          <span *ngIf="g.turnoId" class="text-dark fw-semibold" style="font-size: 1.05rem;">Turno: {{ g.turnoId }}</span>
-        </div>
       </div>
     </div>
     <div class="card-body">
@@ -47,14 +42,6 @@
         <div class="col-sm-4">
           <div class="text-muted small">Estado</div>
           <div>{{ g.estado }}</div>
-        </div>
-        <div class="col-sm-4">
-          <div class="text-muted small">Empleado</div>
-          <div>{{ empleadoNombre || (g.usuarioId === 1 ? 'Admin' : ('ID: ' + (g.usuarioId || '-'))) }}</div>
-        </div>
-        <div class="col-sm-4">
-          <div class="text-muted small">Turno</div>
-          <div>{{ g.turnoId || '—' }}</div>
         </div>
       </div>
     </div>

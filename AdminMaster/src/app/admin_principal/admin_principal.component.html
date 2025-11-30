@@ -23,13 +23,13 @@
     <div class="container unicion fixed-bottom">
       <div class="body1 d-flex justify-content-center">
         <button id="button1" class="btn btn-primary nueva-venta bg-green" data-bs-toggle="offcanvas" data-bs-target="#venta-libre">
-          <img class="image-etiqueta me-3" src="/assets/img/Logos Admin/venta.png" alt="">
+          <img class="image-etiqueta me-3" src="assets/img/Logos Admin/venta.png" alt="">
           Nueva Venta
         </button>
       </div>
       <div class="body2 d-flex justify-content-center">
         <button id="button3" class="btn btn-primary nuevo-gasto" data-bs-toggle="offcanvas" data-bs-target="#gasto" >
-          <img class="image-etiqueta me-3" src="/assets/img/Logos Admin/gasto.png" alt="">
+          <img class="image-etiqueta me-3" src="assets/img/Logos Admin/gasto.png" alt="">
           Nuevo Gasto
         </button>
         <!-- Offcanvas Venta Libre -->
@@ -62,7 +62,7 @@
       <div class="row">
         <div class="col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center ">
           <div class="balance balances">
-            <img class="img-balance " width="100px" src="/assets/img/Logos Admin/Balance.png" alt="">
+            <img class="img-balance " width="100px" src="assets/img/Logos Admin/Balance.png" alt="">
             <div class="balance-precio ">
               <h4>Balance<span *ngIf="showRangeTag"> (en rango)</span></h4>
               <h5><span [ngClass]="{ 'text-success': balance > 0, 'text-danger': balance < 0 }">{{ formatCop(balance) }}</span></h5>
@@ -71,7 +71,7 @@
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4 d-flex justify-content-center ">
           <div class="balance balances">
-            <img class="img-balance " width="100px" src="/assets/img/Logos Admin/ventas.png" alt="">
+            <img class="img-balance " width="100px" src="assets/img/Logos Admin/ventas.png" alt="">
             <div class="balance-precio">
               <h4>Ventas Totales<span *ngIf="showRangeTag"> (en rango)</span></h4>
               <h5> <span class="precio_letra">{{ formatCop(ventasTotales) }}</span></h5>
@@ -80,7 +80,7 @@
         </div>
         <div class="col-sm-12 col-md-12 col-lg-4 d-flex justify-content-center ">
           <div class="balance gastos">
-            <img class="img-balance" width="105px" src="/assets/img/Logos Admin/gastos.png" alt="">
+            <img class="img-balance" width="105px" src="assets/img/Logos Admin/gastos.png" alt="">
             <div class="balance-precio">
               <h4>Gastos Totales<span *ngIf="showRangeTag"> (en rango)</span></h4>
               <h5> <span class="precio_letra_rojo">{{ formatCop(gastosTotales) }}</span></h5>
@@ -100,7 +100,7 @@
           <form class="busc" role="search" (submit)="$event.preventDefault()">
             <div class="input-group busca">
               <button class="btn btn-primary boton_buscador" type="button">
-                <img width="28px" src="/assets/img/Logos Admin/Buscador.png" alt="">
+                <img width="28px" src="assets/img/Logos Admin/Buscador.png" alt="">
               </button>
               <input class="form-control input-buscador" type="search" placeholder="Buscar" aria-label="Buscar" [(ngModel)]="searchTerm" name="search" (ngModelChange)="onSearchChange()">
             </div>
@@ -109,7 +109,7 @@
         <!-- Filtro -->
         <div class="col-sm-6 col-md-3 col-lg-2 d-flex justify-content-center text-center ">
           <button  id="" class="btn btn-primary filtro bg-white" data-bs-toggle="modal" data-bs-target="#filtroModal">
-            <img width="25px" class="me-0.5" src="/assets/img/Logos Admin/filtro.png" alt=""><span class="letrafiltro">Filtros</span>
+            <img width="25px" class="me-0.5" src="assets/img/Logos Admin/filtro.png" alt=""><span class="letrafiltro">Filtros</span>
           </button>
           <div class="modal fade" id="filtroModal" tabindex="-1" aria-labelledby="filtroModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-scrollable modal-lg">
@@ -153,7 +153,7 @@
         <!-- Rango -->
         <div class="col-sm-6 col-md-3 col-lg-2 dropdown range-dropdown-col">
           <button id="button" class="btn btn-primary dropdown-toggle bg-white range range-dropdown-btn" data-bs-toggle="dropdown">
-            <img width="20" height="20" class="me-1" src="/assets/img/Logos Admin/filtro.png" alt="">{{ rangeLabel }}
+            <img width="20" height="20" class="me-1" src="assets/img/Logos Admin/filtro.png" alt="">{{ rangeLabel }}
           </button>
           <div class="dropdown-menu">
             <a class="dropdown-item flexible2" href="#" (click)="clearRange(); $event.preventDefault()">
@@ -222,7 +222,7 @@
               (selectedTab==='por_pagar' && gastosPorPagar.length === 0)
             "
           >
-            <img class="icon-quick" src="/assets/img/Logos Admin/xls.png" alt="">
+            <img class="icon-quick" src="assets/img/Logos Admin/xls.png" alt="">
             <span>Reporte</span>
           </button>
         </div>
@@ -248,12 +248,15 @@
             <tr *ngFor="let v of ventasIngresos" class="table-row-click" (click)="abrirDialogoVenta(v)">
               <td data-label="Nombre Productos">
                 <div class="producto-resumen d-flex gap-2 align-items-center">
-                  <img src="/assets/img/Logos Admin/ventas.png" alt="" class="img-responsive" width="36" height="36">
+                  <img src="assets/img/Logos Admin/ventas.png" alt="" class="img-responsive" width="36" height="36">
                   <div class="info-producto d-flex flex-column">
                     <span class="nom_produc fw-semibold text-truncate" style="max-width: 240px;">
                       {{ (v.tipo_venta || '') === 'libre' ? ('Venta Libre #' + (v.id || '')) : ('Venta #' + (v.id || '')) }}
                     </span>
-                    <small class="text-muted">Por: {{ empleadoNombreById(getUsuarioIdFromVenta(v)) }} • Turno: {{ getTurnoIdFromVenta(v) || '—' }}</small>
+                    <small class="text-muted" *ngIf="isEmpleadoVenta(v)">
+                      Por: {{ empleadoNombreById(getUsuarioIdFromVenta(v)) }}
+                      <span> • Turno: {{ getTurnoIdFromVenta(v) || '—' }}</span>
+                    </small>
                     <small class="text-muted d-md-none">{{ v.forma_pago || '-' }} • {{ v.fecha_hora | date:'dd/MM/yyyy | hh:mm a' }}</small>
                   </div>
                 </div>
@@ -269,7 +272,14 @@
               </td>
               <td class="ocultar-en-movil" data-label="Fecha y Hora">{{ v.fecha_hora | date:'dd/MM/yyyy | hh:mm a' }}</td>
               <td class="ocultar-en-movil" data-label="Estado">
-                <span class="status" [class.activo]="(v.estado||'').toLowerCase()==='pagada'" [class.text-muted]="(v.estado||'').toLowerCase()!=='pagada'">{{ v.estado || 'Pagada' }}</span>
+                <span
+                  class="status"
+                  [ngClass]="{
+                    'bg-success-subtle text-success': (v.estado||'').toLowerCase()==='confirmado' || (v.estado||'').toLowerCase()==='confirmada',
+                    'bg-primary-subtle text-primary': (v.estado||'').toLowerCase()==='pendiente' || !(v.estado||'').trim(),
+                    'text-muted': ['confirmado','confirmada','pendiente',''].indexOf((v.estado||'').toLowerCase()) === -1
+                  }"
+                >{{ v.estado || 'Confirmado' }}</span>
               </td>
             </tr>
             <tr *ngIf="ventasIngresos.length === 0">
@@ -300,10 +310,13 @@
             <tr *ngFor="let g of gastosEgresos" class="table-row-click" (click)="abrirDialogoGasto(g)" style="cursor: pointer;">
               <td data-label="Nombre">
                 <div class="producto-resumen d-flex gap-2 align-items-center">
-                  <img src="/assets/img/Logos Admin/gastos.png" alt="" class="img-responsive" width="36" height="36">
+                  <img src="assets/img/Logos Admin/gastos.png" alt="" class="img-responsive" width="36" height="36">
                   <div class="info-producto d-flex flex-column">
                     <span class="nom_produc fw-semibold text-truncate" style="max-width: 240px;">{{ g.nombre || ('Gasto #' + g.id) }}</span>
-                    <small class="text-muted">Por: {{ empleadoNombreById(getUsuarioIdFromGasto(g)) }} • Turno: {{ getTurnoIdFromGasto(g) || '—' }}</small>
+                    <small class="text-muted" *ngIf="isEmpleadoGasto(g)">
+                      Por: {{ empleadoNombreById(getUsuarioIdFromGasto(g)) }}
+                      <span> • Turno: {{ getTurnoIdFromGasto(g) || '—' }}</span>
+                    </small>
                     <small class="text-muted d-md-none">{{ g.forma_pago || '-' }} • {{ g.fecha | date:'dd/MM/yyyy' }}</small>
                   </div>
                 </div>
@@ -323,11 +336,10 @@
               <td class="ocultar-en-movil" data-label="Estado">
                 <span
                   class="status"
-                  [class.activo]="(g.estado||'').toLowerCase()==='confirmado'"
                   [ngClass]="{
+                    'bg-success-subtle text-success': (g.estado||'').toLowerCase()==='confirmado',
                     'bg-primary-subtle text-primary': (g.estado||'').toLowerCase()==='pendiente',
-                    'bg-danger-subtle text-danger': (g.estado||'').toLowerCase()==='anulado',
-                    'text-muted': ['confirmado','pendiente','anulado'].indexOf((g.estado||'').toLowerCase()) === -1
+                    'text-muted': ['confirmado','pendiente'].indexOf((g.estado||'').toLowerCase()) === -1
                   }"
                 >{{ g.estado }}</span>
               </td>
@@ -359,12 +371,15 @@
             <tr *ngFor="let v of ventasPorCobrar" class="table-row-click" (click)="abrirDialogoVenta(v)">
               <td data-label="Nombre Productos">
                 <div class="producto-resumen d-flex gap-2 align-items-center">
-                  <img src="/assets/img/Logos Admin/ventas.png" alt="" class="img-responsive" width="36" height="36">
+                  <img src="assets/img/Logos Admin/ventas.png" alt="" class="img-responsive" width="36" height="36">
                   <div class="info-producto d-flex flex-column">
                     <span class="nom_produc fw-semibold text-truncate" style="max-width: 240px;">
                       {{ (v.tipo_venta || '') === 'libre' ? ('Venta Libre #' + (v.id || '')) : ('Venta #' + (v.id || '')) }}
                     </span>
-                    <small class="text-muted">Por: {{ empleadoNombreById(getUsuarioIdFromVenta(v)) }} • Turno: {{ getTurnoIdFromVenta(v) || '—' }}</small>
+                    <small class="text-muted" *ngIf="isEmpleadoVenta(v)">
+                      Por: {{ empleadoNombreById(getUsuarioIdFromVenta(v)) }}
+                      <span> • Turno: {{ getTurnoIdFromVenta(v) || '—' }}</span>
+                    </small>
                     <small class="text-muted d-md-none">{{ v.forma_pago || '-' }} • {{ v.fecha_hora | date:'dd/MM/yyyy | hh:mm a' }}</small>
                   </div>
                 </div>
@@ -376,7 +391,14 @@
               <td class="ocultar-en-movil" data-label="Medio de Pago">{{ v.forma_pago || '-' }}</td>
               <td class="ocultar-en-movil" data-label="Fecha y Hora">{{ v.fecha_hora | date:'dd/MM/yyyy | hh:mm a' }}</td>
               <td class="ocultar-en-movil" data-label="Estado">
-                <span class="status bg-primary-subtle text-primary">{{ v.estado || 'Pendiente' }}</span>
+                <span
+                  class="status"
+                  [ngClass]="{
+                    'bg-success-subtle text-success': (v.estado||'').toLowerCase()==='confirmado',
+                    'bg-primary-subtle text-primary': (v.estado||'').toLowerCase()==='pendiente' || !(v.estado||'').trim(),
+                    'text-muted': ['confirmado','pendiente',''].indexOf((v.estado||'').toLowerCase()) === -1
+                  }"
+                >{{ v.estado || 'Pendiente' }}</span>
               </td>
             </tr>
             <tr *ngIf="ventasPorCobrar.length === 0">
@@ -407,10 +429,13 @@
             <tr *ngFor="let g of gastosPorPagar" class="table-row-click" (click)="abrirDialogoGasto(g)" style="cursor: pointer;">
               <td data-label="Nombre">
                 <div class="producto-resumen d-flex gap-2 align-items-center">
-                  <img src="/assets/img/Logos Admin/gastos.png" alt="" class="img-responsive" width="36" height="36">
+                  <img src="assets/img/Logos Admin/gastos.png" alt="" class="img-responsive" width="36" height="36">
                   <div class="info-producto d-flex flex-column">
                     <span class="nom_produc fw-semibold text-truncate" style="max-width: 240px;">{{ g.nombre || ('Gasto #' + g.id) }}</span>
-                    <small class="text-muted">Por: {{ empleadoNombreById(getUsuarioIdFromGasto(g)) }} • Turno: {{ getTurnoIdFromGasto(g) || '—' }}</small>
+                    <small class="text-muted" *ngIf="isEmpleadoGasto(g)">
+                      Por: {{ empleadoNombreById(getUsuarioIdFromGasto(g)) }}
+                      <span> • Turno: {{ getTurnoIdFromGasto(g) || '—' }}</span>
+                    </small>
                     <small class="text-muted d-md-none">{{ g.forma_pago || '-' }} • {{ g.fecha | date:'dd/MM/yyyy' }}</small>
                   </div>
                 </div>
@@ -424,7 +449,14 @@
               <td class="ocultar-en-movil" data-label="Medio de Pago">{{ g.forma_pago || '-' }}</td>
               <td class="ocultar-en-movil" data-label="Fecha">{{ g.fecha | date:'dd/MM/yyyy' }}</td>
               <td class="ocultar-en-movil" data-label="Estado">
-                <span class="status bg-primary-subtle text-primary">{{ g.estado || 'Pendiente' }}</span>
+                <span
+                  class="status"
+                  [ngClass]="{
+                    'bg-success-subtle text-success': (g.estado||'').toLowerCase()==='confirmado',
+                    'bg-primary-subtle text-primary': (g.estado||'').toLowerCase()==='pendiente' || !(g.estado||'').trim(),
+                    'text-muted': ['confirmado','pendiente',''].indexOf((g.estado||'').toLowerCase()) === -1
+                  }"
+                >{{ g.estado || 'Pendiente' }}</span>
               </td>
             </tr>
             <tr *ngIf="gastosPorPagar.length === 0">

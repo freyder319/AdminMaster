@@ -365,6 +365,20 @@ export class AdministradorPrincipalComponent implements OnInit {
     return this.empleadoNombreById(uid || undefined);
   }
 
+  isEmpleadoVenta(v: any): boolean {
+    const uid = this.getUsuarioIdFromVenta(v);
+    const id = Number(uid);
+    if (!Number.isFinite(id) || id <= 0) return false;
+    return !!this.empleadoMap[id];
+  }
+
+  isEmpleadoGasto(g: any): boolean {
+    const uid = this.getUsuarioIdFromGasto(g);
+    const id = Number(uid);
+    if (!Number.isFinite(id) || id <= 0) return false;
+    return !!this.empleadoMap[id];
+  }
+
   formatCop(n: number): string {
     const num = Number(n) || 0;
     return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(num);
@@ -395,6 +409,10 @@ export class AdministradorPrincipalComponent implements OnInit {
       precio: this.formatCop(Number(i?.precio) || 0),
       subtotal: this.formatCop(Number(i?.subtotal) || 0),
     }));
+    const isEmpleado = this.isEmpleadoVenta(v);
+    const tipoVenta = (v?.tipo_venta || '').toString().toLowerCase();
+    const esVentaNormal = tipoVenta !== 'libre';
+
     const detalle = {
       producto: (v?.resumen || v?.descripcion || `Venta #${v?.id ?? ''}`),
       valor: this.formatCop(Number(v?.total) || 0),
@@ -405,8 +423,8 @@ export class AdministradorPrincipalComponent implements OnInit {
       descuentoPorcentaje: (v?.descuentoPorcentaje ?? null),
       descuentoMonto: porcentaje > 0 ? this.formatCop(descuentoMontoRaw) : null,
       items,
-      empleadoNombre: this.displayEmpleadoVenta(v),
-      turnoId: this.getTurnoIdFromVenta(v) || null,
+      empleadoNombre: isEmpleado && esVentaNormal ? this.displayEmpleadoVenta(v) : null,
+      turnoId: isEmpleado && esVentaNormal ? (this.getTurnoIdFromVenta(v) || null) : null,
       clienteNombre: this.displayClienteVenta(v),
       transaccionId: (v as any)?.transaccionId ?? null,
     } as any;

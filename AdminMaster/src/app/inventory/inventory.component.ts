@@ -529,7 +529,14 @@ export class InventoryComponent implements AfterViewInit {
     if (s.toLowerCase().startsWith('default') && s.toLowerCase() !== 'default.jpg') {
       return this.baseImageUrl + 'default.jpg';
     }
+    // Si ya viene como URL absoluta (http, https) o data URI, devolver tal cual
     if (s.startsWith('http') || s.startsWith('data:')) return s;
+    // Si el backend devuelve rutas tipo '/storage/archivo.jpg' o 'storage/archivo.jpg'
+    if (s.startsWith('/storage/') || s.startsWith('storage/')) {
+      // Construir URL absoluta basada en apiUrl
+      return `${environment.apiUrl}/${s.replace(/^\/+/, '')}`;
+    }
+    // Caso general: nombre de archivo relativo en storage
     return this.baseImageUrl + s.replace(/^\/+/, '');
   }
   agregarCategoria(form:NgForm){
