@@ -55,6 +55,7 @@
   box-shadow: 0 8px 24px rgba(0,0,0,0.12);
   padding: 12px;
 }
+
 .dropdown-item{
   display: flex;
   align-items: center;
@@ -149,7 +150,21 @@ a{
 
 @media (max-width: 768px) {
   .navbar-brand img {
-    margin-left: -35px; /* mover un poco a la izquierda solo en móvil */
+    margin-left: 0; /* centrar el logo en móvil */
+  }
+  
+  .dropdown-menu {
+    position: fixed !important;
+    right: 10px !important;
+    left: 10px !important;
+    top: 80px !important;
+    width: auto !important;
+    min-width: unset !important;
+    max-width: unset !important;
+  }
+  
+  .navbar .btn-link {
+    margin-right: 10px; /* asegurar espacio a la derecha */
   }
 }
 a{
