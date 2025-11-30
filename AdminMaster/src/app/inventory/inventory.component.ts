@@ -522,6 +522,7 @@ export class InventoryComponent implements AfterViewInit {
     });
   }
   toImageUrl(img?: string | null): string {
+
     if (!img) return this.baseImageUrl + 'default.jpg';
     const s = String(img).trim();
     if (s === '') return this.baseImageUrl + 'default.jpg';
@@ -529,8 +530,20 @@ export class InventoryComponent implements AfterViewInit {
     if (s.toLowerCase().startsWith('default') && s.toLowerCase() !== 'default.jpg') {
       return this.baseImageUrl + 'default.jpg';
     }
-    // Si ya viene como URL absoluta (http, https) o data URI, devolver tal cual
+    // Si ya viene como URL absoluta apuntando a localhost, reescribir a environment.apiUrl
+    if (s.startsWith('http://localhost') || s.startsWith('https://localhost')) {
+      try {
+        const url = new URL(s);
+        const path = url.pathname.replace(/^\/+/, '');
+        const baseApi = environment.apiUrl.replace(/\/+$/, '');
+        return `${baseApi}/${path}`;
+      } catch {
+        // Si falla el parseo, continuar con lógica normal
+      }
+    }
+    // Si ya viene como URL absoluta (http, https) o data URI (no localhost), devolver tal cual
     if (s.startsWith('http') || s.startsWith('data:')) return s;
+
     // Si el backend devuelve rutas tipo '/storage/archivo.jpg' o 'storage/archivo.jpg'
     if (s.startsWith('/storage/') || s.startsWith('storage/')) {
       // Construir URL absoluta basada en apiUrl
