@@ -43,13 +43,13 @@
                             <!-- Para pantallas grandes (≥768px) → abre offcanvas -->
                             <button class="btn agregar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddEmpleado" aria-controls="offcanvasAddEmpleado">
                                 <span class="texto">Agregar Empleado</span>
-                                <img width="80px" src="/assets/img/icons_empleado/agregarEmpleado.png" alt="">
+                                <img width="80px" src="assets/img/icons_empleado/agregarEmpleado.png" alt="">
                             </button>
 
                             <!-- Para pantallas pequeñas (<768px) → cambia de interfaz -->
                             <button class="btn agregar d-md-none" type="button"  (click)="mostrarAddEmpleado = true">
                                 <span class="texto">Agregar Empleado</span>
-                                <img width="80px" src="/assets/img/icons_empleado/agregarEmpleado.png" alt="">
+                                <img width="80px" src="assets/img/icons_empleado/agregarEmpleado.png" alt="">
                             </button>
 
                         </div>
@@ -78,7 +78,7 @@
                             <td data-label="Nombre">
                                 <!-- Escritorio y móvil: mostrar nombre y apellido (clickable en móvil) -->
                                 <div class="perfil clickable d-flex align-items-center gap-2" (click)="mostrarInterfazReponsive(empleado.id)">
-                                    <img src="/assets/img/icons-navbar/Empleados.png" alt="Empleado" width="40" height="40">
+                                    <img src="assets/img/icons-navbar/Empleados.png" alt="Empleado" width="40" height="40">
                                     <div class="info">
                                         <p class="mb-0 fw-bold">{{empleado.nombre}} {{empleado.apellido}}</p>
                                         <!-- Mostrar caja asociada solo en móvil para evitar duplicados -->

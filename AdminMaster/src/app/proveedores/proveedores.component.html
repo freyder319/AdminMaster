@@ -43,13 +43,13 @@
               <!-- Para pantallas grandes (≥768px) → abre offcanvas -->
               <button class="btn agregar d-none d-md-inline-block" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasAddProveedor" aria-controls="offcanvasAddProveedor">
                 <span class="texto">Agregar Proveedor</span>
-                <img width="80px" src="/assets/img/icono_proveedor/Proveedores__6_-removebg-preview (2).png" alt="">
+                <img width="80px" src="assets/img/icono_proveedor/Proveedores__6_-removebg-preview (2).png" alt="">
               </button>
 
               <!-- Para pantallas pequeñas (<768px) → cambia de interfaz -->
               <button class="btn agregar d-md-none" type="button" (click)="mostrarAddProveedor = true">
                 <span class="texto">Agregar Proveedor</span>
-                <img width="80px" src="/assets/img/icono_proveedor/Proveedores__6_-removebg-preview (2).png" alt="">
+                <img width="80px" src="assets/img/icono_proveedor/Proveedores__6_-removebg-preview (2).png" alt="">
               </button>
 
             </div>
@@ -78,7 +78,7 @@
               <td data-label="Nombre Empresa">
                 <!-- Solo visible en móviles (<768px), clickeable -->
                 <div class="perfil clickable d-md-none" (click)="seleccionar(p); mostrarModificarProveedor = true">
-                  <img src="/assets/img/icons-navbar/Proovedores.png" alt="Proveedor">
+                  <img src="assets/img/icons-navbar/Proovedores.png" alt="Proveedor">
                   <div class="info">
                     <p class="nombre">
                       <strong>{{ p.nombreEmpresa || '-' }}</strong>
@@ -89,7 +89,7 @@
 
                 <!-- Solo visible en escritorio (≥768px), NO clickeable -->
                 <div class="perfil d-none d-md-flex">
-                  <img src="/assets/img/icons-navbar/Proovedores.png" alt="Proveedor" width="50px" height="50px" style="margin-top: -10px;">
+                  <img src="assets/img/icons-navbar/Proovedores.png" alt="Proveedor" width="50px" height="50px" style="margin-top: -10px;">
                   <div class="info">
                     <p class="nombre" style="margin-left: 10px;">
                       <strong>{{ p.nombreEmpresa || '-' }}</strong>

@@ -239,14 +239,22 @@ ngOnInit(): void {
     this.categorias = [];
     const categoriasMap = new Map<number, string>();
     
-    // Función para normalizar URLs de imágenes
+    // Función para normalizar URLs de imágenes (compatible con producción)
     const toImageUrl = (img?: string | null): string => {
       if (!img) return 'assets/img/placeholder.jpg'; // Imagen por defecto
       const s = String(img).trim();
+      if (s === '') return 'assets/img/placeholder.jpg';
+      // URLs absolutas o data URI
       if (s.startsWith('http') || s.startsWith('data:')) return s;
-      // Asegurar que la URL base termine con / y la ruta de la imagen no empiece con /
+      // Rutas tipo '/storage/archivo.jpg' o 'storage/archivo.jpg'
+      if (s.startsWith('/storage/') || s.startsWith('storage/')) {
+        const clean = s.replace(/^\/+/, '');
+        const baseApi = environment.apiUrl.replace(/\/+$/, '');
+        return `${baseApi}/${clean}`;
+      }
+      // Caso general: nombre de archivo relativo almacenado en storage
       const base = this.baseImageUrl.endsWith('/') ? this.baseImageUrl : this.baseImageUrl + '/';
-      const path = s.startsWith('/') ? s.substring(1) : s;
+      const path = s.replace(/^\/+/, '');
       return base + path;
     };
 

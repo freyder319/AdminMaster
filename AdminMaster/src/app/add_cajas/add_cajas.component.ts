@@ -34,16 +34,17 @@ export class AddCajasComponent {
   @Output() cerrarOffcanvas = new EventEmitter<void>();
 
   caja: Cajas[] = [];
-  nuevaCaja: Cajas = { id: 0, nombre: '', codigoCaja: '', estado: 'Activa' } as Cajas;
-  estadoInvalido: boolean = false;
+  nuevaCaja = { codigoCaja: '', nombre: '', estado: 'Activa' }; // CORREGIDO: no enviar id
+
+  estadoInvalido = false;
   mostrarFormulario = true;
 
-  constructor (private cajasServices: CajasService){}
+  constructor(private cajasServices: CajasService) {}
 
-  // Validar el Codigo de Caja
-  codigoCajaExcede: boolean = false;
-  codigoCajaNoNumerico: boolean = false;
-  codigoCajaDuplicado: boolean = false;
+  // Validaciones
+  codigoCajaExcede = false;
+  codigoCajaNoNumerico = false;
+  codigoCajaDuplicado = false;
 
   validarCodigoCaja() {
     const valor = this.nuevaCaja.codigoCaja ?? '';
@@ -51,11 +52,9 @@ export class AddCajasComponent {
     this.codigoCajaExcede = valor.length > 20;
     this.codigoCajaNoNumerico = !/^\d*$/.test(valor);
 
-    // Reset flag if formato inválido o vacío
     if (this.codigoCajaExcede || this.codigoCajaNoNumerico || !valor) {
       this.codigoCajaDuplicado = false;
     } else {
-      // verificar contra las cajas ya cargadas
       this.codigoCajaDuplicado = this.caja.some(c => (c.codigoCaja || '') === valor);
     }
 
@@ -65,15 +64,13 @@ export class AddCajasComponent {
     }
   }
 
-  // Inicializar el Componente
-  ngOnInit():void{
+  ngOnInit(): void {
     this.cajasServices.getCajas().subscribe({
-    next: (data) => this.caja = data,
-    error: (error) => console.error('Error al Cargar Cajas:',error)
-  });
+      next: (data) => this.caja = data,
+      error: (error) => console.error('Error al Cargar Cajas:', error)
+    });
   }
 
-  // Agregar Caja con Validaciones
   agregarCaja(formCaja?: NgForm) {
     this.estadoInvalido = !this.nuevaCaja.estado;
     if (this.estadoInvalido) {
@@ -96,7 +93,12 @@ export class AddCajasComponent {
           return;
         }
 
-        this.cajasServices.createCaja(this.nuevaCaja).subscribe({
+        // CORREGIDO: enviar solo los campos válidos
+        this.cajasServices.createCaja({
+          codigoCaja: this.nuevaCaja.codigoCaja,
+          nombre: this.nuevaCaja.nombre,
+          estado: this.nuevaCaja.estado
+        }).subscribe({
           next: (cajaCreada) => {
             this.cajaAgregada.emit(cajaCreada);
             Swal.fire({
@@ -106,19 +108,12 @@ export class AddCajasComponent {
               timer: 2000,
               showConfirmButton: false
             });
-            this.nuevaCaja = {
-              id: 0,
-              nombre: '',
-              codigoCaja: '',
-              estado: 'Activa',
-            };
+            this.nuevaCaja = { codigoCaja: '', nombre: '', estado: 'Activa' };
             this.codigoCajaExcede = false;
             this.codigoCajaNoNumerico = false;
             this.estadoInvalido = false;
             this.mostrarFormulario = false;
-            setTimeout(() => {
-              this.mostrarFormulario = true;
-            }, 0);
+            setTimeout(() => this.mostrarFormulario = true, 0);
             this.cerrarOffcanvas.emit();
           },
           error: (error) => {
@@ -141,17 +136,9 @@ export class AddCajasComponent {
 
   onEnterFocus(next: any, event: Event, value?: any) {
     event.preventDefault();
-
-    // Validar valor: si es string, no vacío; si es número, mayor a 0
-    if (value === undefined || value === null) {
-      return;
-    }
-    if (typeof value === 'string' && !value.trim()) {
-      return;
-    }
-    if (typeof value === 'number' && (!Number.isFinite(value) || value <= 0)) {
-      return;
-    }
+    if (value === undefined || value === null) return;
+    if (typeof value === 'string' && !value.trim()) return;
+    if (typeof value === 'number' && (!Number.isFinite(value) || value <= 0)) return;
 
     if (next && typeof next.focus === 'function') {
       next.focus();
