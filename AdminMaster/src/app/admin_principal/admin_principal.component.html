@@ -33,7 +33,7 @@
           Nuevo Gasto
         </button>
         <!-- Offcanvas Venta Libre -->
-        <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="venta-libre" aria-labelledby="staticBackdropLabel" style="--bs-offcanvas-width: 600px;">
+        <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="venta-libre" aria-labelledby="staticBackdropLabel">
           <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="staticBackdropLabel">Crear Venta Libre</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -43,7 +43,7 @@
           </div>
         </div>
         <!-- Offcanvas Gasto -->
-        <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="gasto" aria-labelledby="staticBackdropLabel" style="--bs-offcanvas-width: 440px;">
+        <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="gasto" aria-labelledby="staticBackdropLabel">
           <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="staticBackdropLabel">Crear Gasto</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -93,93 +93,475 @@
   <br>
   <!-- Filtros, Calendario, Rango, Buscador, Reporte -->
   <section>
-    <div class="container d-flex justify-content-center">
-      <div class="row toolbar-equal">
+    <div class="container">
+      <!-- Desktop Layout -->
+      <div class="toolbar-desktop d-none d-lg-flex align-items-center gap-3">
         <!-- Buscador -->
-        <div class="col-sm-12 col-md-6 col-lg-3 buscador-reportes">
-          <form class="busc" role="search" (submit)="$event.preventDefault()">
-            <div class="input-group busca">
-              <button class="btn btn-primary boton_buscador" type="button">
-                <img width="28px" src="assets/img/Logos Admin/Buscador.png" alt="">
-              </button>
-              <input class="form-control input-buscador" type="search" placeholder="Buscar" aria-label="Buscar" [(ngModel)]="searchTerm" name="search" (ngModelChange)="onSearchChange()">
-            </div>
-          </form>
-        </div>
-        <!-- Filtro -->
-        <div class="col-sm-6 col-md-3 col-lg-2 d-flex justify-content-center text-center ">
-          <button  id="" class="btn btn-primary filtro bg-white" data-bs-toggle="modal" data-bs-target="#filtroModal">
-            <img width="25px" class="me-0.5" src="assets/img/Logos Admin/filtro.png" alt=""><span class="letrafiltro">Filtros</span>
-          </button>
-          <div class="modal fade" id="filtroModal" tabindex="-1" aria-labelledby="filtroModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="filtroModalLabel">Filtros avanzados</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <app-filter (filtersChange)="applyAdvancedFilters($event)"></app-filter>
-                </div>
+        <div class="flex-grow-1">
+          <div class="modern-search-container">
+            <div class="search-wrapper">
+              <div class="search-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
               </div>
-            </div>
-          </div>
-        </div>
-        <!-- Rango global Desde / Hasta -->
-        <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-items-center date-range-col">
-          <div class="w-100 d-flex gap-2 date-range-wrapper">
-            <div class="flex-grow-1" (click)="dateFromPicker.showPicker()">
-              <input
-                #dateFromPicker
-                type="date"
-                class="form-control date-range-input w-100"
-                placeholder="Desde"
-                [(ngModel)]="dateFromInput"
-                (change)="setRange('personalizado', true)"
+              <input 
+                class="modern-search-input" 
+                type="search" 
+                placeholder="Buscar movimientos..." 
+                aria-label="Buscar" 
+                [(ngModel)]="searchTerm" 
+                name="search" 
+                (ngModelChange)="onSearchChange()"
               >
+              <div class="search-actions" *ngIf="searchTerm && searchTerm.length > 0">
+                <button class="clear-btn" type="button" (click)="clearSearch()">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
             </div>
-            <div class="flex-grow-1" (click)="dateToPicker.showPicker()">
-              <input
-                #dateToPicker
-                type="date"
-                class="form-control date-range-input w-100"
-                placeholder="Hasta"
-                [(ngModel)]="dateToInput"
-                (change)="setRange('personalizado', true)"
-              >
-            </div>
-          </div>
-        </div>
-        <!-- Rango -->
-        <div class="col-sm-6 col-md-3 col-lg-2 dropdown range-dropdown-col">
-          <button id="button" class="btn btn-primary dropdown-toggle bg-white range range-dropdown-btn" data-bs-toggle="dropdown">
-            <img width="20" height="20" class="me-1" src="assets/img/Logos Admin/filtro.png" alt="">{{ rangeLabel }}
-          </button>
-          <div class="dropdown-menu">
-            <a class="dropdown-item flexible2" href="#" (click)="clearRange(); $event.preventDefault()">
-              <div class="contenido-botones2">
-                <h6>Sin Filtro</h6>
-              </div>
-            </a>
-            <a class="dropdown-item " href="#" (click)="setRange('diario'); $event.preventDefault()">
-              <div class="contenido-botones2">
-                <h6>Diario</h6>
-              </div>
-            </a>
-            <a class="dropdown-item flexible2" href="#" (click)="setRange('semanal'); $event.preventDefault()">
-              <div class="contenido-botones2">
-                <h6>Semanal</h6>
-              </div>
-            </a>
-            <a class="dropdown-item flexible2" href="#" (click)="setRange('mensual'); $event.preventDefault()">
-              <div class="contenido-botones2">
-                <h6>Mensual</h6>
-              </div>
-            </a>
           </div>
         </div>
         
-
+        <!-- Filtro -->
+        <div class="toolbar-item">
+          <div class="dropdown">
+            <button class="modern-filter-btn" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+              <div class="filter-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                </svg>
+              </div>
+              <span class="filter-text">Filtros</span>
+              <div class="filter-badge"></div>
+            </button>
+            <div class="dropdown-menu dropdown-menu-end filtro-dropdown-menu" style="min-width: 350px; max-width: 400px; padding: 0;">
+              <div class="filtro-dropdown-header">
+                <h6 class="mb-0">Filtros avanzados</h6>
+                <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="dropdown" aria-label="Close"></button>
+              </div>
+              <div class="filtro-dropdown-body" style="padding: 15px; max-height: 400px; overflow-y: auto;">
+                <app-filter (filtersChange)="applyAdvancedFilters($event)"></app-filter>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Rango de Fechas -->
+        <div class="toolbar-item date-range-item">
+          <div class="d-flex gap-2">
+            <div class="date-input-container">
+              <label class="date-label">Desde</label>
+              <div class="date-input-wrapper" (click)="dateFromPicker.showPicker()">
+                <svg class="date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <input
+                  #dateFromPicker
+                  type="date"
+                  class="modern-date-input"
+                  placeholder="Seleccionar fecha"
+                  [(ngModel)]="dateFromInput"
+                  (change)="setRange('personalizado', true)"
+                >
+              </div>
+            </div>
+            <div class="date-input-container">
+              <label class="date-label">Hasta</label>
+              <div class="date-input-wrapper" (click)="dateToPicker.showPicker()">
+                <svg class="date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <input
+                  #dateToPicker
+                  type="date"
+                  class="modern-date-input"
+                  placeholder="Seleccionar fecha"
+                  [(ngModel)]="dateToInput"
+                  (change)="setRange('personalizado', true)"
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Rango Dropdown -->
+        <div class="toolbar-item">
+          <button class="modern-range-btn" data-bs-toggle="dropdown" data-bs-auto-close="outside">
+            <div class="range-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12h18m-9-9v18"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+              </svg>
+            </div>
+            <span class="range-text">{{ rangeLabel }}</span>
+            <div class="range-arrow">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+          </button>
+          <div class="dropdown-menu modern-range-dropdown">
+            <a class="dropdown-item modern-range-item" [class.active]="!hasRangeApplied" href="#" (click)="clearRange(); $event.preventDefault()">
+              <div class="range-item-content">
+                <div class="range-item-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                  </svg>
+                </div>
+                <span class="range-item-text">Sin Filtro</span>
+              </div>
+            </a>
+            <a class="dropdown-item modern-range-item" [class.active]="selectedRange === 'diario'" href="#" (click)="setRange('diario'); $event.preventDefault()">
+              <div class="range-item-content">
+                <div class="range-item-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                </div>
+                <span class="range-item-text">Diario</span>
+              </div>
+            </a>
+            <a class="dropdown-item modern-range-item" [class.active]="selectedRange === 'semanal'" href="#" (click)="setRange('semanal'); $event.preventDefault()">
+              <div class="range-item-content">
+                <div class="range-item-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 2v4m8-4v4M3 10h18"></path>
+                    <rect x="3" y="14" width="18" height="8" rx="2"></rect>
+                  </svg>
+                </div>
+                <span class="range-item-text">Semanal</span>
+              </div>
+            </a>
+            <a class="dropdown-item modern-range-item" [class.active]="selectedRange === 'mensual'" href="#" (click)="setRange('mensual'); $event.preventDefault()">
+              <div class="range-item-content">
+                <div class="range-item-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 7V5a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path>
+                    <rect x="8" y="11" width="8" height="8" rx="1"></rect>
+                  </svg>
+                </div>
+                <span class="range-item-text">Mensual</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Tablet Layout -->
+      <div class="toolbar-tablet d-none d-md-flex d-lg-none">
+        <div class="row g-3">
+          <!-- Fila 1: Buscador y Filtros -->
+          <div class="col-12">
+            <div class="d-flex gap-3">
+              <div class="flex-grow-1">
+                <div class="modern-search-container">
+                  <div class="search-wrapper">
+                    <div class="search-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                      </svg>
+                    </div>
+                    <input 
+                      class="modern-search-input" 
+                      type="search" 
+                      placeholder="Buscar movimientos..." 
+                      aria-label="Buscar" 
+                      [(ngModel)]="searchTerm" 
+                      name="search" 
+                      (ngModelChange)="onSearchChange()"
+                    >
+                    <div class="search-actions" *ngIf="searchTerm && searchTerm.length > 0">
+                      <button class="clear-btn" type="button" (click)="clearSearch()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <line x1="18" y1="6" x2="6" y2="18"></line>
+                          <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="toolbar-item">
+                <button class="modern-filter-btn" data-bs-toggle="modal" data-bs-target="#filtroModalTablet">
+                  <div class="filter-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                  </div>
+                  <span class="filter-text">Filtros</span>
+                  <div class="filter-badge"></div>
+                </button>
+                <div class="modal fade" id="filtroModalTablet" tabindex="-1" aria-labelledby="filtroModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-scrollable modal-lg modal-fullscreen-md-down">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="filtroModalLabel">Filtros avanzados</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <app-filter (filtersChange)="applyAdvancedFilters($event)"></app-filter>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Fila 2: Fechas y Rango -->
+          <div class="col-12">
+            <div class="d-flex gap-3 align-items-center">
+              <div class="flex-grow-1">
+                <div class="d-flex gap-2">
+                  <div class="date-input-container flex-grow-1">
+                    <label class="date-label">Desde</label>
+                    <div class="date-input-wrapper" (click)="dateFromPicker.showPicker()">
+                      <svg class="date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                      <input
+                        #dateFromPicker
+                        type="date"
+                        class="modern-date-input"
+                        placeholder="Seleccionar fecha"
+                        [(ngModel)]="dateFromInput"
+                        (change)="setRange('personalizado', true)"
+                      >
+                    </div>
+                  </div>
+                  <div class="date-input-container flex-grow-1">
+                    <label class="date-label">Hasta</label>
+                    <div class="date-input-wrapper" (click)="dateToPicker.showPicker()">
+                      <svg class="date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                      <input
+                        #dateToPicker
+                        type="date"
+                        class="modern-date-input"
+                        placeholder="Seleccionar fecha"
+                        [(ngModel)]="dateToInput"
+                        (change)="setRange('personalizado', true)"
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="toolbar-item">
+                <button class="modern-range-btn" data-bs-toggle="dropdown">
+                  <div class="range-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 12h18m-9-9v18"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                      <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+                    </svg>
+                  </div>
+                  <span class="range-text">{{ rangeLabel }}</span>
+                  <div class="range-arrow">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Mobile Layout (Original) -->
+      <div class="toolbar-mobile d-md-none">
+        <div class="row toolbar-equal">
+          <!-- Buscador Moderno -->
+          <div class="col-12 col-sm-12 col-md-6 col-lg-3 buscador-reportes">
+            <div class="modern-search-container">
+              <div class="search-wrapper">
+                <div class="search-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                  </svg>
+                </div>
+                <input 
+                  class="modern-search-input" 
+                  type="search" 
+                  placeholder="Buscar movimientos..." 
+                  aria-label="Buscar" 
+                  [(ngModel)]="searchTerm" 
+                  name="search" 
+                  (ngModelChange)="onSearchChange()"
+                >
+                <div class="search-actions" *ngIf="searchTerm && searchTerm.length > 0">
+                  <button class="clear-btn" type="button" (click)="clearSearch()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Filtro -->
+          <div class="col-sm-6 col-md-3 col-lg-2 d-flex justify-content-center text-center ">
+            <button class="modern-filter-btn" data-bs-toggle="modal" data-bs-target="#filtroModal">
+              <div class="filter-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                </svg>
+              </div>
+              <span class="filter-text">Filtros</span>
+              <div class="filter-badge"></div>
+            </button>
+            <div class="modal fade" id="filtroModal" tabindex="-1" aria-labelledby="filtroModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-scrollable modal-lg modal-fullscreen-md-down">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="filtroModalLabel">Filtros avanzados</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <app-filter (filtersChange)="applyAdvancedFilters($event)"></app-filter>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Rango global Desde / Hasta -->
+          <div class="col-sm-12 col-md-6 col-lg-3 d-flex align-items-center date-range-col">
+            <div class="w-100 d-flex gap-2 date-range-wrapper">
+              <div class="date-input-container">
+                <label class="date-label">Desde</label>
+                <div class="date-input-wrapper" (click)="dateFromPicker.showPicker()">
+                  <svg class="date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  <input
+                    #dateFromPicker
+                    type="date"
+                    class="modern-date-input"
+                    placeholder="Seleccionar fecha"
+                    [(ngModel)]="dateFromInput"
+                    (change)="setRange('personalizado', true)"
+                  >
+                </div>
+              </div>
+              <div class="date-input-container">
+                <label class="date-label">Hasta</label>
+                <div class="date-input-wrapper" (click)="dateToPicker.showPicker()">
+                  <svg class="date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  <input
+                    #dateToPicker
+                    type="date"
+                    class="modern-date-input"
+                    placeholder="Seleccionar fecha"
+                    [(ngModel)]="dateToInput"
+                    (change)="setRange('personalizado', true)"
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Rango -->
+          <div class="col-sm-6 col-md-3 col-lg-2 dropdown range-dropdown-col">
+            <button class="modern-range-btn" data-bs-toggle="dropdown">
+              <div class="range-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 12h18m-9-9v18"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+                </svg>
+              </div>
+              <span class="range-text">{{ rangeLabel }}</span>
+              <div class="range-arrow">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </div>
+            </button>
+            <div class="dropdown-menu modern-range-dropdown">
+              <a class="dropdown-item modern-range-item" [class.active]="!hasRangeApplied" href="#" (click)="clearRange(); $event.preventDefault()">
+                <div class="range-item-content">
+                  <div class="range-item-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="15" y1="9" x2="9" y2="15"></line>
+                      <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                  </div>
+                  <span class="range-item-text">Sin Filtro</span>
+                </div>
+              </a>
+              <a class="dropdown-item modern-range-item" [class.active]="selectedRange === 'diario'" href="#" (click)="setRange('diario'); $event.preventDefault()">
+                <div class="range-item-content">
+                  <div class="range-item-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                  </div>
+                  <span class="range-item-text">Diario</span>
+                </div>
+              </a>
+              <a class="dropdown-item modern-range-item" [class.active]="selectedRange === 'semanal'" href="#" (click)="setRange('semanal'); $event.preventDefault()">
+                <div class="range-item-content">
+                  <div class="range-item-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M8 2v4m8-4v4M3 10h18"></path>
+                      <rect x="3" y="14" width="18" height="8" rx="2"></rect>
+                    </svg>
+                  </div>
+                  <span class="range-item-text">Semanal</span>
+                </div>
+              </a>
+              <a class="dropdown-item modern-range-item" [class.active]="selectedRange === 'mensual'" href="#" (click)="setRange('mensual'); $event.preventDefault()">
+                <div class="range-item-content">
+                  <div class="range-item-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 7V5a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path>
+                      <rect x="8" y="11" width="8" height="8" rx="1"></rect>
+                    </svg>
+                  </div>
+                  <span class="range-item-text">Mensual</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
