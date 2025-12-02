@@ -320,5 +320,10 @@ export class AdminNavbarComponent {
     this.isMobilePanelOpen = !this.isMobilePanelOpen;
   }
 
+  closeCurrentTab(): void {
+    // Solo cerrar el panel móvil
+    this.isMobilePanelOpen = false;
+  }
+
 }
 

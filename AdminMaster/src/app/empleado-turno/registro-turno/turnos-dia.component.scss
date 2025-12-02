@@ -39,9 +39,8 @@
 }
 
 .campo-boton {
-  display: flex;
-  align-items: flex-end;
-  grid-column: 3 / span 1;
+  display: block;
+  grid-column: 1 / span 3;
 }
 
 .campo-boton .btn {
@@ -139,6 +138,10 @@
   }
 
   .campo-notas {
+    grid-column: 1 / span 1;
+  }
+
+  .campo-boton {
     grid-column: 1 / span 1;
   }
 }

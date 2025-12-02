@@ -3,51 +3,51 @@
     <div class="row">
       <div class="col-12">
         <div class="turno-card">
-          <h2 class="titulo">
+          <h2 class="titulo text-center text-md-start">
             <i class="bi bi-calendar-check me-2"></i>
             <span>Registro de Turnos</span>
           </h2>
 
   <div class="form-grid">
-    <div class="campo" (click)="fechaInput.showPicker()">
+    <div class="campo text-center text-md-start" (click)="fechaInput.showPicker()">
       <label>Fecha</label>
-      <input #fechaInput type="date" class="form-control" [(ngModel)]="fechaSeleccionada" [attr.min]="minFecha" (change)="onFechaChange()">
+      <input #fechaInput type="date" class="form-control w-100" [(ngModel)]="fechaSeleccionada" [attr.min]="minFecha" (change)="onFechaChange()">
     </div>
 
-    <div class="campo">
+    <div class="campo text-center text-md-start">
       <label>Jornada</label>
-      <select class="form-select" [(ngModel)]="bloque" (ngModelChange)="onJornadaChange($event)">
+      <select class="form-select w-100" [(ngModel)]="bloque" (ngModelChange)="onJornadaChange($event)">
         <option value="manana">Mañana</option>
         <option value="tarde">Tarde</option>
         <option value="noche">Noche</option>
       </select>
     </div>
 
-    <div class="campo campo-hora-desde" (click)="horaDesdeInput.showPicker()">
+    <div class="campo campo-hora-desde text-center text-md-start" (click)="horaDesdeInput.showPicker()">
       <label>Hora desde</label>
-      <input #horaDesdeInput type="time" class="form-control" [(ngModel)]="horaDesde">
+      <input #horaDesdeInput type="time" class="form-control w-100" [(ngModel)]="horaDesde">
     </div>
 
-    <div class="campo campo-hora-hasta" (click)="horaHastaInput.showPicker()">
+    <div class="campo campo-hora-hasta text-center text-md-start" (click)="horaHastaInput.showPicker()">
       <label>Hora hasta</label>
-      <input #horaHastaInput type="time" class="form-control" [(ngModel)]="horaHasta">
+      <input #horaHastaInput type="time" class="form-control w-100" [(ngModel)]="horaHasta">
     </div>
 
-    <div class="campo campo-notas">
+    <div class="campo campo-notas text-center text-md-start">
       <label>Notas (opcional)</label>
-      <textarea class="form-control" rows="1" [(ngModel)]="notas" placeholder="Ej: Reforzar caja, inventario, etc."></textarea>
+      <textarea class="form-control w-100" rows="1" [(ngModel)]="notas" placeholder="Ej: Reforzar caja, inventario, etc."></textarea>
     </div>
 
-    <div class="campo campo-boton">
-      <button type="button" class="btn btn-primary" (click)="agregarTurno()">
+    <div class="campo campo-boton text-center text-md-start px-2">
+      <button type="button" class="btn btn-primary w-100" style="max-width: 100%; box-sizing: border-box;" (click)="agregarTurno()">
         Agregar Turno
       </button>
     </div>
   </div>
 
-  <div class="campo mt-3 filtro-fecha-turnos" (click)="fechaConsultaInput.showPicker()">
+  <div class="campo mt-3 filtro-fecha-turnos text-center text-md-start" (click)="fechaConsultaInput.showPicker()">
     <label>Ver registros de</label>
-    <input #fechaConsultaInput type="date" class="form-control" [(ngModel)]="fechaConsulta" (change)="onFechaConsultaChange()">
+    <input #fechaConsultaInput type="date" class="form-control w-100" [(ngModel)]="fechaConsulta" (change)="onFechaConsultaChange()">
   </div>
 
   <div class="lista" *ngIf="turnosDeFechaActual().length; else sinTurnosTpl">
