@@ -145,7 +145,6 @@ main{
     width: 100%;
     border-collapse: separate;
     border-spacing: 0 10px; 
-    text-align: center;
 }
 
 .table thead th {
@@ -155,11 +154,41 @@ main{
 
 .table td, .table th {
     border: none;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .table tbody tr {
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Centrar contenido (icono + nombre) en la primera columna (Nombre Empresa) SOLO en escritorio */
+@media (min-width: 768px) {
+  .table td[data-label="Nombre Empresa"] .perfil.d-none.d-md-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .table td[data-label="Nombre Empresa"] .perfil.d-none.d-md-flex .info {
+    text-align: center;
+  }
+
+  .table td[data-label="Nombre Empresa"] .perfil.d-none.d-md-flex .info .nombre {
+    margin-left: 0 !important;
+  }
+}
+
+/* Centrar el bloque de acciones dentro de la celda Acciones */
+.acciones {
+    text-align: center;
+}
+
+.acciones > .d-none.d-xl-flex,
+.acciones > .d-none.d-md-flex.d-xl-none {
+    justify-content: center;
 }
 
 @keyframes proveedorFadeIn {
