@@ -2,7 +2,7 @@
   <header>
       <app-admin-navbar></app-admin-navbar>
   </header>
-  <br>
+  <br><br>
   <main>
     <h1 class="tit-config">
       <i class="bi bi-gear-fill me-2"></i>
@@ -64,8 +64,8 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <label class="form-labe  text-start d-block">Correo Electronico</label>
-                                        <input type="email" class="form-control" [(ngModel)]="form.correo" name="correo" #correo="ngModel" required pattern=".*@.*" placeholder="Ej: correo@dominio.com">
+                                        <label class="form-label text-start d-block">Correo Electronico</label>
+                                        <input type="email" class="form-control" [(ngModel)]="form.correo" name="correo" #correo="ngModel" required email placeholder="Ej: correo@dominio.com">
                                         <small class="text-danger" *ngIf="correo.invalid && (correo.dirty || correo.touched)">
                                             <ng-container *ngIf="correo.errors?.['pattern']; else correoInvalido">El correo debe contener el símbolo '&#64;'.</ng-container>
                                             <ng-template #correoInvalido>Ingrese un correo electrónico válido.</ng-template>

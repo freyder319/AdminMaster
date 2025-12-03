@@ -52,7 +52,7 @@ export class AdministradorPrincipalComponent implements OnInit {
   gastos: Gasto[] = [];
   selectedTab: 'ingresos' | 'egresos' | 'por_cobrar' | 'por_pagar' = 'ingresos';
   // Rango de fechas para filtrar tablas
-  selectedRange: 'diario' | 'semanal' | 'mensual' | 'personalizado' = 'semanal';
+  selectedRange: 'diario' | 'semanal' | 'mensual' | 'personalizado' = 'personalizado';
   dateFrom?: Date;
   dateTo?: Date;
   // Filtro de texto (buscador)
@@ -100,9 +100,7 @@ export class AdministradorPrincipalComponent implements OnInit {
     this.loadUsuariosMap();
     // Cargar preferencias persistidas
     this.restorePreferences();
-    if (!this.selectedRange) this.selectedRange = 'semanal';
-    if (!this.dateFrom || !this.dateTo) this.setRange(this.selectedRange || 'semanal', false);
-    // Forzar inicio en 'Sin Filtro' al entrar a la ruta
+    // Iniciar con "Sin Filtro" como estado determinado
     this.clearRange();
 
     // Refrescar tablas cuando se registren nuevos gastos o ventas libres
@@ -640,8 +638,14 @@ export class AdministradorPrincipalComponent implements OnInit {
     this.persistPreferences();
   }
 
+  clearSearch() {
+    this.searchTerm = '';
+    this.persistPreferences();
+  }
+
   // Quitar rango (modo "sin filtro")
   clearRange() {
+    this.selectedRange = 'personalizado'; // Reset to personalizado when no range
     this.dateFrom = undefined;
     this.dateTo = undefined;
     this.dateFromInput = '';
@@ -650,6 +654,27 @@ export class AdministradorPrincipalComponent implements OnInit {
     this.dateToModel = undefined;
     this.hasRangeApplied = false;
     this.persistPreferences();
+  }
+
+  // Método para aplicar filtros avanzados desde el componente Filter
+  applyAdvancedFilters(filters: any) {
+    console.log('Aplicando filtros avanzados:', filters);
+    
+    // Aplicar filtros de forma de pago
+    this.filtroFormaPago = filters.forma_pago || '';
+    
+    // Aplicar filtros de cliente
+    this.filtroClienteId = filters.clienteId || '';
+    
+    // Aplicar filtros de proveedor
+    this.filtroProveedorId = filters.proveedorId || '';
+    
+    // Persistir preferencias de filtros avanzados
+    try {
+      localStorage.setItem('adm_filtroFormaPago', this.filtroFormaPago);
+      localStorage.setItem('adm_filtroClienteId', String(this.filtroClienteId));
+      localStorage.setItem('adm_filtroProveedorId', String(this.filtroProveedorId));
+    } catch {}
   }
 
   private persistPreferences() {
@@ -671,6 +696,15 @@ export class AdministradorPrincipalComponent implements OnInit {
       if (dt) this.dateTo = new Date(dt);
       const s = localStorage.getItem('adm_search');
       if (s !== null) this.searchTerm = s;
+      
+      // Restaurar filtros avanzados
+      const fp = localStorage.getItem('adm_filtroFormaPago');
+      if (fp !== null) this.filtroFormaPago = fp;
+      const fc = localStorage.getItem('adm_filtroClienteId');
+      if (fc !== null) this.filtroClienteId = fc ? Number(fc) : '';
+      const fpr = localStorage.getItem('adm_filtroProveedorId');
+      if (fpr !== null) this.filtroProveedorId = fpr ? Number(fpr) : '';
+      
       // Si había un rango guardado, considerar que ya hay rango aplicado
       if (r || df || dt) this.hasRangeApplied = true;
     } catch {}
@@ -810,12 +844,6 @@ export class AdministradorPrincipalComponent implements OnInit {
       String(g?.estado || 'Pendiente'),
     ] as (string | number)[]);
     await this.exportExcel('por_pagar.xlsx', 'Por pagar', header, rows);
-  }
-
-  applyAdvancedFilters(filters: { forma_pago: string; clienteId: number | ''; proveedorId: number | ''; }): void {
-    this.filtroFormaPago = filters.forma_pago || '';
-    this.filtroClienteId = filters.clienteId;
-    this.filtroProveedorId = filters.proveedorId;
   }
 
   exportCurrentTab(): void {

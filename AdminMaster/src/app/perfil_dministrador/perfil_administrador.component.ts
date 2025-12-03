@@ -57,8 +57,17 @@ export class PerfilAdministradorComponent {
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Error cargando configuración';
-        console.error(err);
+        console.error('Error cargando configuración:', err);
+        // Si es 404, significa que no hay configuración aún (es normal)
+        if (err.status === 404) {
+          console.log('No hay configuración existente, se creará una nueva');
+        } else if (err.status === 400) {
+          console.log('Error 400 al cargar configuración, usando formulario vacío');
+          // No mostrar error al usuario, solo log para depurar
+        } else {
+          this.error = 'Error cargando configuración';
+          console.error('Error inesperado:', err);
+        }
         this.loading = false;
       }
     });
@@ -118,6 +127,7 @@ export class PerfilAdministradorComponent {
       // Update existing
       const id = this.config.id;
       const { id: _, ...payload } = this.form as any;
+      console.log('Enviando payload para actualizar:', payload);
       this.cfgSvc.update(id, payload).subscribe({
         next: (cfg) => {
           this.config = cfg;
@@ -135,8 +145,29 @@ export class PerfilAdministradorComponent {
         },
         error: (err) => {
           this.error = 'Error guardando configuración';
-          console.error(err);
+          console.error('Error completo:', err);
+          console.error('Status:', err.status);
+          console.error('Status Text:', err.statusText);
+          console.error('Error body:', err.error);
+          console.error('Payload enviado:', payload);
           this.loading = false;
+          
+          // Mostrar error específico al usuario
+          if (err.status === 400) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error de validación',
+              html: 'Por favor verifica todos los campos.<br><br><small>Detalles: ' + (err.error?.message || 'Error desconocido') + '</small>',
+              confirmButtonText: 'Entendido'
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Error del servidor',
+              text: 'No se pudo guardar la configuración. Intenta nuevamente.',
+              confirmButtonText: 'Entendido'
+            });
+          }
         }
       });
     } else {

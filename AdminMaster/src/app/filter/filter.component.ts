@@ -72,20 +72,23 @@ export class FilterComponent implements OnInit {
       clienteId: this.selectedClienteId,
       proveedorId: this.selectedProveedorId,
     });
-    // cerrar modal u offcanvas si se abrió desde allí
+    // cerrar dropdown solo cuando se filtra
     try {
-      const openModal = document.querySelector('.modal.show') as HTMLElement | null;
-      if (openModal) {
-        const modalInst = bootstrap?.Modal?.getInstance(openModal) || new bootstrap.Modal(openModal);
-        modalInst?.hide?.();
-      } else {
-        const openOffcanvas = document.querySelector('.offcanvas.show') as HTMLElement | null;
-        const el = openOffcanvas || document.getElementById('filtro') || document.getElementById('staticBackdrop');
-        if (el) {
-          const inst = bootstrap?.Offcanvas?.getInstance(el) || new bootstrap.Offcanvas(el);
-          inst?.hide?.();
+      const openDropdown = document.querySelector('.dropdown-menu.show') as HTMLElement | null;
+      if (openDropdown) {
+        const dropdownToggle = openDropdown.previousElementSibling as HTMLElement | null;
+        if (dropdownToggle && dropdownToggle.getAttribute('data-bs-toggle') === 'dropdown') {
+          const dropdownInstance = (window as any).bootstrap?.Dropdown?.getInstance(dropdownToggle);
+          if (dropdownInstance) {
+            dropdownInstance.hide();
+          } else {
+            // Fallback: simular clic en el botón para cerrar
+            dropdownToggle.click();
+          }
         }
       }
-    } catch {}
+    } catch (error) {
+      console.error('Error cerrando dropdown:', error);
+    }
   }
 }

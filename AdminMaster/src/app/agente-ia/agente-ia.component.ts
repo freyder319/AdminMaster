@@ -31,6 +31,7 @@ export class AgenteIAComponent implements OnInit {
   isChatOpen = false;
   isSending = false;
   errorMessage: string | null = null;
+  showHistory = false;
 
   /** Lista de sesiones de chat en el historial */
   sessions: ChatSession[] = [];
@@ -51,6 +52,25 @@ export class AgenteIAComponent implements OnInit {
     this.saveChatState();
   }
 
+  toggleHistory(): void {
+    this.showHistory = !this.showHistory;
+  }
+
+  goToHistory(): void {
+    // Navigate to history view or show history modal
+    console.log('Navigate to history view');
+    // You can implement navigation to a separate history page/component here
+  }
+
+  switchToSession(sessionId: string): void {
+    this.activeSessionId = sessionId;
+    const session = this.sessions.find(s => s.id === sessionId);
+    if (session) {
+      this.messages = session.messages;
+    }
+    this.saveSessionsToStorage();
+  }
+
   async sendMessage(): Promise<void> {
     const text = this.newMessage.trim();
     if (!text || this.isSending) {
@@ -58,7 +78,7 @@ export class AgenteIAComponent implements OnInit {
     }
 
     // Agregar mensaje del usuario
-    this.messages.push({ from: 'user', text });
+    this.messages.push({ from: 'user', text, timestamp: new Date() });
     const historySnapshot = [...this.messages];
     this.newMessage = '';
     this.errorMessage = null;
@@ -75,7 +95,8 @@ export class AgenteIAComponent implements OnInit {
       );
       this.messages.push({
         from: 'agent',
-        text: this.extractReply(response)
+        text: this.extractReply(response),
+        timestamp: new Date()
       });
       this.saveSessionsToStorage();
       this.updateSessionTitle();
@@ -83,7 +104,7 @@ export class AgenteIAComponent implements OnInit {
       const fallbackText =
         'Lo siento, no pude conectar con el asistente. Inténtalo nuevamente en unos segundos.';
       this.errorMessage = fallbackText;
-      this.messages.push({ from: 'agent', text: fallbackText });
+      this.messages.push({ from: 'agent', text: fallbackText, timestamp: new Date() });
       this.saveSessionsToStorage();
       this.updateSessionTitle();
     } finally {
