@@ -147,11 +147,38 @@ main{
 
 .table td, .table th {
     border: none;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .table tbody tr {
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Centrar contenido (icono + nombre) en la primera columna (Nombre) */
+.table td[data-label="Nombre"] .perfil {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.table td[data-label="Nombre"] .perfil .info {
+    text-align: center;
+}
+
+.table td[data-label="Nombre"] .perfil .info .nombre {
+    margin-left: 0 !important;
+}
+
+/* Centrar el bloque de acciones dentro de la celda Acciones */
+.acciones {
+    text-align: center;
+}
+
+.acciones > .d-none.d-xl-flex,
+.acciones > .d-none.d-md-flex.d-xl-none {
+    justify-content: center;
 }
 
 @keyframes clienteFadeIn {

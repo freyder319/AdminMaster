@@ -155,11 +155,27 @@ main {
 
 .table td, .table th {
     border: none;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .table tbody tr {
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Centrar contenido (icono + nombre) en la primera columna (Nombre) SOLO en escritorio */
+@media (min-width: 768px) {
+  .table td[data-label="Nombre"] .perfil.d-none.d-md-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .table td[data-label="Nombre"] .perfil.d-none.d-md-flex .info {
+    text-align: center;
+  }
 }
 
 @keyframes cajaFadeIn {
@@ -267,7 +283,8 @@ main {
     .info .codigo {
         font-size: 30px; 
         color: #666;
-        margin: 4px 0 0 20px; 
+        margin: 4px 0 0 0; 
+        text-align: center;
     }
 
     /* Ocultar columnas innecesarias */

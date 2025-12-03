@@ -96,13 +96,8 @@
                             </td>
                             <!-- Documento (solo visible en escritorio) -->
                             <td data-label="Documento" class="d-none d-md-table-cell">{{empleado.documento}}</td>
-                            <td data-label="Correo" class="align-middle">
-                                <!-- Escritorio -->
-                                <div class="perfil d-none d-md-flex align-items-center">
-                                    <div class="info">
-                                        <p class="correo">{{empleado.correo}}</p>
-                                    </div>
-                                </div>
+                            <td data-label="Correo" class="d-none d-md-table-cell align-middle">
+                                {{empleado.correo || '-'}}
                             </td>
 
                             <!-- Teléfono (solo visible en escritorio) -->
