@@ -40,7 +40,8 @@
 
 .campo-boton {
   display: block;
-  grid-column: 1 / span 3;
+  grid-column: 3 / span 1; /* en escritorio: al lado de notas, misma fila */
+  align-self: end; /* bájalo un poco para alinearlo mejor con el textarea */
 }
 
 .campo-boton .btn {

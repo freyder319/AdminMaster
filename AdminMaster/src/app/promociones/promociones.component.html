@@ -25,20 +25,30 @@
       <div class="container buscar-agg">
         <div class="row">
           <!-- Buscar -->
-          <div class="col-sm-12 col-md-6 col-lg-6">
+          <div class="col-sm-12 col-md-8 col-lg-8">
             <div class="search">
-              <div class="input-group">
-                <input type="text"
-                       class="form-control"
-                       placeholder="Buscar Promoción..."
-                       [(ngModel)]="searchTerm"
-                       name="promoSearch">
+              <div class="modern-search-container">
+                <div class="search-wrapper">
+                  <div class="search-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                  </div>
+                  <input
+                    class="modern-search-input"
+                    type="search"
+                    placeholder="Buscar Promoción..."
+                    aria-label="Buscar"
+                    [(ngModel)]="searchTerm"
+                    name="promoSearch">
+                </div>
               </div>
             </div>
           </div>
 
           <!-- Agregar Promoción -->
-          <div class="col-sm-12 col-md-6 col-lg-6">
+          <div class="col-sm-12 col-md-4 col-lg-4">
             <div class="agg-caja">
               <!-- Escritorio (≥768px) → abre modal -->
               <button class="btn agregar d-none d-md-inline-block" type="button" data-bs-toggle="modal" data-bs-target="#promoModal">
