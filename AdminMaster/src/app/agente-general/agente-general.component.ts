@@ -34,6 +34,7 @@ export class AgenteGeneralComponent implements OnInit, AfterViewChecked {
 
   isSending = false;
   errorMessage: string | null = null;
+  showHistoryPanel = false;
   
   /** Lista de sesiones de chat en el historial */
   sessions: ChatSession[] = [];
@@ -140,6 +141,15 @@ export class AgenteGeneralComponent implements OnInit, AfterViewChecked {
     this.newMessage = '';
     this.shouldScroll = true;
     this.saveActiveSession();
+    
+    // On mobile, hide history panel after selecting a session
+    if (window.innerWidth < 649) {
+      this.showHistoryPanel = false;
+    }
+  }
+
+  toggleHistoryPanel(): void {
+    this.showHistoryPanel = !this.showHistoryPanel;
   }
 
   private generateSessionId(): string {

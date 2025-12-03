@@ -49,6 +49,12 @@ input[type="date"]:focus {
   color: var(--primary-dark);
 }
 
+@media (max-width: 575px) {
+  .text-center-mobile {
+    text-align: center !important;
+  }
+}
+
 .turno-lista {
   list-style: none;
   margin: 0;

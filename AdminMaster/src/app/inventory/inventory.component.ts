@@ -486,10 +486,16 @@ export class InventoryComponent implements AfterViewInit {
     // Reiniciar a la primera página en cada cambio de búsqueda
     this.pageIndex = 0;
   }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.onSearchChange();
+  }
   onCategoryChange(): void {
     // Reiniciar a la primera página al cambiar la categoría
     this.pageIndex = 0;
   }
+// ... (rest of the code remains the same)
   onNombreCategoriaChange(val: string): void {
     const nombre = String(val || '').trim().toLowerCase();
     if (!nombre) { this.nombreCategoriaDuplicado = false; return; }
