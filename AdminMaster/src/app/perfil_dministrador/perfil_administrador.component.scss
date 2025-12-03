@@ -8,8 +8,96 @@ main{
 @media (max-width: 768px) {
     main {
         margin-top: 0; 
-        padding-bottom: 96px;
+        padding-bottom: 20px;
         min-height: 100vh;
+    }
+
+    /* Mobile responsive adjustments */
+    .formulario {
+        height: auto;
+        min-height: 120vh;
+        width: 95%;
+        margin: 0 auto;
+        border-radius: 20px;
+        padding: 20px 15px 60px 15px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .avatar-wrapper {
+        width: 120px;
+        height: 120px;
+        margin-top: 20px;
+    }
+
+    .avatar {
+        font-size: 24px;
+    }
+
+    .tit-config {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .container .row {
+        margin: 0;
+    }
+
+    .col-md-6 {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        font-size: 0.9rem;
+        padding: 0.75rem;
+    }
+
+    .confirmarfinal.mas {
+        margin-top: 2rem;
+        text-align: center;
+    }
+
+    .btn.confir {
+        width: 100%;
+        max-width: 300px;
+        padding: 0.75rem 1.5rem;
+    }
+
+    /* Remove br tags spacing */
+    br {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .formulario {
+        width: 98%;
+        padding: 15px 10px;
+        border-radius: 15px;
+    }
+
+    .avatar-wrapper {
+        width: 100px;
+        height: 100px;
+        margin-top: 15px;
+    }
+
+    .tit-config {
+        font-size: 1.5rem;
+    }
+
+    .form-label {
+        font-size: 0.85rem;
+    }
+
+    .form-control {
+        font-size: 0.85rem;
+        padding: 0.6rem;
     }
 }
 
@@ -131,7 +219,7 @@ main{
 
 @media screen and (max-width: 768px) {
   .formulario{
-    height: 96vh;
+    height: 95vh;
     width: 100%;
     margin-bottom: 100px;
   }

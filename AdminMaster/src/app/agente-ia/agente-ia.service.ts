@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 export interface ChatMessage {
   from: 'user' | 'agent';
   text: string;
+  timestamp?: Date;
 }
 
 export interface ChatResponse {

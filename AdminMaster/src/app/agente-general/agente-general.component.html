@@ -6,7 +6,7 @@
   <div class="main">
     <div class="chat-layout">
       <!-- Panel izquierdo: historial de chats -->
-      <aside class="chat-history-panel">
+      <aside class="chat-history-panel" [class.mobile-visible]="showHistoryPanel">
         <div class="chat-history-header">
           <h2>Historial</h2>
           <div class="chat-history-actions">
@@ -22,6 +22,14 @@
             <button type="button" class="new-chat-btn" (click)="onNewChatClick()">
               <i class="bi bi-plus-lg"></i>
               <span>Nuevo chat</span>
+            </button>
+            <button 
+              type="button" 
+              class="history-close-btn mobile-only"
+              (click)="toggleHistoryPanel()" 
+              title="Cerrar historial"
+            >
+              <i class="bi bi-x-lg"></i>
             </button>
           </div>
         </div>
@@ -63,71 +71,83 @@
 
       <!-- Panel derecho: chat actual -->
       <div class="chat-container">
-      <div class="chat-header">
-        <div class="chat-header-title">
-          <span>Agente IA</span>
-          <span>Asistente virtual</span>
+        <!-- Mobile: History button in chat header -->
+        <div class="mobile-chat-header mobile-only">
+          <div class="chat-header-title">
+            <span>Agente IA</span>
+            <span>Asistente virtual</span>
+          </div>
+          <button class="mobile-history-btn" (click)="toggleHistoryPanel()">
+            <i class="bi bi-list"></i>
+            <span>Historial</span>
+          </button>
         </div>
-      </div>
+        
+        <div class="chat-header desktop-only">
+          <div class="chat-header-title">
+            <span>Agente IA</span>
+            <span>Asistente virtual</span>
+          </div>
+        </div>
 
-      <div class="chat-body" #chatBody>
-        <div
-          *ngFor="let msg of messages"
-          class="message"
-          [ngClass]="msg.from === 'user' ? 'user' : 'agent'"
-        >
-          <!-- Mostrar texto si existe -->
-          <div *ngIf="msg.text" class="message-text" [innerHTML]="formatMessage(msg.text)"></div>
-          
-          <!-- Mostrar pasos si existen -->
-          <div *ngIf="msg.steps && msg.steps.length > 0" class="steps-list">
-            <div class="steps-header">
-              <i class="bi bi-list-ol"></i>
-              <span>Pasos a seguir</span>
-            </div>
-            <div class="step-item" *ngFor="let step of msg.steps; let i = index">
-              <div class="step-number">{{ i + 1 }}</div>
-              <div class="step-content">
-                <div class="step-text">{{ step }}</div>
+        <div class="chat-body" #chatBody>
+          <div
+            *ngFor="let msg of messages"
+            class="message"
+            [ngClass]="msg.from === 'user' ? 'user' : 'agent'"
+          >
+            <!-- Mostrar texto si existe -->
+            <div *ngIf="msg.text" class="message-text" [innerHTML]="formatMessage(msg.text)"></div>
+            
+            <!-- Mostrar pasos si existen -->
+            <div *ngIf="msg.steps && msg.steps.length > 0" class="steps-list">
+              <div class="steps-header">
+                <i class="bi bi-list-ol"></i>
+                <span>Pasos a seguir</span>
+              </div>
+              <div class="step-item" *ngFor="let step of msg.steps; let i = index">
+                <div class="step-number">{{ i + 1 }}</div>
+                <div class="step-content">
+                  <div class="step-text">{{ step }}</div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        
-        <div class="chat-status" *ngIf="isSending">
-          <div class="loading-dots">
-            <span></span>
-            <span></span>
-            <span></span>
+          
+          <div class="chat-status" *ngIf="isSending">
+            <div class="loading-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            Enviando mensaje...
           </div>
-          Enviando mensaje...
+          
+          <div class="chat-error" *ngIf="errorMessage">
+            {{ errorMessage }}
+          </div>
         </div>
-        
-        <div class="chat-error" *ngIf="errorMessage">
-          {{ errorMessage }}
-        </div>
-      </div>
 
-      <div class="chat-input-area">
-        <div class="input-wrapper">
-          <input
-            type="text"
-            [(ngModel)]="newMessage"
-            placeholder="Escribe un mensaje..."
-            [disabled]="isSending"
-            (keydown.enter)="sendMessage()"
-            class="chat-input"
-          />
-          <button
-            class="chat-send-btn"
-            type="button"
-            (click)="sendMessage()"
-            [disabled]="isSending || !newMessage.trim()"
-          >
-            <i class="bi bi-send-fill"></i>
-          </button>
+        <div class="chat-input-area">
+          <div class="input-wrapper">
+            <input
+              type="text"
+              [(ngModel)]="newMessage"
+              placeholder="Escribe un mensaje..."
+              [disabled]="isSending"
+              (keydown.enter)="sendMessage()"
+              class="chat-input"
+            />
+            <button
+              class="chat-send-btn"
+              type="button"
+              (click)="sendMessage()"
+              [disabled]="isSending || !newMessage.trim()"
+            >
+              <i class="bi bi-send-fill"></i>
+            </button>
+          </div>
         </div>
-      </div>
       </div>
     </div>
   </div>
