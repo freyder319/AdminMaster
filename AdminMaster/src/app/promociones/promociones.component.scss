@@ -7,6 +7,129 @@ main{
   background: var(--surface-bg);
 }
 
+/* Buscador moderno igual al de Inventario */
+.modern-search-container {
+  width: 100%;
+  position: relative;
+}
+
+.search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 2px solid transparent;
+  border-radius: 50px;
+  padding: 1px 4px; /* altura compacta como inventario */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.search-wrapper:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border-color: #3b82f6;
+}
+
+.search-wrapper:focus-within {
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+}
+
+.search-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;  /* ícono compacto como inventario */
+  height: 36px;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  border-radius: 50%;
+  margin-right: 8px;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.search-wrapper:hover .search-icon {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  transform: scale(1.05);
+}
+
+.modern-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 6px 12px; /* misma altura que inventario */
+  font-size: 15px;
+  font-weight: 500;
+  color: #1f2937;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.modern-search-input::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.modern-search-input:focus {
+  color: #111827;
+}
+
+.search-actions {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+}
+
+.clear-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 50%;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-right: 4px;
+}
+
+.clear-btn:hover {
+  background: #e5e7eb;
+  color: #374151;
+  transform: scale(1.1);
+}
+
+.clear-btn:active {
+  transform: scale(0.95);
+}
+
+/* Mobile Responsive para buscador moderno */
+@media (max-width: 575.98px) {
+  .modern-search-container {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .search-wrapper {
+    padding: 3px;
+    border-radius: 40px;
+  }
+
+  .search-icon {
+    width: 36px;
+    height: 36px;
+    margin-right: 6px;
+  }
+
+  .modern-search-input {
+    padding: 10px 12px;
+    font-size: 16px; /* evita zoom en iOS */
+  }
+}
+
 @media (max-width: 768px) {
   main {
       margin-top: 0; 
@@ -51,7 +174,7 @@ main{
   background: linear-gradient(90deg, var(--primary-color), #4f46e5);
 }
 
-/* --- Buscar y Agregar, igual que en Cajas --- */
+/* --- Buscar y Agregar --- */
 .buscar-agg {
   display: flex;
   justify-content: center;
@@ -65,25 +188,14 @@ main{
   align-items: center;
 }
 
-/* Solo el buscador de la barra superior (no afecta inputs del modal) */
-.buscar-agg .form-control {
-  width: 700px;
-  border-radius: 18px;
-  border: 1px solid rgba(148, 163, 184, 0.7);
-  box-shadow: 0 2px 8px rgba(148, 163, 184, 0.25);
-  padding: 8px 15px;
-  margin-right: 10px;
-}
-
-.buscar-agg .form-control:focus {
-  border-color: #1d4ed8;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
-  outline: none;
+/* Mover un poco el buscador hacia la izquierda respecto al botón */
+.buscar-agg .search {
+  margin-right: 40px; /* suficiente separación, dejando espacio al botón ancho */
 }
 
 .btn.agregar {
   background: radial-gradient(circle at 30% 20%, #38bdf8, #1d4ed8);
-  width: 200px;
+  width: 350px; /* un poco más ancho en escritorio */
   border-radius: 18px;
   box-shadow: 0 10px 24px rgba(56, 189, 248, 0.55);
   padding: 8px 15px;
@@ -106,7 +218,7 @@ main{
     align-items: stretch;
   }
 
-  .buscar-agg .form-control {
+  .buscar-agg .modern-search-container {
     width: 100%;
     margin-bottom: 10px;
   }
