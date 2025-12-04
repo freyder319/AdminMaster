@@ -69,8 +69,8 @@
               <th>Documento</th>
               <th>Correo</th>
               <th>Teléfono</th>
-              <th>N° Deudas</th>
-              <th>N° Compras</th>
+              <th *ngIf="rol !== 'punto_pos'">N° Deudas</th>
+              <th *ngIf="rol !== 'punto_pos'">N° Compras</th>
               <th>Estado</th>
               <th>Acciones</th>
             </tr>
@@ -99,8 +99,8 @@
               <td data-label="Documento">{{cliente.documento || '-'}}</td>
               <td data-label="Correo">{{cliente.correo}}</td>
               <td data-label="Teléfono">{{cliente.numero}}</td>
-              <td data-label="N° Deudas">{{ getDeudas(cliente) }}</td>
-              <td data-label="N° Compras">{{ getNumeroCompras(cliente) }}</td>
+              <td *ngIf="rol !== 'punto_pos'" data-label="N° Deudas">{{ getDeudas(cliente) }}</td>
+              <td *ngIf="rol !== 'punto_pos'" data-label="N° Compras">{{ getNumeroCompras(cliente) }}</td>
               <td data-label="Estado de Cliente">
                 <span class="status" [ngClass]="estadoCliente(cliente).toLowerCase()">{{ estadoCliente(cliente) }}</span>
               </td>
