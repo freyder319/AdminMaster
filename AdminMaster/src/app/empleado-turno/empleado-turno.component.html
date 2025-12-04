@@ -33,12 +33,19 @@
                     <h4>Caja</h4>
                     <ng-container *ngIf="resumen.aperturaCaja">
                         <p><strong>Apertura:</strong> {{resumen.aperturaCaja.fecha | date:'shortTime'}} </p>
-                        <p><strong>Monto Inicial:</strong> ${{resumen.aperturaCaja.montoInicial | number:'1.0-0'}} </p>
+                        <p><strong>Monto Inicial:</strong> ${{ saldoInicial | number:'1.0-0'}} </p>
+                        <p><strong>Total Ventas:</strong> ${{ totalVentas | number:'1.0-0' }} </p>
+                        <p><strong>Monto Esperado:</strong>
+                          ${{ saldoEsperado | number:'1.0-0' }}
+                        </p>
                     </ng-container>
                     <ng-container *ngIf="resumen.cierreCaja; else sinCierrePuntoPos">
                         <p><strong>Cierre:</strong> {{resumen.cierreCaja.fecha | date:'shortTime'}}</p>
-                        <p><strong>Monto Final:</strong> ${{resumen.cierreCaja.montoFinal | number:'1.0-0'}} </p>
-                        <p *ngIf="resumen.aperturaCaja"><strong>Diferencia:</strong> ${{(resumen.cierreCaja.montoFinal - resumen.aperturaCaja.montoInicial) | number:'1.0-0'}} </p>
+                        <p><strong>Monto Final (real):</strong> ${{ saldoFinal | number:'1.0-0'}} </p>
+                        <p *ngIf="resumen.aperturaCaja" [ngClass]="diferenciaClase()">
+                          <strong>Diferencia:</strong>
+                          ${{ diferencia | number:'1.0-0' }}
+                        </p>
                     </ng-container>
                     <ng-template #sinCierrePuntoPos>
                         <p><em>Aún sin cierre de caja.</em></p>
@@ -68,12 +75,19 @@
                 <h4>Caja</h4>
                 <ng-container *ngIf="resumen.aperturaCaja">
                     <p><strong>Apertura:</strong> {{resumen.aperturaCaja.fecha | date:'shortTime'}} </p>
-                    <p><strong>Monto Inicial:</strong> ${{resumen.aperturaCaja.montoInicial | number:'1.0-0'}} </p>
+                    <p><strong>Monto Inicial:</strong> ${{ saldoInicial | number:'1.0-0'}} </p>
+                    <p><strong>Total Ventas:</strong> ${{ totalVentas | number:'1.0-0' }} </p>
+                    <p><strong>Monto Esperado:</strong>
+                      ${{ saldoEsperado | number:'1.0-0' }}
+                    </p>
                 </ng-container>
                 <ng-container *ngIf="resumen.cierreCaja; else sinCierre">
                     <p><strong>Cierre:</strong> {{resumen.cierreCaja.fecha | date:'shortTime'}}</p>
-                    <p><strong>Monto Final:</strong> ${{resumen.cierreCaja.montoFinal | number:'1.0-0'}} </p>
-                    <p *ngIf="resumen.aperturaCaja"><strong>Diferencia:</strong> ${{(resumen.cierreCaja.montoFinal - resumen.aperturaCaja.montoInicial) | number:'1.0-0'}} </p>
+                    <p><strong>Monto Final (real):</strong> ${{ saldoFinal | number:'1.0-0'}} </p>
+                    <p *ngIf="resumen.aperturaCaja" [ngClass]="diferenciaClase()">
+                      <strong>Diferencia:</strong>
+                      ${{ diferencia | number:'1.0-0' }}
+                    </p>
                 </ng-container>
                 <ng-template #sinCierre>
                     <p><em>Aún sin cierre de caja.</em></p>

@@ -24,9 +24,30 @@ export class DetalleTurnoCerradoComponent {
   get montoFinal(): number { return Number(this.turno?.resumen?.cierreCaja?.montoFinal || 0); }
   get totalVentas(): number { return Number(this.turno?.resumen?.actividad?.totalVentas || 0); }
   get totalVentasLibres(): number { return Number(this.turno?.resumen?.actividad?.totalVentasLibres || 0); }
-  get totalGastos(): number { return Number(this.turno?.resumen?.actividad?.totalGastos || 0); }
-  get totalNeto(): number { return this.montoInicial + this.totalVentas + this.totalVentasLibres - this.totalGastos; }
+  get totalGastos(): number { return 0; }
+  get totalNeto(): number { return this.montoInicial + this.totalVentas + this.totalVentasLibres; }
   get transaccionesTotal(): number { return Number(this.turno?.resumen?.actividad?.transacciones || 0) + Number(this.turno?.resumen?.actividad?.transaccionesLibres || 0); }
+
+  get saldoEsperado(): number {
+    return this.totalNeto;
+  }
+
+  get diferencia(): number {
+    return this.montoFinal - this.saldoEsperado;
+  }
+
+  get estadoCajaTexto(): string {
+    const diff = this.diferencia;
+    if (Math.abs(diff) < 0.5) return 'Correcto: el monto coincide con lo esperado.';
+    if (diff < 0) return 'Menor al esperado: falta dinero en caja.';
+    return 'Mayor al esperado: sobra dinero en caja.';
+  }
+
+  get estadoCajaClase(): string {
+    const diff = this.diferencia;
+    if (Math.abs(diff) < 0.5) return 'estado-caja-ok';
+    return diff < 0 ? 'estado-caja-menor' : 'estado-caja-mayor';
+  }
 
   get cajaNombre(): string {
     return (this.turno?.resumen as any)?.caja?.nombre || 'Sin caja asignada';
@@ -42,7 +63,8 @@ export class DetalleTurnoCerradoComponent {
       if (diff < 0) return '—';
       const h = Math.floor(diff / 3_600_000);
       const m = Math.floor((diff % 3_600_000) / 60_000);
-      return `${h}h ${m}m`;
+      const s = Math.floor((diff % 60_000) / 1000);
+      return `${h}h ${m}m ${s}s`;
     } catch { return '—'; }
   }
 

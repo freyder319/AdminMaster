@@ -41,3 +41,25 @@ mat-card-content {
 .estado.pendiente {
     color: #f9a825;
 }
+
+.btn-estado-verde {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  border: none;
+  border-radius: 9999px;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 6px 18px;
+  box-shadow: 0 6px 16px rgba(22, 163, 74, 0.45);
+}
+
+.btn-estado-verde:disabled {
+  opacity: 0.7;
+  box-shadow: none;
+}
+
+.texto-confirmar-pago {
+  font-size: 0.8rem;
+  color: #6b7280;
+  display: inline-flex;
+  align-items: center;
+}

@@ -61,4 +61,16 @@ export class VentaService {
     }
     return this.http.get<any[]>(this.apiUrl, { params, ...this.authOptions() });
   }
+
+  update(id: number, changes: Partial<CreateVentaPayload>): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, changes, this.authOptions());
+  }
+
+  updateEstado(id: number, estado: 'confirmada' | 'pendiente'): Observable<any> {
+    return this.http.patch<any>(
+      `${this.apiUrl}/${id}/estado`,
+      { estado },
+      this.authOptions(),
+    );
+  }
 }

@@ -8,6 +8,19 @@
     <div class="card-header">
       <div class="d-flex justify-content-between align-items-center">
         <h5 class="m-0">Detalle del Gasto</h5>
+        <div class="d-flex align-items-center gap-2" *ngIf="g.estado === 'pendiente'">
+          <div class="texto-confirmar-pago">
+            Confirmar pago
+            <i class="bi bi-arrow-right-short ms-1"></i>
+          </div>
+          <button
+            type="button"
+            class="btn btn-sm btn-estado-verde"
+            (click)="marcarPagado()"
+            [disabled]="marcando">
+            Pagado
+          </button>
+        </div>
       </div>
     </div>
     <div class="card-body">
