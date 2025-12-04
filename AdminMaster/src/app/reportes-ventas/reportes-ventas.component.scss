@@ -8,16 +8,44 @@
 
 .turnos-activos-container {
   width: 100%;
-  max-width: 1300px;
-  margin: 0 auto;
+  max-width: 1315px; /* un poco más ancho */
+  margin: 14px auto 0; /* bajarlo un poquito desde arriba */
 }
 
 .filtros {
   display:flex;
+  flex-direction: column;
   gap:8px;
-  flex-wrap:wrap;
   margin-bottom:12px;
-  align-items:center;
+}
+
+.filtros .filtros-fechas {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filtros .filtro-fecha {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.filtros .filtro-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.filtros .filtro-acciones {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filtros .filtro-acciones .form-control {
+  width: 450px; /* menos ancho para que el botón destaque más */
 }
 
 .filtros .form-control {
@@ -36,13 +64,279 @@
 }
 
 .btn-turno {
-  padding: 6px 14px;
-  border-radius: 999px;
-  border: none;
-  background: #2563eb;
-  color: #ffffff;
+  background: radial-gradient(circle at 30% 20%, #38bdf8, #1d4ed8);
+  border-color: transparent;
   font-weight: 600;
+  border-radius: 999px;
+  padding: 9px 18px; /* un poco más alto para que se vea mejor */
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.45);
+  color: #ffffff;
+  border: none;
   cursor: pointer;
 }
 
-.btn-turno:hover { background:#1d4ed8; }
+.btn-turno:hover {
+  background: linear-gradient(135deg, #1d4ed8, #4f46e5);
+  border-color: transparent;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.5);
+}
+
+/* --- Inputs de fecha modernos (como Movimientos) --- */
+.date-input-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 4px;
+}
+
+.date-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.date-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 2px solid #e5e7eb;
+  border-radius: 50px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.date-input-wrapper:hover {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.1);
+}
+
+.date-input-wrapper:focus-within {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.date-icon {
+  color: #6b7280;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.date-input-wrapper:hover .date-icon {
+  color: #3b82f6;
+}
+
+.modern-date-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.modern-date-input::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.modern-date-input::placeholder {
+  color: #9ca3af;
+}
+
+.modern-date-input:focus::placeholder {
+  color: #cbd5e1;
+}
+
+@media (max-width: 575.98px) {
+  .date-input-container {
+    gap: 3px;
+  }
+
+  .date-input-wrapper {
+    padding: 6px 10px;
+  }
+
+  .date-icon {
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;
+  }
+
+  .modern-date-input {
+    font-size: 13px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .date-input-wrapper {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    border-color: #374151;
+  }
+
+  .date-input-wrapper:hover {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    border-color: #3b82f6;
+  }
+
+  .date-icon {
+    color: #9ca3af;
+  }
+
+  .date-input-wrapper:hover .date-icon {
+    color: #93c5fd;
+  }
+
+  .modern-date-input {
+    color: #f9fafb;
+  }
+
+  .modern-date-input::placeholder {
+    color: #6b7280;
+  }
+}
+
+/* --- Dropdown moderno para vista (como Categorías, sin iconos en items) --- */
+.modern-range-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  border: 2px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow:
+    0 4px 16px rgba(31, 38, 135, 0.08),
+    0 2px 8px rgba(31, 38, 135, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  justify-content: space-between;
+  backdrop-filter: blur(8px);
+  min-height: 40px;
+}
+
+.modern-range-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.4s ease;
+}
+
+.modern-range-btn:hover::before {
+  left: 100%;
+}
+
+.modern-range-btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 24px rgba(59, 130, 246, 0.15),
+    0 4px 12px rgba(59, 130, 246, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border-color: #3b82f6;
+  background: linear-gradient(145deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.modern-range-btn:active {
+  transform: translateY(-1px);
+  box-shadow:
+    0 4px 16px rgba(59, 130, 246, 0.12),
+    0 2px 8px rgba(59, 130, 246, 0.08);
+}
+
+.modern-range-btn:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.15),
+    0 4px 16px rgba(31, 38, 135, 0.08);
+}
+
+.range-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  transition: all 0.3s ease;
+  flex: 1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.2px;
+}
+
+.modern-range-btn:hover .range-text {
+  color: #1e40af;
+}
+
+.range-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+}
+
+.modern-range-btn:hover .range-arrow {
+  color: #3b82f6;
+  transform: translateY(2px);
+}
+
+.modern-range-dropdown {
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow:
+    0 12px 32px rgba(31, 38, 135, 0.12),
+    0 4px 16px rgba(31, 38, 135, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  padding: 8px;
+  margin-top: 6px;
+  min-width: 200px;
+}
+
+.modern-range-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.modern-range-item:hover {
+  background: #eff6ff;
+}
+
+.modern-range-item.active {
+  background: #dbeafe;
+}
+
+.range-item-text {
+  font-size: 14px;
+  color: #0f172a;
+}

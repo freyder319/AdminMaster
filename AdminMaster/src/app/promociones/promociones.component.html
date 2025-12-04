@@ -25,7 +25,7 @@
       <div class="container buscar-agg">
         <div class="row">
           <!-- Buscar -->
-          <div class="col-sm-12 col-md-8 col-lg-8">
+          <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="search">
               <div class="modern-search-container">
                 <div class="search-wrapper">
@@ -47,8 +47,29 @@
             </div>
           </div>
 
+          <!-- Filtro por fecha -->
+          <div class="col-sm-12 col-md-3 col-lg-3 mt-2 mt-md-0 d-flex align-items-center">
+            <div class="date-input-container w-100">
+              <div class="date-input-wrapper" (click)="promoDatePicker.showPicker()">
+                <svg class="date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <input
+                  #promoDatePicker
+                  type="date"
+                  class="modern-date-input"
+                  placeholder="Filtrar por fecha"
+                  [(ngModel)]="dateFilter"
+                  name="promoDateFilter">
+              </div>
+            </div>
+          </div>
+
           <!-- Agregar Promoción -->
-          <div class="col-sm-12 col-md-4 col-lg-4">
+          <div class="col-sm-12 col-md-3 col-lg-3 mt-2 mt-md-0">
             <div class="agg-caja">
               <!-- Escritorio (≥768px) → abre modal -->
               <button class="btn agregar d-none d-md-inline-block" type="button" data-bs-toggle="modal" data-bs-target="#promoModal">
@@ -66,35 +87,102 @@
       </div>
     </section>
 
-    <!-- Lista de promociones -->
+    <!-- Lista de promociones en tabla -->
     <section>
       <div class="container-fluid py-2 promo-container">
-        <h6 class="mt-3 mb-2 text-start discounts-title">Promociones registradas</h6>
 
-        <div *ngIf="promocionesFiltradas.length === 0" class="text-muted small">No hay Promociones Registradas.</div>
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th class="text-start">Nombre</th>
+                <th class="text-start">Detalle</th>
+                <th class="text-start">Vigencia</th>
+                <th class="text-center">Estado</th>
+                <th class="text-center">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="promocionesFiltradas.length === 0">
+                <td colspan="5" class="text-center text-muted py-3">
+                  <ng-container *ngIf="!(searchTerm || '').trim() && !(dateFilter || '').trim(); else hayFiltros">
+                    No hay Promociones Registradas.
+                  </ng-container>
+                  <ng-template #hayFiltros>
+                    <!-- Texto + fecha -->
+                    <ng-container *ngIf="(searchTerm || '').trim() && (dateFilter || '').trim(); else soloUnFiltro">
+                      No se encontraron Promociones con
+                      "{{ (searchTerm || '').trim() }}" para la fecha
+                      "{{ (dateFilter || '').trim() }}".
+                    </ng-container>
 
-        <ul class="list-group" *ngIf="promocionesFiltradas.length > 0">
-          <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let p of promocionesFiltradas">
-            <div>
-              <div class="fw-semibold">{{ p.nombre }}</div>
-              <small class="text-muted">
-                {{ p.porcentaje }}%
-                • Tipo: {{ p.tipo === 'PORCENTAJE' ? 'Porcentaje' : 'Valor fijo' }}
-                • Creado: {{ p.creadoEn | date:'dd/MM/yyyy HH:mm' }}
-                <span *ngIf="p.fechaInicio || p.fechaFin">
-                  • Vigencia:
-                  <ng-container *ngIf="p.fechaInicio">desde {{ p.fechaInicio | date:'dd/MM/yyyy' }}</ng-container>
-                  <ng-container *ngIf="p.fechaFin">hasta {{ p.fechaFin | date:'dd/MM/yyyy' }}</ng-container>
-                </span>
-                <span *ngIf="!p.activo" class="text-danger"> • Inactiva</span>
-              </small>
-            </div>
-            <button class="btn elimi btn-sm" (click)="remove(p.id)" title="Eliminar">
-              <i class="bi bi-trash"></i>
-              <span class="texto">Eliminar</span>
-            </button>
-          </li>
-        </ul>
+                    <!-- Solo un filtro activo -->
+                    <ng-template #soloUnFiltro>
+                      <!-- Solo fecha -->
+                      <ng-container *ngIf="(dateFilter || '').trim(); else soloTexto">
+                        No hay Promociones Registradas para la fecha
+                        "{{ (dateFilter || '').trim() }}".
+                      </ng-container>
+                      <!-- Solo texto -->
+                      <ng-template #soloTexto>
+                        No se encontraron Promociones con
+                        "{{ (searchTerm || '').trim() }}".
+                      </ng-template>
+                    </ng-template>
+                  </ng-template>
+                </td>
+              </tr>
+              <tr *ngFor="let p of promocionesFiltradas">
+                <td class="fw-semibold">{{ p.nombre }}</td>
+                <td>
+                  <small class="d-block">
+                    {{ p.porcentaje }}%
+                    • {{ p.tipo === 'PORCENTAJE' ? 'Porcentaje' : 'Valor fijo' }}
+                    • Creado: {{ p.creadoEn | date:'dd/MM/yyyy HH:mm' }}
+                  </small>
+                </td>
+                <td>
+                  <small class="d-block">
+                    <ng-container *ngIf="p.fechaInicio || p.fechaFin; else sinVigencia">
+                      <ng-container *ngIf="p.fechaInicio">Desde {{ p.fechaInicio | date:'dd/MM/yyyy' }}</ng-container>
+                      <ng-container *ngIf="p.fechaFin">
+                        <span *ngIf="p.fechaInicio"> • </span>
+                        Hasta {{ p.fechaFin | date:'dd/MM/yyyy' }}
+                      </ng-container>
+                      <span *ngIf="isExpired(p)" class="text-danger ms-1">(Vigencia expirada)</span>
+                    </ng-container>
+                    <ng-template #sinVigencia>
+                      Sin vigencia definida
+                    </ng-template>
+                  </small>
+                </td>
+                <td class="text-center">
+                  <span class="status" [ngClass]="claseEstado(p)">
+                    {{ estadoVisual(p) }}
+                  </span>
+                </td>
+                <td class="text-center">
+                  <button
+                    *ngIf="canDelete(p); else noSePuedeEliminar"
+                    class="btn elimi btn-sm"
+                    (click)="remove(p.id)"
+                    title="Eliminar">
+                    <i class="bi bi-trash"></i>
+                    <span class="texto">Eliminar</span>
+                  </button>
+                  <ng-template #noSePuedeEliminar>
+                    <small class="text-muted" *ngIf="isLinkedToSale(p); else msgInactiva">
+                      Enlazada a una Venta, No se puede Eliminar
+                    </small>
+                    <ng-template #msgInactiva>
+                      <small class="text-muted">No se puede Eliminar</small>
+                    </ng-template>
+                  </ng-template>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
@@ -148,7 +236,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn add-btn" (click)="add()" [disabled]="form.invalid">Guardar promoción</button>
+            <button type="button" class="btn add-btn" (click)="add()" [disabled]="form.invalid" data-bs-dismiss="modal">Guardar promoción</button>
           </div>
         </div>
       </div>
