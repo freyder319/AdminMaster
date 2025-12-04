@@ -193,6 +193,13 @@ main{
   margin-right: 40px; /* suficiente separación, dejando espacio al botón ancho */
 }
 
+/* Desplazar levemente el filtro de fecha hacia la izquierda en escritorio/tablet */
+@media (min-width: 768px) {
+  .buscar-agg .date-input-container {
+    margin-left: -20px;
+  }
+}
+
 .btn.agregar {
   background: radial-gradient(circle at 30% 20%, #38bdf8, #1d4ed8);
   width: 350px; /* un poco más ancho en escritorio */
@@ -345,4 +352,142 @@ form {
 
 .btn.elimi .texto {
   font-size: 0.8rem;
+}
+
+/* Estado igual que en Empleados */
+.status {
+  padding: 5px 10px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.activo {
+  color: #00b82b;
+  background-color: #9cffb3;
+}
+
+.inactivo {
+  color: #c00013;
+  background-color: #ff828f;
+}
+
+/* --- Estilos de input de fecha modernos (igual que Movimientos) --- */
+.date-input-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 4px;
+}
+
+.date-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 2px solid #e5e7eb;
+  border-radius: 50px;
+  padding: 10px 12px; /* un poco más alto para que se vea mejor */
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.date-input-wrapper:hover {
+  border-color: #3b82f6;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.1);
+}
+
+.date-input-wrapper:focus-within {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.date-icon {
+  color: #6b7280;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.date-input-wrapper:hover .date-icon {
+  color: #3b82f6;
+}
+
+.modern-date-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.modern-date-input::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+.modern-date-input::placeholder {
+  color: #9ca3af;
+}
+
+.modern-date-input:focus::placeholder {
+  color: #cbd5e1;
+}
+
+@media (max-width: 575.98px) {
+  .date-input-container {
+    gap: 3px;
+  }
+
+  .date-input-wrapper {
+    padding: 6px 10px;
+  }
+
+  .date-icon {
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;
+  }
+
+  .modern-date-input {
+    font-size: 13px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .date-input-wrapper {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    border-color: #374151;
+  }
+
+  .date-input-wrapper:hover {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+    border-color: #3b82f6;
+  }
+
+  .date-icon {
+    color: #9ca3af;
+  }
+
+  .date-input-wrapper:hover .date-icon {
+    color: #93c5fd;
+  }
+
+  .modern-date-input {
+    color: #f9fafb;
+  }
+
+  .modern-date-input::placeholder {
+    color: #6b7280;
+  }
 }

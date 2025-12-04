@@ -74,15 +74,59 @@
           </div>
         </div>
 
-        <!-- Ver todas las Categorias -->
+        <!-- Ver todas las Categorias (dropdown moderno) -->
         <div class="col-lg-2 col-md-6 col-sm-12">
           <div class="ver-cate">
-            <select title="categorias" class="form-select" name="categoria" [(ngModel)]="selectedCategoryId" (change)="onCategoryChange()">
-              <option value="" selected>Todas</option>
-              <option *ngFor="let cat of categorias" [value]="cat.idCategoria">
-                {{ cat.nombreCategoria }}
-              </option>
-            </select>
+            <div class="dropdown w-100">
+              <button
+                class="modern-range-btn w-100 d-flex align-items-center justify-content-between"
+                type="button"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="true">
+                <div class="d-flex align-items-center w-100 justify-content-center">
+                  <span class="range-text">{{ selectedCategoryLabel }}</span>
+                </div>
+                <div class="range-arrow">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
+              </button>
+              <div class="dropdown-menu modern-range-dropdown">
+                <a
+                  class="dropdown-item modern-range-item"
+                  [class.active]="selectedCategoryId === ''"
+                  href="#"
+                  (click)="onSelectCategory(''); $event.preventDefault()">
+                  <div class="range-item-content">
+                    <div class="range-item-icon">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                      </svg>
+                    </div>
+                    <span class="range-item-text">Todas Categorías</span>
+                  </div>
+                </a>
+                <a
+                  class="dropdown-item modern-range-item"
+                  *ngFor="let cat of categorias"
+                  [class.active]="selectedCategoryId == cat.idCategoria"
+                  href="#"
+                  (click)="onSelectCategory(cat.idCategoria); $event.preventDefault()">
+                  <div class="range-item-content">
+                    <div class="range-item-icon">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect>
+                        <path d="M7 8h10M7 12h6M7 16h4"></path>
+                      </svg>
+                    </div>
+                    <span class="range-item-text">{{ cat.nombreCategoria }}</span>
+                  </div>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 

@@ -11,19 +11,87 @@
             <div class="turno-card">
               <h2 class="titulo">
                 <i class="bi bi-bar-chart-line me-2"></i>
-                <span>Reporte de ventas por {{ vista === 'producto' ? 'producto' : 'categoría' }}</span>
+                <span>Reporte de Ventas por {{ vista === 'producto' ? 'producto' : 'categoría' }}</span>
               </h2>
 
               <div class="filtros">
-                <input type="date" [(ngModel)]="from" class="form-control" aria-label="Desde">
-                <input type="date" [(ngModel)]="to" class="form-control" aria-label="Hasta">
+                <div class="filtros-fechas">
+                  <div class="date-input-container">
+                    <label class="date-label">Desde</label>
+                    <div class="date-input-wrapper" (click)="fromPicker.showPicker()">
+                      <svg class="date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                      <input
+                        #fromPicker
+                        type="date"
+                        class="modern-date-input"
+                        placeholder="Seleccionar fecha"
+                        [(ngModel)]="from"
+                        aria-label="Desde">
+                    </div>
+                  </div>
+                  <div class="date-input-container">
+                    <label class="date-label">Hasta</label>
+                    <div class="date-input-wrapper" (click)="toPicker.showPicker()">
+                      <svg class="date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                      </svg>
+                      <input
+                        #toPicker
+                        type="date"
+                        class="modern-date-input"
+                        placeholder="Seleccionar fecha"
+                        [(ngModel)]="to"
+                        aria-label="Hasta">
+                    </div>
+                  </div>
+                </div>
 
-                <select class="form-control" [(ngModel)]="vista">
-                  <option value="producto">Por producto</option>
-                  <option value="categoria">Por categoría</option>
-                </select>
+                <div class="filtro-acciones">
+                  <div class="dropdown w-100">
+                    <button
+                      class="modern-range-btn w-100 d-flex align-items-center justify-content-between"
+                      type="button"
+                      data-bs-toggle="dropdown"
+                      data-bs-auto-close="true">
+                      <div class="d-flex align-items-center w-100 justify-content-center">
+                        <span class="range-text">
+                          {{ vista === 'producto' ? 'Por producto' : 'Por categoría' }}
+                        </span>
+                      </div>
+                      <div class="range-arrow">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </div>
+                    </button>
+                    <div class="dropdown-menu modern-range-dropdown">
+                      <a
+                        class="dropdown-item modern-range-item"
+                        [class.active]="vista === 'producto'"
+                        href="#"
+                        (click)="vista = 'producto'; $event.preventDefault()">
+                        <span class="range-item-text">Por producto</span>
+                      </a>
+                      <a
+                        class="dropdown-item modern-range-item"
+                        [class.active]="vista === 'categoria'"
+                        href="#"
+                        (click)="vista = 'categoria'; $event.preventDefault()">
+                        <span class="range-item-text">Por categoría</span>
+                      </a>
+                    </div>
+                  </div>
 
-                <button type="button" class="btn-turno" (click)="cargar()">Aplicar</button>
+                  <button type="button" class="btn-turno" (click)="cargar()">Aplicar</button>
+                </div>
               </div>
 
               <div *ngIf="cargando">Cargando...</div>
@@ -39,15 +107,18 @@
                   <thead>
                     <tr>
                       <th>Producto</th>
-                      <th class="text-end">Cantidad vendida</th>
+                      <th class="text-center">Cantidad vendida</th>
                       <th class="text-end">Total vendido</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let p of porProducto">
                       <td>{{ p.nombreProducto }}</td>
-                      <td class="text-end">{{ p.cantidadVendida }}</td>
-                      <td class="text-end">{{ p.totalVendido | number:'1.2-2' }}</td>
+                      <td class="text-center">{{ p.cantidadVendida }}</td>
+                      <td class="text-end">
+                        <span class="me-3">$</span>
+                        <span>{{ p.totalVendido | number:'1.0-0' }}</span>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -58,15 +129,18 @@
                   <thead>
                     <tr>
                       <th>Categoría</th>
-                      <th class="text-end">Cantidad vendida</th>
+                      <th class="text-center">Cantidad vendida</th>
                       <th class="text-end">Total vendido</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr *ngFor="let c of porCategoria">
                       <td>{{ c.nombreCategoria }}</td>
-                      <td class="text-end">{{ c.cantidadVendida }}</td>
-                      <td class="text-end">{{ c.totalVendido | number:'1.2-2' }}</td>
+                      <td class="text-center">{{ c.cantidadVendida }}</td>
+                      <td class="text-end">
+                        <span class="me-3">$</span>
+                        <span>{{ c.totalVendido | number:'1.0-0' }}</span>
+                      </td>
                     </tr>
                   </tbody>
                 </table>

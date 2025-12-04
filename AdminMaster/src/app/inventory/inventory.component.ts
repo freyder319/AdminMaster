@@ -145,6 +145,12 @@ export class InventoryComponent implements AfterViewInit {
     const cat = this.categorias.find(c => c.idCategoria == Number(this.selectedCategoryId));
     return cat?.nombreCategoria || String(this.selectedCategoryId);
   }
+  get selectedCategoryLabel(): string {
+    if (this.selectedCategoryId === '') return 'Todas Categorías';
+    const cat = this.categorias.find(c => c.idCategoria == Number(this.selectedCategoryId));
+    return cat?.nombreCategoria || 'Categoría';
+  }
+
   constructor(
     private productoService:ProductoService,
     private categoriaService:CategoriaService
@@ -495,7 +501,10 @@ export class InventoryComponent implements AfterViewInit {
     // Reiniciar a la primera página al cambiar la categoría
     this.pageIndex = 0;
   }
-// ... (rest of the code remains the same)
+  onSelectCategory(id: number | ''): void {
+    this.selectedCategoryId = id;
+    this.onCategoryChange();
+  }
   onNombreCategoriaChange(val: string): void {
     const nombre = String(val || '').trim().toLowerCase();
     if (!nombre) { this.nombreCategoriaDuplicado = false; return; }
