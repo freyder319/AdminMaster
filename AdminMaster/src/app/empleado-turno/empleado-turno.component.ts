@@ -308,8 +308,8 @@ export class EmpleadoTurnoComponent implements OnInit {
       title: 'Iniciar turno',
       text: 'Ingresa el Monto Inicial de Caja',
       input: 'number',
-      inputAttributes: { min: '1', step: '0.01' },
-      inputValue: 1,
+      inputAttributes: { min: '50000', step: '1000' },
+      inputValue: 50000,
       showCancelButton: true,
       confirmButtonText: 'Iniciar',
       cancelButtonText: 'Cancelar',
@@ -323,11 +323,11 @@ export class EmpleadoTurnoComponent implements OnInit {
     }).then((result) => {
       if (!result.isConfirmed) return;
       const monto = Number(result.value ?? 0);
-      if (isNaN(monto) || monto <= 0) {
+      if (isNaN(monto) || monto < 50000) {
         Swal.fire({
           icon: 'warning',
           title: 'Monto inicial inválido',
-          html: 'La <b>Caja</b> no puede Iniciar en $0. Ingresa un <b>Monto Inicial</b> mayor que 0.',
+          html: 'La <b>Caja</b> debe iniciar con al menos <b>$50.000</b>. Ingresa un <b>Monto Inicial</b> igual o superior a $50.000.',
           confirmButtonText: 'Corregir monto',
           confirmButtonColor: '#1d4ed8',
         });

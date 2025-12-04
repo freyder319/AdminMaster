@@ -48,54 +48,78 @@
         <div class="row align-items-center mb-3">
           <div class="col-sm-12 col-md-6 col-lg-6">
             <form class="d-flex justify-content-center text-center" role="search" (submit)="$event.preventDefault()">
-              <div class="input-group busca control-width">
-                <button
-                  title="boton_buscar"
-                  class="btn btn-primary btn-sm boton_buscador"
-                  type="submit">
-                  <img width="16px" src="assets/img/Logos Admin/Buscador.png" alt="Buscar">
-                </button>
-                <input #searchInput
-                       class="form-control form-control-sm input-buscador"
-                       type="search"
-                       placeholder="Buscar productos o códigos"
-                       aria-label="Buscar"
-                       [(ngModel)]="searchTerm"
-                       name="q"
-                       (keydown.enter)="onSearchEnter($event)">
+              <div class="modern-search-container control-width w-100">
+                <div class="search-wrapper">
+                  <div class="search-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="11" cy="11" r="8"></circle>
+                      <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                  </div>
+                  <input
+                    #searchInput
+                    class="modern-search-input"
+                    type="search"
+                    placeholder="Buscar productos o códigos"
+                    aria-label="Buscar"
+                    [(ngModel)]="searchTerm"
+                    name="q"
+                    (keydown.enter)="onSearchEnter($event)">
+                </div>
               </div>
             </form>
           </div>
           <div class="col-sm-12 col-md-6 col-lg-6">
             <div class="dropdown w-100 control-width">
-              <button class="btn btn-primary btn-sm dropdown-toggle bg-white range w-100" type="button" data-bs-toggle="dropdown">
-                Ordenar: {{ sortLabel }}
+              <button
+                class="modern-range-btn w-100 d-flex align-items-center justify-content-between"
+                type="button"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="true">
+                <div class="d-flex align-items-center w-100">
+                  <span class="range-text">Ordenar: {{ sortLabel }}</span>
+                </div>
+                <div class="range-arrow">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                  </svg>
+                </div>
               </button>
-              <div class="dropdown-menu anchor">
-                <a class="dropdown-item" href="#" (click)="$event.preventDefault(); sortOption='todos'">
-                  <div class="contenido-botones2">
-                    <h6>Todos</h6>
-                  </div>
+              <div class="dropdown-menu modern-range-dropdown">
+                <a
+                  class="dropdown-item modern-range-item"
+                  [class.active]="sortOption==='todos'"
+                  href="#"
+                  (click)="$event.preventDefault(); sortOption='todos'">
+                  <span class="range-item-text">Todos</span>
                 </a>
-                <a class="dropdown-item" href="#" (click)="$event.preventDefault(); sortOption='masVendidos'">
-                  <div class="contenido-botones2">
-                    <h6>Productos Más Vendidos</h6>
-                  </div>
+                <a
+                  class="dropdown-item modern-range-item"
+                  [class.active]="sortOption==='masVendidos'"
+                  href="#"
+                  (click)="$event.preventDefault(); sortOption='masVendidos'">
+                  <span class="range-item-text">Productos Más Vendidos</span>
                 </a>
-                <a class="dropdown-item" href="#" (click)="$event.preventDefault(); sortOption='alfabetico'">
-                  <div class="contenido-botones2">
-                    <h6>Alfabéticamente</h6>
-                  </div>
+                <a
+                  class="dropdown-item modern-range-item"
+                  [class.active]="sortOption==='alfabetico'"
+                  href="#"
+                  (click)="$event.preventDefault(); sortOption='alfabetico'">
+                  <span class="range-item-text">Alfabéticamente</span>
                 </a>
-                <a class="dropdown-item flexible2" href="#" (click)="$event.preventDefault(); sortOption='masRentables'">
-                  <div class="contenido-botones2">
-                    <h6>Productos Más Rentables</h6>
-                  </div>
+                <a
+                  class="dropdown-item modern-range-item"
+                  [class.active]="sortOption==='masRentables'"
+                  href="#"
+                  (click)="$event.preventDefault(); sortOption='masRentables'">
+                  <span class="range-item-text">Productos Más Rentables</span>
                 </a>
-                <a class="dropdown-item flexible2" href="#" (click)="$event.preventDefault(); sortOption='ultimasUnidades'">
-                  <div class="contenido-botones2">
-                    <h6>Últimas Unidades Disponibles</h6>
-                  </div>
+                <a
+                  class="dropdown-item modern-range-item"
+                  [class.active]="sortOption==='ultimasUnidades'"
+                  href="#"
+                  (click)="$event.preventDefault(); sortOption='ultimasUnidades'">
+                  <span class="range-item-text">Últimas Unidades Disponibles</span>
                 </a>
                 <div class="dropdown-item pt-2">
                   <div class="form-check form-switch m-0" (click)="$event.stopPropagation()">

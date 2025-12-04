@@ -118,6 +118,37 @@ main{
   outline-offset: 2px;
 }
 
+/* Botones del SweetAlert para iniciar/cerrar turno (fuera del scope del componente) */
+:host ::ng-deep .swal2-confirm-primary {
+  border-radius: 9999px !important;
+  padding: 8px 18px !important;
+  background: linear-gradient(135deg, #1d4ed8, #4f46e5) !important;
+  border: none !important;
+  font-weight: 600 !important;
+  box-shadow: 0 6px 16px rgba(37,99,235,0.45) !important;
+}
+
+:host ::ng-deep .swal2-confirm-primary:hover,
+:host ::ng-deep .swal2-confirm-primary:focus {
+  filter: brightness(1.05);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.16) !important;
+}
+
+:host ::ng-deep .swal2-cancel-muted {
+  border-radius: 9999px !important;
+  padding: 8px 18px !important;
+  background: #f3f4f6 !important;
+  color: #374151 !important;
+  border: 1px solid #d1d5db !important;
+  font-weight: 500 !important;
+}
+
+:host ::ng-deep .swal2-cancel-muted:hover,
+:host ::ng-deep .swal2-cancel-muted:focus {
+  background: #e5e7eb !important;
+  border-color: #cbd5e1 !important;
+}
+
 .admin-grid {
   display: grid;
   gap: 16px;

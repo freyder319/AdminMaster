@@ -259,10 +259,131 @@ html, body {
   max-width: 380px;
   margin: 0 auto;
 }
-.busca:focus-within .boton_buscador,
-.busca:focus-within .input-buscador{
+/* Buscador moderno (como Movimientos) */
+.modern-search-container {
+  width: 100%;
+}
+
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 2px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 8px 12px; /* un poco más alto para que se vea mejor */
+  box-shadow: 0 2px 8px rgba(148,163,184,0.25);
+  transition: all 0.25s ease;
+}
+
+.search-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  margin-right: 8px;
+}
+
+.modern-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.85rem;
+  color: #111827;
+}
+
+.modern-search-input::placeholder {
+  color: #9ca3af;
+}
+
+.search-wrapper:hover {
   border-color: #1d4ed8;
-  box-shadow: 0 0 0 3px rgba(37,99,235,0.3);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.18);
+}
+
+.search-wrapper:focus-within {
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.25);
+}
+
+/* Dropdown de Ordenar moderno (tipo categorías, sin iconos en items) */
+.modern-range-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  border: 2px solid #e5e7eb;
+  border-radius: 999px;
+  padding: 8px 14px; /* misma altura visual que el buscador */
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 8px rgba(148,163,184,0.25);
+  width: 100%;
+  min-height: 40px;
+}
+
+.range-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e293b;
+  flex: 1;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.range-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.modern-range-btn:hover {
+  border-color: #1d4ed8;
+  box-shadow: 0 6px 12px rgba(148,163,184,0.35);
+}
+
+.modern-range-dropdown {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(15,23,42,0.15);
+  padding: 4px;
+  margin-top: 6px;
+  min-width: 220px;
+}
+
+.modern-range-item {
+  display: flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.modern-range-item:hover {
+  background: #eff6ff;
+}
+
+.modern-range-item.active {
+  background: #dbeafe;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.25);
+}
+
+.range-item-text {
+  font-size: 0.9rem;
+  color: #0f172a;
+}
+
+/* Fila especial con switch "Ver inhabilitados": sin fondo azul al hacer click */
+.modern-range-dropdown .dropdown-item.pt-2,
+.modern-range-dropdown .dropdown-item.pt-2:hover,
+.modern-range-dropdown .dropdown-item.pt-2:active,
+.modern-range-dropdown .dropdown-item.pt-2.active {
+  background-color: transparent !important;
 }
 
 /* Responsive: tamaños ligeramente menores en móvil */
