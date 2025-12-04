@@ -55,4 +55,12 @@ export class VentaLibreService {
   list(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl, this.authOptions());
   }
+
+  update(id: number, changes: Partial<CreateVentaLibrePayload>): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, changes, this.authOptions());
+  }
+
+  updateEstado(id: number, estado: 'confirmada' | 'pendiente' | 'anulada'): Observable<any> {
+    return this.update(id, { estado });
+  }
 }

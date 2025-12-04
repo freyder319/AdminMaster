@@ -17,6 +17,7 @@ export class InfoGastosComponent implements OnInit {
   error: string | null = null;
   gasto: Gasto | null = null;
   empleadoNombre: string | null = null;
+  marcando = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -66,5 +67,21 @@ export class InfoGastosComponent implements OnInit {
       return;
     }
     this.router.navigate(['/movimientos']);
+  }
+
+  marcarPagado() {
+    if (!this.gasto || this.gasto.estado !== 'pendiente' || this.marcando) {
+      return;
+    }
+    this.marcando = true;
+    this.gastoSrv.update(this.gasto.id, { estado: 'confirmado' }).subscribe({
+      next: (updated) => {
+        this.gasto = updated;
+        this.marcando = false;
+      },
+      error: () => {
+        this.marcando = false;
+      },
+    });
   }
 }

@@ -412,6 +412,8 @@ export class AdministradorPrincipalComponent implements OnInit {
     const esVentaNormal = tipoVenta !== 'libre';
 
     const detalle = {
+      id: v?.id,
+      tipoVenta,
       producto: (v?.resumen || v?.descripcion || `Venta #${v?.id ?? ''}`),
       valor: this.formatCop(Number(v?.total) || 0),
       pago: (v?.forma_pago || '-'),

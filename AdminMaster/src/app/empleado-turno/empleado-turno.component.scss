@@ -62,6 +62,21 @@ main{
         line-height: 1.4;
         }
     }
+
+    .diferencia-positiva {
+      color: #16a34a;
+      font-weight: 600;
+    }
+
+    .diferencia-negativa {
+      color: #dc2626;
+      font-weight: 600;
+    }
+
+    .diferencia-cero {
+      color: #4b5563;
+      font-weight: 600;
+    }
 }
 
 .turno-card.punto-pos-layout {

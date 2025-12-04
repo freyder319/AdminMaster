@@ -38,6 +38,44 @@ export class EmpleadoTurnoComponent implements OnInit {
   countHistorial = 0;
   countNotificaciones = 0;
 
+  get saldoInicial(): number {
+    return this.resumen?.aperturaCaja?.montoInicial || 0;
+  }
+
+  get totalVentas(): number {
+    const act: any = this.resumen?.actividad || {};
+    return (act.totalVentas || 0) + (act.totalVentasLibres || 0);
+  }
+
+  get totalGastos(): number {
+    // El empleado no registra gastos; para el cálculo de caja se ignoran
+    return 0;
+  }
+
+  get saldoEsperado(): number {
+    // Solo se considera monto inicial + total de ventas
+    return this.saldoInicial + this.totalVentas;
+  }
+
+  get saldoFinal(): number {
+    return this.resumen?.cierreCaja?.montoFinal || 0;
+  }
+
+  get diferencia(): number {
+    if (!this.resumen || !this.resumen.aperturaCaja || !this.resumen.cierreCaja) {
+      return 0;
+    }
+    return this.saldoFinal - this.saldoEsperado;
+  }
+
+  diferenciaClase(): string {
+    const diff = this.diferencia;
+    if (diff > 0.5 || diff < -0.5) {
+      return diff > 0 ? 'diferencia-positiva' : 'diferencia-negativa';
+    }
+    return 'diferencia-cero';
+  }
+
   constructor(
     private turnoService: TurnosService,
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -302,7 +340,7 @@ export class EmpleadoTurnoComponent implements OnInit {
       })
     );
   }
-
+  
   iniciarTurno() {
     Swal.fire({
       title: 'Iniciar turno',
@@ -400,12 +438,16 @@ export class EmpleadoTurnoComponent implements OnInit {
   }
 
   cerrarTurno() {
+    const saldoEsperado = this.saldoEsperado;
+
     Swal.fire({
       title: 'Terminar turno',
-      text: 'Ingresa el Monto final de Caja',
+      text: saldoEsperado > 0
+        ? `Ingresa el Monto final de Caja. Según el resumen debería haber aproximadamente $${saldoEsperado.toFixed(0)} en efectivo.`
+        : 'Ingresa el Monto final de Caja',
       input: 'number',
       inputAttributes: { min: '0', step: '1' },
-      inputValue: 0,
+      inputValue: saldoEsperado > 0 ? Math.round(saldoEsperado) : 0,
       showCancelButton: true,
       confirmButtonText: 'Terminar',
       cancelButtonText: 'Cancelar',
@@ -431,8 +473,8 @@ export class EmpleadoTurnoComponent implements OnInit {
       }
       this.turnoService.cerrarTurno(monto).subscribe({
         next: (data) => {
-          this.resumen = undefined as any;
-          this.sinTurnoActivo = true;
+          this.resumen = data;
+          this.sinTurnoActivo = false;
           Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Turno cerrado', timer: 2000, showConfirmButton: false });
           // limpiar indicador persistente al cerrar turno
           try { this.turnoState.clear(); } catch {}
@@ -448,8 +490,8 @@ export class EmpleadoTurnoComponent implements OnInit {
             if (!isNaN(userId) && userId > 0) {
               this.turnoService.cerrarTurnoPorUsuario(userId, monto).subscribe({
                 next: (data2) => {
-                  this.resumen = undefined as any;
-                  this.sinTurnoActivo = true;
+                  this.resumen = data2;
+                  this.sinTurnoActivo = false;
                   Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Turno cerrado', timer: 2000, showConfirmButton: false });
                   try { this.turnoState.clear(); } catch {}
                 },
