@@ -133,6 +133,145 @@
   color: #6c757d;
 }
 
+/* --- Inputs de fecha/hora modernos (estilo movimientos) --- */
+.date-input-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.date-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  border-radius: 18px;
+  padding: 8px 10px; /* mismo padding que los inputs normales para no cambiar tamaño */
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.date-input-wrapper:hover {
+  border-color: #1d4ed8;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.date-input-wrapper:focus-within {
+  outline: none;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+.date-icon {
+  color: #6b7280;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.modern-date-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.modern-date-input::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+/* --- Dropdown Jornada moderno (tipo categorías, sin iconos) --- */
+.modern-range-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  border-radius: 18px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  width: 100%;
+  min-height: 36px;
+}
+
+.jornada-btn {
+  /* asegurar tamaño similar al select original dentro del grid */
+  font-size: 0.9rem;
+}
+
+.modern-range-btn:hover {
+  border-color: #1d4ed8;
+  background: linear-gradient(145deg, #eff6ff 0%, #dbeafe 100%);
+}
+
+.modern-range-btn:focus {
+  outline: none;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+.range-text {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #1e293b;
+  flex: 1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* En Jornada, alinear el texto a la izquierda en lugar de centrado */
+.jornada-btn .range-text {
+  text-align: left;
+}
+
+.range-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.modern-range-dropdown {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.15);
+  padding: 4px;
+  margin-top: 4px;
+  min-width: 100%;
+}
+
+.modern-range-item {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.modern-range-item:hover {
+  background: #eff6ff;
+}
+
+.modern-range-item.active {
+  background: #dbeafe;
+}
+
+.range-item-text {
+  font-size: 0.9rem;
+  color: #0f172a;
+}
+
 @media (max-width: 768px) {
   .form-grid {
     grid-template-columns: 1fr;

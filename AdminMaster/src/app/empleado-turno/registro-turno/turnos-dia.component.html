@@ -9,28 +9,118 @@
           </h2>
 
   <div class="form-grid">
-    <div class="campo text-center text-md-start" (click)="fechaInput.showPicker()">
+    <div class="campo text-center text-md-start">
       <label>Fecha</label>
-      <input #fechaInput type="date" class="form-control w-100" [(ngModel)]="fechaSeleccionada" [attr.min]="minFecha" (change)="onFechaChange()">
+      <div class="date-input-container w-100">
+        <div class="date-input-wrapper" (click)="fechaInput.showPicker()">
+          <svg class="date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <input
+            #fechaInput
+            type="date"
+            class="modern-date-input"
+            [(ngModel)]="fechaSeleccionada"
+            [attr.min]="minFecha"
+            (change)="onFechaChange()">
+        </div>
+      </div>
     </div>
 
     <div class="campo text-center text-md-start">
       <label>Jornada</label>
-      <select class="form-select w-100" [(ngModel)]="bloque" (ngModelChange)="onJornadaChange($event)">
-        <option value="manana">Mañana</option>
-        <option value="tarde">Tarde</option>
-        <option value="noche">Noche</option>
-      </select>
+      <div class="dropdown w-100">
+        <button
+          class="modern-range-btn jornada-btn w-100 d-flex align-items-center justify-content-between"
+          type="button"
+          data-bs-toggle="dropdown"
+          data-bs-auto-close="true">
+          <div class="d-flex align-items-center w-100">
+            <i
+              class="me-2"
+              [ngClass]="{
+                'bi bi-sunrise-fill': bloque === 'manana',
+                'bi bi-sun-fill': bloque === 'tarde',
+                'bi bi-moon-stars-fill': bloque === 'noche'
+              }"></i>
+            <span class="range-text">
+              {{
+                bloque === 'manana'
+                  ? 'Mañana'
+                  : (bloque === 'tarde' ? 'Tarde' : 'Noche')
+              }}
+            </span>
+          </div>
+          <div class="range-arrow">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+        </button>
+        <div class="dropdown-menu modern-range-dropdown">
+          <a
+            class="dropdown-item modern-range-item"
+            [class.active]="bloque === 'manana'"
+            href="#"
+            (click)="bloque = 'manana'; onJornadaChange('manana'); $event.preventDefault()">
+            <i class="bi bi-sunrise-fill me-2"></i>
+            <span class="range-item-text">Mañana</span>
+          </a>
+          <a
+            class="dropdown-item modern-range-item"
+            [class.active]="bloque === 'tarde'"
+            href="#"
+            (click)="bloque = 'tarde'; onJornadaChange('tarde'); $event.preventDefault()">
+            <i class="bi bi-sun-fill me-2"></i>
+            <span class="range-item-text">Tarde</span>
+          </a>
+          <a
+            class="dropdown-item modern-range-item"
+            [class.active]="bloque === 'noche'"
+            href="#"
+            (click)="bloque = 'noche'; onJornadaChange('noche'); $event.preventDefault()">
+            <i class="bi bi-moon-stars-fill me-2"></i>
+            <span class="range-item-text">Noche</span>
+          </a>
+        </div>
+      </div>
     </div>
 
-    <div class="campo campo-hora-desde text-center text-md-start" (click)="horaDesdeInput.showPicker()">
+    <div class="campo campo-hora-desde text-center text-md-start">
       <label>Hora desde</label>
-      <input #horaDesdeInput type="time" class="form-control w-100" [(ngModel)]="horaDesde">
+      <div class="date-input-container w-100">
+        <div class="date-input-wrapper" (click)="horaDesdeInput.showPicker()">
+          <svg class="date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <input
+            #horaDesdeInput
+            type="time"
+            class="modern-date-input"
+            [(ngModel)]="horaDesde">
+        </div>
+      </div>
     </div>
 
-    <div class="campo campo-hora-hasta text-center text-md-start" (click)="horaHastaInput.showPicker()">
+    <div class="campo campo-hora-hasta text-center text-md-start">
       <label>Hora hasta</label>
-      <input #horaHastaInput type="time" class="form-control w-100" [(ngModel)]="horaHasta">
+      <div class="date-input-container w-100">
+        <div class="date-input-wrapper" (click)="horaHastaInput.showPicker()">
+          <svg class="date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <input
+            #horaHastaInput
+            type="time"
+            class="modern-date-input"
+            [(ngModel)]="horaHasta">
+        </div>
+      </div>
     </div>
 
     <div class="campo campo-notas text-center text-md-start">
@@ -45,9 +135,24 @@
     </div>
   </div>
 
-  <div class="campo mt-3 filtro-fecha-turnos text-center text-md-start" (click)="fechaConsultaInput.showPicker()">
+  <div class="campo mt-3 filtro-fecha-turnos text-center text-md-start">
     <label>Ver registros de</label>
-    <input #fechaConsultaInput type="date" class="form-control w-100" [(ngModel)]="fechaConsulta" (change)="onFechaConsultaChange()">
+    <div class="date-input-container w-100">
+      <div class="date-input-wrapper" (click)="fechaConsultaInput.showPicker()">
+        <svg class="date-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <input
+          #fechaConsultaInput
+          type="date"
+          class="modern-date-input"
+          [(ngModel)]="fechaConsulta"
+          (change)="onFechaConsultaChange()">
+      </div>
+    </div>
   </div>
 
   <div class="lista" *ngIf="turnosDeFechaActual().length; else sinTurnosTpl">
