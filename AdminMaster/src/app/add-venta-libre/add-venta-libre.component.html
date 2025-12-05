@@ -15,33 +15,38 @@
         <!-- nombre de la venta -->
         <div class="mb-3">
           <label class="form-label">Nombre de la Venta</label>
-          <input #nombreVentaInput data-autofocus="true" type="text" class="form-control" name="nombreVenta" [(ngModel)]="nombreVenta" placeholder="Venta mostrador, Venta rápida..." (keydown.enter)="onEnterFocus(fechaHoraInput, $event, nombreVenta)" />
-        </div>
-
-        <!-- fecha y hora -->
-        <div class="mb-3">
-          <label class="form-label">Fecha y hora</label>
-          <input
-            #fechaHoraInput
-            type="datetime-local"
-            class="form-control"
-            name="fechaHora"
-            [(ngModel)]="fechaHora"
-            (click)="fechaHoraInput.showPicker()"
-            (focus)="fechaHoraInput.select()"
-          />
+          <input #nombreVentaInput data-autofocus="true" type="text" class="form-control" name="nombreVenta" [(ngModel)]="nombreVenta" placeholder="Venta mostrador, Venta rápida..." />
         </div>
 
         <!-- productos -->
         <div class="mb-3 span-2">
           <label class="form-label d-block">Productos</label>
           <div class="productos">
+            <!-- Product Inputs with labels above each -->
             <div class="producto" *ngFor="let p of productos; let i = index">
-              <input class="form-control" placeholder="Nombre del producto" [(ngModel)]="p.nombre" name="prodNombre{{i}}" />
-              <input type="number" class="form-control" placeholder="Cantidad" min="1" [(ngModel)]="p.cantidad" name="prodCant{{i}}" (input)="updateSubtotal(i)" />
-              <input type="number" class="form-control" placeholder="Precio unitario" min="0" step="1" inputmode="numeric" [(ngModel)]="p.precio" name="prodPrecio{{i}}" (input)="updateSubtotal(i)" />
-              <input class="form-control" placeholder="Subtotal" [value]="p.subtotal | number:'1.0-0'" readonly />
-              <button type="button" class="btn btn-danger" (click)="removeProducto(i)" *ngIf="productos.length > 1">Eliminar</button>
+              <div class="input-group">
+                <label class="form-label small mb-1">Nombre</label>
+                <input class="form-control" [(ngModel)]="p.nombre" name="prodNombre{{i}}" />
+              </div>
+              
+              <div class="input-group">
+                <label class="form-label small mb-1">Cantidad</label>
+                <input type="number" class="form-control text-center" min="1" [(ngModel)]="p.cantidad" name="prodCant{{i}}" (input)="updateSubtotal(i)" />
+              </div>
+              
+              <div class="input-group">
+                <label class="form-label small mb-1">Valor</label>
+                <input type="number" class="form-control text-end" min="0" step="1" inputmode="numeric" [(ngModel)]="p.precio" name="prodPrecio{{i}}" (input)="updateSubtotal(i)" />
+              </div>
+              
+              <div class="input-group">
+                <label class="form-label small mb-1">Total</label>
+                <input class="form-control text-end" [value]="p.subtotal | number:'1.0-0'" readonly />
+              </div>
+              
+              <div class="d-flex align-items-end">
+                <button type="button" class="btn btn-danger" (click)="removeProducto(i)" *ngIf="productos.length > 1">Eliminar</button>
+              </div>
             </div>
             <div class="mt-2">
               <button type="button" class="btn btn-secondary" (click)="addProducto()">Agregar producto</button>

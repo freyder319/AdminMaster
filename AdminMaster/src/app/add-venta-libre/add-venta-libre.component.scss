@@ -84,18 +84,47 @@
 .productos {
   display: flex;
   flex-direction: column;
-  gap: 8px; /* separación entre filas de productos */
+  gap: 12px; /* separación entre filas de productos */
 }
 
 .producto {
   display: grid;
   grid-template-columns: repeat(4, 1fr) auto; /* todos los inputs con el mismo ancho */
   gap: 8px; /* separación entre inputs dentro de la fila */
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    
+    .form-control {
+      text-align: start !important;
+      padding-left: 12px;
+      padding-right: 12px;
+      
+      /* Para inputs de tipo number, asegurar que el texto esté alineado al inicio */
+      &[type="number"] {
+        -moz-appearance: textfield;
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+      }
+    }
+    
+    .form-label {
+      font-size: 0.875rem;
+      color: #4b5563;
+      margin-bottom: 0;
+    }
+  }
 }
 
 .producto .btn.btn-danger {
-  align-self: center;
+  align-self: flex-end;
   height: 38px; /* alineado con la altura de inputs bootstrap */
+  margin-bottom: 4px;
 }
 
 /* Asegurar que cada bloque ocupe toda la fila */
