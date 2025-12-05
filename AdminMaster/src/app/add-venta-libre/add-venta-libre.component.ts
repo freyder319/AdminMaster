@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -43,6 +44,18 @@ export class AddVentaLibreComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Set current date and time in the format YYYY-MM-DDThh:mm
+    const now = new Date();
+    // Format: YYYY-MM-DDThh:mm using local time
+    const pad = (num: number) => num.toString().padStart(2, '0');
+    const year = now.getFullYear();
+    const month = pad(now.getMonth() + 1);
+    const day = pad(now.getDate());
+    const hours = pad(now.getHours());
+    const minutes = pad(now.getMinutes());
+    
+    this.fechaHora = `${year}-${month}-${day}T${hours}:${minutes}`;
+    
     if (this.isPuntoPos) {
       try {
         const raw = localStorage.getItem('cajaId');
@@ -137,6 +150,8 @@ export class AddVentaLibreComponent implements OnInit {
     this.ventaLibreSrv.create(payload).subscribe({
       next: (res) => {
         this.submitting = false;
+        // Reset the form before closing the offcanvas
+        this.resetForm();
         this.closeOffcanvas();
         Swal.fire({
           icon: 'success',
@@ -169,15 +184,41 @@ export class AddVentaLibreComponent implements OnInit {
     return issues;
   }
 
+  private resetForm() {
+    // Reset form fields
+    this.nombreVenta = '';
+    this.estadoVenta = 'confirmada';
+    this.formaPago = undefined;
+    this.observaciones = '';
+    this.transaccionId = '';
+    this.total = 0;
+    
+    // Reset productos to initial state
+    this.productos = [
+      { nombre: '', cantidad: 1, precio: 0, subtotal: 0 }
+    ];
+    
+    // Reset the form's validation state if needed
+    if (this.ventaForm) {
+      this.ventaForm.resetForm();
+    }
+  }
+
+  @ViewChild('ventaForm') ventaForm: any;
+
   private closeOffcanvas() {
     const el = document.getElementById('venta-libre');
     if (!el) return;
     try {
       const instance = bootstrap?.Offcanvas?.getInstance(el) || new bootstrap.Offcanvas(el);
       instance?.hide();
+      // Reset the form when offcanvas is closed
+      this.resetForm();
     } catch {
       const btn = el.querySelector('.btn-close') as HTMLElement | null;
       btn?.click();
+      // Reset the form when offcanvas is closed via button
+      this.resetForm();
     }
   }
 
