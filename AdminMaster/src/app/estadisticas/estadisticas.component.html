@@ -32,57 +32,65 @@
       </div>
     </div>
 
-    <!-- Filtro de período (solo comercial y finanzas) -->
-    <div class="d-flex justify-content-center mb-4 gap-2 filtro-periodo" *ngIf="selectedOption !== 'inventario'">
-      <button
-        type="button"
-        class="btn btn-periodo"
-        [ngClass]="{'btn-periodo-activo': periodoSeleccionado === 'semanal'}"
-        (click)="cambiarPeriodo('semanal')">
-        <i class="bi bi-calendar-week me-1"></i>
-        <span>Semanal</span>
-      </button>
-      <button
-        type="button"
-        class="btn btn-periodo"
-        [ngClass]="{'btn-periodo-activo': periodoSeleccionado === 'mensual'}"
-        (click)="cambiarPeriodo('mensual')">
-        <i class="bi bi-calendar-month me-1"></i>
-        <span>Mensual</span>
-      </button>
+    <!-- Filtro de fechas personalizado -->
+    <div class="filtro-fechas-container" *ngIf="selectedOption !== 'inventario'">
+      <div class="filtro-header">
+        <h4 class="filtro-titulo">
+          <i class="bi bi-calendar-range me-2"></i>
+          Filtrar por Período
+        </h4>
+        <p class="filtro-descripcion">Selecciona el rango de fechas para analizar las estadísticas</p>
+      </div>
+      
+      <div class="filtro-content">
+        <div class="date-filter-group">
+          <label class="date-label">
+            <i class="bi bi-calendar-event me-1"></i>
+            Fecha de Inicio
+          </label>
+          <input 
+            type="date" 
+            class="form-control date-input clickable-date" 
+            [(ngModel)]="fechaDesde"
+            (change)="onFechaChange()"
+            (click)="openDatePicker($event)"
+            [max]="fechaHasta || getTodayDate()"
+            readonly>
+        </div>
+        
+        <div class="date-separator">
+          <i class="bi bi-arrow-right"></i>
+        </div>
+        
+        <div class="date-filter-group">
+          <label class="date-label">
+            <i class="bi bi-calendar-check me-1"></i>
+            Fecha de Fin
+          </label>
+          <input 
+            type="date" 
+            class="form-control date-input clickable-date" 
+            [(ngModel)]="fechaHasta"
+            (change)="onFechaChange()"
+            (click)="openDatePicker($event)"
+            [min]="fechaDesde"
+            [max]="getTodayDate()"
+            readonly>
+        </div>
+        
+        <div class="filtro-actions">
+          <button 
+            type="button" 
+            class="btn btn-aplicar-fechas"
+            [disabled]="!fechaDesde || !fechaHasta"
+            (click)="aplicarFiltroFechas()">
+            <i class="bi bi-funnel-fill me-2"></i>
+            Aplicar Filtro
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- Detalle de filtro: mes y semana (solo comercial y finanzas) -->
-    <div class="d-flex justify-content-center mb-4 gap-2 filtro-periodo" *ngIf="selectedOption !== 'inventario'">
-      <select class="form-select form-select-sm w-auto select-periodo" (change)="$event && onMesChange($any($event.target).value)">
-        <option value="">Mes (todos)</option>
-        <option value="1">Enero</option>
-        <option value="2">Febrero</option>
-        <option value="3">Marzo</option>
-        <option value="4">Abril</option>
-        <option value="5">Mayo</option>
-        <option value="6">Junio</option>
-        <option value="7">Julio</option>
-        <option value="8">Agosto</option>
-        <option value="9">Septiembre</option>
-        <option value="10">Octubre</option>
-        <option value="11">Noviembre</option>
-        <option value="12">Diciembre</option>
-      </select>
-
-      <select
-        *ngIf="periodoSeleccionado === 'semanal'"
-        class="form-select form-select-sm w-auto select-periodo select-periodo-semana"
-        (change)="onSemanaChange($any($event.target).value)">
-        <option value="">Semana (todas)</option>
-        <option value="1">Semana 1</option>
-        <option value="2">Semana 2</option>
-        <option value="3">Semana 3</option>
-        <option value="4">Semana 4</option>
-        <option value="5">Semana 5</option>
-      </select>
-
-    </div>
 
     <!-- CONTENIDO CAMBIANTE -->
     <div class="content-container" [@fadeInOut]>

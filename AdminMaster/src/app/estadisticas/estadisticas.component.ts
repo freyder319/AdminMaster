@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { AdminNavbarComponent } from '../admin_navbar/admin_navbar.component';
 import { NgChartsModule } from 'ng2-charts';
@@ -11,7 +12,7 @@ import { AgenteIAComponent } from "../agente-ia/agente-ia.component";
 @Component({
   selector: 'app-estadisticas',
   standalone: true,
-  imports: [CommonModule, RouterModule, AdminNavbarComponent, NgChartsModule, HttpClientModule, AgenteIAComponent],
+  imports: [CommonModule, RouterModule, FormsModule, AdminNavbarComponent, NgChartsModule, HttpClientModule, AgenteIAComponent],
   templateUrl: './estadisticas.component.html',
   styleUrls: ['./estadisticas.component.scss'],
   animations: [
@@ -28,10 +29,14 @@ import { AgenteIAComponent } from "../agente-ia/agente-ia.component";
 })
 export class EstadisticasComponent {
   selectedOption: 'inventario' | 'comercial' | 'finanzas' = 'inventario';
-  periodoSeleccionado: 'semanal' | 'mensual' = 'mensual';
+  periodoSeleccionado: 'semanal' | 'mensual' | 'personalizado' = 'mensual';
   mesSeleccionado: string = '';
   semanaSeleccionada: string = '';
   highlightedIndex: number | null = null;
+  
+  // Filtros de fecha personalizado
+  fechaDesde: string = '';
+  fechaHasta: string = '';
   productosMasVendidos: any[] = [];
   barChartType: 'bar' = 'bar';
   pieChartType: 'pie' = 'pie';
@@ -115,7 +120,7 @@ export class EstadisticasComponent {
     this.cargarInventario();
   }
 
-  cambiarPeriodo(periodo: 'semanal' | 'mensual'): void {
+  cambiarPeriodo(periodo: 'semanal' | 'mensual' | 'personalizado'): void {
     if (this.periodoSeleccionado === periodo) return;
     this.periodoSeleccionado = periodo;
 
@@ -123,10 +128,64 @@ export class EstadisticasComponent {
     if (periodo === 'mensual') {
       this.semanaSeleccionada = '';
     }
+    
+    // Si cambia a personalizado, limpiar filtros de mes/semana
+    if (periodo === 'personalizado') {
+      this.mesSeleccionado = '';
+      this.semanaSeleccionada = '';
+    }
+    
+    // Si cambia desde personalizado, limpiar fechas
+    if (periodo !== 'personalizado') {
+      this.fechaDesde = '';
+      this.fechaHasta = '';
+    }
 
+    // Recargar datos con el nuevo período
     if (this.selectedOption === 'inventario') this.cargarInventario();
     if (this.selectedOption === 'comercial') this.cargarComercial();
     if (this.selectedOption === 'finanzas') this.cargarFinanzas();
+  }
+
+  getTodayDate(): string {
+    return new Date().toISOString().split('T')[0];
+  }
+
+  onFechaChange(): void {
+    // Validación automática: si ambas fechas están seleccionadas, aplicar filtro
+    if (this.fechaDesde && this.fechaHasta) {
+      // Opcional: auto-aplicar o esperar a que hagan clic en "Aplicar"
+    }
+  }
+
+  aplicarFiltroFechas(): void {
+    if (!this.fechaDesde || !this.fechaHasta) return;
+    
+    // Validar que fecha desde sea menor o igual a fecha hasta
+    if (new Date(this.fechaDesde) > new Date(this.fechaHasta)) {
+      alert('La fecha "Desde" debe ser anterior o igual a la fecha "Hasta"');
+      return;
+    }
+
+    // Recargar datos con el rango de fechas personalizado
+    if (this.selectedOption === 'inventario') this.cargarInventario();
+    if (this.selectedOption === 'comercial') this.cargarComercial();
+    if (this.selectedOption === 'finanzas') this.cargarFinanzas();
+  }
+
+  openDatePicker(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input && input.type === 'date') {
+      // Remover readonly temporalmente para permitir la interacción
+      input.removeAttribute('readonly');
+      // Hacer foco y mostrar el picker
+      input.focus();
+      input.showPicker?.();
+      // Restaurar readonly después de un pequeño delay
+      setTimeout(() => {
+        input.setAttribute('readonly', 'true');
+      }, 100);
+    }
   }
 
   onMesChange(valor: string): void {
@@ -154,7 +213,7 @@ export class EstadisticasComponent {
   // 🔹 Ejemplo: datos reales desde tu API
   cargarInventario() {
     this.estadisticasService
-      .getInventario(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada)
+      .getInventario(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada, this.fechaDesde, this.fechaHasta)
       .subscribe((data) => {
     if (!data || !data.labels || data.labels.length === 0) {
       this.hayDatosInventario = false;
@@ -337,7 +396,13 @@ export class EstadisticasComponent {
   cargarComercial() {
     // ✅ 1) Cargar productos más vendidos
     this.estadisticasService
-      .getProductosMasVendidos(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada)
+      .getProductosMasVendidos(
+        this.periodoSeleccionado,
+        this.mesSeleccionado,
+        this.semanaSeleccionada,
+        this.fechaDesde || undefined,
+        this.fechaHasta || undefined
+      )
       .subscribe((data) => {
       this.productosMasVendidos = data;
 
@@ -368,7 +433,13 @@ export class EstadisticasComponent {
 
     // ✅ 2) Cargar ventas mensuales → gráfica de línea
     this.estadisticasService
-      .getComercial(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada)
+      .getComercial(
+        this.periodoSeleccionado,
+        this.mesSeleccionado,
+        this.semanaSeleccionada,
+        this.fechaDesde || undefined,
+        this.fechaHasta || undefined
+      )
       .subscribe((data) => {
 
       console.log("📌 Datos para la línea:", data);
@@ -394,7 +465,13 @@ export class EstadisticasComponent {
       ]
     };
     this.estadisticasService
-      .getVentasPorMetodoPago(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada)
+      .getVentasPorMetodoPago(
+        this.periodoSeleccionado,
+        this.mesSeleccionado,
+        this.semanaSeleccionada,
+        this.fechaDesde || undefined,
+        this.fechaHasta || undefined
+      )
       .subscribe((data: any) => {
     this.pieChartMetodosPago = {
       labels: data.labels,
@@ -409,7 +486,13 @@ export class EstadisticasComponent {
 
   // ✅ Ventas por categoría
   this.estadisticasService
-    .getVentasPorCategoria(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada)
+    .getVentasPorCategoria(
+      this.periodoSeleccionado,
+      this.mesSeleccionado,
+      this.semanaSeleccionada,
+      this.fechaDesde || undefined,
+      this.fechaHasta || undefined
+    )
     .subscribe((data: any) => {
     this.pieChartCategoriasVenta = {
       labels: data.labels,
@@ -424,7 +507,13 @@ export class EstadisticasComponent {
 
   // ✅ Ventas por mes (Cantidad, no dinero)
   this.estadisticasService
-    .getVentasPorMes(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada)
+    .getVentasPorMes(
+      this.periodoSeleccionado,
+      this.mesSeleccionado,
+      this.semanaSeleccionada,
+      this.fechaDesde || undefined,
+      this.fechaHasta || undefined
+    )
     .subscribe((data: any) => {
     this.barChartVentasMes = {
       labels: data.labels,
@@ -440,7 +529,13 @@ export class EstadisticasComponent {
 
   // ✅ Productos más rentables (ganancia = precioComercial - precioUnitario)
   this.estadisticasService
-    .getProductosRentables(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada)
+    .getProductosRentables(
+      this.periodoSeleccionado,
+      this.mesSeleccionado,
+      this.semanaSeleccionada,
+      this.fechaDesde || undefined,
+      this.fechaHasta || undefined
+    )
     .subscribe((data: any) => {
     this.barChartProductosRentables = {
       labels: data.labels,
@@ -468,7 +563,13 @@ export class EstadisticasComponent {
 
   cargarFinanzas() {
     this.estadisticasService
-      .getFinanzas(this.periodoSeleccionado, this.mesSeleccionado, this.semanaSeleccionada)
+      .getFinanzas(
+        this.periodoSeleccionado,
+        this.mesSeleccionado,
+        this.semanaSeleccionada,
+        this.fechaDesde || undefined,
+        this.fechaHasta || undefined
+      )
       .subscribe({
       next: (data: any) => {
         

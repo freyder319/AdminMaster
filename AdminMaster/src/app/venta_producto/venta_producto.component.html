@@ -153,7 +153,8 @@
                   <p class="text-prec">{{ (p.precioComercial || p.precioUnitario) | currency:'COP':'symbol-narrow':'1.0-0' }}</p>
                   <p class="text-nom">
                     {{ p.nombreProducto }}
-                    <small *ngIf="p.estado === false" class="text-muted ms-1">(Inhabilitado)</small>
+                    <small *ngIf="getAvailableStock(p) === 0" class="text-danger ms-1 fw-bold">(Agotado)</small>
+                    <small *ngIf="p.estado === false && getAvailableStock(p) > 0" class="text-muted ms-1">(Inhabilitado)</small>
                   </p>
                   <p class="text-cant">{{ getAvailableStock(p) | number }} Disponibles</p>
                 </div>

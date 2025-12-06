@@ -48,9 +48,9 @@ export const routes: Routes = [
     { path: "reportes-empleados", component: ReportesEmpleadosComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
     { path: "reportes-ventas", component: ReportesVentasComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
 
-    { path: "crear_venta", component: VentaProductoComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
+    { path: "crear_venta", component: VentaProductoComponent, canActivate: [RoleGuard], data: { roles: ['punto_pos'] } },
     { path: "actividad-empleado", component: ActividadEmpleadoComponent, canActivate: [RoleGuard], data: { roles: ['punto_pos'] } },
-    { path: "inventario", component: InventoryComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
+    { path: "inventario", component: InventoryComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
     { path: "estadisticas", component: EstadisticasComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
     { path: "cajas", component: CajasComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
     { path: "empleados", component: EmpleadosComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
@@ -58,7 +58,7 @@ export const routes: Routes = [
     { path: "modificar-proveedor", component: ModifyProveedorComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
     { path: "clientes", component: ClientesComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
     { path: "turno-empleado", component: EmpleadoTurnoComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] }, children: [
-        { path: "registros-turno", component: TurnosDiaComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
+        { path: "registros-turno", component: TurnosDiaComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
         { path: "activos", component: ActivosComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
         { path: "cerrados", component: CerradosComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
         { path: "historial", component: HistorialComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
@@ -66,8 +66,8 @@ export const routes: Routes = [
         { path: "auditoria-caja", component: AuditoriaCajaComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
         { path: "", redirectTo: "activos", pathMatch: "full" }]
     },
-    { path: "info-gastos/:id", component: InfoGastosComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
-    { path: "detalle-turno-cerrado", component: DetalleTurnoCerradoComponent, canActivate: [RoleGuard], data: { roles: ['admin', 'punto_pos'] } },
+    { path: "info-gastos/:id", component: InfoGastosComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
+    { path: "detalle-turno-cerrado", component: DetalleTurnoCerradoComponent, canActivate: [RoleGuard], data: { roles: ['admin'] } },
     { path: "verificar-email", component: SendEmailComponent },
     { path: "login", component: LoginComponent, canActivate: [NoAuthGuard] },
     { path: "recuperar-email", component: SecurityEmailComponent, canActivate: [RecoveryEmailGuard] },

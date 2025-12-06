@@ -101,8 +101,14 @@ export class InventoryComponent implements AfterViewInit {
     // Filtrar por categoría primero si hay selección
     let lista = this.productos;
     if (this.selectedCategoryId !== '') {
-      const sel = Number(this.selectedCategoryId);
-      lista = lista.filter(p => (p.categoria?.idCategoria ?? p.idCategoria) == sel);
+      if (this.selectedCategoryId === 'agotados') {
+        // Filtrar solo productos agotados (stock = 0)
+        lista = lista.filter(p => (p.stockProducto ?? 0) === 0);
+      } else {
+        // Filtrar por categoría normal
+        const sel = Number(this.selectedCategoryId);
+        lista = lista.filter(p => (p.categoria?.idCategoria ?? p.idCategoria) == sel);
+      }
     }
     // Ordenar: habilitados primero, luego por nombre
     lista = [...lista].sort((a, b) => {
@@ -139,14 +145,16 @@ export class InventoryComponent implements AfterViewInit {
   searchTerm: string = '';
   cargandoInventario: boolean = false;
   // Filtro por categoría (idCategoria o nombre)
-  selectedCategoryId: number | '' = '';
+  selectedCategoryId: number | '' | 'agotados' = '';
   get selectedCategoryName(): string {
     if (this.selectedCategoryId === '') return 'todas';
+    if (this.selectedCategoryId === 'agotados') return 'productos agotados';
     const cat = this.categorias.find(c => c.idCategoria == Number(this.selectedCategoryId));
     return cat?.nombreCategoria || String(this.selectedCategoryId);
   }
   get selectedCategoryLabel(): string {
     if (this.selectedCategoryId === '') return 'Todas Categorías';
+    if (this.selectedCategoryId === 'agotados') return 'Productos Agotados';
     const cat = this.categorias.find(c => c.idCategoria == Number(this.selectedCategoryId));
     return cat?.nombreCategoria || 'Categoría';
   }
@@ -501,7 +509,7 @@ export class InventoryComponent implements AfterViewInit {
     // Reiniciar a la primera página al cambiar la categoría
     this.pageIndex = 0;
   }
-  onSelectCategory(id: number | ''): void {
+  onSelectCategory(id: number | '' | 'agotados'): void {
     this.selectedCategoryId = id;
     this.onCategoryChange();
   }

@@ -95,6 +95,22 @@
               <div class="dropdown-menu modern-range-dropdown">
                 <a
                   class="dropdown-item modern-range-item"
+                  [class.active]="selectedCategoryId === 'agotados'"
+                  href="#"
+                  (click)="onSelectCategory('agotados'); $event.preventDefault()">
+                  <div class="range-item-content">
+                    <div class="range-item-icon">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                      </svg>
+                    </div>
+                    <span class="range-item-text">Productos Agotados</span>
+                  </div>
+                </a>
+                <a
+                  class="dropdown-item modern-range-item"
                   [class.active]="selectedCategoryId === ''"
                   href="#"
                   (click)="onSelectCategory(''); $event.preventDefault()">
@@ -404,7 +420,8 @@
                           <td>{{ producto.codigoProducto }}</td>
                           <td>
                             {{ producto.nombreProducto }}
-                            <small *ngIf="(producto.estado === false) || (producto.stockProducto === 0)" class="text-muted ms-2">(Inhabilitado)</small>
+                            <small *ngIf="producto.stockProducto === 0" class="text-danger ms-2 fw-bold">(Agotado)</small>
+                            <small *ngIf="producto.estado === false && producto.stockProducto > 0" class="text-muted ms-2">(Inhabilitado)</small>
                           </td>
                           <td>{{ producto.categoria?.nombreCategoria || producto.idCategoria || '-' }}</td>
                           <td>{{ producto.stockProducto }}</td>
