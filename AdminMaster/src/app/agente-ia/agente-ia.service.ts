@@ -40,7 +40,7 @@ export interface ChatSessionSummary {
   providedIn: 'root'
 })
 export class AgenteIAService {
-  private readonly webhookUrl = 'https://adminmaster.app.n8n.cloud/webhook/chat';
+  private readonly webhookUrl = 'https://freyder05.app.n8n.cloud/webhook/chat';
   private readonly apiBaseUrl = '/agente-ia';
 
   constructor(private readonly http: HttpClient) {}

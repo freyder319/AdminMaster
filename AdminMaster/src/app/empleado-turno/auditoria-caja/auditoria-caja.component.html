@@ -23,6 +23,32 @@
               <label for="fecha-hasta" class="campo-label">Hasta</label>
               <input id="fecha-hasta" type="date" [(ngModel)]="to" class="form-control clickable-date" aria-label="Hasta" title="Hasta (fecha)" (click)="openDatePicker($event)" readonly>
             </div>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <span style="white-space: nowrap; color: #6c757d;">Desde:</span>
+              <input
+                type="date"
+                [(ngModel)]="from"
+                class="form-control"
+                aria-label="Desde"
+                title="Desde (fecha)"
+                (change)="validateDates()"
+              />
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px;">
+              <span style="white-space: nowrap; color: #6c757d;">Hasta:</span>
+              <input
+                type="date"
+                [(ngModel)]="to"
+                class="form-control"
+                aria-label="Hasta"
+                [min]="from"
+                title="Hasta (fecha)"
+                (change)="validateDates()"
+              />
+            </div>
+            <small *ngIf="dateError" class="text-danger" style="width: 100%; margin-top: -8px; display: block;">
+              La fecha 'Hasta' no puede ser anterior a la fecha 'Desde'
+            </small>
           </div>
 
           <div *ngIf="cargando">Cargando...</div>

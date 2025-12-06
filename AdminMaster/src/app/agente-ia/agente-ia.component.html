@@ -1,43 +1,17 @@
 <div class="avatar-container" *ngIf="!isChatOpen" (click)="toggleChat()">
   <div class="glass-effect">
     <img src="assets/img/agente/AgenteIA.png" class="agent-image" />
-    <div class="shine"></div>
   </div>
-  <div class="agent-text">Agente IA</div>
 </div>
 
-<!-- Mobile: Full screen chat with history button at top -->
-<div class="chat-container mobile-only" *ngIf="isChatOpen">
+<div class="chat-container" *ngIf="isChatOpen">
   <div class="chat-header">
     <div class="chat-header-title">
       <span>Agente IA</span>
       <span>Asistente virtual</span>
     </div>
     <div class="chat-header-actions">
-      <button class="chat-header-history" (click)="$event.stopPropagation(); toggleHistory()" title="Ver historial completo">
-        📋
-      </button>
       <span class="chat-header-close" (click)="$event.stopPropagation(); toggleChat()">×</span>
-    </div>
-  </div>
-
-  <!-- History panel that appears when button is clicked -->
-  <div class="history-panel mobile-only" *ngIf="showHistory && sessions.length > 0">
-    <div class="history-panel-header">
-      <span>Historial de conversaciones</span>
-      <button class="history-panel-close" (click)="$event.stopPropagation(); toggleHistory()">×</button>
-    </div>
-    <div class="history-panel-content">
-      <div 
-        *ngFor="let session of sessions" 
-        class="history-session"
-        [class.active]="session.id === activeSessionId"
-        (click)="switchToSession(session.id)"
-      >
-        <div class="session-title">{{ session.title }}</div>
-        <div class="session-date">{{ session.createdAt | date:'short' }}</div>
-        <div class="session-preview">{{ session.messages[session.messages.length - 1].text | slice:0:50 }}...</div>
-      </div>
     </div>
   </div>
 
@@ -47,7 +21,7 @@
       class="message"
       [ngClass]="msg.from === 'user' ? 'user' : 'agent'"
     >
-      {{ msg.text }}
+      <div class="message-content">{{ msg.text }}</div>
     </div>
     <div class="chat-status" *ngIf="isSending">
       Enviando mensaje...
@@ -73,80 +47,5 @@
     >
       {{ isSending ? 'Enviando...' : 'Enviar' }}
     </button>
-  </div>
-</div>
-
-<!-- Desktop: Chat with history sidebar -->
-<div class="chat-wrapper desktop-only" *ngIf="isChatOpen">
-  <!-- History Sidebar -->
-  <div class="history-sidebar">
-    <div class="history-header">
-      <span>Historial de conversación</span>
-      <button class="history-clear" (click)="$event.stopPropagation(); clearHistory()" title="Limpiar historial">
-        🗑️
-      </button>
-    </div>
-    <div class="history-sessions">
-      <div 
-        *ngFor="let session of sessions" 
-        class="history-session"
-        [class.active]="session.id === activeSessionId"
-        (click)="switchToSession(session.id)"
-      >
-        <div class="session-title">{{ session.title }}</div>
-        <div class="session-date">{{ session.createdAt | date:'short' }}</div>
-        <div class="session-preview">{{ session.messages[session.messages.length - 1].text | slice:0:50 }}...</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Main Chat Area -->
-  <div class="chat-main">
-    <div class="chat-header">
-      <div class="chat-header-title">
-        <span>Agente IA</span>
-        <span>Asistente virtual</span>
-      </div>
-      <div class="chat-header-actions">
-        <button class="chat-header-clear" (click)="$event.stopPropagation(); clearHistory()" title="Limpiar historial">
-          🗑️
-        </button>
-        <span class="chat-header-close" (click)="$event.stopPropagation(); toggleChat()">×</span>
-      </div>
-    </div>
-
-    <div class="chat-body">
-      <div
-        *ngFor="let msg of messages"
-        class="message"
-        [ngClass]="msg.from === 'user' ? 'user' : 'agent'"
-      >
-        <div class="message-content">{{ msg.text }}</div>
-      </div>
-      <div class="chat-status" *ngIf="isSending">
-        Enviando mensaje...
-      </div>
-      <div class="chat-error" *ngIf="errorMessage">
-        {{ errorMessage }}
-      </div>
-    </div>
-
-    <div class="chat-input-area" (click)="$event.stopPropagation()">
-      <input
-        type="text"
-        [(ngModel)]="newMessage"
-        placeholder="Escribe un mensaje..."
-        [disabled]="isSending"
-        (keydown.enter)="sendMessage()"
-      />
-      <button
-        class="chat-send-btn"
-        type="button"
-        (click)="sendMessage()"
-        [disabled]="isSending || !newMessage.trim()"
-      >
-        {{ isSending ? 'Enviando...' : 'Enviar' }}
-      </button>
-    </div>
   </div>
 </div>

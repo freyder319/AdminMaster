@@ -21,6 +21,7 @@ export class AuditoriaCajaComponent {
   q = '';
   from = '';
   to = '';
+  dateError = false;
   cajaId: number | '' = '';
   usuarioId: number | '' = '';
   seleccionado: AuditoriaCaja | null = null;
@@ -35,6 +36,17 @@ export class AuditoriaCajaComponent {
   ) {
     this.cargarListas();
     this.cargar();
+  }
+
+  validateDates(): void {
+    if (this.from && this.to && new Date(this.from) > new Date(this.to)) {
+      this.dateError = true;
+      this.to = this.from; // Reset to the from date
+    } else {
+      this.dateError = false;
+      // Reload data when dates change
+      this.cargar();
+    }
   }
 
   private cargar() {
