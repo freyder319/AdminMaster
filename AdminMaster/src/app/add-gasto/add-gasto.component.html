@@ -18,21 +18,14 @@
           <input #nombreGastoInput data-autofocus="true" type="text" class="form-control" id="nombreGasto" name="nombreGasto" [(ngModel)]="nombreGasto" placeholder="Nombre del gasto" (keydown.enter)="onEnterFocus(fechaGastoInput, $event, nombreGasto)" />
         </div>
 
-        <!-- fecha -->
-        <div class="mb-3">
-          <label for="fechaGasto" class="form-label">Fecha y Hora</label>
-          <input
-            #fechaGastoInput
-            type="datetime-local"
-            class="form-control"
-            id="fechaGasto"
-            name="fechaGasto"
-            [(ngModel)]="fechaGasto"
-            (click)="fechaGastoInput.showPicker()"
-            (focus)="fechaGastoInput.select()"
-            (keydown.enter)="onEnterFocus(montoGastoInput, $event, fechaGasto)"
-          />
-        </div>
+        <!-- fecha oculta: se asigna automáticamente en el componente -->
+        <input
+          #fechaGastoInput
+          type="hidden"
+          id="fechaGasto"
+          name="fechaGasto"
+          [(ngModel)]="fechaGasto"
+        />
 
         <!-- monto -->
         <div class="mb-3">

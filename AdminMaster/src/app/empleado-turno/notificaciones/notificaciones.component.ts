@@ -19,6 +19,7 @@ export class NotificacionesComponent {
   q = '';
   from = '';
   to = '';
+  dateError = false;
 
   constructor(private pqrs: PqrsService) {
     this.pqrs.obtenerTodas().subscribe(data => {
@@ -40,6 +41,21 @@ export class NotificacionesComponent {
     try { ev?.preventDefault(); ev?.stopPropagation(); } catch {}
     this.modalAbierto = false;
     this.seleccionado = null;
+  }
+
+  validateDates(): void {
+    if (this.from && this.to && new Date(this.from) > new Date(this.to)) {
+      this.dateError = true;
+      this.to = this.from;
+    } else {
+      this.dateError = false;
+    }
+  }
+
+  limpiarFiltros() {
+    this.q = '';
+    this.from = '';
+    this.to = '';
   }
 
   get view(): any[] {

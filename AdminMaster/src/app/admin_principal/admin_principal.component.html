@@ -176,7 +176,7 @@
                         class="modern-date-input"
                         placeholder="Seleccionar fecha"
                         [(ngModel)]="dateFromInput"
-                        (change)="setRange('personalizado', true)"
+                        (change)="onMainDateInputsChange()"
                       >
                     </div>
                   </div>
@@ -197,8 +197,12 @@
                         class="modern-date-input"
                         placeholder="Seleccionar fecha"
                         [(ngModel)]="dateToInput"
-                        (change)="setRange('personalizado', true)"
+                        [min]="dateFromInput || null"
+                        (change)="onMainDateInputsChange()"
                       >
+                    </div>
+                    <div class="invalid-feedback" *ngIf="dateToInput && dateToInput < dateFromInput">
+                      La fecha "Hasta" no puede ser anterior a la fecha "Desde".
                     </div>
                   </div>
                 </div>
@@ -404,7 +408,7 @@
               <th class="ocultar-en-movil">Descripción</th>
               <th class="text-end">Monto</th>
               <th class="ocultar-en-movil">Medio de Pago</th>
-              <th class="ocultar-en-movil">Fecha</th>
+              <th class="ocultar-en-movil">Fecha y Hora</th>
               <th class="ocultar-en-movil">Estado</th>
             </tr>
           </thead>
@@ -419,7 +423,7 @@
                       Por: {{ empleadoNombreById(getUsuarioIdFromGasto(g)) }}
                       <span> • Turno: {{ getTurnoIdFromGasto(g) || '—' }}</span>
                     </small>
-                    <small class="text-muted d-md-none">{{ g.forma_pago || '-' }} • {{ g.fecha | date:'dd/MM/yyyy' }}</small>
+                    <small class="text-muted d-md-none">{{ g.forma_pago || '-' }} • {{ g.fecha | date:'dd/MM/yyyy | hh:mm a' }}</small>
                   </div>
                 </div>
               </td>
@@ -434,7 +438,7 @@
                 <br *ngIf="g.transaccionId">
                 <small class="text-muted" *ngIf="g.transaccionId">ID: {{ g.transaccionId }}</small>
               </td>
-              <td class="ocultar-en-movil" data-label="Fecha">{{ g.fecha | date:'dd/MM/yyyy' }}</td>
+              <td class="ocultar-en-movil" data-label="Fecha y Hora">{{ g.fecha | date:'dd/MM/yyyy | hh:mm a' }}</td>
               <td class="ocultar-en-movil" data-label="Estado">
                 <span
                   class="status"
@@ -531,7 +535,7 @@
               <th class="ocultar-en-movil">Descripción</th>
               <th class="text-end">Monto</th>
               <th class="ocultar-en-movil">Medio de Pago</th>
-              <th class="ocultar-en-movil">Fecha</th>
+              <th class="ocultar-en-movil">Fecha y Hora</th>
               <th class="ocultar-en-movil">Estado</th>
             </tr>
           </thead>
@@ -546,7 +550,7 @@
                       Por: {{ empleadoNombreById(getUsuarioIdFromGasto(g)) }}
                       <span> • Turno: {{ getTurnoIdFromGasto(g) || '—' }}</span>
                     </small>
-                    <small class="text-muted d-md-none">{{ g.forma_pago || '-' }} • {{ g.fecha | date:'dd/MM/yyyy' }}</small>
+                    <small class="text-muted d-md-none">{{ g.forma_pago || '-' }} • {{ g.fecha | date:'dd/MM/yyyy | hh:mm a' }}</small>
                   </div>
                 </div>
               </td>
@@ -557,7 +561,7 @@
                 <span class="valor-derecha fw-bold text-danger">{{ (g.monto || 0) | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
               </td>
               <td class="ocultar-en-movil" data-label="Medio de Pago">{{ g.forma_pago || '-' }}</td>
-              <td class="ocultar-en-movil" data-label="Fecha">{{ g.fecha | date:'dd/MM/yyyy' }}</td>
+              <td class="ocultar-en-movil" data-label="Fecha y Hora">{{ g.fecha | date:'dd/MM/yyyy | hh:mm a' }}</td>
               <td class="ocultar-en-movil" data-label="Estado">
                 <span
                   class="status"

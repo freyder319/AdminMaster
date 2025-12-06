@@ -42,11 +42,17 @@ export class AddGastoComponent implements OnInit {
     this.categoriaService.getCategories().subscribe((cats) => (this.categorias = cats));
     this.proveedorService.fetchAll().subscribe((list) => (this.proveedores = list));
 
+    // establecer fecha y hora actuales por defecto al abrir el formulario
+    this.setNowAsFechaGasto();
+
     const el = document.getElementById('gasto');
     if (el && typeof (window as any)?.bootstrap !== 'undefined') {
       el.addEventListener('shown.bs.offcanvas', () => {
         // siempre dejar "confirmado" seleccionado al abrir
         this.estadoSeleccionado = 'confirmado';
+
+        // refrescar la fecha/hora al momento de abrir el offcanvas
+        this.setNowAsFechaGasto();
 
         let input = el.querySelector('input[data-autofocus="true"]') as HTMLInputElement | null;
         if (!input) {
@@ -62,6 +68,17 @@ export class AddGastoComponent implements OnInit {
     }
   }
 
+  private setNowAsFechaGasto() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    // formato compatible con input type="datetime-local": YYYY-MM-DDTHH:MM
+    this.fechaGasto = `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
+
   setEstado(estado: 'confirmado' | 'pendiente') {
     this.estadoSeleccionado = estado;
   }
@@ -71,6 +88,9 @@ export class AddGastoComponent implements OnInit {
   }
 
   onSubmit() {
+    // asegurar que justo al enviar se tome la fecha/hora actual
+    this.setNowAsFechaGasto();
+
     const issues = this.validate();
     if (issues.length) {
       Swal.fire({
