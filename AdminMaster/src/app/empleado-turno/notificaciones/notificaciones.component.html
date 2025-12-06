@@ -3,10 +3,15 @@
     <div class="row">
       <div class="col-12">
         <div class="turno-card">
-          <h2 class="titulo">
-            <i class="bi bi-bell-fill me-2"></i>
-            <span>PQRS</span>
-          </h2>
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 class="titulo mb-0">
+              <i class="bi bi-bell-fill me-2"></i>
+              <span>PQRS</span>
+            </h2>
+            <button type="button" class="btn-turno btn-sm" (click)="limpiarFiltros()">
+              Limpiar filtros
+            </button>
+          </div>
           <div class="filtros-con-labels">
             <div class="campo-buscar">
               <label for="buscar-input" class="campo-label">Buscador</label>
@@ -17,12 +22,36 @@
             </div>
             <div class="campo-fecha">
               <label for="fecha-desde" class="campo-label">Desde</label>
-              <input id="fecha-desde" type="date" [(ngModel)]="from" class="form-control clickable-date" aria-label="Desde" title="Desde (fecha)" (click)="openDatePicker($event)" readonly>
+              <input
+                id="fecha-desde"
+                type="date"
+                [(ngModel)]="from"
+                class="form-control clickable-date"
+                aria-label="Desde"
+                title="Desde (fecha)"
+                (click)="openDatePicker($event)"
+                (change)="validateDates()"
+                readonly
+              >
             </div>
             <div class="campo-fecha">
               <label for="fecha-hasta" class="campo-label">Hasta</label>
-              <input id="fecha-hasta" type="date" [(ngModel)]="to" class="form-control clickable-date" aria-label="Hasta" title="Hasta (fecha)" (click)="openDatePicker($event)" readonly>
+              <input
+                id="fecha-hasta"
+                type="date"
+                [(ngModel)]="to"
+                class="form-control clickable-date"
+                aria-label="Hasta"
+                title="Hasta (fecha)"
+                [min]="from"
+                (click)="openDatePicker($event)"
+                (change)="validateDates()"
+                readonly
+              >
             </div>
+            <small *ngIf="dateError" class="text-danger" style="width: 100%; margin-top: -8px; display: block;">
+              La fecha 'Hasta' no puede ser anterior a la fecha 'Desde'
+            </small>
           </div>
           <div *ngIf="cargando">Cargando...</div>
           <div *ngIf="!cargando && (!view || view.length === 0)">

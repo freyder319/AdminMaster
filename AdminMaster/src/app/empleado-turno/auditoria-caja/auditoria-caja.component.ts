@@ -83,6 +83,14 @@ export class AuditoriaCajaComponent {
     this.cargar();
   }
 
+  limpiarFiltros() {
+    this.q = '';
+    this.from = '';
+    this.to = '';
+    this.dateError = false;
+    this.cargar();
+  }
+
   abrirDetalle(item: AuditoriaCaja) {
     this.seleccionado = item;
     this.modalAbierto = true;

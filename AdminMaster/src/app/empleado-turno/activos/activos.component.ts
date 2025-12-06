@@ -23,6 +23,7 @@ export class ActivosComponent implements OnDestroy {
   q = '';
   from = '';
   to = '';
+  dateError = false;
 
   constructor(private turnos: TurnosService) {
     this.cargar();
@@ -47,6 +48,22 @@ export class ActivosComponent implements OnDestroy {
         this.activos = items || [];
         this.cargando = false;
       });
+  }
+
+  validateDates(): void {
+    if (this.from && this.to && new Date(this.from) > new Date(this.to)) {
+      this.dateError = true;
+      this.to = this.from;
+    } else {
+      this.dateError = false;
+    }
+  }
+
+  limpiarFiltros() {
+    this.q = '';
+    this.from = '';
+    this.to = '';
+    this.cargar();
   }
 
   abrirDetalle(item: TurnoActivoItem) {

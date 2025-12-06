@@ -21,6 +21,7 @@ export class HistorialComponent implements OnDestroy {
   q = '';
   from = '';
   to = '';
+  dateError = false;
   
   private readonly actionMap: Record<string, string> = {
     create: 'Crear',
@@ -65,6 +66,21 @@ export class HistorialComponent implements OnDestroy {
     try { ev?.preventDefault(); ev?.stopPropagation(); } catch {}
     this.modalAbierto = false;
     this.seleccionado = null;
+  }
+
+  validateDates(): void {
+    if (this.from && this.to && new Date(this.from) > new Date(this.to)) {
+      this.dateError = true;
+      this.to = this.from;
+    } else {
+      this.dateError = false;
+    }
+  }
+
+  limpiarFiltros() {
+    this.q = '';
+    this.from = '';
+    this.to = '';
   }
 
   isProducto(ev?: AuditLogDto | null): boolean {

@@ -24,6 +24,7 @@ export class CerradosComponent implements OnDestroy {
   q = '';
   from = '';
   to = '';
+  dateError = false;
 
   constructor(private turnos: TurnosService, private router: Router) {
     this.cargar();
@@ -48,6 +49,22 @@ export class CerradosComponent implements OnDestroy {
         this.cerrados = items || [];
         this.cargando = false;
       });
+  }
+
+  validateDates(): void {
+    if (this.from && this.to && new Date(this.from) > new Date(this.to)) {
+      this.dateError = true;
+      this.to = this.from;
+    } else {
+      this.dateError = false;
+    }
+  }
+
+  limpiarFiltros() {
+    this.q = '';
+    this.from = '';
+    this.to = '';
+    this.cargar();
   }
 
   abrirDetalle(item: TurnoActivoItem) {

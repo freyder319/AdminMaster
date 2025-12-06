@@ -60,6 +60,7 @@ export class AdministradorPrincipalComponent implements OnInit {
   // Inputs UI para rango personalizado
   dateFromInput: string = '';
   dateToInput: string = '';
+  dateRangeError: boolean = false;
   // Modelos Date para Datepicker Material
   dateFromModel?: Date;
   dateToModel?: Date;
@@ -116,6 +117,23 @@ export class AdministradorPrincipalComponent implements OnInit {
     } catch {}
   }
 
+  // Validación para los inputs de fecha principales (toolbar)
+  onMainDateInputsChange() {
+    if (this.dateFromInput && this.dateToInput) {
+      const from = new Date(this.dateFromInput + 'T00:00:00');
+      const to = new Date(this.dateToInput + 'T00:00:00');
+      if (from > to) {
+        this.dateRangeError = true;
+        // normalizar: ajustar "Hasta" al mismo día de "Desde"
+        this.dateToInput = this.dateFromInput;
+        return;
+      }
+    }
+    this.dateRangeError = false;
+    // aplicar el rango personalizado cuando las fechas son válidas
+    this.setRange('personalizado', true);
+  }
+
   verGasto(g: any) {
     const id = Number(g?.id);
     if (!Number.isFinite(id)) return;
@@ -168,14 +186,17 @@ export class AdministradorPrincipalComponent implements OnInit {
 
             const normalesNorm = (normales || []).map((v: any) => ({
               ...v,
-              tipo_venta: v?.tipo_venta || 'inventario'
+              // normalizar tipo_venta y posible transaccionId/transaccion_id
+              tipo_venta: v?.tipo_venta || 'inventario',
+              transaccionId: (v as any)?.transaccionId ?? (v as any)?.transaccion_id ?? null,
             }));
 
             const libresNorm = listaLibres.map((v: any) => ({
               id: v.id,
               total: v.total,
               forma_pago: v.forma_pago,
-              transaccionId: v.transaccionId,
+              // normalizar posible transaccionId/transaccion_id
+              transaccionId: (v as any)?.transaccionId ?? (v as any)?.transaccion_id ?? null,
               fecha_hora: v.fecha_hora,
               created_at: v.created_at,
               estado: v.estado,
