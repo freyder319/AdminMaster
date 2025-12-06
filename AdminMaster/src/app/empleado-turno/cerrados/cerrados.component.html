@@ -7,13 +7,22 @@
             <i class="bi bi-people me-2"></i>
             <span>Turnos cerrados</span>
           </h2>
-          <div class="filtros" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center;">
-            <div class="input-icon" style="flex:1 1 220px;min-width:200px;">
-              <i class="bi bi-search" aria-hidden="true"></i>
-              <input type="search" [(ngModel)]="q" placeholder="Buscar por nombre/correo" class="form-control" aria-label="Buscar">
+          <div class="filtros-con-labels">
+            <div class="campo-buscar">
+              <label for="buscar-input" class="campo-label">Buscador</label>
+              <div class="input-icon">
+                <i class="bi bi-search" aria-hidden="true"></i>
+                <input id="buscar-input" type="search" [(ngModel)]="q" placeholder="Buscar por nombre/correo" class="form-control" aria-label="Buscar">
+              </div>
             </div>
-            <input type="date" [(ngModel)]="from" class="form-control" aria-label="Desde" placeholder="Desde (fecha)" title="Desde (fecha)">
-            <input type="date" [(ngModel)]="to" class="form-control" aria-label="Hasta" placeholder="Hasta (fecha)" title="Hasta (fecha)">
+            <div class="campo-fecha">
+              <label for="fecha-desde" class="campo-label">Desde</label>
+              <input id="fecha-desde" type="date" [(ngModel)]="from" class="form-control clickable-date" aria-label="Desde" title="Desde (fecha)" (click)="openDatePicker($event)" readonly>
+            </div>
+            <div class="campo-fecha">
+              <label for="fecha-hasta" class="campo-label">Hasta</label>
+              <input id="fecha-hasta" type="date" [(ngModel)]="to" class="form-control clickable-date" aria-label="Hasta" title="Hasta (fecha)" (click)="openDatePicker($event)" readonly>
+            </div>
           </div>
           <div *ngIf="cargando">Cargando...</div>
           <div *ngIf="!cargando && view.length === 0">

@@ -11,51 +11,59 @@ export class EstadisticasService {
 
   constructor(private http: HttpClient) {}
 
-  private buildParams(periodo?: string, mes?: string, semana?: string) {
+  private buildParams(
+    periodo?: string,
+    mes?: string,
+    semana?: string,
+    fechaDesde?: string,
+    fechaHasta?: string
+  ) {
     const params: any = {};
     if (periodo) params.periodo = periodo;
     if (mes) params.mes = mes;
     if (semana) params.semana = semana;
+    if (fechaDesde) params.fechaDesde = fechaDesde;
+    if (fechaHasta) params.fechaHasta = fechaHasta;
     return params;
   }
 
-  getInventario(periodo?: string, mes?: string, semana?: string): Observable<any> {
-    const params = this.buildParams(periodo, mes, semana);
+  getInventario(periodo?: string, mes?: string, semana?: string, fechaDesde?: string, fechaHasta?: string): Observable<any> {
+    const params = this.buildParams(periodo, mes, semana, fechaDesde, fechaHasta);
     return this.http.get(`${this.apiUrl}/inventario`, { params });
   }
 
-  getComercial(periodo?: string, mes?: string, semana?: string): Observable<any> {
-    const params = this.buildParams(periodo, mes, semana);
+  getComercial(periodo?: string, mes?: string, semana?: string, fechaDesde?: string, fechaHasta?: string): Observable<any> {
+    const params = this.buildParams(periodo, mes, semana, fechaDesde, fechaHasta);
     return this.http.get(`${this.apiUrl}/comercial`, { params });
   }
 
-  getFinanzas(periodo?: string, mes?: string, semana?: string): Observable<any> {
-    const params = this.buildParams(periodo, mes, semana);
+  getFinanzas(periodo?: string, mes?: string, semana?: string, fechaDesde?: string, fechaHasta?: string): Observable<any> {
+    const params = this.buildParams(periodo, mes, semana, fechaDesde, fechaHasta);
     return this.http.get(`${this.apiUrl}/finanzas`, { params });
   }
 
-  getProductosMasVendidos(periodo?: string, mes?: string, semana?: string): Observable<any[]> {
-    const params = this.buildParams(periodo, mes, semana);
+  getProductosMasVendidos(periodo?: string, mes?: string, semana?: string, fechaDesde?: string, fechaHasta?: string): Observable<any[]> {
+    const params = this.buildParams(periodo, mes, semana, fechaDesde, fechaHasta);
     return this.http.get<any[]>(`${this.apiUrl}/productos-mas-vendidos`, { params });
   }
 
-  getVentasPorMetodoPago(periodo?: string, mes?: string, semana?: string) {
-    const params = this.buildParams(periodo, mes, semana);
+  getVentasPorMetodoPago(periodo?: string, mes?: string, semana?: string, fechaDesde?: string, fechaHasta?: string) {
+    const params = this.buildParams(periodo, mes, semana, fechaDesde, fechaHasta);
     return this.http.get(`${this.apiUrl}/ventas-metodo-pago`, { params });
   }
 
-  getVentasPorCategoria(periodo?: string, mes?: string, semana?: string) {
-    const params = this.buildParams(periodo, mes, semana);
+  getVentasPorCategoria(periodo?: string, mes?: string, semana?: string, fechaDesde?: string, fechaHasta?: string) {
+    const params = this.buildParams(periodo, mes, semana, fechaDesde, fechaHasta);
     return this.http.get(`${this.apiUrl}/ventas-categoria`, { params });
   }
 
-  getVentasPorMes(periodo?: string, mes?: string, semana?: string) {
-    const params = this.buildParams(periodo, mes, semana);
+  getVentasPorMes(periodo?: string, mes?: string, semana?: string, fechaDesde?: string, fechaHasta?: string) {
+    const params = this.buildParams(periodo, mes, semana, fechaDesde, fechaHasta);
     return this.http.get(`${this.apiUrl}/ventas-por-mes`, { params });
   }
 
-  getProductosRentables(periodo?: string, mes?: string, semana?: string) {
-    const params = this.buildParams(periodo, mes, semana);
+  getProductosRentables(periodo?: string, mes?: string, semana?: string, fechaDesde?: string, fechaHasta?: string) {
+    const params = this.buildParams(periodo, mes, semana, fechaDesde, fechaHasta);
     return this.http.get(`${this.apiUrl}/productos-rentables`, { params });
   }
   //Ingresos vs Gastos mensual

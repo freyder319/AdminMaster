@@ -31,14 +31,132 @@ input[type="date"]:focus {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
 }
 /* Search icon inside input on the right */
-.input-icon { position: relative; }
-.input-icon i { position:absolute; right:10px; top:50%; transform:translateY(-50%); color:#1d4ed8; font-size: 16px; pointer-events: none; }
-.input-icon input { padding-right: 40px; width: 100%; }
+.input-icon { 
+  position: relative; 
+  width: 100%;
+  display: block;
+}
+.input-icon i { 
+  position: absolute; 
+  right: 12px; 
+  top: 50%; 
+  transform: translateY(-50%); 
+  color: #1d4ed8; 
+  font-size: 16px; 
+  pointer-events: none; 
+  z-index: 10;
+}
+.input-icon input { 
+  padding-right: 40px; 
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
 .filtro-label { color:#0f766e; font-weight:600; }
+
+/* Nuevos estilos para filtros con labels */
+.filtros-con-labels {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: flex-start;
+}
+
+.campo-buscar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+}
+
+.campo-buscar .input-icon {
+  position: relative !important;
+  width: 100% !important;
+  display: block !important;
+  flex: none !important;
+  min-width: auto !important;
+}
+
+.campo-buscar .input-icon i {
+  position: absolute !important;
+  right: 12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  color: #1d4ed8 !important;
+  font-size: 16px !important;
+  pointer-events: none !important;
+  z-index: 10 !important;
+}
+
+.campo-buscar .input-icon input {
+  padding-right: 40px !important;
+  width: 100% !important;
+  position: relative !important;
+  z-index: 1 !important;
+  border-radius: 18px !important;
+}
+
+.campo-fecha {
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+}
+
+.campo-fecha input {
+  border-radius: 18px !important;
+}
+
+.campo-fecha input.clickable-date {
+  cursor: pointer !important;
+  position: relative;
+  
+  &:hover {
+    background-color: #f8fafc !important;
+    border-color: #1d4ed8 !important;
+  }
+
+  &:readonly {
+    cursor: pointer !important;
+    background-color: #ffffff !important;
+    
+    &:hover {
+      background-color: #f8fafc !important;
+    }
+  }
+
+  &::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+  }
+
+  // Hacer que todo el input sea clickeable
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    cursor: pointer;
+    z-index: 1;
+  }
+}
+
+.campo-label {
+  margin-bottom: 4px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #374151;
+}
 
 @media (min-width: 576px) {
   .filtros { flex-wrap: nowrap; }
-  .input-icon { flex: 1 1 260px; min-width: 220px; }
+  .filtros .input-icon { flex: 1 1 260px; min-width: 220px; }
   .filtros input[type="date"] { flex: 0 0 170px; }
 }
 

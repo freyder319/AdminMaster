@@ -115,5 +115,20 @@ export class HistorialComponent implements OnDestroy {
       return true;
     });
   }
+
+  openDatePicker(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input && input.type === 'date') {
+      // Remover readonly temporalmente para permitir la interacción
+      input.removeAttribute('readonly');
+      // Hacer foco y mostrar el picker
+      input.focus();
+      input.showPicker?.();
+      // Restaurar readonly después de un pequeño delay
+      setTimeout(() => {
+        input.setAttribute('readonly', 'true');
+      }, 100);
+    }
+  }
 }
 

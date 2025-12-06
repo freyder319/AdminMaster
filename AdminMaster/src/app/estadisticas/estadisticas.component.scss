@@ -81,6 +81,7 @@ main {
     font-size: 0.85rem;
     color: #374151;
     background-color: #ffffff;
+    cursor: pointer;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
     &:focus {
@@ -92,6 +93,331 @@ main {
 
   .select-periodo-semana {
     min-width: 9.5rem;
+  }
+
+  /* Filtros de fecha personalizado */
+  .date-filter-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .date-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    i {
+      font-size: 1.1rem;
+      color: var(--primary-color);
+      margin-right: 0.5rem;
+    }
+  }
+
+  .date-input {
+    border-radius: 16px !important;
+    padding: 0.75rem 1.25rem !important;
+    border: 2px solid rgba(148, 163, 184, 0.3) !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+    color: #374151 !important;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    min-width: 180px !important;
+    height: 52px !important;
+    box-shadow: 0 4px 12px rgba(148, 163, 184, 0.15) !important;
+
+    &:focus {
+      border-color: var(--primary-color) !important;
+      box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25), 0 8px 20px rgba(37, 99, 235, 0.15) !important;
+      outline: none !important;
+      background: #ffffff !important;
+      transform: translateY(-1px) !important;
+    }
+
+    &::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      filter: invert(0.4);
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    &.clickable-date {
+      cursor: pointer;
+      position: relative;
+      
+      &:hover {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+        border-color: var(--primary-color) !important;
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2) !important;
+        transform: translateY(-1px) !important;
+
+        &::-webkit-calendar-picker-indicator {
+          opacity: 1;
+          filter: invert(0.2);
+        }
+      }
+
+      &:readonly {
+        cursor: pointer;
+        
+        &:hover {
+          background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+        }
+      }
+
+      // Hacer que todo el input sea clickeable
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        cursor: pointer;
+        z-index: 1;
+      }
+    }
+  }
+
+  .btn-aplicar-fechas {
+    padding: 0.6rem 1.5rem;
+    border-radius: 999px;
+    border: none;
+    background-image: linear-gradient(135deg, #059669, #10b981);
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.25s ease;
+    align-self: flex-end;
+    margin-top: 1.5rem;
+
+    i {
+      font-size: 1rem;
+    }
+
+    &:hover:not(:disabled) {
+      background-image: linear-gradient(135deg, #047857, #059669);
+      box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
+      transform: translateY(-1px);
+    }
+
+    &:disabled {
+      background: #d1d5db;
+      color: #9ca3af;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  /* Responsive para filtros de fecha */
+  @media (max-width: 768px) {
+    .date-filter-group {
+      flex-direction: row;
+      gap: 0.75rem;
+    }
+
+    .date-label {
+      font-size: 0.8rem;
+      min-width: 60px;
+    }
+
+    .date-input {
+      min-width: 120px;
+      font-size: 0.8rem;
+    }
+
+    .btn-aplicar-fechas {
+      margin-top: 0;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.85rem;
+    }
+  }
+}
+
+/* Estilos para el nuevo contenedor de filtros mejorado */
+.filtro-fechas-container {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 20px;
+  padding: 2rem;
+  margin: 0.25rem auto 1.75rem;
+  max-width: 800px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), #4f46e5, #7c3aed);
+  }
+}
+
+.filtro-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.filtro-titulo {
+  color: var(--primary-dark);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    color: var(--primary-color);
+    font-size: 1.3rem;
+  }
+}
+
+.filtro-descripcion {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 0;
+  opacity: 0.8;
+}
+
+.filtro-content {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 0;
+}
+
+/* Estilos específicos para los inputs de fecha del filtro principal */
+.filtro-fechas-container .date-input {
+  border-radius: 16px !important;
+  border: 2px solid rgba(148, 163, 184, 0.3) !important;
+  cursor: pointer !important;
+}
+
+/* Ajuste específico para los inputs de fecha del filtro principal */
+.filtro-fechas-container .date-filter-group {
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 0;
+}
+
+.date-separator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  
+  i {
+    animation: pulse 2s infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.filtro-actions {
+  display: flex;
+  align-items: end;
+  margin-bottom: 1.5rem;
+}
+
+.btn-aplicar-fechas {
+  padding: 0 2.5rem !important;
+  height: 52px !important;
+  border-radius: 16px !important;
+  border: none !important;
+  background-image: linear-gradient(135deg, #059669, #10b981) !important;
+  color: #ffffff !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 160px;
+  position: relative;
+  top: 25px; /* baja solo el botón sin afectar a los inputs */
+
+  i {
+    font-size: 1.1rem;
+  }
+
+  &:hover:not(:disabled) {
+    background-image: linear-gradient(135deg, #047857, #059669) !important;
+    box-shadow: 0 8px 20px rgba(5, 150, 105, 0.4) !important;
+    transform: translateY(-2px) !important;
+  }
+
+  &:disabled {
+    background: linear-gradient(135deg, #d1d5db, #9ca3af) !important;
+    color: #6b7280 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: 0 4px 10px rgba(156, 163, 175, 0.2) !important;
+  }
+}
+
+/* Responsive para el nuevo diseño */
+@media (max-width: 768px) {
+  .filtro-fechas-container {
+    margin: 1.5rem 1rem;
+    padding: 1.5rem;
+  }
+
+  .filtro-titulo {
+    font-size: 1.3rem;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .filtro-content {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .date-separator {
+    transform: rotate(90deg);
+    margin: 0.5rem 0;
+  }
+
+  .filtro-actions {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 0;
+  }
+
+  .btn-aplicar-fechas {
+    width: 100% !important;
+    padding: 1rem 2rem !important;
   }
 }
 
@@ -123,7 +449,7 @@ h1 {
   border-radius: 12px;
   overflow: hidden;
   max-width: 900px;
-  margin: 0 auto 3rem;
+  margin: 0 auto 1.5rem;
   position: relative;
   z-index: 1;
   padding: 15px; /* Aumentar el padding para el efecto de elevación */

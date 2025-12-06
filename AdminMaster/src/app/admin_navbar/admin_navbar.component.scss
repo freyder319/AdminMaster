@@ -75,7 +75,7 @@
 
 .brand-rail {
   margin-bottom: 6px;
-  cursor: default; /* quitar mano solo en el logo */
+  cursor: pointer; /* mostrar cursor pointer para indicar que es clickeable */
 }
 
 .brand-rail:hover {

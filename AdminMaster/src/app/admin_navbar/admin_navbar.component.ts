@@ -34,6 +34,7 @@ export class AdminNavbarComponent {
   searchPreviewLabel: string | null = null;
   searchFeedbackTerm: string | null = null;
   logoUrl: string | null = null;
+  turnoActivo: boolean = false;
 
   constructor(
     private router: Router,
@@ -109,6 +110,11 @@ export class AdminNavbarComponent {
     this.rol = rawRol ? rawRol.toLowerCase() : null;
     try { this.turnoState.hydrateFromStorage(); } catch {}
     this.turno$ = this.turnoState.turnoActivo$;
+    
+    // Suscribirse al estado del turno para actualizar turnoActivo
+    this.turno$.subscribe(turno => {
+      this.turnoActivo = turno !== null;
+    });
 
     // Cargar logo de configuración
     this.cfgSvc.get().subscribe({
@@ -147,6 +153,7 @@ export class AdminNavbarComponent {
       { keywords: ['pqrs', 'notificacion', 'notificaciones'], commands: ['/turno-empleado', 'notificaciones'], label: 'PQRS / Notificaciones' },
       { keywords: ['inventario', 'stock', 'productos'], commands: ['/inventario'], label: 'Inventario' },
       { keywords: ['venta', 'ventas', 'crear venta'], commands: ['/crear_venta'], label: 'Crear venta' },
+      { keywords: ['actividad', 'actividad empleado'], commands: ['/actividad-empleado'], label: 'Actividad empleado' },
       { keywords: ['promocion', 'promoción', 'promociones', 'ofertas'], commands: ['/promociones'], label: 'Promociones' },
       { keywords: ['perfil', 'cuenta', 'configuracion', 'configuración'], commands: ['/perfil_administrador'], label: 'Perfil administrador' },
       { keywords: ['clientes', 'cliente'], commands: ['/clientes'], label: 'Clientes' },
@@ -154,7 +161,22 @@ export class AdminNavbarComponent {
       { keywords: ['empleado', 'empleados'], commands: ['/empleados'], label: 'Empleados' },
     ];
 
-    for (const entry of entries) {
+    // Filtrar entradas según el rol del usuario
+    const userRole = (this.rol || '').toLowerCase();
+    const filteredEntries = entries.filter(entry => {
+      if (userRole === 'admin') {
+        // Si es admin, excluir las entradas relacionadas con ventas (crear_venta)
+        return !entry.commands.includes('/crear_venta');
+      } else if (userRole === 'punto_pos') {
+        // Si es punto_pos, solo mostrar: ventas, actividad empleado, clientes y turno empleado
+        const allowedCommands = ['/crear_venta', '/actividad-empleado', '/clientes', '/turno-empleado'];
+        return allowedCommands.some(cmd => entry.commands.includes(cmd)) || 
+               entry.commands.some(cmd => cmd.startsWith('/turno-empleado'));
+      }
+      return true;
+    });
+
+    for (const entry of filteredEntries) {
       if (entry.keywords.some(k => q.includes(k))) {
         return { label: entry.label, commands: entry.commands };
       }
@@ -181,13 +203,19 @@ export class AdminNavbarComponent {
 
   private syncGroupWithUrl(url: string) {
     const u = (url || '').toLowerCase();
-    // Rutas de Turnos (siempre antes que Cuenta para no pisar)
+    
+    // Rutas de Cajas (verificar primero para evitar conflictos)
     if (
-      u.includes('/turno-empleado/registros-turno') ||
-      u.includes('/turno-empleado/activos') ||
-      u.includes('/turno-empleado/cerrados') ||
-      u.includes('/turno-empleado/historial') ||
-      u.includes('/turno-empleado/notificaciones')
+      u.includes('/turno-empleado/auditoria-caja') ||
+      u.includes('/cajas')
+    ) {
+      this.selectedGroup = 'cajas';
+      return;
+    }
+    
+    // Rutas de Turnos (después de verificar cajas)
+    if (
+      u.includes('/turno-empleado')
     ) {
       this.selectedGroup = 'turnos';
       return;
@@ -232,14 +260,6 @@ export class AdminNavbarComponent {
       return;
     }
 
-    // Rutas de Cajas
-    if (
-      u.includes('/turno-empleado/auditoria-caja') ||
-      u.includes('/cajas')
-    ) {
-      this.selectedGroup = 'cajas';
-      return;
-    }
 
     // Rutas de Inteligencia Artificial
     if (
@@ -302,7 +322,13 @@ export class AdminNavbarComponent {
   }
 
   onRailClick(): void {
-    this.isMobilePanelOpen = !this.isMobilePanelOpen;
+    if (this.rol === 'admin') {
+      // Solo para admin: navegar a movimientos
+      this.router.navigate(['/movimientos']);
+    } else {
+      // Para otros roles: solo toggle del panel móvil
+      this.isMobilePanelOpen = !this.isMobilePanelOpen;
+    }
   }
 
   onRailGroupClick(group: 'cuenta' | 'turnos' | 'operaciones' | 'reportes' | 'relaciones' | 'cajas'| 'ia'): void {
