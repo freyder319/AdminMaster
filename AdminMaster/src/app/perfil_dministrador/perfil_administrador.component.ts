@@ -60,9 +60,7 @@ export class PerfilAdministradorComponent {
         console.error('Error cargando configuración:', err);
         // Si es 404, significa que no hay configuración aún (es normal)
         if (err.status === 404) {
-          console.log('No hay configuración existente, se creará una nueva');
         } else if (err.status === 400) {
-          console.log('Error 400 al cargar configuración, usando formulario vacío');
           // No mostrar error al usuario, solo log para depurar
         } else {
           this.error = 'Error cargando configuración';
@@ -127,7 +125,6 @@ export class PerfilAdministradorComponent {
       // Update existing
       const id = this.config.id;
       const { id: _, ...payload } = this.form as any;
-      console.log('Enviando payload para actualizar:', payload);
       this.cfgSvc.update(id, payload).subscribe({
         next: (cfg) => {
           this.config = cfg;

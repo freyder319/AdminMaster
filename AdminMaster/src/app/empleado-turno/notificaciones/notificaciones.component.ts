@@ -32,7 +32,6 @@ export class NotificacionesComponent {
   }
 
   abrirDetalle(n: any) {
-    try { console.log('[Notificaciones] abrirDetalle', n); } catch {}
     this.seleccionado = n;
     this.modalAbierto = true;
   }

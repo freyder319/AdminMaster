@@ -41,8 +41,6 @@ export class ActivosComponent implements OnDestroy {
         try {
           const sample = (items || []).slice(0, 3);
           if (sample.length) {
-            console.log('[Turnos Activos] Muestra de items:', sample);
-            console.log('[Turnos Activos] Claves del primer item:', Object.keys(sample[0] || {}));
           }
         } catch {}
         this.activos = items || [];
@@ -67,7 +65,6 @@ export class ActivosComponent implements OnDestroy {
   }
 
   abrirDetalle(item: TurnoActivoItem) {
-    try { console.log('[Activos] abrirDetalle', item); } catch {}
     this.seleccionado = item;
     this.modalAbierto = true;
   }

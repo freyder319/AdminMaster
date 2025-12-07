@@ -49,7 +49,6 @@ ngOnInit(): void {
   if (isPlatformBrowser(this.platformId)) {
     this.cargarProductos();
   } else {
-    console.log("Error de Servidor");
   }
 }
 
@@ -213,37 +212,33 @@ ngOnInit(): void {
   }
 
   private cargarProductos() {
-    console.log('🔍 Iniciando carga de productos...');
     this.productoService.getPublic().subscribe({
       next: (data: any[]) => {
-        console.log("✅ Datos recibidos del servidor:", data);
         if (!data || !Array.isArray(data)) {
-          console.error('❌ Error: La respuesta del servidor no es un array:', data);
+          console.error('Error: La respuesta del servidor no es un array:', data);
           return;
         }
         if (data.length === 0) {
-          console.warn('⚠️ El servidor devolvió un array vacío de productos');
+          console.warn('El servidor devolvió un array vacío de productos');
         }
         this.cargarDesdeBackend(data);
       },
       error: (err) => {
-        console.error("❌ Error al obtener productos:", err);
+        console.error("Error al obtener productos:", err);
         // Set default products for development
         if (err.status === 0) {
-          console.warn('⚠️ No se pudo conectar al servidor. Verifica que el backend esté en ejecución.');
+          console.warn('No se pudo conectar al servidor. Verifica que el backend esté en ejecución.');
         }
         // Inicializar con datos vacíos para evitar errores en el template
         this.productos = [];
         this.categorias = [];
       },
       complete: () => {
-        console.log('✅ Carga de productos completada');
       }
     });
   }
 
   private cargarDesdeBackend(productosBackend: any[]): void {
-    console.log('🔄 Procesando', productosBackend.length, 'productos...');
     
     // Limpiar estructuras previas
     this.productos = [];
@@ -280,61 +275,42 @@ ngOnInit(): void {
       return base + path;
     };
 
-    try {
-      // Procesar cada producto
-      productosBackend.forEach((prod: any) => {
-        if (!prod) return; // Saltar productos nulos o indefinidos
-        
-        const catIdRaw = prod.idCategoria ?? prod.categoria?.idCategoria;
-        const catId = (catIdRaw !== undefined && catIdRaw !== null) ? Number(catIdRaw) : null;
-        const catNombre = prod.categoria?.nombreCategoria || 'Sin categoría';
+    // Procesar cada producto
+    productosBackend.forEach((prod: any) => {
+      if (!prod) return; // Saltar productos nulos o indefinidos
+      
+      const catIdRaw = prod.idCategoria ?? prod.categoria?.idCategoria;
+      const catId = (catIdRaw !== undefined && catIdRaw !== null) ? Number(catIdRaw) : null;
+      const catNombre = prod.categoria?.nombreCategoria || 'Sin categoría';
 
-        // Crear el objeto de producto
-        const productoCard: ProductoCard = {
-          nombre: prod.nombreProducto || 'Producto sin nombre',
-          precio: prod.precioComercial ?? prod.precioUnitario ?? 0,
-          imagen: toImageUrl(prod.imgProducto),
-          stock: prod.stockProducto ?? 0,
-          categoriaId: catId,
-          categoriaNombre: catNombre,
-        };
+      // Crear el objeto de producto
+      const productoCard: ProductoCard = {
+        nombre: prod.nombreProducto || 'Producto sin nombre',
+        precio: prod.precioComercial ?? prod.precioUnitario ?? 0,
+        imagen: toImageUrl(prod.imgProducto),
+        stock: prod.stockProducto ?? 0,
+        categoriaId: catId,
+        categoriaNombre: catNombre,
+      };
 
-        this.productos.push(productoCard);
+      this.productos.push(productoCard);
 
-        if (catId !== null && !categoriasMap.has(catId)) {
-          categoriasMap.set(catId, catNombre);
-        }
-      });
-
-      // Actualizar lista de categorías únicas
-      this.categorias = Array.from(categoriasMap.entries())
-        .map(([id, nombre]) => ({ id, nombre }));
-
-      // Seleccionar por defecto la primera categoría disponible
-      if (this.categorias.length > 0) {
-        this.categoriaSeleccionadaId = this.categorias[0].id;
-        this.categoriaSeleccionadaNombre = this.categorias[0].nombre;
-      } else {
-        this.categoriaSeleccionadaId = null;
-        this.categoriaSeleccionadaNombre = '';
+      if (catId !== null && !categoriasMap.has(catId)) {
+        categoriasMap.set(catId, catNombre);
       }
-      
-      // Reiniciar a la primera página
-      this.currentPage = 1;
-      this.animarTitulo = true;
+    });
 
-      console.log(' Productos cargados correctamente:', {
-        categorias: this.categorias.length,
-        totalProductos: this.productos.length
-      });
+    // Actualizar lista de categorías únicas
+    this.categorias = Array.from(categoriasMap.entries())
+      .map(([id, nombre]) => ({ id, nombre }));
 
-      // Iniciar/reiniciar auto-scroll una vez que los carruseles existen en el DOM
-      setTimeout(() => this.startAutoScrollIfMobile(), 0);
-      
-    } catch (error) {
-      console.error(' Error al procesar los productos:', error);
-      // Asegurarse de que siempre haya una estructura válida
-      this.productos = [];
+    // Seleccionar por defecto la primera categoría disponible
+    if (this.categorias.length > 0) {
+      this.categoriaSeleccionadaId = this.categorias[0].id;
+      this.categoriaSeleccionadaNombre = this.categorias[0].nombre;
+    } else {
+      this.categoriaSeleccionadaId = null;
+      this.categoriaSeleccionadaNombre = '';
       this.categorias = [];
     }
   }

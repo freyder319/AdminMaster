@@ -161,8 +161,7 @@ export class AdministradorPrincipalComponent implements OnInit {
     } else if (this.selectedTab === 'egresos') {
       this.gastoSrv.fetchAll().subscribe({
         next: (rows) => {
-          this.gastos = rows || [];
-          console.log('Gastos cargados:', this.gastos.length);
+          this.gastos = rows || []
         },
         error: (err) => {
           console.error('Error cargando gastos', err);
@@ -217,7 +216,6 @@ export class AdministradorPrincipalComponent implements OnInit {
 
             this.ventas = [...normalesNorm, ...libresNorm];
             try {
-              console.log('Ventas (normales + libres) cargadas:', this.ventas.length);
             } catch {}
           },
           error: (errLib) => {
@@ -681,7 +679,6 @@ export class AdministradorPrincipalComponent implements OnInit {
 
   // Método para aplicar filtros avanzados desde el componente Filter
   applyAdvancedFilters(filters: any) {
-    console.log('Aplicando filtros avanzados:', filters);
     
     // Aplicar filtros de forma de pago
     this.filtroFormaPago = filters.forma_pago || '';

@@ -357,11 +357,7 @@ export class EstadisticasComponent {
     }));
     this.promedioRotacion = rotacion.sort((a: any, b: any) => a.ratio - b.ratio).slice(0, 5);
 
-    // DEBUG opcional:
-    console.log('stockCritico', stockCritico);
-    console.log('coloresStock', coloresStock);
-    console.log('barChartStockCritico', this.barChartStockCritico);
-    // ✅ Promedio de rotación usando gráfico de burbuja
+    // Promedio de rotación usando gráfico de burbuja
     const bubbleData = rotacion.map((p: any, i: number) => ({
       x: i + 1,
       y: p.ratio,
@@ -431,7 +427,7 @@ export class EstadisticasComponent {
       };
     });
 
-    // ✅ 2) Cargar ventas mensuales → gráfica de línea
+    //  2) Cargar ventas mensuales → gráfica de línea
     this.estadisticasService
       .getComercial(
         this.periodoSeleccionado,
@@ -441,8 +437,6 @@ export class EstadisticasComponent {
         this.fechaHasta || undefined
       )
       .subscribe((data) => {
-
-      console.log("📌 Datos para la línea:", data);
 
     if (!data || !data.labels || data.labels.length === 0 || !data.data || data.data.every((v: number) => Number(v) === 0)) {
       this.hayDatosComercial = false;
@@ -572,11 +566,9 @@ export class EstadisticasComponent {
       )
       .subscribe({
       next: (data: any) => {
-        
-        console.log("📌 Datos recibidos para Finanzas:", data);
 
         if (!data) {
-          console.error("❌ No llegaron datos de finanzas");
+          console.error(" No llegaron datos de finanzas");
           this.hayDatosFinanzas = false;
           this.lineIngresosGastos = { labels: [], datasets: [] };
           this.barMargenBeneficio = { labels: [], datasets: [] };
@@ -765,9 +757,7 @@ export class EstadisticasComponent {
 }
 
   highlightPie(index: number) {
-    console.log('Highlight Pie:', index);
   }
   highlightBar(index: number) {
-    console.log('Highlight Bar:', index);
   }
 }

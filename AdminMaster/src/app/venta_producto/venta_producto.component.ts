@@ -196,7 +196,6 @@ export class VentaProductoComponent implements AfterViewInit {
     if (items.length === 0) return; // nada válido para enviar
 
     this.isSubmitting = true;
-    console.log('Enviando venta payload:', JSON.parse(JSON.stringify(payload)));
     try { if ((payload as any)?.items) { console.table((payload as any).items); } } catch {}
     this.ventaService.create(payload).subscribe({
       next: () => {

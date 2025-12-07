@@ -57,7 +57,6 @@ export class HistorialComponent implements OnDestroy {
   }
 
   abrirDetalle(ev: AuditLogDto) {
-    try { console.log('[Historial] abrirDetalle', ev); } catch {}
     this.seleccionado = ev;
     this.modalAbierto = true;
   }

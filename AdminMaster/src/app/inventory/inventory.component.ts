@@ -1,5 +1,4 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-
 import { AdminNavbarComponent } from "../admin_navbar/admin_navbar.component";
 import { CreateProductoComponent } from "../create_producto/create_producto.component";
 import { FormGroup, FormsModule, NgForm } from '@angular/forms';
@@ -320,16 +319,8 @@ export class InventoryComponent implements AfterViewInit {
       const cantidadEntrante = Number(this.entrada.cantidad) || 0;
       const nuevaCantidad = stockActual + cantidadEntrante;
       
-      console.log('Actualizando stock:', {
-        productoId: this.productoEncontrado.id,
-        stockActual,
-        cantidadEntrante,
-        nuevaCantidad
-      });
-      
       this.productoService.actualizarStock(this.productoEncontrado.id, nuevaCantidad).subscribe({
         next: (productoActualizado: Producto) => {
-          console.log('Stock Actualizado Correctamente:', productoActualizado);
           Swal.fire({
             icon: 'success',
             title: '¡Entrada Registrada!',
@@ -400,7 +391,6 @@ export class InventoryComponent implements AfterViewInit {
   cambiarPagina(event: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    console.log('Página actual:', this.pageIndex, ' | Tamaño:', this.pageSize);
   }
   // Productos paginados según pageIndex y pageSize
   get paginatedProductos(): Producto[] {
@@ -605,7 +595,6 @@ export class InventoryComponent implements AfterViewInit {
             form.resetForm(); 
           },
           error: (err: any) => {
-            console.log(err)
             if (err.status === 400) {
               this.errorMessage = err.error.message;
             } else {
