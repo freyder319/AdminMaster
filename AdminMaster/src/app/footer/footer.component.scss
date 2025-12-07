@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@600&family=Nunito:wght@400;600&family=Poetsen+One&display=swap');
 
 body {
     font-family: 'Quicksand', sans-serif;
@@ -15,9 +15,72 @@ main {
 }
 
 .section-contacto {
-    padding: 2rem 1rem 1rem;
-    text-align: center;
+    padding: 3rem 1rem 2.75rem;
     background: linear-gradient(to bottom, #fffaf0, #fbe3d9);
+    font-family: 'Nunito', sans-serif;
+}
+
+/* Contenedor tipo grid para el footer (4 columnas en escritorio) */
+.container-footer-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.6fr 1.1fr 1.1fr; // 3 columnas: marca, estudio, newsletter
+    column-gap: 2.5rem;
+    row-gap: 1.5rem;
+    align-items: stretch; // todas las columnas con la misma altura de fila
+    justify-items: center; // centrar horizontalmente cada columna
+}
+
+.footer-col {
+    text-align: center;
+    font-size: 1.14rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; // centra verticalmente dentro de la celda del grid
+    height: 100%; // ocupar toda la altura de la celda
+}
+
+.footer-col p {
+    margin: 0.25rem 0;
+}
+
+/* Enlaces de la columna Redes (texto + icono clicables) */
+.footer-col a {
+    display: block;
+    margin: 0.25rem 0;
+    text-decoration: none;
+    color: #612121;
+}
+
+.footer-col a:hover {
+    color: #78391c;
+}
+
+/* Iconos inline en columnas Enlaces / Newsletter */
+.footer-col i.bi {
+    font-size: 1.70rem;
+    color: #612121;
+    vertical-align: middle;
+    margin-right: 0.4rem;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.footer-col p:hover i.bi {
+    color: #78391c;
+    transform: translateY(-1px);
+}
+
+.footer-col-brand {
+    text-align: center;
+}
+
+/* Limitar ancho del texto descriptivo bajo el logo para que no se vea tan largo */
+.footer-col-brand p {
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .logo-contacto {
@@ -37,10 +100,11 @@ main {
 
 .titulo-contacto {
     color: #612121;
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 2rem;
     letter-spacing: 1px;
+    font-family: 'Poetsen One', sans-serif;
 }
 
 .redes-contacto {
@@ -100,10 +164,22 @@ main {
     letter-spacing: 0.5px;
     width: 100%;
     box-shadow: inset 0 12px 24px rgba(255, 250, 240, 0.2);
+    font-family: 'Nunito', sans-serif;
 }
 
 
 @media screen and (max-width: 768px) {
+    .container-footer-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .footer-col,
+    .footer-col-brand {
+        text-align: center;
+        font-size: 0.98rem;
+    }
+
     .logo-contacto {
         width: 120px;
     }
