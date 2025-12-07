@@ -40,6 +40,7 @@ export class ProductsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChildren('productsWrapper') productsWrappers?: QueryList<ElementRef<HTMLDivElement>>;
   private autoScrollId: any = null;
   @ViewChild('productsSection') productsSection?: ElementRef<HTMLElement>;
+  @ViewChild('heroVideo') heroVideo?: ElementRef<HTMLVideoElement>;
   private sectionObserver?: IntersectionObserver;
 
   constructor(private productoService: ProductoService,@Inject(PLATFORM_ID) private platformId: Object) { }
@@ -191,6 +192,16 @@ ngOnInit(): void {
   ngAfterViewInit(): void {
     this.startAutoScrollIfMobile();
     this.setupSectionObserver();
+
+    // Intentar forzar la reproducción del video de fondo cuando estemos en el navegador
+    if (isPlatformBrowser(this.platformId) && this.heroVideo?.nativeElement) {
+      const videoEl = this.heroVideo.nativeElement;
+      // aseguramos que esté silenciado para cumplir políticas de autoplay
+      videoEl.muted = true;
+      videoEl.play().catch(() => {
+        // Algunos navegadores aún pueden bloquearlo; en ese caso simplemente ignoramos el error
+      });
+    }
   }
 
   ngOnDestroy(): void {
