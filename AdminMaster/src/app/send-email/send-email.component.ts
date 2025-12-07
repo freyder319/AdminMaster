@@ -29,7 +29,6 @@ export class SendEmailComponent {
 
   enviarCodigo() {
     const correo = this.emailForm.value.correo;
-    console.log('Correo a enviar:', correo);
 
     if (!correo || this.emailForm.invalid) {
       Swal.fire({

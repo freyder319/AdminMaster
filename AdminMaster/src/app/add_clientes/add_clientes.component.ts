@@ -93,7 +93,6 @@ export class AddClientesComponent {
         this.clienteAgregado.emit();  
       },
       error: (err) => {
-        console.log(err)
         if (err.status === 400) {
           this.errorMessage = err.error.message;
         } else {
@@ -111,8 +110,6 @@ export class AddClientesComponent {
   cambiarEstado(nuevoEstado: 'activo' | 'inactivo') {
     if(this.cliente){
       this.cliente.estado = nuevoEstado;
-    }else{
-      console.log("Error de estado")
     }
   }
   validarcliente() {

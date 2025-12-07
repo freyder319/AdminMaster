@@ -48,7 +48,6 @@ export class ModifyClienteComponent {
           this.clienteModificado.emit();  
           },
         error: (err) => {
-          console.log(err)
           if (err.status === 400) {
             this.errorMessage = err.error.message;
           } else {
@@ -62,14 +61,11 @@ export class ModifyClienteComponent {
         }
       });
     }else{
-      console.log("Error al cargar el cliente")
     }
   }
   cambiarEstado(nuevoEstado: 'activo' | 'inactivo') {
     if(this.cliente){
       this.cliente.estado = nuevoEstado;
-    }else{
-      console.log("Error de estado")
     }
   }
 }

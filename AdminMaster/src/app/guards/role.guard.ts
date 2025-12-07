@@ -8,7 +8,6 @@ export class RoleGuard implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         if (!this.auth.isTokenValid()) {
-            console.log('[RoleGuard] token no válido, redirigiendo a /login');
             this.auth.logout();
             this.router.navigate(['/login']);
             return false;
@@ -19,14 +18,10 @@ export class RoleGuard implements CanActivate {
         const allowedLc = allowedRoles.map(r => r?.toString().toLowerCase());
         const userLc = userRole.toLowerCase();
 
-        console.log('[RoleGuard] ruta:', state.url, 'roles permitidos:', allowedLc, 'rol usuario:', userLc);
-
         if (allowedLc.includes(userLc)) {
-            console.log('[RoleGuard] acceso PERMITIDO');
             return true;
         }
 
-        console.log('[RoleGuard] acceso DENEGADO, redirigiendo a /login');
         this.router.navigate(['/login']);
         return false;
     }

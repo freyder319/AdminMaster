@@ -58,7 +58,6 @@ export class AgenteIAComponent implements OnInit {
 
   goToHistory(): void {
     // Navigate to history view or show history modal
-    console.log('Navigate to history view');
     // You can implement navigation to a separate history page/component here
   }
 

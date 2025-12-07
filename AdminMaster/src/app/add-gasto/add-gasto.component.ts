@@ -118,7 +118,6 @@ export class AddGastoComponent implements OnInit {
     this.gastoService.create(payload).subscribe({
       next: (res) => {
         this.submitting = false;
-        console.log('Gasto Creado, id:', res?.id, 'usuarioId enviado:', usuarioId);
         this.closeGastoOffcanvas();
         Swal.fire({
           icon: 'success',

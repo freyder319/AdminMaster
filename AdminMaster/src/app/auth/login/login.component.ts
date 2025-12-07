@@ -23,7 +23,6 @@ export class LoginComponent {
     private router: Router,
     private auth: AuthService
   ) {
-    console.log('[LoginComponent] constructor');
     this.loginForm = this.fb.group({
       correo: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
@@ -35,7 +34,6 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    console.log('[LoginComponent] onSubmit');
     if (this.loginForm.invalid) {
       Swal.fire({
         icon: 'error',

@@ -42,8 +42,6 @@ export class CerradosComponent implements OnDestroy {
         try {
           const sample = (items || []).slice(0, 3);
           if (sample.length) {
-            console.log('[Turnos Cerrados] Muestra de items:', sample);
-            console.log('[Turnos Cerrados] Claves del primer item:', Object.keys(sample[0] || {}));
           }
         } catch {}
         this.cerrados = items || [];
@@ -68,7 +66,6 @@ export class CerradosComponent implements OnDestroy {
   }
 
   abrirDetalle(item: TurnoActivoItem) {
-    try { console.log('[Cerrados] abrirDetalle', item); } catch {}
     this.seleccionado = item;
     this.modalAbierto = true;
   }
@@ -84,7 +81,6 @@ export class CerradosComponent implements OnDestroy {
     const payload = this.seleccionado;
     if (!payload) return;
     try {
-      console.log('[VerMás] Navegando a detalle-turno-cerrado con payload:', payload);
       this.router.navigateByUrl('/detalle-turno-cerrado', { state: { turno: payload } })
         .then(ok => {
           if (ok) this.modalAbierto = false;

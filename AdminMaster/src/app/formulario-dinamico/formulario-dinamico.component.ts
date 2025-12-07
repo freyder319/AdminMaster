@@ -520,7 +520,6 @@ Máximo 50 caracteres. Ejemplos:
         }
       },
       error: () => {
-        console.log('IA no disponible, usando mensajes predefinidos');
       }
     });
   }
