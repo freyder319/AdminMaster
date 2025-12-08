@@ -297,7 +297,13 @@ export class CreateProductoComponent implements OnInit {
     if (!s) return null;
     if (s.startsWith('http') || s.startsWith('data:')) return s;
     if (s.startsWith('/storage/') || s.startsWith('storage/')) {
-      const baseApi = (environment.apiUrl || '').replace(/\/+$/, '');
+      let baseApi = (environment.apiUrl || '');
+      try {
+        if (typeof window !== 'undefined' && window.location && !window.location.hostname.includes('localhost')) {
+          baseApi = `${window.location.origin}/api`;
+        }
+      } catch {}
+      baseApi = baseApi.replace(/\/+$/, '');
       const path = s.replace(/^\/+/, '');
       return `${baseApi}/${path}`;
     }
