@@ -295,6 +295,23 @@ export class CreateProductoComponent implements OnInit {
     if (!img) return null;
     const s = String(img).trim();
     if (!s) return null;
+    // Si viene como URL absoluta apuntando a localhost, reescribir a la API pública
+    if (s.startsWith('http://localhost') || s.startsWith('https://localhost')) {
+      try {
+        const url = new URL(s);
+        const path = url.pathname.replace(/^\/+/, '');
+        let baseApi = environment.apiUrl || '';
+        try {
+          if (typeof window !== 'undefined' && window.location && !window.location.hostname.includes('localhost')) {
+            baseApi = `${window.location.origin}/api`;
+          }
+        } catch {}
+        baseApi = baseApi.replace(/\/+$/, '');
+        return `${baseApi}/${path}`;
+      } catch {
+        // si falla, seguimos con la lógica normal
+      }
+    }
     if (s.startsWith('http') || s.startsWith('data:')) return s;
     if (s.startsWith('/storage/') || s.startsWith('storage/')) {
       let baseApi = (environment.apiUrl || '');
