@@ -518,12 +518,20 @@ export class InventoryComponent implements AfterViewInit {
     if (s.toLowerCase().startsWith('default') && s.toLowerCase() !== 'default.jpg') {
       return this.baseImageUrl + 'default.jpg';
     }
-    // Si ya viene como URL absoluta apuntando a localhost, reescribir a environment.apiUrl
+    // Si ya viene como URL absoluta apuntando a localhost, reescribir a la API pública
     if (s.startsWith('http://localhost') || s.startsWith('https://localhost')) {
       try {
         const url = new URL(s);
         const path = url.pathname.replace(/^\/+/, '');
-        const baseApi = environment.apiUrl.replace(/\/+$/, '');
+        // Por defecto usamos environment.apiUrl, pero si estamos en un dominio real (no localhost),
+        // preferimos construir la base a partir del origen actual + '/api'
+        let baseApi = environment.apiUrl || '';
+        try {
+          if (typeof window !== 'undefined' && window.location && !window.location.hostname.includes('localhost')) {
+            baseApi = `${window.location.origin}/api`;
+          }
+        } catch {}
+        baseApi = baseApi.replace(/\/+$/, '');
         return `${baseApi}/${path}`;
       } catch {
         // Si falla el parseo, continuar con lógica normal
