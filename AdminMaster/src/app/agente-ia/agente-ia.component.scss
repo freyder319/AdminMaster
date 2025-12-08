@@ -702,14 +702,11 @@
     color: #ef4444;
     border-radius: 12px;
     font-size: 14px;
-  }
-}
+  }}
 
-/* Desktop styles - Chat with sidebar */
-@media (min-width: 768px) {
-  .desktop-only {
-    display: block;
-  }
+  /* Formatted message content */
+  .message-content {
+    white-space: pre-wrap;
 
   .mobile-only {
     display: none !important;

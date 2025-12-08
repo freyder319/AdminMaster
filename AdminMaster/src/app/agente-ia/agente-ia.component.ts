@@ -47,6 +47,55 @@ export class AgenteIAComponent implements OnInit {
   private readonly STORAGE_KEY_ACTIVE_SESSION = 'agente-ia-active-session';
   private readonly STORAGE_KEY_CHAT_STATE = 'agente-ia-chat-state';
 
+  formatMessage(text: string): string {
+    if (!text) return '';
+    
+    // Remove ** and -- from the text
+    let formattedText = text.replace(/\*\*|--/g, '');
+    
+    // Escape HTML to prevent XSS
+    formattedText = this.escapeHtml(formattedText);
+    
+    // Replace newlines with <br> for line breaks
+    formattedText = formattedText.replace(/\n/g, '<br>');
+    
+    // Format lists (both bullet points and numbered lists)
+    formattedText = formattedText.replace(/^(\s*[-•*]\s+)(.+)$/gm, '<li>$2</li>');
+    formattedText = formattedText.replace(/^(\s*\d+\.\s+)(.+)$/gm, '<li>$2</li>');
+    
+    // If we found any list items, wrap them in a <ul> or <ol>
+    if (formattedText.includes('<li>')) {
+      formattedText = formattedText.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
+    }
+    
+    // Format code blocks (text between ```)
+    formattedText = formattedText.replace(/```(\w*)\n([\s\S]*?)\n```/g, 
+      (match: string, lang: string, code: string) => {
+        return `<pre><code class="language-${lang || 'plaintext'}">${this.escapeHtml(code)}</code></pre>`;
+      }
+    );
+    
+    // Format inline code (text between `)
+    formattedText = formattedText.replace(/`([^`]+)`/g, '<code>$1</code>');
+    
+    // Format links
+    formattedText = formattedText.replace(
+      /(https?:\/\/[^\s]+)/g, 
+      '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
+    );
+    
+    return formattedText;
+  }
+  
+  private escapeHtml(unsafe: string): string {
+    return unsafe
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
   toggleChat(): void {
     this.isChatOpen = !this.isChatOpen;
     this.saveChatState();
