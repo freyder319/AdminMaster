@@ -92,6 +92,13 @@
             </span>
           </div>
 
+          <!-- Aviso para punto_pos sin turno activo -->
+          <div
+            *ngIf="isPuntoPos() && !turnoActivo && hasSearchInput"
+            style="font-size: 0.75rem; color: #dc3545; margin-top: 2px;">
+            Inicia tu turno para poder usar el buscador.
+          </div>
+
           <!-- Menú principal: muestra distinto contenido según grupo (desktop) o plano (móvil) -->
           <div class="sidebar-menu">
 

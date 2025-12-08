@@ -893,6 +893,12 @@ body{
   min-height: 80px;
 }
 
+/* Ocultar la X nativa de los inputs de búsqueda modernos (dejamos solo la X personalizada) */
+.modern-search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 .toolbar-tablet {
   padding: 12px 0;
 }

@@ -35,6 +35,7 @@ export class AdminNavbarComponent {
   searchFeedbackTerm: string | null = null;
   logoUrl: string | null = null;
   turnoActivo: boolean = false;
+  hasSearchInput: boolean = false;
 
   constructor(
     private router: Router,
@@ -189,9 +190,21 @@ export class AdminNavbarComponent {
     if (!q) {
       this.searchPreviewLabel = null;
       this.searchFeedbackTerm = null;
+      this.hasSearchInput = false;
       return;
     }
+    this.hasSearchInput = true;
+    const isPuntoPos = (this.rol || '').toLowerCase() === 'punto_pos';
+
+    // Si es punto_pos sin turno activo, el buscador no muestra sugerencias ni feedback
+    if (isPuntoPos && !this.turnoActivo) {
+      this.searchPreviewLabel = null;
+      this.searchFeedbackTerm = null;
+      return;
+    }
+
     const result = this.findSearchCommands(q);
+
     if (result) {
       this.searchPreviewLabel = result.label;
       this.searchFeedbackTerm = null;
@@ -310,6 +323,14 @@ export class AdminNavbarComponent {
   onSearch(term: string): void {
     const q = (term || '').trim().toLowerCase();
     if (!q) return;
+    const isPuntoPos = (this.rol || '').toLowerCase() === 'punto_pos';
+
+    // Si es punto_pos sin turno activo, ignorar búsqueda y redirigir directamente a turno
+    if (isPuntoPos && !this.turnoActivo) {
+      this.router.navigate(['/turno-empleado']);
+      return;
+    }
+
     const result = this.findSearchCommands(q);
     if (result) {
       this.router.navigate(result.commands as any[]);

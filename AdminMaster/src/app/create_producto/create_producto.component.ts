@@ -3,6 +3,7 @@ import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, 
 import { FormsModule, NgForm } from '@angular/forms';
 import { Categorias, CategoriaService } from '../services/categoria.service';
 import { Producto, ProductoService } from '../services/producto.service';
+import { environment } from '../config/environment';
 import Swal from 'sweetalert2';
 declare const bootstrap: any;
 
@@ -283,12 +284,24 @@ export class CreateProductoComponent implements OnInit {
           precioComercial: this.productoInicial.precioComercial,
           categoria: this.productoInicial.idCategoria || this.productoInicial.categoria?.idCategoria || ''
         };
-        this.previewUrl = this.productoInicial.imgProducto || null;
+        this.previewUrl = this.normalizeImgUrl(this.productoInicial.imgProducto);
       } else {
         this.editMode = false;
         this.resetForm();
       }
     }
+  }
+  private normalizeImgUrl(img?: string | null): string | null {
+    if (!img) return null;
+    const s = String(img).trim();
+    if (!s) return null;
+    if (s.startsWith('http') || s.startsWith('data:')) return s;
+    if (s.startsWith('/storage/') || s.startsWith('storage/')) {
+      const baseApi = (environment.apiUrl || '').replace(/\/+$/, '');
+      const path = s.replace(/^\/+/, '');
+      return `${baseApi}/${path}`;
+    }
+    return s;
   }
   private resetForm() {
     const initial = {
