@@ -86,10 +86,21 @@
               <div class="card-image">
                 <img title="img" [src]="producto.imagen" [alt]="producto.nombre">
               </div>
-              <div class="card-info">
-                <h3>{{ producto.nombre }}</h3>
-                <p>Stock: {{ producto.stock }} unidades</p>
-                <p class="price">$ {{ producto.precio }}</p>
+              <div class="card-info text-center">
+                <h3 class="mb-2">{{ producto.nombre }}</h3>
+                <div class="mb-2">
+                  <ng-container *ngIf="producto.stock > 0; else agotadoInfo">
+                    <span class="badge rounded-pill bg-success-subtle text-success px-3 py-1">
+                      Disponible · {{ producto.stock }} {{ producto.stock === 1 ? 'und' : 'unds' }}
+                    </span>
+                  </ng-container>
+                  <ng-template #agotadoInfo>
+                    <span class="badge rounded-pill bg-danger-subtle text-danger px-3 py-1">
+                      Agotado
+                    </span>
+                  </ng-template>
+                </div>
+                <p class="price mb-0">$ {{ producto.precio }}</p>
               </div>
             </div>
           </div>

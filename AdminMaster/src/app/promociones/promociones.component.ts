@@ -115,6 +115,44 @@ export class PromocionesComponent implements OnInit {
     });
   }
 
+  onFechaInicioChange(value: string | null | undefined): void {
+    const fechaInicioCtrl = this.form.get('fechaInicio');
+    const fechaFinCtrl = this.form.get('fechaFin');
+
+    const v = (value ?? '').toString().trim();
+    if (!v) {
+      fechaInicioCtrl?.setValue(null);
+      return;
+    }
+
+    fechaInicioCtrl?.setValue(v);
+
+    const fin = (fechaFinCtrl?.value ?? '').toString().trim();
+    if (fin && fin < v) {
+      fechaFinCtrl?.setValue(v);
+    }
+  }
+
+  onFechaFinChange(value: string | null | undefined): void {
+    const fechaInicioCtrl = this.form.get('fechaInicio');
+    const fechaFinCtrl = this.form.get('fechaFin');
+
+    const v = (value ?? '').toString().trim();
+    if (!v) {
+      fechaFinCtrl?.setValue(null);
+      return;
+    }
+
+    const ini = (fechaInicioCtrl?.value ?? '').toString().trim();
+    if (ini && v < ini) {
+      // Si el usuario elige una fecha fin menor a inicio, forzamos a inicio
+      fechaFinCtrl?.setValue(ini);
+      return;
+    }
+
+    fechaFinCtrl?.setValue(v);
+  }
+
   add() {
     if (this.form.invalid) return;
     const v = this.form.value;

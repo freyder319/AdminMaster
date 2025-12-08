@@ -52,35 +52,6 @@ export class InventoryComponent implements AfterViewInit {
   toggleEstado(prod: Producto) {
     if (!prod?.id) return;
     const nuevo = !(prod.estado === false ? false : true);
-    // Evitar habilitar productos con stock en 0: deben registrar entradas primero
-    if (nuevo === true && (Number(prod.stockProducto) || 0) <= 0) {
-      Swal.fire({
-        icon: 'info',
-        title: 'Stock Insuficiente',
-        html: 'Para <b>Habilitar</b> este Producto debes <b>Registrar Primero una Entrada</b> que <b>Aumente su Stock</b>.'
-      }).then(() => {
-        try {
-          // Preconfigurar el formulario de entrada con el código del producto
-          this.entrada = {
-            codigo: String(prod.codigoProducto || ''),
-            cantidad: 0
-          };
-          // Mostrar de inmediato los datos del producto en el panel derecho
-          this.productoEncontrado = { ...prod };
-          this.mensajeProducto = '';
-          this.mostrarIconoNoEncontrado = false;
-          // Indicar que al abrir el modal se debe enfocar la cantidad
-          this.focusCantidadOnEntrada = true;
-          // Abrir modal de Entrada de Productos
-          const modalElement = document.getElementById('modalEntradaInventario');
-          if (modalElement) {
-            const modal = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
-            modal.show();
-          }
-        } catch {}
-      });
-      return;
-    }
     this.productoService.setEstado(prod.id, nuevo).subscribe({
       next: (actualizado) => {
         // Actualizar en memoria
